@@ -97,8 +97,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('replies/{reply}', [ActivityCommentController::class, 'updateReply']);
     Route::delete('replies/{reply}', [ActivityCommentController::class, 'destroyReply']);
 
-    //client
-    Route::apiResource('user/badge-requests', BadgeRequestController::class);
+    // client
+    // Route::apiResource('user/badge-requests', BadgeRequestController::class); ⚠️ Possibly breaking route ⚠️
 
     // Replies routes
     Route::post('comments/{comment}/replies', [CommentController::class, 'storeReply']);
