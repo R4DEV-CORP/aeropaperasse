@@ -24,12 +24,15 @@ class BadgeRequestObserver
      */
     public function created(BadgeRequest $badgeRequest): void
     {
-        // Envoyer l'email de création de demande de badge
-        $this->badgeRequestMailService->sendCreatedMail($badgeRequest);
+        // // Envoyer l'email de création de demande de badge
+        // $this->badgeRequestMailService->sendCreatedMail($badgeRequest);
+        if ($badgeRequest->status !== 'draft') {
+            $this->badgeRequestMailService->sendCreatedMail($badgeRequest);
+        }
     }
     /**
      * Handle the BadgeRequest "updating" event.
-     * 
+     *
      * Cette méthode est appelée avant la mise à jour.
      * Nous sauvegardons l'ancien statut pour le comparer après la mise à jour.
      */
@@ -41,7 +44,7 @@ class BadgeRequestObserver
 
     /**
      * Handle the BadgeRequest "updated" event.
-     * 
+     *
      * Cette méthode est appelée après la mise à jour.
      */
     public function updated(BadgeRequest $badgeRequest): void
