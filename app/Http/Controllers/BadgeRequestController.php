@@ -25,22 +25,22 @@ class BadgeRequestController extends Controller
         $client_id = $user->client_id;
 
         // Si l'utilisateur est admin, récupérer toutes les demandes, sauf les brouillons
-        if ($user->role === 'admin' || $user->role === 'sadmin' ) {
-            $requests = BadgeRequest::where('status', '!=', 'draft')->with('user')->latest()->get();
+        if ($user->role === 'admin' || $user->role === 'sadmin') {
+            $requests = BadgeRequest::where('status', '!=', 'draft')->with(['user', 'client'])->latest()->get();
             $draftCount = BadgeRequest::where('status', 'draft')->count();
         }
         // Sinon, récupérer les demandes liées au client de l'utilisateur, sauf les brouillons
         else {
             $requests = BadgeRequest::where('status', '!=', 'draft')
-                ->whereHas('user', function($query) use ($client_id) {
+                ->whereHas('user', function ($query) use ($client_id) {
                     $query->where('client_id', $client_id);
                 })
-                ->with('user')
+                ->with(['user', 'client'])
                 ->latest()
                 ->get();
-            
+
             $draftCount = BadgeRequest::where('status', 'draft')
-                ->whereHas('user', function($query) use ($client_id) {
+                ->whereHas('user', function ($query) use ($client_id) {
                     $query->where('client_id', $client_id);
                 })
                 ->count();
@@ -57,8 +57,19 @@ class BadgeRequestController extends Controller
             'ready_for_delivery' => $requests->where('status', 'ready_for_delivery')->count(),
         ];
 
+        $firstRequest = $requests->first();
+        \Log::debug('Contenu de la première demande', [
+            'id' => $firstRequest ? $firstRequest->id : null,
+            'client_id_exists' => $firstRequest ? isset($firstRequest->client_id) : false,
+            'client_id_value' => $firstRequest ? $firstRequest->client_id : null,
+            'client_relation_exists' => $firstRequest ? isset($firstRequest->client) : false,
+            'client_relation_content' => $firstRequest ? $firstRequest->client : null,
+            'client_name' => $firstRequest && $firstRequest->client ? $firstRequest->client->name : null,
+            'json_serialized' => $firstRequest ? json_encode($firstRequest) : null
+        ]);
+
         return response()->json([
-            'user' =>   $user,
+            'user' => $user,
             'requests' => $requests,
             'has_drafts' => $draftCount > 0,
             'draft_count' => $draftCount,
@@ -101,11 +112,11 @@ class BadgeRequestController extends Controller
         }
 
         try {
-            
+
             $user = User::where('email', $request->email)->first();
             if (!$user) {
                 $password = Str::random(12);
-                
+
                 $user = User::create([
                     'name' => $request->prenom . ' ' . $request->nom,
                     'email' => $request->email,
@@ -120,7 +131,7 @@ class BadgeRequestController extends Controller
             $photoPath = $request->file('photoIdentite')->store('photos', 'public');
             $pieceIdentitePath = $request->file('pieceIdentite')->store('pieces_identite', 'public');
             $autorisationPath = $request->file('autorisationActivite')->store('autorisations', 'public');
-            
+
             $certificatPath = null;
             if ($request->hasFile('certificatFormation')) {
                 $certificatPath = $request->file('certificatFormation')->store('certificats', 'public');
@@ -128,7 +139,7 @@ class BadgeRequestController extends Controller
 
             $documentForPath = $request->file('documentFor')->store('documents_for', 'public');
             \Log::info('Document FOR path', ['path' => $documentForPath]);
-            
+
             $facturePath = null;
             if ($request->hasFile('facture')) {
                 $facturePath = $request->file('facture')->store('factures', 'public');
@@ -162,13 +173,19 @@ class BadgeRequestController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la création de la demande: ' . $e->getMessage());
-            
-            if (isset($photoPath)) Storage::disk('public')->delete($photoPath);
-            if (isset($pieceIdentitePath)) Storage::disk('public')->delete($pieceIdentitePath);
-            if (isset($autorisationPath)) Storage::disk('public')->delete($autorisationPath);
-            if (isset($certificatPath)) Storage::disk('public')->delete($certificatPath);
-            if (isset($documentForPath)) Storage::disk('public')->delete($documentForPath);
-            if (isset($facturePath)) Storage::disk('public')->delete($facturePath);
+
+            if (isset($photoPath))
+                Storage::disk('public')->delete($photoPath);
+            if (isset($pieceIdentitePath))
+                Storage::disk('public')->delete($pieceIdentitePath);
+            if (isset($autorisationPath))
+                Storage::disk('public')->delete($autorisationPath);
+            if (isset($certificatPath))
+                Storage::disk('public')->delete($certificatPath);
+            if (isset($documentForPath))
+                Storage::disk('public')->delete($documentForPath);
+            if (isset($facturePath))
+                Storage::disk('public')->delete($facturePath);
 
             return response()->json([
                 'message' => 'Erreur lors de la création de la demande',
@@ -195,9 +212,9 @@ class BadgeRequestController extends Controller
             ], 500);
         }
     }
-    
+
     public function updateStatus(Request $request, $id)
-    {   
+    {
         $validator = Validator::make($request->all(), [
             'status' => 'required|in:pending_rem,rejected_rem,pending_adp,approved_adp,rejected_adp,pending_fabrication,ready_for_delivery',
             'reject_reason' => 'nullable|string|max:500',
@@ -209,9 +226,9 @@ class BadgeRequestController extends Controller
         }
 
         $badgeRequest = BadgeRequest::findOrFail($id);
-        
+
         $badgeRequest->status = $request->status;
-                
+
         if ($request->has('reject_reason') && in_array($request->status, ['rejected_rem', 'rejected_adp'])) {
             $badgeRequest->reject_reason = $request->reject_reason;
         } else {
@@ -220,7 +237,7 @@ class BadgeRequestController extends Controller
                 'status' => $request->status
             ]);
         }
-        
+
         $timestampField = $request->status . '_at';
         $badgeRequest->$timestampField = now();
 
@@ -244,14 +261,13 @@ class BadgeRequestController extends Controller
         $client_id = $user->client_id;
 
         if ($user->role === 'admin' || $user->role === 'sadmin') {
-            $drafts = BadgeRequest::where('status', 'draft')->with('user')->latest()->get();
-        } 
-        else {
+            $drafts = BadgeRequest::where('status', 'draft')->with(['user', 'client'])->latest()->get();
+        } else {
             $drafts = BadgeRequest::where('status', 'draft')
-                ->whereHas('user', function($query) use ($client_id) {
+                ->whereHas('user', function ($query) use ($client_id) {
                     $query->where('client_id', $client_id);
                 })
-                ->with('user')
+                ->with(['user', 'client'])
                 ->latest()
                 ->get();
         }
@@ -316,16 +332,16 @@ class BadgeRequestController extends Controller
             }
 
             $badgeRequestId = $request->input('draft_id');
-            
+
             if ($badgeRequestId) {
                 $badgeRequest = BadgeRequest::findOrFail($badgeRequestId);
-                
+
                 if ($badgeRequest->status !== 'draft' || $badgeRequest->user_id !== auth()->id()) {
                     return response()->json([
                         'message' => 'Vous ne pouvez pas modifier cette demande'
                     ], 403);
                 }
-                
+
                 $badgeRequest->update($draftData);
             } else {
                 $badgeRequest = BadgeRequest::create($draftData);
@@ -338,7 +354,7 @@ class BadgeRequestController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la création du brouillon: ' . $e->getMessage());
-            
+
             return response()->json([
                 'message' => 'Erreur lors de la création du brouillon',
                 'error' => $e->getMessage()
@@ -349,7 +365,7 @@ class BadgeRequestController extends Controller
     public function submitDraft(Request $request, $id)
     {
         $draft = BadgeRequest::findOrFail($id);
-        
+
         if ($draft->status !== 'draft' || $draft->user_id !== auth()->id()) {
             return response()->json([
                 'message' => 'Vous ne pouvez pas soumettre cette demande'
@@ -380,7 +396,7 @@ class BadgeRequestController extends Controller
             $user = User::where('email', $draft->email)->first();
             if (!$user) {
                 $password = Str::random(12);
-                
+
                 $user = User::create([
                     'name' => $draft->prenom . ' ' . $draft->nom,
                     'email' => $draft->email,
@@ -402,10 +418,10 @@ class BadgeRequestController extends Controller
                 'message' => 'Demande soumise avec succès',
                 'request' => $draft
             ]);
-            
+
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la soumission du brouillon: ' . $e->getMessage());
-            
+
             return response()->json([
                 'message' => 'Erreur lors de la soumission de la demande',
                 'error' => $e->getMessage()
@@ -436,10 +452,14 @@ class BadgeRequestController extends Controller
             }
 
             $fileFields = [
-                'photoIdentite', 'pieceIdentite', 'autorisationActivite', 
-                'certificatFormation', 'documentFor', 'facture'
+                'photoIdentite',
+                'pieceIdentite',
+                'autorisationActivite',
+                'certificatFormation',
+                'documentFor',
+                'facture'
             ];
-    
+
             foreach ($fileFields as $field) {
                 if (!empty($draft->$field)) {
                     Storage::disk('public')->delete($draft->$field);
@@ -454,7 +474,7 @@ class BadgeRequestController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la suppression du brouillon: ' . $e->getMessage());
-            
+
             return response()->json([
                 'message' => 'Erreur lors de la suppression du brouillon',
                 'error' => $e->getMessage()
