@@ -22,6 +22,7 @@ class BadgeRequest extends Model
         'pieceIdentite',
         'autorisationActivite',
         'certificatFormation',
+        'attestationFormation',
         'est_habilitation',
         'documentFor',
         'facture',
@@ -39,6 +40,8 @@ class BadgeRequest extends Model
     ];
 
     protected $casts = [
+        'est_habilitation' => 'boolean',
+        'attestationFormation' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'draft_at' => 'datetime',
@@ -74,7 +77,7 @@ class BadgeRequest extends Model
     {
         return $this->belongsTo(Client::class);
     }
-    
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');

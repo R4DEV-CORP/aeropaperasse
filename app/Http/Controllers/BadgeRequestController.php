@@ -92,6 +92,7 @@ class BadgeRequestController extends Controller
             'pieceIdentite' => 'required|file|mimes:pdf,jpeg,png,jpg|max:2048',
             'autorisationActivite' => 'required|file|mimes:pdf,jpeg,png,jpg|max:2048',
             'certificatFormation' => 'file|mimes:pdf,jpeg,png,jpg|max:2048',
+            'attestationFormation' => 'boolean',
             'est_habilitation' => 'boolean',
             'documentFor' => 'required|file|mimes:pdf,xlsx,xls,jpeg,png,jpg|max:2048',
             'facture' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048',
@@ -155,6 +156,7 @@ class BadgeRequestController extends Controller
                 'pieceIdentite' => $pieceIdentitePath,
                 'autorisationActivite' => $autorisationPath,
                 'certificatFormation' => $certificatPath,
+                'attestationFormation' => $request->boolean('attestationFormation'),
                 'est_habilitation' => $request->boolean('est_habilitation'),
                 'documentFor' => $documentForPath,
                 'facture' => $facturePath,
@@ -164,6 +166,12 @@ class BadgeRequestController extends Controller
                 'pending_rem_at' => now(),
                 'reject_reason' => $request->reject_reason,
                 'created_by' => auth()->id()
+            ]);
+
+            \Log::debug('Données pour création BadgeRequest:', [
+                'attestationFormation' => $request->boolean('attestationFormation'),
+                'raw_attestationFormation' => $request->input('attestationFormation'),
+                'all_inputs' => $request->all()
             ]);
 
             return response()->json([
@@ -288,6 +296,7 @@ class BadgeRequestController extends Controller
             'pieceIdentite' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048',
             'autorisationActivite' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048',
             'certificatFormation' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048',
+            'attestationFormation' => 'boolean',
             'est_habilitation' => 'boolean',
             'documentFor' => 'nullable|file|mimes:pdf,xlsx,xls,jpeg,png,jpg|max:2048',
             'facture' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048',
@@ -310,6 +319,10 @@ class BadgeRequestController extends Controller
                 if ($request->has($field)) {
                     $draftData[$field] = $request->$field;
                 }
+            }
+
+            if ($request->has('attestationFormation')) {
+                $draftData['attestationFormation'] = $request->boolean('attestationFormation');
             }
 
             if ($request->has('est_habilitation')) {
