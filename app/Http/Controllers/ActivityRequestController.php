@@ -29,7 +29,7 @@ class ActivityRequestController extends Controller
                 ->where('user_id', $user->id)
                 ->latest()
                 ->get();
-            
+
             $draftCount = ActivityRequest::where('status', 'draft')
                 ->where('user_id', $user->id)
                 ->count();
@@ -43,7 +43,7 @@ class ActivityRequestController extends Controller
         ];
 
         return response()->json([
-            'user' =>   $user,
+            'user' => $user,
             'requests' => $requests,
             'has_drafts' => $draftCount > 0,
             'draft_count' => $draftCount,
@@ -100,11 +100,31 @@ class ActivityRequestController extends Controller
 
         try {
 
-            // Stocker les fichiers
+            $data = [];
+
+            $data['raison_sociale'] = $request->input('raison_sociale');
+            $data['nom_commercial'] = $request->input('nom_commercial');
+            $data['siret'] = $request->input('siret');
+            $data['adresse'] = $request->input('adresse');
+            $data['responsable_nom'] = $request->input('responsable_nom');
+            $data['responsable_prenom'] = $request->input('responsable_prenom');
+            $data['responsable_email'] = $request->input('responsable_email');
+            $data['responsable_telephone'] = $request->input('responsable_telephone');
+            $data['responsable_fonction'] = $request->input('responsable_fonction');
+            $data['activite_description'] = $request->input('activite_description');
+            $data['nombre_personnes'] = $request->input('nombre_personnes');
+            $data['nombre_vehicules'] = $request->input('nombre_vehicules');
+            $data['clients_denomination'] = $request->input('clients_denomination');
+            $data['renouvellement'] = $request->input('renouvellement');
+
+            if ($request->input('renouvellement')) {
+                $data['autorisation_anterieur'] = $request->input('autorisation_anterieur');
+            }
+
             $data['extrait_kbis_path'] = $request->file('extrait_kbis')->store('activity_requests', 'public');
             $data['attestations_clients_path'] = $request->file('attestations_clients')->store('activity_requests', 'public');
             $data['formulaire_surete_path'] = $request->file('formulaire_surete')->store('activity_requests', 'public');
-            
+
             if ($request->hasFile('agrement_prefectoral')) {
                 $data['agrement_prefectoral_path'] = $request->file('agrement_prefectoral')->store('activity_requests', 'public');
             }
@@ -114,19 +134,19 @@ class ActivityRequestController extends Controller
             if ($request->hasFile('cta')) {
                 $data['cta_path'] = $request->file('cta')->store('activity_requests', 'public');
             }
-    
+
             $data['user_id'] = $user->id;
             $data['created_by'] = $user->id;
             $data['status'] = 'pending';
             $data['pending_at'] = now();
-    
+
             $activityRequest = ActivityRequest::create($data);
-    
+
             // Envoyer l'email de notification
             try {
                 Mail::to(config('mail.admin_address', 'admin@example.com'))
                     ->send(new ActivityRequestCreated($activityRequest));
-    
+
                 // Envoyer également un email de confirmation au demandeur
                 Mail::to($data['responsable_email'])
                     ->send(new ActivityRequestConfirmation($activityRequest));
@@ -134,21 +154,21 @@ class ActivityRequestController extends Controller
                 // Log l'erreur mais ne pas interrompre le processus
                 \Log::error('Erreur lors de l\'envoi de l\'email: ' . $e->getMessage());
             }
-    
+
             return response()->json([
                 'message' => 'Demande d\'activité créée avec succès',
                 'request' => $activityRequest
             ], 201);
 
         } catch (\Exception $e) {
-        \Log::error('Erreur lors de la création de la demande d\'activité: ' . $e->getMessage());
+            \Log::error('Erreur lors de la création de la demande d\'activité: ' . $e->getMessage());
 
-        return response()->json([
-            'message' => 'Erreur lors de la création de la demande',
-            'error' => $e->getMessage()
-        ], 500);
-    }
-    
+            return response()->json([
+                'message' => 'Erreur lors de la création de la demande',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+
 
     }
 
@@ -161,12 +181,12 @@ class ActivityRequestController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        
+
         $activityRequest = ActivityRequest::findOrFail($id);
-        
+
         // Récupérer l'ancien statut pour vérifier s'il y a eu un changement
         $oldStatus = $activityRequest->status;
-        
+
         // Mettre à jour le statut
         $activityRequest->status = $request->status;
 
@@ -174,18 +194,18 @@ class ActivityRequestController extends Controller
         $activityRequest->$timestampField = now();
 
         $activityRequest->save();
-        
+
         // Envoyer un email de notification si le statut a changé
         if ($oldStatus !== $request->status) {
             try {
                 // Notifier le demandeur du changement de statut
                 Mail::to($activityRequest->responsable_email)
                     ->send(new ActivityRequestStatusUpdated($activityRequest));
-                
+
                 // Vous pourriez également vouloir notifier les administrateurs
                 // Mail::to(config('mail.admin_address', 'admin@example.com'))
                 //     ->send(new ActivityRequestStatusUpdated($activityRequest, true)); // Version admin
-                
+
                 \Log::info('Email de notification de changement de statut envoyé à ' . $activityRequest->responsable_email);
             } catch (\Exception $e) {
                 \Log::error('Erreur lors de l\'envoi de l\'email de notification de statut: ' . $e->getMessage());
@@ -202,8 +222,7 @@ class ActivityRequestController extends Controller
         // Si l'utilisateur est admin, récupérer tous les brouillons
         if ($user->role === 'admin' || $user->role === 'sadmin') {
             $drafts = ActivityRequest::where('status', 'draft')->with('user')->latest()->get();
-        } 
-        else {
+        } else {
             // Sinon, récupérer uniquement les brouillons de l'utilisateur
             $drafts = ActivityRequest::where('status', 'draft')
                 ->where('user_id', $user->id)
@@ -257,11 +276,21 @@ class ActivityRequestController extends Controller
 
             // Traitement des champs textuels
             $textFields = [
-                'renouvellement', 'autorisation_anterieur', 'raison_sociale', 
-                'nom_commercial', 'siret', 'adresse', 'responsable_nom', 
-                'responsable_prenom', 'responsable_email', 'responsable_telephone',
-                'responsable_fonction', 'activite_description', 'nombre_personnes',
-                'nombre_vehicules', 'clients_denomination'
+                'renouvellement',
+                'autorisation_anterieur',
+                'raison_sociale',
+                'nom_commercial',
+                'siret',
+                'adresse',
+                'responsable_nom',
+                'responsable_prenom',
+                'responsable_email',
+                'responsable_telephone',
+                'responsable_fonction',
+                'activite_description',
+                'nombre_personnes',
+                'nombre_vehicules',
+                'clients_denomination'
             ];
 
             foreach ($textFields as $field) {
@@ -288,17 +317,17 @@ class ActivityRequestController extends Controller
 
             // Mise à jour ou création du brouillon
             $draftId = $request->input('draft_id');
-            
+
             if ($draftId) {
                 $activityRequest = ActivityRequest::findOrFail($draftId);
-                
+
                 // Vérification des permissions
                 if ($activityRequest->status !== 'draft' || $activityRequest->user_id !== auth()->id()) {
                     return response()->json([
                         'message' => 'Vous ne pouvez pas modifier cette demande'
                     ], 403);
                 }
-                
+
                 $activityRequest->update($draftData);
             } else {
                 $activityRequest = ActivityRequest::create($draftData);
@@ -311,7 +340,7 @@ class ActivityRequestController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la création du brouillon: ' . $e->getMessage());
-            
+
             return response()->json([
                 'message' => 'Erreur lors de la création du brouillon',
                 'error' => $e->getMessage()
@@ -322,9 +351,9 @@ class ActivityRequestController extends Controller
     public function submitDraft(Request $request, $id)
     {
         $user = auth()->user();
-        
+
         $draft = ActivityRequest::findOrFail($id);
-        
+
         if ($draft->status !== 'draft' || $draft->user_id !== auth()->id()) {
             return response()->json([
                 'message' => 'Vous ne pouvez pas soumettre cette demande'
@@ -355,7 +384,7 @@ class ActivityRequestController extends Controller
             $additionalValidator = Validator::make($draft->toArray(), [
                 'autorisation_anterieur' => 'required|string|max:255'
             ]);
-            
+
             if ($additionalValidator->fails()) {
                 return response()->json([
                     'message' => 'Numéro d\'autorisation antérieure requis pour un renouvellement',
@@ -382,10 +411,10 @@ class ActivityRequestController extends Controller
                 'message' => 'Demande soumise avec succès',
                 'request' => $draft
             ]);
-            
+
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la soumission du brouillon: ' . $e->getMessage());
-            
+
             return response()->json([
                 'message' => 'Erreur lors de la soumission de la demande',
                 'error' => $e->getMessage()
