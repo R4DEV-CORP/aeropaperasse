@@ -4,9 +4,7 @@ return [
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
     'allowed_methods' => ['*'],
     'allowed_origins' => [
-        'http://localhost:3000',
-        'http://localhost:3001',
-        'https://front-aeropaperasse-git-dev-r4dev.vercel.app'
+        'https://front-aeropaperasse.vercel.app'
     ],
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
