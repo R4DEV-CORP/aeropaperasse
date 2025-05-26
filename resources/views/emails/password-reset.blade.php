@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code de vérification</title>
+    <title>Réinitialisation de mot de passe</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,21 +31,35 @@
             font-size: 24px;
             font-weight: 600;
         }
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
         .content {
             padding: 30px;
             color: #374151;
             text-align: center;
         }
-        .code-box {
-            background-color: #f3f4f6;
+        .content p {
+            margin-bottom: 16px;
+        }
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .reset-button {
+            display: inline-block;
+            background-color: #2563eb;
+            color: #ffffff !important;
+            padding: 12px 24px;
+            text-decoration: none;
             border-radius: 6px;
-            padding: 20px;
-            margin: 20px 0;
-            font-size: 32px;
-            font-weight: bold;
-            letter-spacing: 4px;
-            color: #1f2936;
-            font-family: monospace;
+            font-weight: 600;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .reset-button:hover {
+            background-color: #1e3a8a;
         }
         .timer {
             background-color: #fee2e2;
@@ -53,7 +67,6 @@
             padding: 8px 16px;
             border-radius: 4px;
             display: inline-block;
-            margin-top: 20px;
             font-size: 14px;
         }
         .footer {
@@ -77,8 +90,9 @@
                 margin: 0;
                 border-radius: 0;
             }
-            .code-box {
-                font-size: 28px;
+            .reset-button {
+                padding: 12px 24px;
+                font-size: 14px;
             }
         }
     </style>
@@ -87,22 +101,26 @@
     <div class="container">
         <div class="header">
             <img src="https://app.aeropaperasse.fr/images/aeropaperasse-logo-white.png" alt="Logo" class="logo">
-            <h1>Code de vérification</h1>
+            <h1>Réinitialisation de mot de passe</h1>
         </div>
 
         <div class="content">
-            <p>Voici votre code de vérification :</p>
+            <p>Bonjour,</p>
 
-            <div class="code-box">
-                {{ $code }}
+            <p>Vous recevez cet email car nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.</p>
+
+            <p>Veuillez cliquer sur le bouton ci-dessous pour réinitialiser votre mot de passe :</p>
+
+            <div class="button-container">
+                <a href="{{ $resetUrl }}" class="reset-button">Réinitialiser mon mot de passe</a>
             </div>
 
             <div class="timer">
-                ⏰ Ce code expirera dans 10 minutes
+                ⏰ Ce lien expirera dans 60 minutes
             </div>
 
             <div class="info">
-                Si vous n'avez pas demandé ce code, veuillez ignorer cet email et contacter le support immédiatement.
+                Si vous n'avez pas demandé de réinitialisation de mot de passe, veuillez ignorer cet email et contacter le support immédiatement.
             </div>
         </div>
 
