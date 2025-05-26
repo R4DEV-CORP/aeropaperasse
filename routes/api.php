@@ -36,6 +36,11 @@ Route::get('/documents/{filename}', function ($filename) {
     return response()->download($path);
 });
 
+// Routes pour la réinitialisation de mot de passe
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/check-reset-token', [AuthController::class, 'checkResetToken']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+
 // Routes protégées
 Route::middleware('auth:sanctum')->group(function () {
     // Auth routes
@@ -54,15 +59,15 @@ Route::middleware('auth:sanctum')->group(function () {
     // Facilitation de l'accès aux fichiers pour téléchargement en ZIP
     Route::get('/file/{path}', function (Request $request, $path) {
         $path = str_replace('__', '/', $path);
-        
+
         if (Storage::disk('public')->exists($path)) {
             return response()->file(storage_path('app/public/' . $path));
         }
-        
+
         return response()->json(['error' => 'Fichier introuvable'], 404);
     })->where('path', '.*');
-    
-    
+
+
     // Badge requests + drafts routes
     Route::get('/badge-requests/drafts', [BadgeRequestController::class, 'getDrafts']);
     Route::post('/badge-requests/drafts', [BadgeRequestController::class, 'storeDraft']);
@@ -98,7 +103,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('replies/{reply}', [ActivityCommentController::class, 'destroyReply']);
 
     // client
-    // Route::apiResource('user/badge-requests', BadgeRequestController::class); ⚠️ Possibly breaking route ⚠️
+    Route::apiResource('user/badge-requests', BadgeRequestController::class); // ⚠️ Possibly breaking route ⚠️
 
     // Replies routes
     Route::post('comments/{comment}/replies', [CommentController::class, 'storeReply']);
