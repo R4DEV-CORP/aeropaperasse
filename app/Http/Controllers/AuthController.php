@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\TwoFactorCode;
+use App\Models\PasswordResetToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\TwoFactorCodeMail;
+use App\Mail\PasswordResetMail;
 
 class AuthController extends Controller
 {
@@ -27,7 +29,7 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
             'role' => $validated['role'] ?? 'client', // Par défaut "user"
             'is_new' => true, // Nouvel utilisateur est marqué comme nouveau
-            'is_student' => false, 
+            'is_student' => false,
         ];
 
         $user = User::create($userData);
@@ -44,15 +46,15 @@ class AuthController extends Controller
 
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
-            
+
             // Vérifier si c'est la première connexion
             $isFirstLogin = $user->is_new;
-            
+
             // Vérifier si la 2FA est activée pour l'utilisateur
             if ($user->two_factor_enabled) {
                 // Générer et envoyer le code 2FA
                 $code = $this->generateAndSendTwoFactorCode($user);
-                
+
                 return response()->json([
                     'requires2FA' => true,
                     'is_first_login' => $isFirstLogin,
@@ -103,10 +105,10 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
-        
+
         // Vérifier si c'est la première connexion
         $isFirstLogin = $user->is_new;
-        
+
         // Vérifier le code 2FA
         $twoFactorCode = TwoFactorCode::where('user_id', $user->id)
             ->where('code', $request->code)
@@ -179,9 +181,9 @@ class AuthController extends Controller
                 'client_id' => $request->user()->client_id
             ],
         ];
-    
+
         \Log::info('Response data: ', $response);
-    
+
         return response()->json($response);
     }
 
@@ -276,4 +278,133 @@ class AuthController extends Controller
             'message' => 'Mot de passe défini avec succès'
         ]);
     }
+
+   /**
+   * Demande de mot de passe oublié
+   *
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function forgotPassword(Request $request)
+  {
+      $request->validate(['email' => 'required|email']);
+
+      $user = User::where('email', $request->email)->first();
+
+      if (!$user) {
+          return response()->json([
+              'status' => 'success',
+              'message' => 'Si un compte associé à cet email existe, un lien de réinitialisation a été envoyé.'
+          ]);
+      }
+
+      // Supprimer les anciens tokens
+      PasswordResetToken::where('email', $request->email)->delete();
+
+      // Créer un nouveau token
+      $token = Str::random(64);
+
+      PasswordResetToken::create([
+          'email' => $request->email,
+          'token' => $token,
+          'created_at' => now(),
+          'expires_at' => now()->addHours(1)
+      ]);
+
+      // Envoyer l'email avec le lien de réinitialisation
+      try {
+          Mail::to($request->email)->send(new PasswordResetMail($token, $request->email));
+
+          return response()->json([
+              'status' => 'success',
+              'message' => 'Si un compte associé à cet email existe, un lien de réinitialisation a été envoyé.'
+          ]);
+      } catch (\Exception $e) {
+          return response()->json([
+              'status' => 'error',
+              'message' => 'Une erreur est survenue lors de l\'envoi de l\'email.',
+              'error' => $e->getMessage()
+          ], 500);
+      }
+  }
+
+   /**
+   * Vérifier le token de réinitialisation
+   *
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function checkResetToken(Request $request)
+  {
+      $request->validate([
+          'token' => 'required|string',
+          'email' => 'required|email'
+      ]);
+
+      $resetToken = PasswordResetToken::where('token', $request->token)
+          ->where('email', $request->email)
+          ->where('expires_at', '>', now())
+          ->first();
+
+      if (!$resetToken) {
+          return response()->json([
+              'status' => 'error',
+              'message' => 'Ce lien de réinitialisation est invalide ou a expiré.'
+          ], 400);
+      }
+
+      return response()->json([
+          'status' => 'success',
+          'message' => 'Token valide'
+      ]);
+  }
+
+   /**
+   * Réinitialiser le mot de passe
+   *
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function resetPassword(Request $request)
+  {
+      $request->validate([
+          'token' => 'required|string',
+          'email' => 'required|email',
+          'password' => 'required|string|min:8|confirmed',
+          'password_confirmation' => 'required|string|min:8'
+      ]);
+
+      $resetToken = PasswordResetToken::where('token', $request->token)
+          ->where('email', $request->email)
+          ->where('expires_at', '>', now())
+          ->first();
+
+      if (!$resetToken) {
+          return response()->json([
+              'status' => 'error',
+              'message' => 'Ce lien de réinitialisation est invalide ou a expiré.'
+          ], 400);
+      }
+
+      $user = User::where('email', $request->email)->first();
+
+      if (!$user) {
+          return response()->json([
+              'status' => 'error',
+              'message' => 'Aucun utilisateur trouvé avec cet email.'
+          ], 404);
+      }
+
+      // Mettre à jour le mot de passe
+      $user->password = Hash::make($request->password);
+      $user->save();
+
+      // Supprimer tous les tokens pour cet email
+      PasswordResetToken::where('email', $request->email)->delete();
+
+      return response()->json([
+          'status' => 'success',
+          'message' => 'Votre mot de passe a été réinitialisé avec succès.'
+      ]);
+  }
 }
