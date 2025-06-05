@@ -108,13 +108,13 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="https://app.aeropaperasse.fr/images/aeropaperasse-logo-white.png" alt="Logo REM Distribution" class="logo">
+            <img src="https://app.aeropaperasse.fr/images/aeropaperasse-logo-white.png" alt="Logo Aéropaperasse" class="logo">
             <h1>Notification - Demande de Badge</h1>
         </div>
-        
+
         <div class="content">
             <p>Une demande de badge a été {{ $action }}.</p>
-            
+
             @if(isset($previous_status) && isset($current_status))
             <div class="status-change">
                 <p>Changement de statut :</p>
@@ -122,7 +122,7 @@
                 <p><strong>Nouveau statut :</strong> {{ $current_status }}</p>
             </div>
             @endif
-            
+
             <div class="info-section">
                 <div class="section-title">Informations du demandeur</div>
                 <div class="info-box">
@@ -144,11 +144,11 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
-        
+
         <div class="footer">
-            <p>© 2025 Rem Distribution. Tous droits réservés.</p>
+            <p>© 2025 Groupe REM. Tous droits réservés.</p>
             <p>Email système - Ne pas répondre</p>
         </div>
     </div>

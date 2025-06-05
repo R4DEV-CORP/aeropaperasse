@@ -71,23 +71,23 @@
             <img src="https://app.aeropaperasse.fr/images/aeropaperasse-logo-white.png" alt="Logo REM Distribution" class="logo">
             <h1>Votre demande de badge a été soumise</h1>
         </div>
-        
+
         <div class="content">
             <p><strong>Bonjour {{ $prenom }} {{ $nom }},</strong></p>
-            
+
             <p>Nous vous confirmons que votre demande de badge a bien été soumise et est en cours de traitement.</p>
-            
+
             <p>Vous recevrez des notifications par email à chaque étape importante du processus.</p>
-            
-           
-            
+
+
+
             <p>Pour toute question concernant votre demande, n'hésitez pas à nous contacter.</p>
-            
-            <p>Cordialement,<br>L'équipe Rem Distribution</p>
+
+            <p>Cordialement,<br>L'équipe Aéropaperasse</p>
         </div>
-        
+
         <div class="footer">
-            <p>© 2025 Rem Distribution. Tous droits réservés.</p>
+            <p>© 2025 Groupe REM. Tous droits réservés.</p>
             <p>Email système - Ne pas répondre</p>
         </div>
     </div>
