@@ -22,15 +22,23 @@ class BadgeStatusUpdated extends Mailable
 
     public function build()
     {
+        $data = [
+            'badge_number' => $this->badge->badge_number,
+            'nom' => $this->badge->badgeRequest->nom,
+            'prenom' => $this->badge->badgeRequest->prenom,
+            'previous_status' => $this->previousStatus,
+            'current_status' => $this->badge->status,
+            'expiry_date' => $this->badge->expiry_date,
+        ];
+
+        if ($this->badge->status === 'ready_for_delivery') {
+            return $this->view('emails.badge-request.ready-for-pickup')
+                        ->subject('Votre badge est prêt à être récupéré')
+                        ->with($data);
+        }
+
         return $this->view('emails.badge.status-updated')
                     ->subject('Statut du badge modifié')
-                    ->with([
-                        'badge_number' => $this->badge->badge_number,
-                        'nom' => $this->badge->badgeRequest->nom,
-                        'prenom' => $this->badge->badgeRequest->prenom,
-                        'previous_status' => $this->previousStatus,
-                        'current_status' => $this->badge->status,
-                        'expiry_date' => $this->badge->expiry_date,
-                    ]);
-    }
+                    ->with($data);
+}
 }

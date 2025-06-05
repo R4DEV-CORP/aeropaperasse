@@ -18,7 +18,7 @@ class BadgeRequestMailService
             // Envoyer un email au demandeur
             if($badgeRequest->status === 'draft'){
                 return true;
-            } 
+            }
             if ($badgeRequest->email) {
                 Mail::send('emails.badge-request.created', [
                     'badgeRequest' => $badgeRequest,
@@ -29,21 +29,21 @@ class BadgeRequestMailService
                     $message->subject('Votre demande de badge a été soumise');
                 });
             }
-            
+
             // Notifier les admins
             $this->notifyAdmins('emails.badge-request.admin-notification', [
                 'badgeRequest' => $badgeRequest,
                 'subject' => 'Nouvelle demande de badge soumise',
                 'action' => 'créée'
             ]);
-            
+
             return true;
         } catch (\Exception $e) {
             Log::error('Erreur lors de l\'envoi du mail de création de demande: ' . $e->getMessage());
             return false;
         }
     }
-    
+
     /**
      * Envoie un email lors du changement de statut d'une demande de badge
      */
@@ -62,7 +62,7 @@ class BadgeRequestMailService
     //                 $message->subject('Mise à jour de votre demande de badge');
     //             });
     //         }
-            
+
     //         // Notifier les admins
     //         $this->notifyAdmins('emails.badge-request.admin-notification', [
     //             'badgeRequest' => $badgeRequest,
@@ -71,7 +71,7 @@ class BadgeRequestMailService
     //             'previous_status' => $this->getStatusLabel($previousStatus),
     //             'current_status' => $this->getStatusLabel($badgeRequest->status)
     //         ]);
-            
+
     //         return true;
     //     } catch (\Exception $e) {
     //         Log::error('Erreur lors de l\'envoi du mail de mise à jour de statut: ' . $e->getMessage());
@@ -83,8 +83,8 @@ class BadgeRequestMailService
         try {
             // Envoyer un email au demandeur
             if ($badgeRequest->email) {
-                // Si le statut est "ready-for-pickup", utiliser le template spécifique
-                if ($badgeRequest->status === 'ready-for-pickup') {
+                // Si le statut est "ready-for-delivery", utiliser le template spécifique
+                if ($badgeRequest->status === 'ready_for_delivery') {
                     Mail::send('emails.badge-request.ready-for-pickup', [
                         'badgeRequest' => $badgeRequest,
                         'nom' => $badgeRequest->nom,
@@ -109,7 +109,7 @@ class BadgeRequestMailService
                     });
                 }
             }
-                
+
             // Notifier les admins
             /*$this->notifyAdmins('emails.badge-request.admin-notification', [
                 'badgeRequest' => $badgeRequest,
@@ -118,14 +118,14 @@ class BadgeRequestMailService
                 'previous_status' => $this->getStatusLabel($previousStatus),
                 'current_status' => $this->getStatusLabel($badgeRequest->status)
             ]);*/
-            
+
             return true;
         } catch (\Exception $e) {
             Log::error('Erreur lors de l\'envoi du mail de mise à jour de statut: ' . $e->getMessage());
             return false;
         }
     }
-    
+
     /**
      * Notifie les administrateurs par email
      */
@@ -136,21 +136,21 @@ class BadgeRequestMailService
             $admins = User::whereIn('role', ['admin', 'sadmin'])
                 ->whereNotNull('email')
                 ->get();
-                
+
             foreach ($admins as $admin) {
                 Mail::send($view, $data, function($message) use ($admin, $data) {
                     $message->to($admin->email);
                     $message->subject($data['subject']);
                 });
             }
-            
+
             return true;
         } catch (\Exception $e) {
             Log::error('Erreur lors de l\'envoi des notifications aux admins: ' . $e->getMessage());
             return false;
         }
     }
-    
+
     /**
      * Convertit le code de statut en libellé plus lisible
      */
@@ -163,9 +163,9 @@ class BadgeRequestMailService
             'approved_adp' => 'Approuvée par ADP',
             'rejected_adp' => 'Rejetée par ADP',
             'pending_fabrication' => 'En cours de fabrication',
-            'ready_for_delivery' => 'Prête à être remise'
+            'ready_for_delivery' => 'Prête à être remis'
         ];
-        
+
         return $labels[$status] ?? $status;
     }
 }
