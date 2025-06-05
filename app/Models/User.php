@@ -76,11 +76,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Conversation::class, 'created_by');
     }
-    
+
     public function trainings()
     {
         return $this->belongsToMany(Training::class, 'user_trainings')
                     ->withPivot(['id', 'started_at', 'expires_at', 'certificate_path'])
                     ->withTimestamps();
+    }
+
+    public function vehiclePasses()
+    {
+        return $this->hasMany(VehiclePass::class);
     }
 }

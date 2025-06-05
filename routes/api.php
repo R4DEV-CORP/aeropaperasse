@@ -91,6 +91,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/activity-requests', [ActivityRequestController::class, 'store']);
     Route::get('/activity-requests', [ActivityRequestController::class, 'index']);
 
+    // Vehicle Pass routes
+    Route::get('/vehicle-passes/drafts', [VehiclePassController::class, 'getDrafts']);
+    Route::post('/vehicle-passes/drafts', [VehiclePassController::class, 'storeDraft']);
+    Route::put('/vehicle-passes/drafts/{id}/submit', [VehiclePassController::class, 'submitDraft']);
+    Route::put('/vehicle-passes/{id}/status', [VehiclePassController::class, 'updateStatus']);
+    Route::post('/vehicle-passes', [VehiclePassController::class, 'store']);
+    Route::get('/vehicle-passes', [VehiclePassController::class, 'index']);
+
     // Comments Activity routes
     Route::get('activity-requests/{ActivityRequest}/comments', [ActivityCommentController::class, 'getComments']);
     Route::post('activity-comments', [ActivityCommentController::class, 'store']);
