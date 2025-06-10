@@ -12,16 +12,14 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientUserController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ConversationController;
-
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\MessageCommentController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ActivityRequestController;
 use App\Http\Controllers\BadgeController;
-
-
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\TrainingCatalogController;
+use App\Http\Controllers\VehiclePassController;
 
 
 // Routes publiques

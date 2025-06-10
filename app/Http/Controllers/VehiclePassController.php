@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use App\Models\VehiclePass;
 
 class VehiclePassController extends Controller
@@ -149,6 +150,8 @@ class VehiclePassController extends Controller
 
         $vehiclePass->status = $request->status;
 
+        $vehiclePass->save();
+
         return response()->json([
             'message' => 'Statut mis à jour avec succès',
             'request' => $vehiclePass->fresh()
@@ -284,11 +287,11 @@ class VehiclePassController extends Controller
             'adresse' => 'required|string|max:500',
             'code_postal' => 'required|string|max:10',
             'ville' => 'required|string|max:255',
-            'tampon_entreprise' => 'required|file|mimes:pdf,jpeg,png,jpg|max:2048',
+            'tampon_entreprise' => 'required|string',
             'aeroport' => 'required|string|in:CDG,ORLY,BOURGET',
             'immatriculation' => 'required|string|max:20',
             'marque_vehicule' => 'required|string|max:100',
-            'carte_grise_path' => 'required|file|mimes:pdf,jpeg,png,jpg|max:2048',
+            'carte_grise_path' => 'required|string',
         ]);
 
         if ($validator->fails()) {
