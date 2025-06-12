@@ -148,9 +148,15 @@ class VehiclePassController extends Controller
 
         $vehiclePass = VehiclePass::findOrFail($id);
 
-        $vehiclePass->status = $request->status;
+        $updateData = ['status' => $request->status];
 
-        $vehiclePass->save();
+        if ($request->status === 'approved') {
+            $updateData['approved_at'] = now();
+        } elseif ($request->status === 'rejected') {
+            $updateData['rejected_at'] = now();
+        }
+
+        $vehiclePass->update($updateData);
 
         return response()->json([
             'message' => 'Statut mis à jour avec succès',
@@ -183,7 +189,7 @@ class VehiclePassController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nom_entreprise' => 'nullable|string|max:255',
-            'siret' => 'nullable|string|size:14',
+            'siret' => 'nullable|string|max:14',
             'adresse' => 'nullable|string|max:500',
             'code_postal' => 'nullable|string|max:10',
             'ville' => 'nullable|string|max:255',
@@ -353,6 +359,54 @@ class VehiclePassController extends Controller
 
             return response()->json([
                 'message' => 'Erreur lors de la soumission de la demande',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function deleteDraft(Request $request, $id)
+    {
+        try {
+            $draft = VehiclePass::findOrFail($id);
+
+            if ($draft->status !== 'draft') {
+                return response()->json([
+                    'message' => 'Seuls les brouillons peuvent être supprimés'
+                ], 403);
+            }
+
+            // Vérifier les permissions:
+            // - L'utilisateur qui a créé le brouillon peut le supprimer
+            // - Les admin/sadmin peuvent supprimer n'importe quel brouillon
+            $user = $request->user();
+            if ($draft->user_id !== $user->id && !in_array($user->role, ['admin', 'sadmin'])) {
+                return response()->json([
+                    'message' => 'Vous n\'êtes pas autorisé à supprimer ce brouillon'
+                ], 403);
+            }
+
+            $fileFields = [
+                'tampon_entreprise',
+                'carte_grise_path'
+            ];
+
+            foreach ($fileFields as $field) {
+                if (!empty($draft->$field)) {
+                    Storage::disk('public')->delete($draft->$field);
+                }
+            }
+
+            $draft->delete();
+
+            return response()->json([
+                'message' => 'Brouillon supprimé avec succès'
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la suppression du brouillon: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Erreur lors de la suppression du brouillon',
                 'error' => $e->getMessage()
             ], 500);
         }

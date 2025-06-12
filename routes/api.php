@@ -20,6 +20,7 @@ use App\Http\Controllers\BadgeController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\TrainingCatalogController;
 use App\Http\Controllers\VehiclePassController;
+use App\Http\Controllers\VehiclePassCommentController;
 
 
 // Routes publiques
@@ -89,14 +90,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/activity-requests', [ActivityRequestController::class, 'store']);
     Route::get('/activity-requests', [ActivityRequestController::class, 'index']);
 
-    // Vehicle Pass routes
-    Route::get('/vehicle-passes/drafts', [VehiclePassController::class, 'getDrafts']);
-    Route::post('/vehicle-passes/drafts', [VehiclePassController::class, 'storeDraft']);
-    Route::put('/vehicle-passes/drafts/{id}/submit', [VehiclePassController::class, 'submitDraft']);
-    Route::put('/vehicle-passes/{id}/status', [VehiclePassController::class, 'updateStatus']);
-    Route::post('/vehicle-passes', [VehiclePassController::class, 'store']);
-    Route::get('/vehicle-passes', [VehiclePassController::class, 'index']);
-
     // Comments Activity routes
     Route::get('activity-requests/{ActivityRequest}/comments', [ActivityCommentController::class, 'getComments']);
     Route::post('activity-comments', [ActivityCommentController::class, 'store']);
@@ -107,6 +100,26 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('activity-comments/{comment}/replies', [ActivityCommentController::class, 'storeReply']);
     Route::put('replies/{reply}', [ActivityCommentController::class, 'updateReply']);
     Route::delete('replies/{reply}', [ActivityCommentController::class, 'destroyReply']);
+
+    // Vehicle Pass routes
+    Route::get('/vehicle-passes/drafts', [VehiclePassController::class, 'getDrafts']);
+    Route::post('/vehicle-passes/drafts', [VehiclePassController::class, 'storeDraft']);
+    Route::delete('/vehicle-passes/drafts/{id}', [VehiclePassController::class, 'deleteDraft']);
+    Route::put('/vehicle-passes/drafts/{id}/submit', [VehiclePassController::class, 'submitDraft']);
+    Route::put('/vehicle-passes/{id}/status', [VehiclePassController::class, 'updateStatus']);
+    Route::post('/vehicle-passes', [VehiclePassController::class, 'store']);
+    Route::get('/vehicle-passes', [VehiclePassController::class, 'index']);
+
+    // Comments Vehicle Pass routes
+    Route::get('vehicle-passes/{vehiclePass}/comments', [VehiclePassCommentController::class, 'getComments']);
+    Route::post('vehicle-pass-comments', [VehiclePassCommentController::class, 'store']);
+    Route::put('vehicle-pass-comments/{comment}', [VehiclePassCommentController::class, 'update']);
+    Route::delete('vehicle-pass-comments/{comment}', [VehiclePassCommentController::class, 'destroy']);
+
+    // Replies Vehicle Pass routes
+    Route::post('vehicle-pass-comments/{comment}/replies', [VehiclePassCommentController::class, 'storeReply']);
+    Route::put('vehicle-pass-replies/{reply}', [VehiclePassCommentController::class, 'updateReply']);
+    Route::delete('vehicle-pass-replies/{reply}', [VehiclePassCommentController::class, 'destroyReply']);
 
     // client
     Route::apiResource('user/badge-requests', BadgeRequestController::class); // ⚠️ Possibly breaking route ⚠️

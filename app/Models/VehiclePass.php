@@ -30,6 +30,9 @@ class VehiclePass extends Model
 
     protected $casts = [
         'aeroport' => 'string',
+        'draft_at' => 'datetime',
+        'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
     ];
 
     public function user()
