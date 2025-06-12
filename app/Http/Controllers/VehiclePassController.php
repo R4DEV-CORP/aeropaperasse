@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
 use App\Models\VehiclePass;
+use App\Models\User;
+use App\Mail\VehiclePassCreated;
+use App\Mail\VehiclePassStatusUpdated;
 
 class VehiclePassController extends Controller
 {
@@ -109,6 +113,8 @@ class VehiclePassController extends Controller
 
             $vehiclePass = VehiclePass::create($data);
 
+            $this->sendVehiclePassCreatedEmails($vehiclePass);
+
             return response()->json([
                 'message' => 'Demande de laisser-passer véhicule créée avec succès',
                 'vehicle_pass' => $vehiclePass
@@ -148,6 +154,8 @@ class VehiclePassController extends Controller
 
         $vehiclePass = VehiclePass::findOrFail($id);
 
+        $previousStatus = $vehiclePass->status;
+
         $updateData = ['status' => $request->status];
 
         if ($request->status === 'approved') {
@@ -157,6 +165,8 @@ class VehiclePassController extends Controller
         }
 
         $vehiclePass->update($updateData);
+
+        $this->sendStatusUpdateEmail($vehiclePass, $previousStatus);
 
         return response()->json([
             'message' => 'Statut mis à jour avec succès',
@@ -348,7 +358,7 @@ class VehiclePassController extends Controller
                 'draft_at' => null,
             ]);
 
-            // Envoi des notifications par mail
+            $this->sendVehiclePassCreatedEmails($draft->fresh());
 
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la soumission du brouillon de laisser-passer véhicule: ' . $e->getMessage(), [
@@ -409,6 +419,62 @@ class VehiclePassController extends Controller
                 'message' => 'Erreur lors de la suppression du brouillon',
                 'error' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Envoie les emails lors de la création d'une demande
+     */
+    private function sendVehiclePassCreatedEmails(VehiclePass $vehiclePass)
+    {
+        try {
+            // Email de confirmation à l'utilisateur
+            Mail::to($vehiclePass->user->email)
+                ->send(new VehiclePassCreated($vehiclePass, false));
+
+            // Email de notification aux admins
+            $adminUsers = User::whereIn('role', ['admin', 'sadmin'])->get();
+            foreach ($adminUsers as $admin) {
+                Mail::to($admin->email)
+                    ->send(new VehiclePassCreated($vehiclePass, true));
+            }
+
+            \Log::info('Emails de création de laisser-passer envoyés avec succès', [
+                'vehicle_pass_id' => $vehiclePass->id,
+                'user_email' => $vehiclePass->user->email,
+                'admin_count' => $adminUsers->count()
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de l\'envoi des emails de création de laisser-passer', [
+                'vehicle_pass_id' => $vehiclePass->id,
+                'error' => $e->getMessage()
+            ]);
+            // Ne pas faire échouer la création si l'email ne fonctionne pas
+        }
+    }
+
+    /**
+     * Envoie l'email de changement de statut
+     */
+    private function sendStatusUpdateEmail(VehiclePass $vehiclePass, string $previousStatus)
+    {
+        try {
+            Mail::to($vehiclePass->user->email)
+                ->send(new VehiclePassStatusUpdated($vehiclePass, $previousStatus));
+
+            \Log::info('Email de changement de statut envoyé avec succès', [
+                'vehicle_pass_id' => $vehiclePass->id,
+                'user_email' => $vehiclePass->user->email,
+                'previous_status' => $previousStatus,
+                'new_status' => $vehiclePass->status
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de l\'envoi de l\'email de changement de statut', [
+                'vehicle_pass_id' => $vehiclePass->id,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 }
