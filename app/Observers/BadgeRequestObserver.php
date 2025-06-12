@@ -51,8 +51,12 @@ class BadgeRequestObserver
     {
         // Vérifier si le statut a changé
         if (isset($badgeRequest->previous_status) && $badgeRequest->previous_status !== $badgeRequest->status) {
-            // Envoyer l'email de changement de statut
-            $this->badgeRequestMailService->sendStatusUpdateMail($badgeRequest, $badgeRequest->previous_status);
+            if ($badgeRequest->status === 'ready_for_delivery') {
+                $this->badgeMailService->sendBadgeRequestStatusMail($badgeRequest, $badgeRequest->previous_status);
+
+            } else {
+                $this->badgeRequestMailService->sendStatusUpdateMail($badgeRequest, $badgeRequest->previous_status);
+            }
         }
     }
 }
