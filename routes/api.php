@@ -54,6 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Client route
     Route::get('/user/client', [AuthController::class, 'client']);
     Route::get('/clients', [ClientController::class, 'all']);
+    Route::get('/clients/{client}/quota', [ClientController::class, 'getQuotaInfo']);
 
     // Facilitation de l'accès aux fichiers pour téléchargement en ZIP
     Route::get('/file/{path}', function (Request $request, $path) {
@@ -136,7 +137,6 @@ Route::middleware(['auth:sanctum', 'role:admin,sadmin'])->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('clients', ClientController::class);
     Route::get('/clients/{client}/document', [ClientController::class, 'downloadDocument']);
-    Route::post('/trainings/sync-catalog', [TrainingCatalogController::class, 'sync']); // Actualisation manuelle du catalogue de formations
 });
 Route::middleware(['auth:sanctum', 'role:sclient'])->group(function () {
     Route::get('/client-users', [ClientUserController::class, 'index']);
