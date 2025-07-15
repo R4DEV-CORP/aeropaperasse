@@ -15,12 +15,14 @@ class UserTraining extends Model
         'training_id',
         'started_at',
         'expires_at',
-        'certificate_path'
+        'certificate_path',
+        'validity_years'
     ];
 
     protected $casts = [
         'started_at' => 'datetime',
         'expires_at' => 'datetime',
+        'validity_years' => 'integer'
     ];
 
     public function user(): BelongsTo

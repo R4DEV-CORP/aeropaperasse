@@ -21,7 +21,7 @@ class TrainingController extends Controller
     {
         try {
             $clients = Client::with(['users'])->get();
-            
+
             $stats = [
                 'totalClients' => $clients->count(),
                 'totalUtilisateurs' => User::count(),
@@ -69,21 +69,21 @@ class TrainingController extends Controller
         try {
             $client = Client::with(['users' => function($query) {
                 $query->with(['trainings' => function($q) {
-                    $q->withPivot(['started_at', 'expires_at', 'certificate_path'])
+                    $q->withPivot(['started_at', 'expires_at', 'certificate_path', 'validity_years'])
                     ->orderBy('user_trainings.expires_at', 'desc');
                 }]);
             }])->findOrFail($clientId);
-    
+
             $expiresSoon = UserTraining::whereHas('user', function($query) use ($clientId) {
                 $query->where('client_id', $clientId);
             })
             ->whereNotNull('expires_at')
             ->where('expires_at', '<=', now()->addMonth())
             ->count();
-    
+
             $userData = $client->users->map(function ($user) {
                 $latestTraining = $user->trainings->first();
-                
+
                 return [
                     'id' => $user->id,
                     'nom' => $user->name,
@@ -93,7 +93,7 @@ class TrainingController extends Controller
                     'dateExpiration' => $latestTraining ? $latestTraining->pivot->expires_at : null
                 ];
             });
-    
+
             return response()->json([
                 'status' => 'success',
                 'client' => [
@@ -119,10 +119,8 @@ class TrainingController extends Controller
     {
         try {
             $user = User::with(['trainings' => function($query) {
-                $query->withPivot(['id', 'started_at', 'expires_at', 'certificate_path']);
+                $query->withPivot(['id', 'started_at', 'expires_at', 'certificate_path', 'validity_years']);
             }])->findOrFail($id);
-
-            // $user = User::with(['trainings'])->findOrFail($id);
 
             $latestBadgeRequest = BadgeRequest::where('user_id', $id)
                 ->orderBy('created_at', 'desc')
@@ -130,16 +128,12 @@ class TrainingController extends Controller
 
             $trainings = $user->trainings->map(function ($training) {
                 $hasCertificate = !empty($training->pivot->certificate_path);
-    
+
                 return [
                     'id' => $training->id,
                     'userTrainingId' => $training->pivot->id,
                     'title' => $training->title,
-                    'short_title' => $training->short_title,
-                    'dendreo_id' => $training->dendreo_id,
-                    'validity_duration' => $training->validity_duration,
-                    'duration_days' => $training->duration_days,
-                    'category' => $training->category,
+                    'validity_years' => $training->pivot->validity_years,
                     'started_at' => $training->pivot->started_at,
                     'expires_at' => $training->pivot->expires_at,
                     'certificate' => [
@@ -180,21 +174,19 @@ class TrainingController extends Controller
                 'user_id' => 'required|exists:users,id',
                 'training_id' => 'required|exists:trainings,id',
                 'started_at' => 'required|date',
+                'validity_years' => 'required|in:3,5'
             ]);
 
-            $training = Training::findOrFail($validatedData['training_id']);
-        
             // Calcul de la date d'expiration
             $startDate = Carbon::parse($validatedData['started_at']);
-            $expirationDate = $startDate
-                ->addDays($training->duration_days ?? 0)
-                ->addDays($training->validity_duration ?? 0);
+            $expirationDate = $startDate->copy()->addYears($validatedData['validity_years']);
 
             $userTraining = UserTraining::create([
                 'user_id' => $validatedData['user_id'],
                 'training_id' => $validatedData['training_id'],
                 'started_at' => $validatedData['started_at'],
                 'expires_at' => $expirationDate,
+                'validity_years' => $validatedData['validity_years']
             ]);
 
             return response()->json([
@@ -223,15 +215,15 @@ class TrainingController extends Controller
         try {
            $userTraining = UserTraining::with(['user', 'training'])
                 ->find($userTrainingId);
-            
+
             if (!$userTraining) {
                 return response()->json([
                     'message' => 'La formation utilisateur avec ID ' . $userTrainingId . ' n\'existe pas'
                 ], 404);
             }
-            
+
             $validator = Validator::make($request->all(), [
-                'certificate' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048', 
+                'certificate' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
             ]);
 
             if ($validator->fails()) {
@@ -247,7 +239,7 @@ class TrainingController extends Controller
             $userTraining->update([
                 'certificate_path' => $path
             ]);
-        
+
             return response()->json([
                 'message' => 'Certificat uploadé avec succès',
                 'certificate' => [
@@ -257,7 +249,7 @@ class TrainingController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
-          
+
             Log::error('Erreur lors de l\'upload du certificat: ' . $e->getMessage());
 
             return response()->json([
@@ -282,13 +274,13 @@ class TrainingController extends Controller
 
             $training = $userTraining->training;
             $user = $userTraining->user;
-            
+
             $certificatePath = $userTraining->certificate_path;
-            
+
             return response()->json([
                 'success' => true,
                 'path' => $certificatePath,
-                'filename' => "certificat_{$training->short_title}_{$user->name}.pdf"
+                'filename' => "certificat_{$training->title}_{$user->name}.pdf"
             ]);
         } catch (\Exception $e) {
             return response()->json([
