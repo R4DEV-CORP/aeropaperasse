@@ -21,8 +21,9 @@ class Client extends Model
         'security_document',
         'kbis_document',
         'hr_contact_name', 'hr_contact_email', 'hr_contact_phone',
+        'notification_email',
         'badge_limit',
-        'vehicle_pass_limit',
+        'vehicle_pass_limit'
     ];
 
     protected $casts = [
