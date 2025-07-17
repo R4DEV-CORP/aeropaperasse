@@ -31,6 +31,10 @@
             font-size: 24px;
             font-weight: 600;
         }
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
         .content {
             padding: 30px;
             color: #374151;
@@ -79,13 +83,22 @@
         }
         .button {
             display: inline-block;
-            background-color: #1f2936;
-            color: #ffffff;
+            background-color: #2563eb;
+            color: #ffffff !important;
             padding: 12px 24px;
             text-decoration: none;
             border-radius: 6px;
             margin-top: 20px;
             font-weight: 600;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #1e3a8a;
+        }
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
         }
         @media only screen and (max-width: 600px) {
             .container {
@@ -101,12 +114,12 @@
             <img src="https://app.aeropaperasse.fr/images/aeropaperasse-logo-white.png" alt="Logo" class="logo">
             <h1>Bienvenue sur notre plateforme</h1>
         </div>
-        
+
         <div class="content">
             <p>Bonjour {{ $user->name }},</p>
-            
+
             <p>Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter à notre plateforme.</p>
-            
+
             <div class="info-section">
                 <div class="section-title">Vos identifiants</div>
                 <div class="info-box">
@@ -138,8 +151,12 @@
                     </div>
                 </div>
             </div>
+
+            <div class="button-container">
+                <a href="https://app.aeropaperasse.fr/login" class="button">Se connecter à Aéropaperasse</a>
+            </div>
         </div>
-        
+
         <div class="footer">
             <p>© 2025 Rem Distribution. Tous droits réservés.</p>
             <p>Email système - Ne pas répondre</p>

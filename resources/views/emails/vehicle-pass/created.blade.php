@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notification demande de badge</title>
+    <title>Votre demande de laisser-passer véhicule a été soumise</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,9 +45,6 @@
             padding: 20px;
             margin: 20px 0;
         }
-        .info-section {
-            margin-bottom: 20px;
-        }
         .info-item {
             margin-bottom: 10px;
             border-bottom: 1px solid #e5e7eb;
@@ -57,14 +54,6 @@
             border-bottom: none;
             margin-bottom: 0;
             padding-bottom: 0;
-        }
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1f2936;
-            margin-bottom: 15px;
-            padding-bottom: 5px;
-            border-bottom: 2px solid #1f2936;
         }
         .label {
             font-weight: 600;
@@ -81,22 +70,6 @@
             font-size: 14px;
             border-top: 1px solid #e5e7eb;
         }
-        .button {
-            display: inline-block;
-            background-color: #1f2936;
-            color: #ffffff;
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 6px;
-            margin-top: 20px;
-            font-weight: 600;
-        }
-        .status-change {
-            background-color: #f3f4f6;
-            border-radius: 6px;
-            padding: 15px;
-            margin: 15px 0;
-        }
         @media only screen and (max-width: 600px) {
             .container {
                 margin: 0;
@@ -109,42 +82,38 @@
     <div class="container">
         <div class="header">
             <img src="https://app.aeropaperasse.fr/images/aeropaperasse-logo-white.png" alt="Logo Aéropaperasse" class="logo">
-            <h1>Notification - Demande de Badge</h1>
+            <h1>Votre demande de laisser-passer véhicule a été soumise</h1>
         </div>
 
         <div class="content">
-            <p>Une demande de badge a été {{ $action }}.</p>
+            <p><strong>Bonjour {{ $vehiclePass->user->name }},</strong></p>
 
-            @if(isset($previous_status) && isset($current_status))
-            <div class="status-change">
-                <p>Changement de statut :</p>
-                <p><strong>Ancien statut :</strong> {{ $previous_status }}</p>
-                <p><strong>Nouveau statut :</strong> {{ $current_status }}</p>
-            </div>
-            @endif
+            <p>Nous vous confirmons que votre demande de laisser-passer véhicule a bien été soumise et est en cours de traitement.</p>
 
-            <div class="info-section">
-                <div class="section-title">Informations du demandeur</div>
-                <div class="info-box">
-                    <div class="info-item">
-                        <span class="label">Nom :</span><br>
-                        <span class="value">{{ $badgeRequest->nom }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="label">Prénom :</span><br>
-                        <span class="value">{{ $badgeRequest->prenom }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="label">Email :</span><br>
-                        <span class="value">{{ $badgeRequest->email }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="label">Téléphone :</span><br>
-                        <span class="value">{{ $badgeRequest->telephone }}</span>
-                    </div>
+            <div class="info-box">
+                <div class="info-item">
+                    <span class="label">Immatriculation :</span><br>
+                    <span class="value">{{ $immatriculation }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Aéroport :</span><br>
+                    <span class="value">{{ $aeroport }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Entreprise :</span><br>
+                    <span class="value">{{ $nom_entreprise }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Marque du véhicule :</span><br>
+                    <span class="value">{{ $marque_vehicule }}</span>
                 </div>
             </div>
 
+            <p>Vous recevrez des notifications par email à chaque étape importante du processus.</p>
+
+            <p>Pour toute question concernant votre demande, n'hésitez pas à nous contacter.</p>
+
+            <p>Cordialement,<br>L'équipe Aéropaperasse</p>
         </div>
 
         <div class="footer">

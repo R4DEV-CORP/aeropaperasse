@@ -31,6 +31,10 @@
             font-size: 24px;
             font-weight: 600;
         }
+        .logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
         .content {
             padding: 30px;
             color: #374151;
@@ -106,60 +110,28 @@
         <img src="https://app.aeropaperasse.fr/images/aeropaperasse-logo-white.png" alt="Logo" class="logo">
             <h1>Votre badge est prêt à être remis</h1>
         </div>
-        
+
         <div class="content">
             <p><strong>Bonjour {{ $nom }},</strong></p>
-            
-            <p>Votre badge est maintenant <span class="highlight">prêt à être remis</span>. Vous pouvez venir le récupérer au BLS :</p>
-            
-            <div class="info-box">
-                <p><strong>Adresse du BLS:</strong> 5740 Rue de l'Archet Bâtiment, 95700 Roissy-en-France</p>
-                
-                <p><strong>Horaires du BLS:</strong></p>
-                
-                <table class="schedule">
-                    <tr>
-                        <td class="day open">lundi</td>
-                        <td class="hours open">08:30-12:30</td>
-                    </tr>
-                    <tr>
-                        <td class="day open">mardi</td>
-                        <td class="hours open">08:30-12:30</td>
-                    </tr>
-                    <tr>
-                        <td class="day">mercredi</td>
-                        <td class="hours">08:30-12:30</td>
-                    </tr>
-                    <tr>
-                        <td class="day">jeudi</td>
-                        <td class="hours">08:30-12:30</td>
-                    </tr>
-                    <tr>
-                        <td class="day">vendredi</td>
-                        <td class="hours">08:30-12:30</td>
-                    </tr>
-                    <tr>
-                        <td class="day closed">samedi</td>
-                        <td class="hours closed">Fermé</td>
-                    </tr>
-                    <tr>
-                        <td class="day closed">dimanche</td>
-                        <td class="hours closed">Fermé</td>
-                    </tr>
-                </table>
-            </div>
-            
-            <p>Merci de vous munir d'une pièce d'identité lors du retrait.</p>
-            
-            <div class="warning">
-                <p>Attention, un badge est personnel et ne peut être remis uniquement à la personne concernée.</p>
-            </div>
-            
+
+            <p>Bonne nouvelle, votre badge d’accès (TCA) est prêt à être récupéré !</p>
+
+            <p>Vous pouvez venir le retirer <span class="highlight">au BLS (Bureau des Licences et Sûreté), du lundi au vendredi entre 8h et 12h.<span></p>
+
+            <p>Quelques points importants à retenir :</p>
+
+            <ul>
+              <li>Il est strictement personnel (ne jamais le prêter).</li>
+              <li>En cas de perte, vol ou dysfonctionnement, prévenez-nous tout de suite.</li>
+              <li>Il devra être restitué en cas de fin de mission, de changement de fonction ou sur demande.</li>
+            </ul>
+
+            <p>Merci de respecter ces consignes, elles sont là pour garantir la sécurité de tous.</p>
+
             <p>Si vous avez des questions, n'hésitez pas à nous contacter.</p>
-            
-           
+
         </div>
-        
+
         <div class="footer">
             <p>© 2025 Rem Distribution. Tous droits réservés.</p>
             <p>Email système - Ne pas répondre</p>

@@ -12,16 +12,15 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientUserController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ConversationController;
-
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\MessageCommentController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ActivityRequestController;
 use App\Http\Controllers\BadgeController;
-
-
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\TrainingCatalogController;
+use App\Http\Controllers\VehiclePassController;
+use App\Http\Controllers\VehiclePassCommentController;
 
 
 // Routes publiques
@@ -35,6 +34,11 @@ Route::get('/documents/{filename}', function ($filename) {
     }
     return response()->download($path);
 });
+
+// Routes pour la réinitialisation de mot de passe
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/check-reset-token', [AuthController::class, 'checkResetToken']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 // Routes protégées
 Route::middleware('auth:sanctum')->group(function () {
@@ -50,19 +54,20 @@ Route::middleware('auth:sanctum')->group(function () {
     // Client route
     Route::get('/user/client', [AuthController::class, 'client']);
     Route::get('/clients', [ClientController::class, 'all']);
+    Route::get('/clients/{client}/quota', [ClientController::class, 'getQuotaInfo']);
 
     // Facilitation de l'accès aux fichiers pour téléchargement en ZIP
     Route::get('/file/{path}', function (Request $request, $path) {
         $path = str_replace('__', '/', $path);
-        
+
         if (Storage::disk('public')->exists($path)) {
             return response()->file(storage_path('app/public/' . $path));
         }
-        
+
         return response()->json(['error' => 'Fichier introuvable'], 404);
     })->where('path', '.*');
-    
-    
+
+
     // Badge requests + drafts routes
     Route::get('/badge-requests/drafts', [BadgeRequestController::class, 'getDrafts']);
     Route::post('/badge-requests/drafts', [BadgeRequestController::class, 'storeDraft']);
@@ -97,8 +102,28 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('replies/{reply}', [ActivityCommentController::class, 'updateReply']);
     Route::delete('replies/{reply}', [ActivityCommentController::class, 'destroyReply']);
 
-    //client
-    Route::apiResource('user/badge-requests', BadgeRequestController::class);
+    // Vehicle Pass routes
+    Route::get('/vehicle-passes/drafts', [VehiclePassController::class, 'getDrafts']);
+    Route::post('/vehicle-passes/drafts', [VehiclePassController::class, 'storeDraft']);
+    Route::delete('/vehicle-passes/drafts/{id}', [VehiclePassController::class, 'deleteDraft']);
+    Route::put('/vehicle-passes/drafts/{id}/submit', [VehiclePassController::class, 'submitDraft']);
+    Route::put('/vehicle-passes/{id}/status', [VehiclePassController::class, 'updateStatus']);
+    Route::post('/vehicle-passes', [VehiclePassController::class, 'store']);
+    Route::get('/vehicle-passes', [VehiclePassController::class, 'index']);
+
+    // Comments Vehicle Pass routes
+    Route::get('vehicle-passes/{vehiclePass}/comments', [VehiclePassCommentController::class, 'getComments']);
+    Route::post('vehicle-pass-comments', [VehiclePassCommentController::class, 'store']);
+    Route::put('vehicle-pass-comments/{comment}', [VehiclePassCommentController::class, 'update']);
+    Route::delete('vehicle-pass-comments/{comment}', [VehiclePassCommentController::class, 'destroy']);
+
+    // Replies Vehicle Pass routes
+    Route::post('vehicle-pass-comments/{comment}/replies', [VehiclePassCommentController::class, 'storeReply']);
+    Route::put('vehicle-pass-replies/{reply}', [VehiclePassCommentController::class, 'updateReply']);
+    Route::delete('vehicle-pass-replies/{reply}', [VehiclePassCommentController::class, 'destroyReply']);
+
+    // client
+    Route::apiResource('user/badge-requests', BadgeRequestController::class); // ⚠️ Possibly breaking route ⚠️
 
     // Replies routes
     Route::post('comments/{comment}/replies', [CommentController::class, 'storeReply']);
@@ -112,7 +137,6 @@ Route::middleware(['auth:sanctum', 'role:admin,sadmin'])->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('clients', ClientController::class);
     Route::get('/clients/{client}/document', [ClientController::class, 'downloadDocument']);
-    Route::post('/trainings/sync-catalog', [TrainingCatalogController::class, 'sync']); // Actualisation manuelle du catalogue de formations
 });
 Route::middleware(['auth:sanctum', 'role:sclient'])->group(function () {
     Route::get('/client-users', [ClientUserController::class, 'index']);

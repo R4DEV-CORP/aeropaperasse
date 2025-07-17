@@ -16,8 +16,13 @@ class ClientController extends Controller
     public function all()
     {
         try {
-            $clients = Client::all();
-            return response()->json($clients); // Retourne directement le tableau
+            $clients = Client::all()->map(function ($client) {
+                // Forcer le calcul ET l'ajout des attributs à la réponse JSON
+                $client->append(['active_badges_count', 'active_vehicle_passes_count']);
+                return $client;
+            });
+
+            return response()->json($clients);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -67,6 +72,9 @@ class ClientController extends Controller
             'hr_contact_name' => 'required|string|max:255',
             'hr_contact_email' => 'required|email|max:255',
             'hr_contact_phone' => 'required|string|max:255',
+
+            'badge_limit' => 'required|integer|min:1|max:1000',
+            'vehicle_pass_limit' => 'required|integer|min:1|max:1000',
         ]);
 
         try {
@@ -76,17 +84,17 @@ class ClientController extends Controller
                 'security_document',
                 'kbis_document'
             ]);
-    
+
             if ($request->hasFile('safety_document')) {
                 $path = $request->file('safety_document')->store('client_documents/safety_referents', 'public');
                 $clientData['safety_document'] = $path;
             }
-            
+
             if ($request->hasFile('security_document')) {
                 $path = $request->file('security_document')->store('client_documents/security_correspondents', 'public');
                 $clientData['security_document'] = $path;
             }
-    
+
             if ($request->hasFile('kbis_document')) {
                 $path = $request->file('kbis_document')->store('client_documents/kbis', 'public');
                 $clientData['kbis_document'] = $path;
@@ -125,14 +133,17 @@ class ClientController extends Controller
             'security_document' => $client->security_document ? 'nullable|file|mimes:pdf|max:2048' : 'required|file|mimes:pdf|max:2048',
 
             'kbis_document' => $client->kbis_document ? 'nullable|file|mimes:pdf|max:2048' : 'required|file|mimes:pdf|max:2048',
-            
+
             'hr_contact_name' => 'required|string|max:255',
             'hr_contact_email' => 'required|email|max:255',
             'hr_contact_phone' => 'required|string|max:255',
+
+            'badge_limit' => 'required|integer|min:1|max:1000',
+            'vehicle_pass_limit' => 'required|integer|min:1|max:1000',
         ]);
 
         try {
-            
+
             $clientData = $request->except([
                 'safety_document',
                 'security_document',
@@ -146,7 +157,7 @@ class ClientController extends Controller
                 $path = $request->file('safety_document')->store('client_documents/safety_referents', 'public');
                 $clientData['safety_document'] = $path;
             }
-            
+
             if ($request->hasFile('security_document')) {
                 if ($client->security_document) {
                     Storage::disk('public')->delete($client->security_document);
@@ -162,7 +173,7 @@ class ClientController extends Controller
                 $path = $request->file('kbis_document')->store('client_documents/kbis', 'public');
                 $clientData['kbis_document'] = $path;
             }
-    
+
 
 
             $client->update($clientData);
@@ -198,10 +209,10 @@ class ClientController extends Controller
     public function downloadDocument(Request $request, Client $client)
     {
         $documentType = $request->input('type');
-        
+
         $documentPath = null;
         $fileName = "";
-    
+
         if ($documentType === 'safety_document') {
             $documentPath = $client->safety_document;
             $fileName = "referent_surete_{$client->name}.pdf";
@@ -212,20 +223,51 @@ class ClientController extends Controller
             $documentPath = $client->kbis_document;
             $fileName = "kbis_{$client->name}.pdf";
         }
-        
+
         if (!$documentPath) {
             return response()->json(['success' => false, 'message' => 'Document non défini'], 404);
         }
-        
+
         if (!Storage::disk('public')->exists($documentPath)) {
             return response()->json(['success' => false, 'message' => "Document non trouvé: {$documentPath}"], 404);
         }
-        
+
         return response()->json([
             'success' => true,
             'path' => $documentPath,
             'url' => Storage::disk('public')->url($documentPath),
             'filename' => $fileName
         ]);
+    }
+
+    public function getQuotaInfo(Client $client)
+    {
+        try {
+            $badgeInfo = [
+                'used' => $client->active_badges_count,
+                'total' => $client->badge_limit,
+                'remaining' => max(0, $client->badge_limit - $client->active_badges_count),
+                'percentage' => $client->badge_limit > 0 ? round(($client->active_badges_count / $client->badge_limit) * 100, 1) : 0,
+                'can_create' => $client->canCreateBadge()
+            ];
+
+            $vehiclePassInfo = [
+                'used' => $client->active_vehicle_passes_count,
+                'total' => $client->vehicle_pass_limit,
+                'remaining' => max(0, $client->vehicle_pass_limit - $client->active_vehicle_passes_count),
+                'percentage' => $client->vehicle_pass_limit > 0 ? round(($client->active_vehicle_passes_count / $client->vehicle_pass_limit) * 100, 1) : 0,
+                'can_create' => $client->canCreateVehiclePass()
+            ];
+
+            return response()->json([
+                'badge_quota' => $badgeInfo,
+                'vehicle_pass_quota' => $vehiclePassInfo
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erreur lors de la récupération des quotas',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }
