@@ -421,4 +421,89 @@ class ActivityRequestController extends Controller
             ], 500);
         }
     }
+
+    public function renewRequest(Request $request, $id)
+    {
+        \Log::info('=== DÉBUT renewRequest ===', [
+            'id' => $id,
+            'method' => $request->method(),
+            'url' => $request->url(),
+            'user_id' => auth()->id()
+        ]);
+        try {
+            $originalRequest = ActivityRequest::findOrFail($id);
+
+            if ($originalRequest->status !== 'approved') {
+                return response()->json([
+                    'message' => 'Seules les demandes approuvées peuvent être renouvelées'
+                ], 400);
+            }
+
+            $renewalData = $originalRequest->toArray();
+
+            // Supprimer les champs qu'on ne veut pas copier
+            unset($renewalData['id']);
+            unset($renewalData['created_at']);
+            unset($renewalData['updated_at']);
+            unset($renewalData['pending_at']);
+            unset($renewalData['approved_at']);
+            unset($renewalData['rejected_at']);
+            unset($renewalData['draft_at']);
+
+            // Modifier les champs pour le renouvellement
+            $renewalData['status'] = 'pending';
+            $renewalData['pending_at'] = now();
+            $renewalData['renouvellement'] = true;
+            $renewalData['autorisation_anterieur'] = (string) $originalRequest->id;
+            $renewalData['user_id'] = auth()->id();
+            $renewalData['created_by'] = auth()->id();
+
+            \Log::info('Données de renouvellement préparées', $renewalData);
+
+            // Copier les fichiers avant de créer la demande
+            $fileFields = [
+                'extrait_kbis_path',
+                'attestations_clients_path',
+                'formulaire_surete_path',
+                'agrement_prefectoral_path',
+                'contrat_iata_path',
+                'cta_path'
+            ];
+
+            foreach ($fileFields as $field) {
+                if ($renewalData[$field]) {
+                    $originalPath = $renewalData[$field];
+
+                    if (Storage::disk('public')->exists($originalPath)) {
+                        // Créer un nouveau nom de fichier
+                        $pathInfo = pathinfo($originalPath);
+                        $newFileName = $pathInfo['filename'] . '_copy_' . time() . '.' . $pathInfo['extension'];
+                        $newPath = $pathInfo['dirname'] . '/' . $newFileName;
+
+                        // Copier le fichier
+                        Storage::disk('public')->copy($originalPath, $newPath);
+                        $renewalData[$field] = $newPath;
+                    } else {
+                        // Fichier introuvable : supprimer le chemin
+                        $renewalData[$field] = null;
+                    }
+                }
+            }
+
+            $newRequest = ActivityRequest::create($renewalData);
+
+            return response()->json([
+                'message' => 'Demande renouvelée avec succès',
+                'request' => $newRequest
+            ], 201);
+
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors du renouvellement: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Erreur lors du renouvellement de la demande',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

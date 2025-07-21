@@ -88,6 +88,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/activity-requests/drafts', [ActivityRequestController::class, 'storeDraft']);
     Route::put('/activity-requests/drafts/{id}/submit', [ActivityRequestController::class, 'submitDraft']);
     Route::put('/activity-requests/{id}/status', [ActivityRequestController::class, 'updateStatus']);
+    Route::post('/activity-requests/{id}/renew', [ActivityRequestController::class, 'renewRequest']);
     Route::post('/activity-requests', [ActivityRequestController::class, 'store']);
     Route::get('/activity-requests', [ActivityRequestController::class, 'index']);
 
