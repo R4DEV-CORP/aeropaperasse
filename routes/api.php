@@ -188,9 +188,11 @@ Route::middleware(['auth:sanctum', 'training.access'])->group(function () {
 // routes/api.php
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/badges', [BadgeController::class, 'index']);
+    Route::post('/badges/import', [BadgeController::class, 'import']);
     Route::post('/badges', [BadgeController::class, 'store']);
     Route::get('/badges/{badge}', [BadgeController::class, 'show']);
     Route::post('/badges/{badge}/return', [BadgeController::class, 'return']);
+    Route::put('/badges/{badge}/expiry-date', [BadgeController::class, 'updateExpiryDate']);
     // Route pour la vérification des badges expirés (à protéger selon vos besoins)
     Route::post('/badges/check-expired', [BadgeController::class, 'checkExpiredBadges']);
 

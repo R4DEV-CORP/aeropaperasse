@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BadgeRequest;
 use App\Models\User;
 use App\Models\Client;
+use App\Models\Badge;
 use App\Http\Controllers\BadgeRequestRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -221,6 +222,42 @@ class BadgeRequestController extends Controller
         }
     }
 
+    // public function updateStatus(Request $request, $id)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'status' => 'required|in:pending_rem,rejected_rem,pending_adp,approved_adp,rejected_adp,pending_fabrication,ready_for_delivery',
+    //         'reject_reason' => 'nullable|string|max:500',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         \Log::error('Validation échouée:', $validator->errors()->toArray());
+    //         return response()->json(['errors' => $validator->errors()], 422);
+    //     }
+
+    //     $badgeRequest = BadgeRequest::findOrFail($id);
+
+    //     $badgeRequest->status = $request->status;
+
+    //     if ($request->has('reject_reason') && in_array($request->status, ['rejected_rem', 'rejected_adp'])) {
+    //         $badgeRequest->reject_reason = $request->reject_reason;
+    //     } else {
+    //         \Log::info('Aucun motif de rejet trouvé ou conditions non remplies', [
+    //             'has_reject_reason' => $request->has('reject_reason'),
+    //             'status' => $request->status
+    //         ]);
+    //     }
+
+    //     $timestampField = $request->status . '_at';
+    //     $badgeRequest->$timestampField = now();
+
+    //     $badgeRequest->save();
+
+    //     return response()->json([
+    //         'message' => 'Statut mis à jour avec succès',
+    //         'request' => $badgeRequest->fresh()
+    //     ]);
+    // }
+
     public function updateStatus(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -250,6 +287,23 @@ class BadgeRequestController extends Controller
         $badgeRequest->$timestampField = now();
 
         $badgeRequest->save();
+
+        if ($request->status === 'ready_for_delivery') {
+            // Vérifier qu'il n'y a pas déjà un badge pour cette demande
+            $existingBadge = Badge::where('badge_request_id', $badgeRequest->id)->first();
+
+            if (!$existingBadge) {
+                Badge::create([
+                    'badge_request_id' => $badgeRequest->id,
+                    'status' => 'active',
+                    'expiry_date' => null, // Sera renseigné plus tard
+                ]);
+
+                \Log::info("Badge créé automatiquement pour la demande {$badgeRequest->id}");
+            } else {
+                \Log::info("Badge déjà existant pour la demande {$badgeRequest->id}");
+            }
+        }
 
         return response()->json([
             'message' => 'Statut mis à jour avec succès',
