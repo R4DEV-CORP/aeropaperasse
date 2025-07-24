@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Client;
+use App\Models\ActivityRequest;
 use Illuminate\Support\Facades\Storage;
 
 class ClientController extends Controller
@@ -266,6 +267,205 @@ class ClientController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erreur lors de la récupération des quotas',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function show($id)
+    {
+        try {
+            $user = auth()->user();
+            $clientId = (int) $id;
+
+            // Vérification des droits d'accès
+            $isAdmin = $user->role === 'sadmin' || $user->role === 'admin';
+            if (!$isAdmin && $user->client_id !== $clientId) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            // Récupération du client
+            $client = Client::findOrFail($clientId);
+
+            // Récupération de la dernière demande d'activité approuvée
+            $activityRequest = ActivityRequest::whereHas('user', function($query) use ($clientId) {
+                $query->where('client_id', $clientId);
+            })->where('status', 'approved')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+            // Compilation des données (priorité aux données Client, fallback sur ActivityRequest)
+            $data = [
+                // Infos de base
+                'id' => $client->id,
+                'name' => $client->name,
+                'badge_limit' => $client->badge_limit,
+                'vehicle_pass_limit' => $client->vehicle_pass_limit,
+
+                // Informations société (priorité Client)
+                'raison_sociale' => $client->raison_sociale ?: ($activityRequest ? $activityRequest->raison_sociale : $client->name),
+                'nom_commercial' => $client->nom_commercial ?: ($activityRequest ? $activityRequest->nom_commercial : null),
+                'siret' => $client->siret ?: ($activityRequest ? $activityRequest->siret : null),
+                'adresse' => $client->adresse ?: ($activityRequest ? $activityRequest->adresse : null),
+                'code_postal' => $client->code_postal,
+                'ville' => $client->ville,
+                'numero_identification' => $client->numero_identification,
+
+                // Responsable principal (priorité Client)
+                'responsable_nom' => $client->responsable_nom ?: ($activityRequest ? $activityRequest->responsable_nom : null),
+                'responsable_prenom' => $client->responsable_prenom ?: ($activityRequest ? $activityRequest->responsable_prenom : null),
+                'responsable_email' => $client->responsable_email ?: ($activityRequest ? $activityRequest->responsable_email : null),
+                'responsable_telephone' => $client->responsable_telephone ?: ($activityRequest ? $activityRequest->responsable_telephone : null),
+                'responsable_fonction' => $client->responsable_fonction ?: ($activityRequest ? $activityRequest->responsable_fonction : null),
+
+                // Activité
+                'activite_description' => $client->activite_description ?: ($activityRequest ? $activityRequest->activite_description : null),
+                'nombre_demandes_activite' => $client->nombre_demandes_activite,
+                'numeros_demandes_activite' => $client->numeros_demandes_activite,
+                'date_debut_validite' => $client->date_debut_validite,
+                'date_fin_validite' => $client->date_fin_validite,
+                'aeroports_concernes' => $client->aeroports_concernes,
+                'zones_concernees' => $client->zones_concernees,
+                'nombre_badges_actifs' => $client->nombre_badges_actifs,
+                'nombre_vehicules_actifs' => $client->nombre_vehicules_actifs,
+
+                // Référents sûreté
+                'safety_referent_name_1' => $client->safety_referent_name_1,
+                'safety_referent_prenom_1' => $client->safety_referent_prenom_1,
+                'safety_referent_email_1' => $client->safety_referent_email_1,
+                'safety_referent_phone_1' => $client->safety_referent_phone_1,
+
+                'safety_referent_name_2' => $client->safety_referent_name_2,
+                'safety_referent_prenom_2' => $client->safety_referent_prenom_2,
+                'safety_referent_email_2' => $client->safety_referent_email_2,
+                'safety_referent_phone_2' => $client->safety_referent_phone_2,
+
+                'safety_referent_name_3' => $client->safety_referent_name_3,
+                'safety_referent_prenom_3' => $client->safety_referent_prenom_3,
+                'safety_referent_email_3' => $client->safety_referent_email_3,
+                'safety_referent_phone_3' => $client->safety_referent_phone_3,
+
+                // Correspondant sécurité
+                'security_correspondent_name' => $client->security_correspondent_name,
+                'security_correspondent_prenom' => $client->security_correspondent_prenom,
+                'security_correspondent_email' => $client->security_correspondent_email,
+                'security_correspondent_phone' => $client->security_correspondent_phone,
+
+                // Contact RH
+                'hr_contact_name' => $client->hr_contact_name,
+                'hr_contact_prenom' => $client->hr_contact_prenom,
+                'hr_contact_email' => $client->hr_contact_email,
+                'hr_contact_phone' => $client->hr_contact_phone,
+            ];
+
+            return response()->json([
+                'status' => 'success',
+                'client' => $data
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Erreur lors de la récupération des données',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateOverview(Request $request, $id)
+    {
+        try {
+            $user = auth()->user();
+            $clientId = (int) $id;
+
+            // Vérification des droits d'accès
+            $isAdmin = $user->role === 'sadmin' || $user->role === 'admin';
+            if (!$isAdmin && $user->client_id !== $clientId) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            // Récupération du client
+            $client = Client::findOrFail($clientId);
+
+            // Validation des données du bilan uniquement
+            $validatedData = $request->validate([
+                // Informations société
+                'raison_sociale' => 'nullable|string|max:255',
+                'nom_commercial' => 'nullable|string|max:255',
+                'siret' => 'nullable|string|max:255',
+                'adresse' => 'nullable|string|max:500',
+                'code_postal' => 'nullable|string|max:10',
+                'ville' => 'nullable|string|max:255',
+                'numero_identification' => 'nullable|string|max:255',
+
+                // Responsable principal
+                'responsable_nom' => 'nullable|string|max:255',
+                'responsable_prenom' => 'nullable|string|max:255',
+                'responsable_email' => 'nullable|email|max:255',
+                'responsable_telephone' => 'nullable|string|max:20',
+                'responsable_fonction' => 'nullable|string|max:255',
+
+                // Activité
+                'activite_description' => 'nullable|string',
+                'nombre_demandes_activite' => 'nullable|integer|min:0',
+                'numeros_demandes_activite' => 'nullable|string',
+                'date_debut_validite' => 'nullable|date',
+                'date_fin_validite' => 'nullable|date|after_or_equal:date_debut_validite',
+                'aeroports_concernes' => 'nullable|array',
+                'zones_concernees' => 'nullable|array',
+                'nombre_badges_actifs' => 'nullable|integer|min:0',
+                'badge_limit' => 'nullable|integer|min:1|max:1000',
+                'nombre_vehicules_actifs' => 'nullable|integer|min:0',
+                'vehicle_pass_limit' => 'nullable|integer|min:1|max:1000',
+
+                // Référents sûreté
+                'safety_referent_name_1' => 'nullable|string|max:255',
+                'safety_referent_prenom_1' => 'nullable|string|max:255',
+                'safety_referent_email_1' => 'nullable|email|max:255',
+                'safety_referent_phone_1' => 'nullable|string|max:20',
+
+                'safety_referent_name_2' => 'nullable|string|max:255',
+                'safety_referent_prenom_2' => 'nullable|string|max:255',
+                'safety_referent_email_2' => 'nullable|email|max:255',
+                'safety_referent_phone_2' => 'nullable|string|max:20',
+
+                'safety_referent_name_3' => 'nullable|string|max:255',
+                'safety_referent_prenom_3' => 'nullable|string|max:255',
+                'safety_referent_email_3' => 'nullable|email|max:255',
+                'safety_referent_phone_3' => 'nullable|string|max:20',
+
+                // Correspondant sécurité
+                'security_correspondent_name' => 'nullable|string|max:255',
+                'security_correspondent_prenom' => 'nullable|string|max:255',
+                'security_correspondent_email' => 'nullable|email|max:255',
+                'security_correspondent_phone' => 'nullable|string|max:20',
+
+                // Contact RH
+                'hr_contact_name' => 'nullable|string|max:255',
+                'hr_contact_prenom' => 'nullable|string|max:255',
+                'hr_contact_email' => 'nullable|email|max:255',
+                'hr_contact_phone' => 'nullable|string|max:20',
+            ]);
+
+            // Mise à jour du client
+            $client->update($validatedData);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Bilan mis à jour avec succès',
+                'client' => $client->fresh()
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Données invalides',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Erreur lors de la mise à jour',
                 'error' => $e->getMessage()
             ], 500);
         }

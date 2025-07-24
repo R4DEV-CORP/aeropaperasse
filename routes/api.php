@@ -55,6 +55,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/client', [AuthController::class, 'client']);
     Route::get('/clients', [ClientController::class, 'all']);
     Route::get('/clients/{client}/quota', [ClientController::class, 'getQuotaInfo']);
+    Route::get('/client/{id}', [ClientController::class, 'show']);
+    Route::put('/client/{id}', [ClientController::class, 'updateOverview']);
 
     // Facilitation de l'accès aux fichiers pour téléchargement en ZIP
     Route::get('/file/{path}', function (Request $request, $path) {
