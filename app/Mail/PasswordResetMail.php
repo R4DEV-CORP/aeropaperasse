@@ -18,7 +18,7 @@ class PasswordResetMail extends Mailable
     {
         $this->token = $token;
         $this->email = $email;
-        $this->appUrl = env('APP_URL', 'http://localhost:3000');
+        $this->appUrl = env('https://app.aeropaperasse.fr', 'http://localhost:3000');
     }
 
     public function build()
