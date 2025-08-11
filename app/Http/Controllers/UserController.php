@@ -28,7 +28,7 @@ class UserController extends Controller
                 ->where("client_id", $user->client_id)
                 ->get();
             }
-            
+
             return response()->json([
                 'status' => 'success',
                 'users' => $users
@@ -66,7 +66,7 @@ class UserController extends Controller
                 'has_left' => $request->has_left ?? false,
                 'departure_date' => $request->departure_date,
                 'is_new' => true,
-                'is_student' => $request->is_student ?? false 
+                'is_student' => $request->is_student ?? false
             ]);
             // Charger la relation client pour la réponse
             $user->load('client');
@@ -129,7 +129,7 @@ class UserController extends Controller
         try {
             // Préparation des données à mettre à jour
             $userData = $request->only(['name', 'email', 'role', 'client_id']);
-            
+
             // Si un nouveau mot de passe est fourni, on le hash
             if ($request->filled('password')) {
                 $userData['password'] = bcrypt($request->password);
@@ -138,7 +138,7 @@ class UserController extends Controller
             $userData['has_left'] = $request->has_left ?? false;
             $userData['departure_date'] = $request->departure_date;
             $userData['is_student'] = $request->is_student ?? false;
-                        
+
             $user->update($userData);
 
             return response()->json([
@@ -178,7 +178,38 @@ class UserController extends Controller
             $query = $request->input('query');
             $clientId = $request->input('client_id');
 
+            $user = Auth::user();
+
+            Log::info('User search debug', [
+                'user_id' => $user->id,
+                'user_role' => $user->role,
+                'user_client_id' => $user->client_id,
+                'search_query' => $request->input('query'),
+                'search_client_id' => $request->input('client_id')
+            ]);
+
             $usersQuery = User::query();
+
+            if($user->role == "sadmin"){
+                // Les super admins peuvent voir tous les utilisateurs
+            }
+            elseif($user->role == "admin"){
+                // Les admins ne peuvent pas voir les super admins
+                $usersQuery->where("role", "!=", "sadmin");
+            }
+            elseif($user->role == "sclient"){
+                // Les super clients ne peuvent voir que les utilisateurs de leur société
+                $usersQuery->where("role", "!=", "sadmin")
+                          ->where("role", "!=", "admin")
+                          ->where("client_id", $user->client_id);
+            }
+            else {
+                // Pour les autres rôles, on limite l'accès
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Accès non autorisé'
+                ], 403);
+            }
 
             if ($query) {
                 $usersQuery->where(function($q) use ($query) {
@@ -188,6 +219,12 @@ class UserController extends Controller
             }
 
             if ($clientId) {
+                if($user->role == "sclient" && $clientId != $user->client_id) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Vous ne pouvez voir que les utilisateurs de votre société'
+                    ], 403);
+                }
                 $usersQuery->where('client_id', $clientId);
             }
 

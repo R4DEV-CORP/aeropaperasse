@@ -51,6 +51,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('first-login-change-password', [AuthController::class, 'firstLoginChangePassword']);
     Route::get('/user', [AuthController::class, 'user']);
 
+    // Recherche d'utilisateur précise
+    Route::get('/users/search', [UserController::class, 'search']);
+
     // Client route
     Route::get('/user/client', [AuthController::class, 'client']);
     Route::get('/clients', [ClientController::class, 'all']);
@@ -136,7 +139,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // Routes admin
 Route::middleware(['auth:sanctum', 'role:admin,sadmin'])->group(function () {
-    Route::get('/users/search', [UserController::class, 'search']); // Recherche d'utilisateur précise
     Route::apiResource('users', UserController::class);
     Route::apiResource('clients', ClientController::class);
     Route::get('/clients/{client}/document', [ClientController::class, 'downloadDocument']);
