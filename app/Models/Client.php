@@ -99,6 +99,10 @@ class Client extends Model
 
     public function canCreateVehiclePass(): bool
     {
+        if ($this->vehicle_pass_limit == 0) {
+            return false;
+        }
+
         return $this->active_vehicle_passes_count < $this->vehicle_pass_limit;
     }
 }

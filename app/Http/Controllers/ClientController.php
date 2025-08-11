@@ -75,7 +75,7 @@ class ClientController extends Controller
             'hr_contact_phone' => 'required|string|max:255',
 
             'badge_limit' => 'required|integer|min:1|max:1000',
-            'vehicle_pass_limit' => 'required|integer|min:1|max:1000',
+            'vehicle_pass_limit' => 'required|integer|min:0|max:1000',
         ]);
 
         try {
@@ -140,7 +140,7 @@ class ClientController extends Controller
             'hr_contact_phone' => 'required|string|max:255',
 
             'badge_limit' => 'required|integer|min:1|max:1000',
-            'vehicle_pass_limit' => 'required|integer|min:1|max:1000',
+            'vehicle_pass_limit' => 'required|integer|min:0|max:1000',
         ]);
 
         try {
@@ -416,7 +416,7 @@ class ClientController extends Controller
                 'nombre_badges_actifs' => 'nullable|integer|min:0',
                 'badge_limit' => 'nullable|integer|min:1|max:1000',
                 'nombre_vehicules_actifs' => 'nullable|integer|min:0',
-                'vehicle_pass_limit' => 'nullable|integer|min:1|max:1000',
+                'vehicle_pass_limit' => 'nullable|integer|min:0|max:1000',
 
                 // Référents sûreté
                 'safety_referent_name_1' => 'nullable|string|max:255',
