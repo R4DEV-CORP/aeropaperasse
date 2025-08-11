@@ -95,7 +95,7 @@ class BadgeRequestController extends Controller
             'certificatFormation' => 'file|mimes:pdf,jpeg,png,jpg|max:2048',
             'attestationFormation' => 'boolean',
             'est_habilitation' => 'boolean',
-            'documentFor' => 'required|file|mimes:pdf,xlsx,xls,jpeg,png,jpg|max:2048',
+            'documentFor' => 'required|file|mimes:xlsx|max:2048',
             'facture' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048',
             'airport' => 'required|string|in:aeroportOrly,aeroportBourget,aeroportCDG',
             'client_id' => 'required|exists:clients,id',
