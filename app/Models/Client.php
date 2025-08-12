@@ -36,6 +36,7 @@ class Client extends Model
         'responsable_telephone',
         'responsable_fonction',
         'activite_description',
+        'sous_traitant_de',
         'numero_identification',
         'safety_referent_prenom_1',
         'safety_referent_prenom_2',
