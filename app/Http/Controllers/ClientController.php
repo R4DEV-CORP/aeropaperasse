@@ -189,18 +189,40 @@ class ClientController extends Controller
   {
     try {
       // Vérifier si le client a des utilisateurs
-      if ($client->users()->count() > 0) {
+      $usersCount = $client->users()->count();
+      if ($usersCount > 0) {
         return response()->json([
-          'message' => 'Impossible de supprimer un client qui a des utilisateurs'
+          'success' => false,
+          'message' => "Impossible de supprimer cette société car elle a {$usersCount} collaborateur(s) associé(s). Vous devez d'abord supprimer ou réassigner tous les collaborateurs.",
+          'error_type' => 'users_associated',
+          'users_count' => $usersCount
         ], 400);
       }
 
+      // Supprimer les documents associés
+      if ($client->safety_document) {
+        Storage::disk('public')->delete($client->safety_document);
+      }
+      if ($client->security_document) {
+        Storage::disk('public')->delete($client->security_document);
+      }
+      if ($client->kbis_document) {
+        Storage::disk('public')->delete($client->kbis_document);
+      }
+
       $client->delete();
-      return response()->json(null, 204);
+
+      return response()->json([
+        'success' => true,
+        'message' => 'Société supprimée avec succès'
+      ], 200);
+
     } catch (\Exception $e) {
       return response()->json([
-        'message' => 'Erreur lors de la suppression du client',
-        'error' => $e->getMessage()
+        'success' => false,
+        'message' => 'Erreur lors de la suppression de la société',
+        'error' => $e->getMessage(),
+        'error_type' => 'server_error'
       ], 500);
     }
   }
