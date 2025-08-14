@@ -182,7 +182,7 @@ class AuthController extends Controller
             ],
         ];
 
-        \Log::info('Response data: ', $response);
+        // \Log::info('Response data: ', $response);
 
         return response()->json($response);
     }

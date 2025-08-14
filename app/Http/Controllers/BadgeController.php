@@ -6,6 +6,7 @@ use App\Models\Badge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\BadgeRequest;
 
@@ -13,14 +14,34 @@ class BadgeController extends Controller
 {
     public function index()
     {
-        $badges = Badge::with(['badgeRequest', 'badgeRequest.user', 'badgeRequest.user.client'])
-            ->orderBy('created_at', 'desc')
-            ->get()
+        $user = Auth::user();
+
+        $badgesQuery = Badge::with(['badgeRequest', 'badgeRequest.user', 'badgeRequest.user.client'])
+            ->orderBy('created_at', 'desc');
+
+            if($user->role == "sadmin"){
+                // Les super admins peuvent voir tous les badges
+            }
+            elseif($user->role == "admin"){
+                // Les admins peuvent voir tous les badges
+            }
+            elseif($user->role == "sclient" || $user->role == "client"){
+                // Les clients ne peuvent voir que les badges de leur société
+                $badgesQuery->whereHas('badgeRequest.user', function($query) use ($user) {
+                    $query->where('client_id', $user->client_id);
+                })
+                // OU les badges importés pour leur société
+                ->orWhere('holder_client', $user->client->name ?? '');
+            }
+            else {
+                // Pour les autres rôles, pas d'accès
+                return response()->json([
+                    'message' => 'Accès non autorisé'
+                ], 403);
+            }
+
+            $badges = $badgesQuery->get()
             ->map(function ($badge) {
-                \Log::info('Badge ID: ' . $badge->id);
-                \Log::info('BadgeRequest: ' . ($badge->badgeRequest ? 'exists' : 'null'));
-                \Log::info('User: ' . ($badge->badgeRequest->user ?? 'null'));
-                \Log::info('Client: ' . ($badge->badgeRequest->user->client ?? 'null'));
                 return [
                     'id' => $badge->id,
                     'holder' => [
