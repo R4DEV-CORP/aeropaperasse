@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\ActivityRequest;
+use App\Services\ClientOverviewPdfService;
 use Illuminate\Support\Facades\Storage;
-
-use Illuminate\Support\Facades\Log;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 class ClientController extends Controller
 {
@@ -488,6 +488,30 @@ class ClientController extends Controller
       return response()->json([
         'status' => 'error',
         'message' => 'Erreur lors de la mise à jour',
+        'error' => $e->getMessage()
+      ], 500);
+    }
+  }
+
+  public function exportOverview($id, ClientOverviewPdfService $pdfService)
+  {
+    try {
+      $user = auth()->user();
+      $clientId = (int) $id;
+
+      // Vérification des droits d'accès
+      $isAdmin = $user->role === 'sadmin' || $user->role === 'admin';
+      if (!$isAdmin && $user->client_id !== $clientId) {
+        return response()->json(['error' => 'Unauthorized'], 403);
+      }
+
+      // Utilisation du service
+        return $pdfService->generateOverview($clientId);
+
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 'error',
+        'message' => 'Erreur lors de la génération du PDF',
         'error' => $e->getMessage()
       ], 500);
     }
