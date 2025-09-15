@@ -31,6 +31,10 @@
             font-size: 24px;
             font-weight: 600;
         }
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
         .content {
             padding: 30px;
             color: #374151;
