@@ -3,7 +3,8 @@
 namespace App\Livewire\Auth;
 
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
+use App\Services\Auth\AuthService;
+use App\Services\Auth\UserRedirectService;
 
 class LoginForm extends Component
 {
@@ -17,37 +18,32 @@ class LoginForm extends Component
             'password' => 'required',
         ]);
 
-        \Log::info('LoginForm: Tentative de connexion avec Auth Laravel', [
-            'email' => $this->email,
-        ]);
+        // Utilisation simplifiée des services
+        $authService = app(AuthService::class);
+        $redirectService = app(UserRedirectService::class);
+        
+        $result = $authService->login($this->email, $this->password);
 
-        try {
-            if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
-                $user = Auth::user();
-                
-                // Créer un token Sanctum pour les appels API futurs
-                $token = $user->createToken('auth_token')->plainTextToken;
-                
-                \Log::info('LoginForm: Connexion réussie', [
-                    'user_id' => $user->id,
-                    'email' => $user->email,
-                    'role' => $user->role
-                ]);
-
-                $this->redirect('/');
-            } else {
-                $this->redirect('/login');
-            }
-        } catch (\Exception $e) {
-            \Log::error('LoginForm: Erreur de connexion', [
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine()
-            ]);
-            
-            $this->addError('email', 'Une erreur est survenue lors de la connexion.');
+        // Gestion des erreurs
+        if (!$result['success']) {
+            $this->addError('email', $result['message']);
+            return;
         }
+
+        // Gestion de la 2FA
+        if ($result['requires2FA']) {
+            $this->redirect('/verify-2fa');
+            return;
+        }
+
+        // Créer la session web
+        $authService->createWebSession($result['user']);
+
+        // Redirection simple
+        $redirectPath = $redirectService->getRedirectPath($result['user']);
+        $this->redirect($redirectPath);
     }
+
     public function render()
     {
         return view('livewire.auth.login-form');

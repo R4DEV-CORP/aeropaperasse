@@ -11,6 +11,8 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
-        "puppeteer": "^24.16.1"
+        "@tailwindcss/vite": "^4.1.14",
+        "puppeteer": "^24.16.1",
+        "tailwindcss": "^4.1.14"
     }
 }

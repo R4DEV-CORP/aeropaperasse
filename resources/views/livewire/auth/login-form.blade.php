@@ -1,26 +1,36 @@
 <div>
-    <form wire:submit.prevent="login" class="space-y-4">
-        <div class="relative">
-            <input
-                type="email"
-                wire:model="email"
-                required
-                placeholder="Email"
-                class="pl-10 w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:border-2 focus:border-gray-500"
-            />
-        </div>
-
-        <div className="relative">
-            <input
-                type="password"
-                wire:model="password"
-                required
+    <form wire:submit="login" class="flex flex-col gap-6">
+        <flux:input 
+            type="email" 
+            icon="envelope" 
+            placeholder="Email"
+            wire:model="email"
+        />
+        
+        <flux:field>
+            <flux:input 
+                type="password" 
+                icon="lock-closed" 
                 placeholder="Mot de passe"
-                class="pl-10 w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:border-2 focus:border-gray-500"
-            />
-        </div>
-        <button type="submit" class="w-full bg-gray-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-gray-700 focus:outline-none">
+                wire:model="password"
+            >
+                <x-slot name="iconTrailing">
+                    <flux:button size="sm" variant="subtle" icon="eye" class="-mr-1" />
+                </x-slot>
+            </flux:input>
+        </flux:field>
+
+        @error('email') 
+        <flux:callout variant="danger" icon="x-circle" heading="{{ $message }}" />
+        @enderror
+        
+        <flux:button 
+            type="submit"
+            variant="primary" 
+            color="zinc" 
+            class="w-full hover:cursor-pointer"
+        >
             Se connecter
-        </button>
+        </flux:button>
     </form>
 </div>

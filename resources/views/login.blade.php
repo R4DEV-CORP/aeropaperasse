@@ -1,23 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <title>Login</title>
-        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <title>{{ config('app.name', 'Laravel') }}</title>
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
+
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body>
-        <div class="min-h-screen bg-cover bg-center flex items-center justify-center relative">
-            <div class="absolute inset-0 bg-gradient-to-t from-white to-transparent"></div>
-            <div class="bg-gradient-to-b from-sky-200 to-white backdrop-blur-sm p-8 rounded-lg shadow-md w-96 relative z-10">
-                <div class="flex flex-col items-center justify-center gap-4 mb-6">
-                    <h1 class="text-2xl font-bold">Connexion</h1>
-                    <p class="text-sm text-gray-600 text-center">
-                        Connectez-vous avec votre email pour accéder à vos outils et
-                        ressources.
-                    </p>
+        <div class="flex justify-center items-center min-h-screen bg-cover bg-center bg-no-repeat" style="background-image: url('{{ Storage::url('coulds-background.png') }}')">
+            <div class="flex justify-center items-center bg-gradient-to-b from-sky-200 to-white backdrop-blur-sm p-8 rounded-lg shadow-md w-96">
+                <div class="w-80 max-w-80 space-y-6">
+                    <img src="{{ asset('/images/aeropaperasse-logo.png') }}" alt="Logo Aéropaperasse" class="w-64 mx-auto">
+                    <flux:heading class="text-center font-semibold" size="xl" accent="true">Connexion</flux:heading>
+                    <flux:text class="text-center text-gray-800">Connectez-vous avec votre email pour accéder à vos outils et ressources.</flux:text>
+                    <livewire:auth.login-form />
+                    <flux:button
+                        href="https://google.com"
+                        icon:trailing="arrow-right"
+                        variant="ghost"
+                        class="w-full"
+                    >
+                        Mot de passe oublié ?
+                    </flux:button>
                 </div>
-
-                <livewire:auth.login-form />
             </div>
         </div>
+        @fluxScripts
     </body>
 </html>

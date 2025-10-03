@@ -21,3 +21,7 @@ Route::get('/', function () {
 Route::get('login', function () {
     return view('login');
 });
+
+Route::get('/verify-2fa', function () {
+    return view('verify-2fa');
+});
