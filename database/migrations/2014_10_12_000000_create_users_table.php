@@ -17,8 +17,16 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('is_new')->default(true);
             $table->rememberToken();
             $table->timestamps();
+            $table->string('role')->default('user');
+            $table->string('function')->nullable();
+            $table->unsignedBigInteger('client_id')->nullable();
+            $table->boolean('has_left')->default(false);
+            $table->boolean('two_factor_enabled')->default(true);
+            $table->date('departure_date')->nullable();
+            $table->boolean('is_student')->default(false);
         });
     }
 
