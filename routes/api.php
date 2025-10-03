@@ -128,9 +128,6 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::put('vehicle-pass-replies/{reply}', [VehiclePassCommentController::class, 'updateReply']);
   Route::delete('vehicle-pass-replies/{reply}', [VehiclePassCommentController::class, 'destroyReply']);
 
-  // client
-  Route::apiResource('user/badge-requests', BadgeRequestController::class); // ⚠️ Possibly breaking route ⚠️
-
   // Replies routes
   Route::post('comments/{comment}/replies', [CommentController::class, 'storeReply']);
   Route::put('replies/{reply}', [CommentController::class, 'updateReply']);
