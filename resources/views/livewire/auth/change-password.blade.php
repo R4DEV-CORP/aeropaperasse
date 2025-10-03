@@ -34,6 +34,12 @@
         @error('password') 
         <flux:callout variant="danger" icon="x-circle" heading="{{ $message }}" />
         @enderror
+        @error('current_password') 
+        <flux:callout variant="danger" icon="x-circle" heading="{{ $message }}" />
+        @enderror
+        @error('password_confirmation') 
+        <flux:callout variant="danger" icon="x-circle" heading="{{ $message }}" />
+        @enderror
         
         <flux:button 
             type="submit"

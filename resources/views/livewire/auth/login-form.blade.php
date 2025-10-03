@@ -19,10 +19,10 @@
         </flux:field>
 
         @error('email') 
-        <flux:callout variant="danger" icon="x-circle" heading="{{ $message }}" />
+        <flux:callout variant="danger" icon="x-circle" heading="{!! $message !!}" />
         @enderror
-        @error('password) 
-        <flux:callout variant="danger" icon="x-circle" heading="{{ $message }}" />
+        @error('password') 
+        <flux:callout variant="danger" icon="x-circle" heading="{!! $message !!}" />
         @enderror
         
         <flux:button 

@@ -32,3 +32,11 @@ Route::get('/verify-2fa', function () {
 Route::get('/change-password', function () {
     return view('auth.change-password');
 });
+
+/*
+* Routes pour le dashboard
+*/
+
+Route::get('/dashboard/badge-requests', function () {
+    return view('dashboard.badge-requests.index');
+});

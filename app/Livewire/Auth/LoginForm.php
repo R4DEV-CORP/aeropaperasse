@@ -17,7 +17,7 @@ class LoginForm extends Component
             'email' => 'required|email',
             'password' => 'required',
         ], [
-            'email.required' => "L'adresse email est obligatoire.",
+            'email.required' => 'L\'adresse email est obligatoire.',
             'email.email' => 'Veuillez saisir une adresse email valide.',
             'password.required' => 'Le mot de passe est obligatoire.'
         ]);
