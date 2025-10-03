@@ -5,6 +5,7 @@ namespace App\Services\Auth;
 use App\Models\User;
 use App\Models\TwoFactorCode;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TwoFactorCodeMail;
 use Illuminate\Support\Facades\Log;
@@ -14,6 +15,11 @@ class AuthService
     /**
      * Tente de connecter l'utilisateur et retourne un tableau résultat simple
      * 
+     * Le Service embarque deux autres fichiers :
+     * 
+     * - UserRedirectService : Gère la redirection après la connexion
+     * - LoginResult : Gère le résultat de la connexion
+     * 
      * @param string $email
      * @param string $password
      * @return array ['success' => bool, 'user' => User|null, 'message' => string, 'requires2FA' => bool]
@@ -21,7 +27,13 @@ class AuthService
     public function login(string $email, string $password): array
     {
         try {
+            Log::info('AuthService: Tentative de connexion', [
+                'email' => $email
+            ]);
             if (!Auth::attempt(['email' => $email, 'password' => $password])) {
+                Log::info('AuthService: Identifiants invalides', [
+                    'email' => $email
+                ]);
                 return [
                     'success' => false,
                     'user' => null,
@@ -34,6 +46,10 @@ class AuthService
             
             // Vérifier si la 2FA est activée
             if ($user->two_factor_enabled) {
+                Log::info('AuthService: 2FA activé', [
+                    'user_id' => $user->id,
+                    'email' => $user->email
+                ]);
                 $this->generateAndSendTwoFactorCode($user);
                 
                 // Stocker l'ID utilisateur en session (pas le password)
@@ -74,24 +90,12 @@ class AuthService
         }
     }
 
-    public function handleTwoFactor(User $user): void
-    {
-        $code = $this->generateAndSendTwoFactorCode($user);
-        
-        // Stocker temporairement les identifiants en session pour la vérification
-        session([
-            'temp_email' => $user->email,
-            'temp_password' => request()->input('password') ?: session('temp_password')
-        ]);
-        
-        Log::info('AuthService: Code 2FA généré et envoyé', [
-            'user_id' => $user->id,
-            'code_length' => strlen($code)
-        ]);
-    }
-
     public function generateAndSendTwoFactorCode(User $user): string
     {
+        Log::info('AuthService: Génération et envoi du code 2FA', [
+            'user_id' => $user->id,
+            'email' => $user->email
+        ]);
         // Générer un code à 6 chiffres
         $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
@@ -150,6 +154,10 @@ class AuthService
                 ->first();
 
             if (!$twoFactorCode) {
+                Log::info('AuthService: Code 2FA invalide ou expiré', [
+                    'user_id' => $user->id,
+                    'email' => $user->email
+                ]);
                 return [
                     'success' => false,
                     'user' => null,
@@ -232,5 +240,105 @@ class AuthService
         Log::info('AuthService: Session web créée', [
             'user_id' => $user->id
         ]);
+    }
+
+    /**
+     * Change le mot de passe d'un utilisateur authentifié (vérification du mot de passe actuel requis)
+     * 
+     * @param User $user
+     * @param string $currentPassword
+     * @param string $newPassword
+     * @return array ['success' => bool, 'message' => string]
+     */
+    public function changePasswordAuthenticated(User $user, string $currentPassword, string $newPassword): array
+    {
+        try {
+            // Vérifier que l'utilisateur est bien connecté
+            if (!Auth::check() || Auth::id() !== $user->id) {
+                return [
+                    'success' => false,
+                    'message' => 'Vous devez être connecté pour effectuer cette opération.'
+                ];
+            }
+
+            // Vérifier le mot de passe actuel
+            if (!Hash::check($currentPassword, $user->password)) {
+                return [
+                    'success' => false,
+                    'message' => 'Le mot de passe actuel est incorrect.'
+                ];
+            }
+
+            // Mettre à jour le mot de passe et marquer le compte comme n'étant plus nouveau
+            $user->password = bcrypt($newPassword);
+            $user->is_new = false; // Au cas où l'utilisateur n'aurait jamais changé
+            $user->save();
+
+            Log::info('AuthService: Mot de passe changé par utilisateur authentifié', [
+                'user_id' => $user->id,
+                'email' => $user->email
+            ]);
+
+            return [
+                'success' => true,
+                'message' => 'Mot de passe modifié avec succès'
+            ];
+
+        } catch (\Exception $e) {
+            Log::error('AuthService: Erreur changement mot de passe utilisateur authentifié', [
+                'message' => $e->getMessage(),
+                'user_id' => $user->id,
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+
+            return [
+                'success' => false,
+                'message' => 'Une erreur est survenue lors du changement de mot de passe.'
+            ];
+        }
+    }
+
+    /**
+     * Vérifie si l'utilisateur peut accéder à la page de changement de mot de passe
+     * 
+     * @param User|null $user
+     * @return array ['can_access' => bool, 'reason' => string|null, 'is_first_login' => bool]
+     */
+    public function canAccessChangePassword(?User $user = null): array
+    {
+        $user = $user ?: Auth::user();
+        
+        if (!$user) {
+            return [
+                'can_access' => false,
+                'reason' => 'Vous devez être connecté.',
+                'is_first_login' => false
+            ];
+        }
+
+        // Si c'est une première connexion, autoriser l'accès
+        if ($user->is_new) {
+            return [
+                'can_access' => true,
+                'reason' => null,
+                'is_first_login' => true
+            ];
+        }
+
+        // Pour les utilisateurs existants, ils doivent être authentifiés normalement
+        if (Auth::check()) {
+            return [
+                'can_access' => true,
+                'reason' => null,
+                'is_first_login' => false
+            ];
+        }
+
+        return [
+            'can_access' => false,
+            'reason' => 'Accès non autorisé.',
+            'is_first_login' => false
+        ];
     }
 }

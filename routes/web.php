@@ -18,10 +18,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('login', function () {
-    return view('login');
+/*
+* Routes pour la connexion, la vérification 2FA et le changement de mot de passe
+*/
+Route::get('/login', function () {
+    return view('auth.login');
 });
 
 Route::get('/verify-2fa', function () {
-    return view('verify-2fa');
+    return view('auth.verify-2fa');
+});
+
+Route::get('/change-password', function () {
+    return view('auth.change-password');
 });

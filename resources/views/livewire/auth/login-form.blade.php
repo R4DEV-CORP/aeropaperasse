@@ -11,12 +11,10 @@
             <flux:input 
                 type="password" 
                 icon="lock-closed" 
+                viewable
                 placeholder="Mot de passe"
                 wire:model="password"
             >
-                <x-slot name="iconTrailing">
-                    <flux:button size="sm" variant="subtle" icon="eye" class="-mr-1" />
-                </x-slot>
             </flux:input>
         </flux:field>
 
