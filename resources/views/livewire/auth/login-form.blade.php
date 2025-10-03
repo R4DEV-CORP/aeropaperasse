@@ -21,6 +21,9 @@
         @error('email') 
         <flux:callout variant="danger" icon="x-circle" heading="{{ $message }}" />
         @enderror
+        @error('password) 
+        <flux:callout variant="danger" icon="x-circle" heading="{{ $message }}" />
+        @enderror
         
         <flux:button 
             type="submit"
