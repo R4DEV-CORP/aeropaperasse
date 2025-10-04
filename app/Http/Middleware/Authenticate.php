@@ -18,7 +18,7 @@ class Authenticate extends Middleware
         }
 
         // For non-API requests, fallback to a login route if defined
-        return route('login');
+        return route('auth.login');
     }
 
     /**

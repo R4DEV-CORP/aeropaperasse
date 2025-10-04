@@ -23,7 +23,7 @@ Route::get('/', function () {
 */
 Route::get('/login', function () {
     return view('auth.login');
-});
+})->name('auth.login');
 
 Route::get('/verify-2fa', function () {
     return view('auth.verify-2fa');
@@ -39,4 +39,4 @@ Route::get('/change-password', function () {
 
 Route::get('/dashboard/badge-requests', function () {
     return view('dashboard.badge-requests.index');
-});
+})->middleware('auth');

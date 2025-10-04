@@ -16,7 +16,11 @@
     <body class="min-h-screen bg-white">
         <flux:sidebar sticky collapsible class="bg-zinc-700 text-white border-r border-zinc-200">
             <flux:sidebar.header>
-                <img src="{{ asset('storage/aeropaperasse-logo-white.png') }}" alt="Logo Aéropaperasse" class="w-32 mx-auto mt-4">
+                <flux:sidebar.brand
+                    href="/dashboard/badge-requests"
+                    logo="{{ asset('storage/aeropaperasse-logo-white.png') }}"
+                />
+                <flux:sidebar.collapse class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2" />
             </flux:sidebar.header>
             <flux:sidebar.nav>
                 <flux:sidebar.item icon="identification" href="/dashboard/badge-requests">Demande de badge</flux:sidebar.item>

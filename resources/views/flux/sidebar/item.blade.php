@@ -27,7 +27,7 @@ $iconClasses = Flux::classes('size-5')
 
 $classes = Flux::classes()
     ->add('h-12 in-data-flux-sidebar-on-mobile:h-10 relative flex items-center gap-3')
-    ->add('in-data-flux-sidebar-collapsed-desktop:w-10 in-data-flux-sidebar-collapsed-desktop:justify-center')
+    ->add('in-data-flux-sidebar-collapsed-desktop:w-full in-data-flux-sidebar-collapsed-desktop:justify-center')
     ->add('py-0 text-start w-full px-3 has-data-flux-navlist-badge:not-in-data-flux-sidebar-collapsed-desktop:pe-1.5 my-px')
     ->add('text-white')
     ->add(match ($accent) {
@@ -37,8 +37,8 @@ $classes = Flux::classes()
             'hover:bg-zinc-600',
         ],
         false => [
-            'data-current:text-zinc-800 dark:data-current:text-zinc-100 data-current:border-zinc-200',
-            'data-current:bg-white dark:data-current:bg-white/10 data-current:border data-current:border-zinc-200 dark:data-current:border-white/10 data-current:shadow-xs',
+            'data-current:text-zinc-800 data-current:border-zinc-200',
+            'data-current:bg-white data-current:border data-current:border-zinc-200 dark:data-current:border-white/10 data-current:shadow-xs',
             'hover:text-zinc-800 dark:hover:text-white',
         ],
     })

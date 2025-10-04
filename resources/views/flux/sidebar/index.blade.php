@@ -15,7 +15,7 @@ if ($stashable && $collapsible === null) {
 
 $classes = Flux::classes('[grid-area:sidebar]')
     ->add('z-1 flex flex-col gap-4 [:where(&)]:w-64 p-0')
-    ->add('data-flux-sidebar-collapsed-desktop:w-14 data-flux-sidebar-collapsed-desktop:px-2')
+    ->add('data-flux-sidebar-collapsed-desktop:w-14')
     ->add('data-flux-sidebar-collapsed-desktop:cursor-e-resize rtl:data-flux-sidebar-collapsed-desktop:cursor-w-resize')
     ;
 

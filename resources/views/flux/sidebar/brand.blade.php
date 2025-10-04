@@ -12,7 +12,7 @@
 
 @php
 $classes = Flux::classes()
-    ->add('h-10 flex items-center px-2 in-data-flux-sidebar-collapsed-desktop:w-10 in-data-flux-sidebar-collapsed-desktop:px-2')
+    ->add('h-auto flex items-center px-2 in-data-flux-sidebar-collapsed-desktop:w-32 in-data-flux-sidebar-collapsed-desktop:px-2')
     ->add('in-data-flux-sidebar-collapsed-desktop:in-data-flux-sidebar-active:absolute')
     ->add('in-data-flux-sidebar-collapsed-desktop:in-data-flux-sidebar-active:opacity-0')
     ;
@@ -50,9 +50,9 @@ $textClasses = Flux::classes()
                 {{ $logo }}
             </div>
         <?php else: ?>
-            <div class="flex items-center justify-center h-6 rounded-sm overflow-hidden shrink-0">
+            <div class="flex items-center justify-center h-auto rounded-sm overflow-hidden shrink-0 in-data-flux-sidebar-collapsed-desktop:hidden">
                 <?php if ($logo): ?>
-                    <img src="{{ $logo }}" alt="{{ $alt }}" class="h-6" />
+                    <img src="{{ $logo }}" alt="{{ $alt }}" class="h-auto w-32" />
                 <?php else: ?>
                     {{ $slot }}
                 <?php endif; ?>
