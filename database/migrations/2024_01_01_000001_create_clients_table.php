@@ -13,39 +13,29 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('referent_name')->nullable();
-            $table->string('referent_email')->nullable();
             $table->timestamps();
-            $table->string('safety_referent_name_1')->nullable();
-            $table->string('safety_referent_email_1')->nullable();
-            $table->string('safety_referent_phone_1')->nullable();
-            $table->string('safety_referent_name_2')->nullable();
-            $table->string('safety_referent_email_2')->nullable();
-            $table->string('safety_referent_phone_2')->nullable();
-            $table->string('safety_referent_name_3')->nullable();
-            $table->string('safety_referent_email_3')->nullable();
-            $table->string('safety_referent_phone_3')->nullable();
-            $table->string('security_correspondent_name')->nullable();
-            $table->string('security_correspondent_email')->nullable();
-            $table->string('security_correspondent_phone')->nullable();
-            $table->string('kbis_document')->nullable();
-            $table->string('hr_contact_name')->nullable();
-            $table->string('hr_contact_email')->nullable();
-            $table->string('hr_contact_phone')->nullable();
-            $table->string('safety_document')->nullable();
-            $table->string('security_document')->nullable();
-            $table->integer('badge_limit')->nullable();
-            $table->integer('vehicle_pass_limit')->nullable();
+
+            //Informations entreprise
+            $table->string('company_name'); // raison sociale
+            $table->string('trade_name'); // nom commercial
+            $table->string('siret_number');
+            $table->string('address');
+            $table->string('zip_code');
+            $table->string('city');
+            $table->text('activity_description');
+            $table->text('subcontractor_of')->nullable(); // Sous traitant de quelles entreprises
+
+            //Chemins documents obligatoires
+            $table->string('kbis_document');
+            $table->string('safety_document');
+            $table->string('security_document');
+
+            // Limites de badges et de véhicules
+            $table->integer('badge_limit')->default(1);
+            $table->integer('vehicle_pass_limit')->default(1);
+
+            //Autres informations
             $table->string('notification_email')->nullable();
-            $table->string('company_name')->nullable();
-            $table->string('company_address')->nullable();
-            $table->string('company_phone')->nullable();
-            $table->string('company_email')->nullable();
-            $table->string('siret_number')->nullable();
-            $table->string('company_website')->nullable();
-            $table->string('payment_terms')->nullable();
-            $table->string('sous_traitant_de')->nullable();
         });
     }
 

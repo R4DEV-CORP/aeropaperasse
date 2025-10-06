@@ -23,8 +23,8 @@
                 <flux:sidebar.collapse class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2" />
             </flux:sidebar.header>
             <flux:sidebar.nav>
-                <flux:sidebar.item icon="document-text" href="#">Demande d'activité</flux:sidebar.item>
-                <flux:sidebar.item icon="identification" href="/dashboard/badge-requests">Demande de badge</flux:sidebar.item>
+                <flux:sidebar.item icon="document-text" href="/activity-requests">Demande d'activité</flux:sidebar.item>
+                <flux:sidebar.item icon="identification" href="/badge-requests">Demande de badge</flux:sidebar.item>
                 <flux:sidebar.item icon="document-check" href="#">Suivi des badges</flux:sidebar.item>
                 <flux:sidebar.item icon="hand-raised" href="#">Laissez-passer</flux:sidebar.item>
                 <flux:sidebar.item icon="academic-cap" href="#">Formations</flux:sidebar.item>

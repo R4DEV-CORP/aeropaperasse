@@ -34,9 +34,17 @@ Route::get('/change-password', function () {
 });
 
 /*
-* Routes pour le dashboard
+* Routes demande d'activité
 */
 
-Route::get('/dashboard/badge-requests', function () {
-    return view('dashboard.badge-requests.index');
+Route::get('/activity-requests', function () {
+    return view('activity-requests.index');
+})->middleware('auth');
+
+/*
+* Routes badge requests
+*/
+
+Route::get('/badge-requests', function () {
+    return view('badge-requests.index');
 })->middleware('auth');

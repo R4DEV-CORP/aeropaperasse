@@ -1,8 +1,13 @@
 <div class="mt-8">
-    <div class="flex items-center gap-3">
-        <flux:input icon="magnifying-glass" placeholder="Rechercher une demande..." />
-        <flux:button variant="primary" icon="plus">Nouvelle demande</flux:button>
-        <flux:button icon="arrow-path">Actualiser</flux:button>
+    <div class="grid grid-cols-4 gap-4 mt-4">
+        <x-badge-info-card title="En attente REM" value="15" bg-color="yellow-200" />
+        <x-badge-info-card title="En attente ADP" value="15" bg-color="amber-200" />
+        <x-badge-info-card title="Approuvé ADP" value="15" bg-color="green-200" />
+        <x-badge-info-card title="En fabrication" value="15" bg-color="lime-200" />
+        <x-badge-info-card title="Rejetté REM" value="15" bg-color="red-200" />
+        <x-badge-info-card title="Rejetté ADP" value="15" bg-color="red-200" />
+        <x-badge-info-card title="Prêt à être Remis" value="15" bg-color="blue-200" />
+        <x-badge-info-card title="Demandes totales" value="15" bg-color="violet-200" />
     </div>
     <div class="mt-4 p-4 bg-white rounded-lg border border-zinc-200">
         <div class="flex justify-between">
@@ -14,15 +19,35 @@
         </div>
         <flux:text class="mt-2">Vous disposez de <span class="font-medium">2 badges.</span> Il vous reste donc <span class="font-medium">7 demandes de badge disponibles.</span></flux:text>
     </div>
-    <div class="grid grid-cols-4 gap-4 mt-4">
-        <x-badge-info-card title="En attente REM" value="15" bg-color="yellow-200" />
-        <x-badge-info-card title="En attente ADP" value="15" bg-color="amber-200" />
-        <x-badge-info-card title="Approuvé ADP" value="15" bg-color="green-200" />
-        <x-badge-info-card title="En fabrication" value="15" bg-color="lime-200" />
-        <x-badge-info-card title="Rejetté REM" value="15" bg-color="red-200" />
-        <x-badge-info-card title="Rejetté ADP" value="15" bg-color="red-200" />
-        <x-badge-info-card title="Prêt à être Remis" value="15" bg-color="blue-200" />
-        <x-badge-info-card title="Demandes totales" value="15" bg-color="violet-200" />
+    <div class="flex items-center gap-3 mt-4">
+        <flux:input icon="magnifying-glass" placeholder="Rechercher une demande..." />
+        <flux:modal.trigger name="new-badge-request">
+            <flux:button variant="primary" icon="plus">Nouvelle demande</flux:button>
+        </flux:modal.trigger>
+        <flux:modal :dismissible="false" name="new-badge-request" class="md:w-3/4">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Nouvelle demande de badge</flux:heading>
+            </div>
+            <form>
+                <flux:radio.group label="Aéroport">
+                    <flux:radio value="CDG" label="Roissy Charles de Gaulle" checked />
+                    <flux:radio value="ORY" label="Paris - Orly" />
+                    <flux:radio value="BVA" label="Le Bourget" />
+                </flux:radio.group>
+                <div class="flex items-center gap-2">
+                    <flux:input label="Prénom" />
+                    <flux:input label="Nom" />
+                </div>
+            
+                <div class="flex">
+                    <flux:spacer />
+                    <flux:button type="submit" variant="primary">Enregistrer</flux:button>
+                </div>
+            </form>
+        </div>
+    </flux:modal>
+        <flux:button icon="arrow-path">Actualiser</flux:button>
     </div>
     <div class="mt-4 py-4 bg-white rounded-lg border border-zinc-200">
         <flux:heading size="lg" class="px-4">Demandes récentes</flux:heading>
@@ -30,7 +55,6 @@
             <table class="min-w-full divide-y divide-slate-800/10">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">ID</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DEMANDEUR</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">CONTACT</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">STATUT</th>
@@ -40,13 +64,12 @@
                 </thead>
                 <tbody class=" divide-slate-800/10 text-sm text-gray-700">
                     <tr>
-                        <td class="px-3 py-2">1</td>
                         <td class="px-3 py-2">
                             <p class="text-gray-800 font-medium">Dupin Nicolas</p>
                             <flux:text>Aéro drame</flux:text>
                         </td>
                         <td class="px-3 py-2">
-                            <p class="text-gray-800 font-medium">Dupin Nicolas</p>
+                            <p class="text-gray-800 font-medium">dupin.nicolas@gmail.com</p>
                             <flux:text>0674859641</flux:text>
                         </td>
                         <td class="px-3 py-2">

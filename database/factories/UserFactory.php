@@ -23,13 +23,17 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $firstName = fake()->firstName();
+        $lastName = fake()->lastName();
+        $email = strtolower($firstName . '.' . $lastName . '@gmail.com');
+        
         return [
-            'name' => 'R4Web',
-            'email' => 'contact@r4web.fr',
+            'name' => $firstName . ' ' . $lastName,
+            'email' => $email,
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('r4web2025$'),
             'remember_token' => Str::random(10),
-            'role' => 'sadmin',
+            'role' => 'client',
             'is_new' => false,
             'is_student' => false,
             'has_left' => false,

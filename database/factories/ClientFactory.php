@@ -16,17 +16,30 @@ class ClientFactory extends Factory
      */
     public function definition(): array
     {
+        // Générer des données cohérentes
+        $companyName = fake()->company();
+        $referentFirstName = fake()->firstName();
+        $referentLastName = fake()->lastName();
+        $referentName = $referentFirstName . ' ' . $referentLastName;
+        
+        // Créer un email de notification cohérent avec la société
+        $companyDomain = strtolower(str_replace([' ', '&', '-', '.'], ['', 'and', '', ''], $companyName)) . '.com';
+        $notificationEmail = 'contact@' . $companyDomain;
+
+        // Créer un email cohérent avec le nom du référent
+        $referentEmail = strtolower($referentFirstName . '.' . $referentLastName . '@' . $companyDomain);
+        
         return [
-            'name' => 'R4Web',
-            'referent_name' => 'R4Web',
-            'referent_email' => 'contact@r4web.fr',
-            'badge_limit' => 100,
-            'vehicle_pass_limit' => 100,
-            'notification_email' => 'contact@r4web.fr',
-            'company_name' => 'R4Web',
-            'company_address' => '123 Rue de la Paix, Paris, France',
-            'company_phone' => '0674859641',
-            'company_email' => 'contact@r4web.fr',
+            'name' => $companyName,
+            'referent_name' => $referentName,
+            'referent_email' => $referentEmail,
+            'badge_limit' => fake()->numberBetween(5, 25),
+            'vehicle_pass_limit' => fake()->numberBetween(0, 10),
+            'notification_email' => $notificationEmail,
+            'company_name' => $companyName, // Même nom que 'name'
+            'company_address' => fake()->address(),
+            'company_phone' => fake()->phoneNumber(),
+            'company_email' => $notificationEmail, // Même email que notification_email
         ];
     }
 }

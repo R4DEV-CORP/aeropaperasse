@@ -20,10 +20,10 @@ class UserRedirectService
 
         // Redirection selon le rôle (identique à AuthController API)
         return match ($user->role) {
-            'admin', 'sadmin' => '/dashboard/badge-requests',
-            'sclient' => '/dashboard/badge-requests',
-            'client' => '/dashboard/badge-requests',
-            default => '/dashboard/badge-requests'
+            'admin', 'sadmin' => '/badge-requests',
+            'sclient' => '/badge-requests',
+            'client' => '/badge-requests',
+            default => '/badge-requests'
         };
     }
 }

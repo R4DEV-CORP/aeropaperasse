@@ -13,7 +13,18 @@ return new class extends Migration
     {
         Schema::create('activity_requests', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->timestamps();
+
+            //Relation avec la table clients
+            $table->unsignedBigInteger('client_id');
+            $table->foreign('client_id')->references('id')->on('clients');
+
+            //Relation avec la table user : créateur de la demande
+            $table->unsignedBigInteger('creator_id');
+            $table->foreign('creator_id')->references('id')->on('users');
+
+            //Informations de la demande
+            
             $table->boolean('renouvellement')->default(false);
             $table->string('autorisation_anterieur')->nullable();
             $table->string('raison_sociale')->nullable();
