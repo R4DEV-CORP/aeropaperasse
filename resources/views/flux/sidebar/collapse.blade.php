@@ -7,7 +7,7 @@
 @props([
     'tooltipPosition' => 'right',
     'tooltipKbd' => null,
-    'tooltip' => __('Toggle sidebar'),
+    'tooltip' => __('Réduire'),
     'inset' => null,
 ])
 

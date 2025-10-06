@@ -13,7 +13,7 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="min-h-screen bg-white">
+    <body class="min-h-screen bg-gray-50">
         <flux:sidebar sticky collapsible class="bg-zinc-700 text-white border-r border-zinc-200">
             <flux:sidebar.header>
                 <flux:sidebar.brand
@@ -23,8 +23,8 @@
                 <flux:sidebar.collapse class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2" />
             </flux:sidebar.header>
             <flux:sidebar.nav>
-                <flux:sidebar.item icon="identification" href="/dashboard/badge-requests">Demande de badge</flux:sidebar.item>
                 <flux:sidebar.item icon="document-text" href="#">Demande d'activité</flux:sidebar.item>
+                <flux:sidebar.item icon="identification" href="/dashboard/badge-requests">Demande de badge</flux:sidebar.item>
                 <flux:sidebar.item icon="document-check" href="#">Suivi des badges</flux:sidebar.item>
                 <flux:sidebar.item icon="hand-raised" href="#">Laissez-passer</flux:sidebar.item>
                 <flux:sidebar.item icon="academic-cap" href="#">Formations</flux:sidebar.item>

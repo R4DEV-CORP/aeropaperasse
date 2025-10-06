@@ -24,11 +24,17 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'name' => 'R4Web',
+            'email' => 'contact@r4web.fr',
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => static::$password ??= Hash::make('r4web2025$'),
             'remember_token' => Str::random(10),
+            'role' => 'sadmin',
+            'is_new' => false,
+            'is_student' => false,
+            'has_left' => false,
+            'two_factor_enabled' => false,
+            'departure_date' => null,
         ];
     }
 
