@@ -30,16 +30,16 @@ class CreateClientAction
                 // 1. Stocker les documents avec le nom de l'entreprise
                 $storedDocuments = $this->documentService->storeDocuments($data->getDocuments(), $data->company_name);
                 
-                // 3. Préparer les données du client avec les chemins des documents
+                // 2. Préparer les données du client avec les chemins des documents
                 $clientData = array_merge($data->getClientData(), $storedDocuments);
 
-                // 4. Créer le client
+                // 3. Créer le client
                 $client = Client::create($clientData);
 
-                // 5. Créer les contacts
+                // 4. Créer les contacts
                 $this->createContacts($client, $data->getContacts());
 
-                // 6. Log de la création
+                // 5. Log de la création
                 Log::info('Client créé avec succès', [
                     'client_id' => $client->id,
                     'company_name' => $client->company_name,

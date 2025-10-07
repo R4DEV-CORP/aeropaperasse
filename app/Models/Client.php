@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Client extends Model
 {
     use HasFactory;
+    use Searchable;
 
     protected $fillable = [
         'company_name', // raison sociale
@@ -24,6 +26,20 @@ class Client extends Model
         'vehicle_pass_limit',
         'notification_email',
     ];
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'company_name' => $this->company_name,
+            'trade_name' => $this->trade_name,
+            'siret_number' => $this->siret_number,
+        ];
+    }
 
     protected $appends = ['active_badges_count', 'active_vehicle_passes_count'];
 

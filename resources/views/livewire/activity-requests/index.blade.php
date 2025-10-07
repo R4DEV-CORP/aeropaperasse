@@ -7,7 +7,9 @@
     </div>
     <div class="flex items-center gap-3 mt-4">
         <flux:input icon="magnifying-glass" placeholder="Rechercher une demande..." />
-        <flux:button variant="primary" icon="plus">Nouvelle demande</flux:button>
+        <flux:modal.trigger name="new-activity-request">
+            <flux:button variant="primary" icon="plus">Nouvelle demande</flux:button>
+        </flux:modal.trigger>
         <flux:button icon="arrow-path">Actualiser</flux:button>
     </div>
     <div class="mt-4 py-4 bg-white rounded-lg border border-zinc-200">
@@ -50,4 +52,8 @@
             </table>
         </div>
     </div>
+    <!-- Modal création société -->
+    <flux:modal name="new-activity-request" :dismissible="false" class="min-w-4xl !max-w-6xl">
+        <livewire:activity-requests.create-activity-request-form />
+    </flux:modal>
 </div>

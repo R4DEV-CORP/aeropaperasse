@@ -33,7 +33,7 @@ class CreateClientData
     ) {}
 
     /**
-     * Ccréer le DTO à partir d'un array
+     * Créer le DTO à partir d'un array
      */
     public static function fromArray(array $data): self
     {
