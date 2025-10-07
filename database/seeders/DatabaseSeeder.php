@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Client;
 use App\Models\BadgeRequest;
 use App\Models\ActivityRequest;
+use App\Models\ContactClient;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,17 +25,30 @@ class DatabaseSeeder extends Seeder
 
             $user = User::factory()
                 ->for($client)
-                ->create();
+                ->create([
+                    'role' => 'sclient'
+                ]);
 
-            $badgeRequest = BadgeRequest::factory()
-                ->for($user)
+            $contactSafety = ContactClient::factory()
                 ->for($client)
-                ->for($user, 'creator')
-                ->count(5)
-                ->create();
+                ->create([
+                    'role' => 'safety'
+                ]);
+
+            $contactSecurity = ContactClient::factory()
+                ->for($client)
+                ->create([
+                    'role' => 'security'
+                ]);
+
+            $contactHr = ContactClient::factory()
+                ->for($client)
+                ->create([
+                    'role' => 'hr'
+                ]);
 
             $activityRequests = ActivityRequest::factory()
-                ->for($user)
+                ->for($client)
                 ->for($user, 'creator')
                 ->count(5)
                 ->create();
@@ -44,17 +58,16 @@ class DatabaseSeeder extends Seeder
 
         $clientAdmin = Client::factory()
             ->create([
-                'name' => 'R4Web',
-                'referent_email' => 'contact@r4web.fr',
-                'referent_name' => 'Clement Richard',
-                'notification_email' => 'contact@r4web.fr',
                 'company_name' => 'R4Web',
-                'company_address' => '123 Rue de la Paix, Paris, France',
-                'company_phone' => '0674859641',
-                'company_email' => 'contact@r4web.fr'
+                'trade_name' => 'R4Web',
+                'siret_number' => '12345678901234',
+                'address' => '53 avenue du bois de la pie',
+                'zip_code' => '93290',
+                'city' => 'Tremblay en Ffrance',
             ]);
 
         $userAdmin = User::factory()
+            ->for($clientAdmin)
             ->create([
                 'name' => 'R4Web',
                 'email' => 'contact@r4web.fr',

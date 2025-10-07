@@ -10,44 +10,36 @@ class ActivityRequest extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'renouvellement',
-        'autorisation_anterieur',
-        'raison_sociale',
-        'nom_commercial',
-        'siret',
-        'adresse',
-        'responsable_nom',
-        'responsable_prenom',
-        'responsable_email',
-        'responsable_telephone',
-        'responsable_fonction',
-        'activite_description',
-        'nombre_personnes',
-        'nombre_vehicules',
-        'clients_denomination',
-        'extrait_kbis_path',
-        'attestations_clients_path',
-        'formulaire_surete_path',
-        'agrement_prefectoral_path',
-        'contrat_iata_path',
-        'cta_path',
-        'status',
-        'previous_status',
-        'draft_at',
-        'created_by',
-        'pending_at',
-        'approved_at',
-        'rejected_at',
+       'renewal',
+       'last_activity_request_id',
+       'manager_firstname',
+       'manager_lastname',
+       'manager_email',
+       'manager_phone',
+       'manager_role',
+       'description',
+       'person_count',
+       'vehicule_count',
+       'customer_names', // dénomination des clients
+       'customer_certificate_document', // attestation client
+       'prefectural_agreement_document', // agrément préfectoral
+       'iata_contract_document', // contrat IATA
+       'cta_document', // CTA
+       'status',
+       'previous_status',
+       'draft_at',
+       'pending_at',
+       'approved_at',
+       'rejected_at',
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
     }
 }

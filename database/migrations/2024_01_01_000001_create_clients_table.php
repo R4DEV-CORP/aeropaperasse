@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('address');
             $table->string('zip_code');
             $table->string('city');
-            $table->text('activity_description');
             $table->text('subcontractor_of')->nullable(); // Sous traitant de quelles entreprises
 
             //Chemins documents obligatoires

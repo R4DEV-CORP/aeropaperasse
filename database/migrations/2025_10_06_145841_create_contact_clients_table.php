@@ -24,8 +24,7 @@ return new class extends Migration
             $table->string('lastname');
             $table->string('email');
             $table->string('phone');
-            $table->string('function')->enum(['hr', 'safety', 'security', 'manager']); // manager = responsable, hr = ressources humaines, safety = sureté, security = sécurité
-            
+            $table->enum('role', ['hr', 'safety', 'security', 'manager']);
         });
     }
 

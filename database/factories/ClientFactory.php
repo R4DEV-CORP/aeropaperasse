@@ -18,28 +18,25 @@ class ClientFactory extends Factory
     {
         // Générer des données cohérentes
         $companyName = fake()->company();
-        $referentFirstName = fake()->firstName();
-        $referentLastName = fake()->lastName();
-        $referentName = $referentFirstName . ' ' . $referentLastName;
-        
-        // Créer un email de notification cohérent avec la société
         $companyDomain = strtolower(str_replace([' ', '&', '-', '.'], ['', 'and', '', ''], $companyName)) . '.com';
+        
+        // Email de notification
         $notificationEmail = 'contact@' . $companyDomain;
-
-        // Créer un email cohérent avec le nom du référent
-        $referentEmail = strtolower($referentFirstName . '.' . $referentLastName . '@' . $companyDomain);
         
         return [
-            'name' => $companyName,
-            'referent_name' => $referentName,
-            'referent_email' => $referentEmail,
-            'badge_limit' => fake()->numberBetween(5, 25),
+            'company_name' => $companyName,
+            'trade_name' => $companyName,
+            'siret_number' => fake()->randomNumber(8),
+            'address' => fake()->address(),
+            'zip_code' => fake()->postcode(),
+            'city' => fake()->city(),
+            'subcontractor_of' => fake()->company(),
+            'kbis_document' => fake()->mimeType(),
+            'safety_document' => fake()->mimeType(),
+            'security_document' => fake()->mimeType(),
+            'badge_limit' => fake()->numberBetween(5, 15),
             'vehicle_pass_limit' => fake()->numberBetween(0, 10),
             'notification_email' => $notificationEmail,
-            'company_name' => $companyName, // Même nom que 'name'
-            'company_address' => fake()->address(),
-            'company_phone' => fake()->phoneNumber(),
-            'company_email' => $notificationEmail, // Même email que notification_email
         ];
     }
 }

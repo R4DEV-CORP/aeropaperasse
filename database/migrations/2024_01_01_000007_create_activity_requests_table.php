@@ -20,43 +20,40 @@ return new class extends Migration
             $table->foreign('client_id')->references('id')->on('clients');
 
             //Relation avec la table user : créateur de la demande
-            $table->unsignedBigInteger('creator_id');
-            $table->foreign('creator_id')->references('id')->on('users');
+            $table->unsignedBigInteger('created_by');
+            $table->foreign('created_by')->references('id')->on('users');
 
-            //Informations de la demande
-            
-            $table->boolean('renouvellement')->default(false);
-            $table->string('autorisation_anterieur')->nullable();
-            $table->string('raison_sociale')->nullable();
-            $table->string('nom_commercial')->nullable();
-            $table->string('siret')->nullable();
-            $table->string('adresse')->nullable();
-            $table->string('responsable_nom')->nullable();
-            $table->string('responsable_prenom')->nullable();
-            $table->string('responsable_email')->nullable();
-            $table->string('responsable_telephone')->nullable();
-            $table->string('responsable_fonction')->nullable();
-            $table->text('activite_description')->nullable();
-            $table->integer('nombre_personnes')->nullable();
-            $table->integer('nombre_vehicules')->nullable();
-            $table->string('clients_denomination')->nullable();
-            $table->string('extrait_kbis_path')->nullable();
-            $table->string('attestations_clients_path')->nullable();
-            $table->string('formulaire_surete_path')->nullable();
-            $table->string('agrement_prefectoral_path')->nullable();
-            $table->string('contrat_iata_path')->nullable();
-            $table->string('cta_path')->nullable();
+            //Gestion du renouvellement
+            $table->boolean('renewal')->default(false); // renouvellement
+            $table->unsignedBigInteger('last_activity_request_id')->nullable();
+            $table->foreign('last_activity_request_id')->references('id')->on('activity_requests');
+
+            // Responsable de l'activité
+            $table->string('manager_firstname')->nullable();
+            $table->string('manager_lastname')->nullable();
+            $table->string('manager_email')->nullable();
+            $table->string('manager_phone')->nullable();
+            $table->string('manager_role')->nullable();
+
+            // Informations sur l'activité
+            $table->text('description')->nullable();
+            $table->integer('person_count')->default(1);
+            $table->integer('vehicule_count')->default(0);
+            $table->string('customer_names')->nullable(); // dénomination des clients
+
+            // Chemin des documents
+            $table->string('customer_certificate_document')->nullable(); // attestation client
+            $table->string('prefectural_agreement_document')->nullable(); // agrément préfectoral
+            $table->string('iata_contract_document')->nullable(); // contrat IATA
+            $table->string('cta_document')->nullable(); // CTA
+
+            // Statut de la demande
             $table->enum('status', ['draft', 'pending', 'approved', 'rejected'])->default('draft');
-            $table->string('previous_status')->nullable();
+            $table->string('previous_status')->default('draft');
             $table->timestamp('draft_at')->nullable();
-            $table->timestamps();
-            $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamp('pending_at')->nullable();
             $table->timestamp('approved_at')->nullable();
             $table->timestamp('rejected_at')->nullable();
-            
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
         });
     }
 

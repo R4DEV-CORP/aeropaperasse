@@ -16,17 +16,25 @@ class ActivityRequestFactory extends Factory
      */
     public function definition(): array
     {
-        $company = fake()->company();
+        $firstName = fake()->firstName();
+        $lastName = fake()->lastName();
+        $email = strtolower($firstName . '.' . $lastName . '@gmail.com');
         return [
-            'renouvellement' => fake()->boolean(),
-            'status' => 'pending',
-            'raison_sociale' => $company,
-            'nom_commercial' => $company,
-            'responsable_nom' => fake()->lastName(),
-            'responsable_prenom' => fake()->firstName(),
-            'responsable_email' => fake()->email(),
-            'responsable_telephone' => fake()->phoneNumber(),
-
+            'manager_firstname' => $firstName,
+            'manager_lastname' => $lastName,
+            'manager_email' => $email,
+            'manager_phone' => fake()->phoneNumber(),
+            'manager_role' => fake()->randomElement(['hr', 'safety', 'security', 'manager']),
+            'description' => fake()->text(),
+            'person_count' => fake()->numberBetween(1, 5),
+            'vehicule_count' => fake()->numberBetween(0, 5),
+            'customer_names' => fake()->company(),
+            'customer_certificate_document' => fake()->mimeType(),
+            'prefectural_agreement_document' => fake()->mimeType(),
+            'iata_contract_document' => fake()->mimeType(),
+            'cta_document' => fake()->mimeType(),
+            'status' => fake()->randomElement(['draft', 'pending', 'approved', 'rejected']),
+            'previous_status' => fake()->randomElement(['draft', 'pending', 'approved', 'rejected']),
         ];
     }
 }

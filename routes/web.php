@@ -34,6 +34,14 @@ Route::get('/change-password', function () {
 });
 
 /*
+* Route sociétés
+*/
+
+Route::get('/clients', function () {
+    return view('clients.index');
+})->middleware('auth');
+
+/*
 * Routes demande d'activité
 */
 
