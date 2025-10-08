@@ -10,7 +10,6 @@
         <flux:modal.trigger name="new-activity-request">
             <flux:button variant="primary" icon="plus">Nouvelle demande</flux:button>
         </flux:modal.trigger>
-        <flux:button icon="arrow-path">Actualiser</flux:button>
     </div>
     <div class="mt-4 py-4 bg-white rounded-lg border border-zinc-200">
         <flux:heading size="lg" class="px-4">Demandes récentes</flux:heading>
@@ -29,7 +28,7 @@
             <table class="min-w-full divide-y divide-slate-800/10">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">NOM</th>
+                        <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">SOCIETE</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">RESPONSABLE</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">STATUT</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DESCRIPTION</th>
@@ -114,7 +113,7 @@
             <table class="min-w-full divide-y divide-slate-800/10">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">NOM</th>
+                        <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">SOCIETE</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">RESPONSABLE</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">STATUT</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DESCRIPTION</th>

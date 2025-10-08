@@ -99,8 +99,12 @@ class CreateActivityRequestForm extends Component
             $this->customer_names = $activityRequest->customer_names;
             $this->person_count = $activityRequest->person_count;
             $this->vehicule_count = $activityRequest->vehicule_count;
-            $this->renewal = $activityRequest->renewal;
-            $this->selectedPreviousActivityRequest = $activityRequest->last_activity_request_id;
+            
+            // ⚠️ IMPORTANT : Lors de l'édition d'un brouillon, on désactive le mode renouvellement
+            // car le brouillon contient déjà toutes les données (qui ont été copiées lors de la création)
+            // L'utilisateur doit voir et modifier les données du brouillon, pas refaire un renouvellement
+            $this->renewal = false;
+            $this->selectedPreviousActivityRequest = null;
             
             // Vérifier la présence de documents existants
             $this->hasExistingCustomerCertificate = !empty($activityRequest->customer_certificate_document);
