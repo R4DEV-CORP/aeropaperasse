@@ -23,6 +23,9 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by');
             $table->foreign('created_by')->references('id')->on('users');
 
+            // Aéroport concerné
+            $table->enum('airport', ['ORY', 'CDG', 'LBG'])->nullable();
+
             //Gestion du renouvellement
             $table->boolean('renewal')->default(false); // renouvellement
             $table->unsignedBigInteger('last_activity_request_id')->nullable();

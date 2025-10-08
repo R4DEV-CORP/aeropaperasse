@@ -1,18 +1,12 @@
 <form wire:submit="createActivityRequest" class="space-y-6">
     <div class="border-b border-gray-800/10 pb-4">
-        <flux:heading size="xl">Nouvelle demande d'activité</flux:heading>
-        <flux:text class="mt-2">Saisissez les informations pour la création d'une nouvelle demande d'activité.</flux:text>
+        <flux:heading size="xl">
+            {{ $activityRequestId ? 'Modifier le brouillon' : 'Nouvelle demande d\'activité' }}
+        </flux:heading>
+        <flux:text class="mt-2">
+            {{ $activityRequestId ? 'Modifiez les informations du brouillon et soumettez-le.' : 'Saisissez les informations pour la création d\'une nouvelle demande d\'activité.' }}
+        </flux:text>
     </div>
-
-     <!-- Messages de succès et d'erreur -->
-    @if($successMessage)
-         <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-            <div class="flex items-center">
-                <flux:icon.check-circle class="size-5 text-green-600 mr-2" />
-                <flux:text class="text-green-800">{{ $successMessage }}</flux:text>
-            </div>
-        </div>
-    @endif
 
     @if($errorMessage)
         <div class="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -23,7 +17,39 @@
         </div>
     @endif
 
+    <!-- Informations de la précédente demande -->
+    @if($previousActivityRequests->count() > 0)
+        <div class="border border-gray-800/10 p-4 rounded-lg">
+            <flux:heading size="lg" class="mb-4">Renouvellement de demande</flux:heading>
+            <flux:field variant="inline">
+                <flux:checkbox wire:model.live="renewal" />
+                <flux:label>Ma demande est un renouvellement</flux:label>
+                <flux:error name="renewal" />
+            </flux:field>
+            @if($renewal)
+            <flux:callout class="mt-4" icon="information-circle" color="blue">
+                <flux:callout.heading>Toutes les informations de la demande sélectionnée seront automatiquement copiées vers la nouvelle demande, y compris les documents.</flux:callout.heading>
+            </flux:callout>
+            <flux:field class="mt-4">
+                <flux:label>Demandes précédentes</flux:label>
+                <select wire:model.live="selectedPreviousActivityRequest" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">Sélectionnez une activité...</option>
+                    @foreach($previousActivityRequests as $activityRequest)
+                        <option value="{{ $activityRequest->id }}">
+                            {{ $activityRequest->description }} - {{ $activityRequest->created_at->format('d/m/Y') }} - {{ $activityRequest->status }}
+                        </option>
+                    @endforeach
+                </select>
+                <flux:error name="last_activity_request_id" />
+            </flux:field>
+            @endif
+        </div>
+    @endif
+
     <!-- Informations de la société -->
+    @if(!$renewal)
+    <flux:separator text="ou" />
     <div class="border border-gray-800/10 p-4 rounded-lg">
         <flux:heading size="lg">Informations sur la société</flux:heading>
         <flux:callout class="mt-4" icon="information-circle" color="blue" inline>
@@ -48,35 +74,141 @@
         <div class="grid grid-cols-2 gap-4 mt-2">
             <flux:field>
                 <flux:label>Prénom<span class="text-red-500">*</span></flux:label>
-                <flux:input name="manager_firstname" required />
+                <flux:input wire:model="manager_firstname" name="manager_firstname" required />
                 <flux:error name="manager_firstname" />
             </flux:field>
             <flux:field>
                 <flux:label>Nom<span class="text-red-500">*</span></flux:label>
-                <flux:input name="manager_lastname" required />
+                <flux:input wire:model="manager_lastname" name="manager_lastname" required />
                 <flux:error name="manager_lastname" />
             </flux:field>
             
             <flux:field>
                 <flux:label>Email<span class="text-red-500">*</span></flux:label>
-                <flux:input type="email" icon="at-symbol" name="manager_email" required />
+                <flux:input wire:model="manager_email" type="email" icon="at-symbol" name="manager_email" required />
                 <flux:error name="manager_email" />
             </flux:field>
             
             <flux:field>
                 <flux:label>Téléphone<span class="text-red-500">*</span></flux:label>
-                <flux:input icon="phone" name="manager_phone" required />
+                <flux:input wire:model="manager_phone" icon="phone" name="manager_phone" required />
                 <flux:error name="manager_phone" />
             </flux:field>
 
             <flux:field>
                 <flux:label>Fonction du responsable<span class="text-red-500">*</span></flux:label>
-                <flux:input name="manager_role" required />
+                <flux:input wire:model="manager_role" name="manager_role" required />
                 <flux:error name="manager_role" />
             </flux:field>
             
         </div>
     </div>
 
+    <!-- Informations sur l'activité -->
+    <div class="border border-gray-800/10 p-4 rounded-lg">
+        <flux:heading size="lg" class="mb-4">Informations sur l'activité</flux:heading>
+        
+        <!-- Sélection de l'aéroport -->
+        <flux:radio.group wire:model="airport" label="Aéroport">
+            <flux:radio value="CDG" label="Roissy Charles de Gaulle" />
+            <flux:radio value="ORY" label="Paris Orly" />
+            <flux:radio value="LBG" label="Le Bourget" />
+        </flux:radio.group>
+        <flux:error name="airport" />
+        
+        <div class="grid grid-cols-2 gap-4 mt-4">
+            <flux:field>
+                <flux:label>Description de l'activité<span class="text-red-500">*</span></flux:label>
+                <flux:textarea wire:model="description" name="description" required />
+                <flux:error name="description" />
+            </flux:field>
+            <flux:field>
+                <flux:label>Dénomination des clients<span class="text-red-500">*</span></flux:label>
+                <flux:textarea wire:model="customer_names" name="customer_names" required />
+                <flux:error name="customer_names" />
+            </flux:field>
+            <flux:field>
+                <flux:label>Nombre de personnes<span class="text-red-500">*</span></flux:label>
+                <flux:input wire:model="person_count" type="number" min="1" max="1000" icon:trailing="identification" name="person_count" required />
+                <flux:error name="person_count" />
+            </flux:field>
+            <flux:field>
+                <flux:label>Nombre de véhicules<span class="text-red-500">*</span></flux:label>
+                <flux:input wire:model="vehicule_count" type="number" min="0" max="1000" icon:trailing="truck" name="vehicule_count" required />
+                <flux:error name="vehicule_count" />
+            </flux:field>
+        </div>
+    </div>
 
+    <!-- Documents -->
+    <div class="border border-gray-800/10 p-4 rounded-lg">
+        <flux:heading size="lg">Documents</flux:heading>
+
+            @if($activityRequestId && ($hasExistingCustomerCertificate || $hasExistingPrefecturalAgreement || $hasExistingIataContract || $hasExistingCta))
+                <flux:callout class="mt-4" icon="information-circle" color="blue">
+                    <flux:callout.heading>Des documents existent déjà pour ce brouillon. Vous pouvez les remplacer en téléchargeant de nouveaux fichiers, sinon les documents existants seront conservés.</flux:callout.heading>
+                </flux:callout>
+            @endif
+            <flux:field class="mt-2">
+                <flux:label>
+                    Attestation client
+                    @if(!$hasExistingCustomerCertificate)
+                        <span class="text-red-500">*</span>
+                    @else
+                        <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
+                    @endif
+                </flux:label>
+                <flux:input wire:model="customer_certificate_document" type="file" icon="document-plus" name="customer_certificate_document" :required="!$hasExistingCustomerCertificate" />
+                <flux:error name="customer_certificate_document" />
+            </flux:field>
+            <flux:field class="mt-2">
+                <flux:label>
+                    Agrément préfectoral
+                    @if(!$hasExistingPrefecturalAgreement)
+                        <span class="text-red-500">*</span>
+                    @else
+                        <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
+                    @endif
+                </flux:label>
+                <flux:input wire:model="prefectural_agreement_document" type="file" icon="document-plus" name="prefectural_agreement_document" :required="!$hasExistingPrefecturalAgreement" />
+                <flux:error name="prefectural_agreement_document" />
+            </flux:field>
+            <flux:field class="mt-2">
+                <flux:label>
+                    Contrat IATA
+                    @if(!$hasExistingIataContract)
+                        <span class="text-red-500">*</span>
+                    @else
+                        <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
+                    @endif
+                </flux:label>
+                <flux:input wire:model="iata_contract_document" type="file" icon="document-plus" name="iata_contract_document" :required="!$hasExistingIataContract" />
+                <flux:error name="iata_contract_document" />
+            </flux:field>
+            <flux:field class="mt-2">
+                <flux:label>
+                    CTA
+                    @if(!$hasExistingCta)
+                        <span class="text-red-500">*</span>
+                    @else
+                        <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
+                    @endif
+                </flux:label>
+                <flux:input wire:model="cta_document" type="file" icon="document-plus" name="cta_document" :required="!$hasExistingCta" />
+                <flux:error name="cta_document" />
+            </flux:field>
+    </div>
+    @endif
+
+    <!-- Actions -->
+    <div class="flex gap-2 mt-4">
+        <flux:button wire:click="closeModal">Annuler</flux:button>
+        <flux:spacer />
+        <flux:button wire:click="saveDraft" icon="document-arrow-down">
+            {{ $activityRequestId ? 'Mettre à jour le brouillon' : 'Enregistrer en brouillon' }}
+        </flux:button>
+        <flux:button type="submit" variant="primary" :icon="$activityRequestId ? 'check' : 'plus'">
+            {{ $activityRequestId ? 'Soumettre la demande' : 'Créer la demande' }}
+        </flux:button>
+    </div>
 </form>

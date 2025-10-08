@@ -4,12 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;   
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ActivityRequest extends Model
 {
     use HasFactory;
+    use Searchable;
 
     protected $fillable = [
+       'client_id',
+       'created_by',
+       'airport',
        'renewal',
        'last_activity_request_id',
        'manager_firstname',
@@ -33,12 +39,28 @@ class ActivityRequest extends Model
        'rejected_at',
     ];
 
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'manager_firstname' => $this->manager_firstname,
+            'manager_lastname' => $this->manager_lastname,
+            'manager_email' => $this->manager_email,
+            'clients.company_name' => $this->client->company_name ?? '',
+            'clients.trade_name' => $this->client->trade_name ?? '',
+        ];
+    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function client()
+    public function client() : BelongsTo
     {
         return $this->belongsTo(Client::class);
     }

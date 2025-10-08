@@ -211,17 +211,17 @@
         <div class="border border-gray-800/10 p-4 rounded-lg">
             <flux:heading size="lg">Documents</flux:heading>
             <flux:field class="mt-2">
-                <flux:label>KBIS</flux:label>
+                <flux:label>KBIS<span class="text-red-500">*</span></flux:label>
                 <flux:input type="file" icon="document-plus" wire:model="kbis_document" name="kbis_document" required />
                 <flux:error name="kbis_document" />
             </flux:field>
             <flux:field class="mt-2">
-                <flux:label>Référents sûreté</flux:label>
+                <flux:label>Référents sûreté<span class="text-red-500">*</span></flux:label>
                 <flux:input type="file" icon="document-plus" wire:model="safety_document" name="safety_document" required />
                 <flux:error name="safety_document" />
             </flux:field>
             <flux:field class="mt-2">
-                <flux:label>Correspondant sécurité</flux:label>
+                <flux:label>Correspondant sécurité<span class="text-red-500">*</span></flux:label>
                 <flux:input type="file" icon="document-plus" wire:model="security_document" name="security_document" required />
                 <flux:error name="security_document" />
             </flux:field>
