@@ -9,19 +9,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class DiscussionReadStatus extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'discussion_read_status';
-    
+
     protected $fillable = [
         'user_id',
         'discussion_id',
-        'last_read_at'
+        'last_read_at',
     ];
-    
+
     protected $casts = [
         'last_read_at' => 'datetime',
     ];
-    
+
     /**
      * Relation avec l'utilisateur
      */
@@ -29,7 +29,7 @@ class DiscussionReadStatus extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
     /**
      * Relation avec la discussion
      */

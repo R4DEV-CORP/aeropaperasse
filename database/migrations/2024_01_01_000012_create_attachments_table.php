@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('file_size');
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->foreign('message_id')->references('id')->on('messages')->onDelete('cascade');
         });
     }

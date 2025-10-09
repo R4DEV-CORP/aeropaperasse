@@ -18,7 +18,8 @@ class BadgeRequestFactory extends Factory
     {
         $firstName = fake()->firstName();
         $lastName = fake()->lastName();
-        $email = strtolower($firstName . '.' . $lastName . '@gmail.com');
+        $email = strtolower($firstName.'.'.$lastName.'@gmail.com');
+
         return [
             'airport' => fake()->randomElement(['CDG', 'ORY', 'BVA']),
             'nom' => $lastName,

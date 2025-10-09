@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Training;
+use App\Models\BadgeRequest;
 use App\Models\Client;
 use App\Models\User;
 use App\Models\UserTraining;
-use App\Models\BadgeRequest;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class TrainingController extends Controller
 {
@@ -28,15 +26,15 @@ class TrainingController extends Controller
                 'expiresSoon' => UserTraining::whereNotNull('expires_at')
                     ->where('expires_at', '<=', Carbon::now()->addMonth())
                     ->distinct('user_id')
-                    ->count()
+                    ->count(),
             ];
 
             $clientsData = $clients->map(function ($client) {
-                $latestTraining = UserTraining::whereHas('user', function($query) use ($client) {
+                $latestTraining = UserTraining::whereHas('user', function ($query) use ($client) {
                     $query->where('client_id', $client->id);
                 })
-                ->orderBy('started_at', 'desc')
-                ->first();
+                    ->orderBy('started_at', 'desc')
+                    ->first();
 
                 return [
                     'id' => $client->id,
@@ -45,21 +43,22 @@ class TrainingController extends Controller
                     'email' => $client->referent_email ?? 'Non défini',
                     'nombreUtilisateurs' => $client->users->count(),
                     'derniereFormation' => optional($latestTraining)->started_at,
-                    'dateExpiration' => optional($latestTraining)->expires_at
+                    'dateExpiration' => optional($latestTraining)->expires_at,
                 ];
             });
 
             return response()->json([
                 'status' => 'success',
                 'clients' => $clientsData,
-                'stats' => $stats
+                'stats' => $stats,
             ]);
         } catch (\Exception $e) {
-            Log::error('Erreur dans getClientsWithTrainings: ' . $e->getMessage());
+            Log::error('Erreur dans getClientsWithTrainings: '.$e->getMessage());
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'Erreur lors de la récupération des données',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -67,19 +66,19 @@ class TrainingController extends Controller
     public function getClientDetails($clientId)
     {
         try {
-            $client = Client::with(['users' => function($query) {
-                $query->with(['trainings' => function($q) {
+            $client = Client::with(['users' => function ($query) {
+                $query->with(['trainings' => function ($q) {
                     $q->withPivot(['started_at', 'expires_at', 'certificate_path', 'validity_years'])
-                    ->orderBy('user_trainings.expires_at', 'desc');
+                        ->orderBy('user_trainings.expires_at', 'desc');
                 }]);
             }])->findOrFail($clientId);
 
-            $expiresSoon = UserTraining::whereHas('user', function($query) use ($clientId) {
+            $expiresSoon = UserTraining::whereHas('user', function ($query) use ($clientId) {
                 $query->where('client_id', $clientId);
             })
-            ->whereNotNull('expires_at')
-            ->where('expires_at', '<=', now()->addMonth())
-            ->count();
+                ->whereNotNull('expires_at')
+                ->where('expires_at', '<=', now()->addMonth())
+                ->count();
 
             $userData = $client->users->map(function ($user) {
                 $latestTraining = $user->trainings->first();
@@ -90,7 +89,7 @@ class TrainingController extends Controller
                     'email' => $user->email,
                     'nombreFormations' => $user->trainings->count(),
                     'derniereFormation' => $latestTraining ? $latestTraining->pivot->started_at : null,
-                    'dateExpiration' => $latestTraining ? $latestTraining->pivot->expires_at : null
+                    'dateExpiration' => $latestTraining ? $latestTraining->pivot->expires_at : null,
                 ];
             });
 
@@ -102,15 +101,16 @@ class TrainingController extends Controller
                 ],
                 'users' => $userData,
                 'stats' => [
-                    'expiresSoon' => $expiresSoon
-                ]
+                    'expiresSoon' => $expiresSoon,
+                ],
             ]);
         } catch (\Exception $e) {
-            Log::error('Erreur dans getClientDetails: ' . $e->getMessage());
+            Log::error('Erreur dans getClientDetails: '.$e->getMessage());
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'Erreur lors de la récupération des détails du client',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -118,7 +118,7 @@ class TrainingController extends Controller
     public function getUserTrainings($id)
     {
         try {
-            $user = User::with(['trainings' => function($query) {
+            $user = User::with(['trainings' => function ($query) {
                 $query->withPivot(['id', 'started_at', 'expires_at', 'certificate_path', 'validity_years']);
             }])->findOrFail($id);
 
@@ -127,7 +127,7 @@ class TrainingController extends Controller
                 ->first();
 
             $trainings = $user->trainings->map(function ($training) {
-                $hasCertificate = !empty($training->pivot->certificate_path);
+                $hasCertificate = ! empty($training->pivot->certificate_path);
 
                 return [
                     'id' => $training->id,
@@ -140,7 +140,7 @@ class TrainingController extends Controller
                         'exists' => $hasCertificate,
                         'path' => $hasCertificate ? $training->pivot->certificate_path : null,
                         'url' => $hasCertificate ? Storage::disk('public')->url($training->pivot->certificate_path) : null,
-                    ]
+                    ],
                 ];
             });
 
@@ -154,15 +154,15 @@ class TrainingController extends Controller
                     'function' => $user->function,
                     'client' => $user->client->name,
                     'created_at' => $user->created_at,
-                    'updated_at' => $user->updated_at
+                    'updated_at' => $user->updated_at,
                 ],
-                'trainings' => $trainings
+                'trainings' => $trainings,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Erreur lors de la récupération des formations',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -174,7 +174,7 @@ class TrainingController extends Controller
                 'user_id' => 'required|exists:users,id',
                 'training_id' => 'required|exists:trainings,id',
                 'started_at' => 'required|date',
-                'validity_years' => 'required|in:3,5'
+                'validity_years' => 'required|in:3,5',
             ]);
 
             // Calcul de la date d'expiration
@@ -186,7 +186,7 @@ class TrainingController extends Controller
                 'training_id' => $validatedData['training_id'],
                 'started_at' => $validatedData['started_at'],
                 'expires_at' => $expirationDate,
-                'validity_years' => $validatedData['validity_years']
+                'validity_years' => $validatedData['validity_years'],
             ]);
 
             return response()->json([
@@ -201,7 +201,8 @@ class TrainingController extends Controller
                 'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
-            Log::error('Erreur dans store: ' . $e->getMessage());
+            Log::error('Erreur dans store: '.$e->getMessage());
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'Erreur lors de l\'attribution de la formation',
@@ -213,12 +214,12 @@ class TrainingController extends Controller
     public function uploadCertificate(Request $request, $userTrainingId)
     {
         try {
-           $userTraining = UserTraining::with(['user', 'training'])
+            $userTraining = UserTraining::with(['user', 'training'])
                 ->find($userTrainingId);
 
-            if (!$userTraining) {
+            if (! $userTraining) {
                 return response()->json([
-                    'message' => 'La formation utilisateur avec ID ' . $userTrainingId . ' n\'existe pas'
+                    'message' => 'La formation utilisateur avec ID '.$userTrainingId.' n\'existe pas',
                 ], 404);
             }
 
@@ -237,7 +238,7 @@ class TrainingController extends Controller
             $path = $request->file('certificate')->store('certificats', 'public');
 
             $userTraining->update([
-                'certificate_path' => $path
+                'certificate_path' => $path,
             ]);
 
             return response()->json([
@@ -245,16 +246,16 @@ class TrainingController extends Controller
                 'certificate' => [
                     'exists' => true,
                     'path' => $path,
-                    'url' => Storage::disk('public')->url($path)
-                ]
+                    'url' => Storage::disk('public')->url($path),
+                ],
             ]);
         } catch (\Exception $e) {
 
-            Log::error('Erreur lors de l\'upload du certificat: ' . $e->getMessage());
+            Log::error('Erreur lors de l\'upload du certificat: '.$e->getMessage());
 
             return response()->json([
                 'message' => 'Erreur lors de l\'upload du certificat',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -262,13 +263,13 @@ class TrainingController extends Controller
     public function downloadCertificate($userTrainingId)
     {
         try {
-           $userTraining = UserTraining::findOrFail($userTrainingId);
+            $userTraining = UserTraining::findOrFail($userTrainingId);
 
-            if (!$userTraining->certificate_path) {
+            if (! $userTraining->certificate_path) {
                 return response()->json(['message' => 'Aucun certificat disponible pour cette formation'], 404);
             }
 
-            if (!Storage::disk('public')->exists($userTraining->certificate_path)) {
+            if (! Storage::disk('public')->exists($userTraining->certificate_path)) {
                 return response()->json(['message' => 'Fichier non trouvé'], 404);
             }
 
@@ -280,12 +281,12 @@ class TrainingController extends Controller
             return response()->json([
                 'success' => true,
                 'path' => $certificatePath,
-                'filename' => "certificat_{$training->title}_{$user->name}.pdf"
+                'filename' => "certificat_{$training->title}_{$user->name}.pdf",
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erreur lors de la récupération du certificat',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

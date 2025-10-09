@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('discussion_id')->nullable();
             $table->unsignedBigInteger('message_comment_id')->nullable();
             $table->timestamps();
-            
+
             $table->foreign('discussion_id')->references('id')->on('discussions')->onDelete('cascade');
             $table->foreign('message_comment_id')->references('id')->on('message_comments')->onDelete('cascade');
         });

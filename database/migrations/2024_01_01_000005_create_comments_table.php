@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('badge_request_id');
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('badge_request_id')->references('id')->on('badge_requests')->onDelete('cascade');
         });

@@ -17,20 +17,20 @@ class ActivityRequestFormData
         public ?string $manager_email = null,
         public ?string $manager_phone = null,
         public ?string $manager_role = null,
-        
+
         // Informations sur l'activité
         public ?string $airport = null,
         public ?string $description = null,
         public ?string $customer_names = null,
         public ?int $person_count = null,
         public ?int $vehicule_count = null,
-        
+
         // Documents
         public ?UploadedFile $customer_certificate_document = null,
         public ?UploadedFile $prefectural_agreement_document = null,
         public ?UploadedFile $iata_contract_document = null,
         public ?UploadedFile $cta_document = null,
-        
+
         // Flags et métadonnées
         public bool $renewal = false,
         public ?int $last_activity_request_id = null,
@@ -99,7 +99,7 @@ class ActivityRequestFormData
      */
     public function isRenewal(): bool
     {
-        return $this->renewal && !is_null($this->last_activity_request_id);
+        return $this->renewal && ! is_null($this->last_activity_request_id);
     }
 
     /**
@@ -107,10 +107,10 @@ class ActivityRequestFormData
      */
     public function hasDocuments(): bool
     {
-        return !is_null($this->customer_certificate_document)
-            || !is_null($this->prefectural_agreement_document)
-            || !is_null($this->iata_contract_document)
-            || !is_null($this->cta_document);
+        return ! is_null($this->customer_certificate_document)
+            || ! is_null($this->prefectural_agreement_document)
+            || ! is_null($this->iata_contract_document)
+            || ! is_null($this->cta_document);
     }
 
     /**
@@ -151,7 +151,7 @@ class ActivityRequestFormData
         $this->customer_names = $activityRequest->customer_names;
         $this->person_count = $activityRequest->person_count;
         $this->vehicule_count = $activityRequest->vehicule_count;
-        
+
         // Pour un brouillon existant, on désactive le mode renouvellement
         // car les données sont déjà présentes
         $this->renewal = false;
@@ -164,11 +164,10 @@ class ActivityRequestFormData
     public function getExistingDocumentsFlags(\App\Models\ActivityRequest $activityRequest): array
     {
         return [
-            'hasExistingCustomerCertificate' => !empty($activityRequest->customer_certificate_document),
-            'hasExistingPrefecturalAgreement' => !empty($activityRequest->prefectural_agreement_document),
-            'hasExistingIataContract' => !empty($activityRequest->iata_contract_document),
-            'hasExistingCta' => !empty($activityRequest->cta_document),
+            'hasExistingCustomerCertificate' => ! empty($activityRequest->customer_certificate_document),
+            'hasExistingPrefecturalAgreement' => ! empty($activityRequest->prefectural_agreement_document),
+            'hasExistingIataContract' => ! empty($activityRequest->iata_contract_document),
+            'hasExistingCta' => ! empty($activityRequest->cta_document),
         ];
     }
 }
-

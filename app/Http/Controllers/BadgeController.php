@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Badge;
+use App\Models\BadgeRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use App\Models\BadgeRequest;
 
 class BadgeController extends Controller
 {
@@ -19,28 +18,25 @@ class BadgeController extends Controller
         $badgesQuery = Badge::with(['badgeRequest', 'badgeRequest.user', 'badgeRequest.user.client'])
             ->orderBy('created_at', 'desc');
 
-            if($user->role == "sadmin"){
-                // Les super admins peuvent voir tous les badges
-            }
-            elseif($user->role == "admin"){
-                // Les admins peuvent voir tous les badges
-            }
-            elseif($user->role == "sclient" || $user->role == "client"){
-                // Les clients ne peuvent voir que les badges de leur société
-                $badgesQuery->whereHas('badgeRequest.user', function($query) use ($user) {
-                    $query->where('client_id', $user->client_id);
-                })
-                // OU les badges importés pour leur société
+        if ($user->role == 'sadmin') {
+            // Les super admins peuvent voir tous les badges
+        } elseif ($user->role == 'admin') {
+            // Les admins peuvent voir tous les badges
+        } elseif ($user->role == 'sclient' || $user->role == 'client') {
+            // Les clients ne peuvent voir que les badges de leur société
+            $badgesQuery->whereHas('badgeRequest.user', function ($query) use ($user) {
+                $query->where('client_id', $user->client_id);
+            })
+            // OU les badges importés pour leur société
                 ->orWhere('holder_client', $user->client->name ?? '');
-            }
-            else {
-                // Pour les autres rôles, pas d'accès
-                return response()->json([
-                    'message' => 'Accès non autorisé'
-                ], 403);
-            }
+        } else {
+            // Pour les autres rôles, pas d'accès
+            return response()->json([
+                'message' => 'Accès non autorisé',
+            ], 403);
+        }
 
-            $badges = $badgesQuery->get()
+        $badges = $badgesQuery->get()
             ->map(function ($badge) {
                 return [
                     'id' => $badge->id,
@@ -63,7 +59,7 @@ class BadgeController extends Controller
             });
 
         return response()->json([
-            'badges' => $badges
+            'badges' => $badges,
         ]);
     }
 
@@ -77,7 +73,7 @@ class BadgeController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Erreur de validation',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -86,7 +82,7 @@ class BadgeController extends Controller
             $badgeRequest = BadgeRequest::find($request->badge_request_id);
             if ($badgeRequest->status !== 'ready_for_delivery') {
                 return response()->json([
-                    'message' => 'La demande de badge doit être approuvée pour créer un badge'
+                    'message' => 'La demande de badge doit être approuvée pour créer un badge',
                 ], 422);
             }
         }
@@ -99,7 +95,7 @@ class BadgeController extends Controller
 
         return response()->json([
             'message' => 'Badge créé avec succès',
-            'badge' => $badge
+            'badge' => $badge,
         ], 201);
     }
 
@@ -126,7 +122,7 @@ class BadgeController extends Controller
                 'externalRequestNumber' => $badge->external_request_number,
                 'requestDate' => $badge->request_date,
                 'importSource' => $badge->import_source,
-            ]
+            ],
         ]);
     }
 
@@ -135,7 +131,7 @@ class BadgeController extends Controller
         // Valider que le badge peut être restitué
         if ($badge->status !== 'active') {
             return response()->json([
-                'message' => 'Ce badge ne peut pas être restitué dans son état actuel.'
+                'message' => 'Ce badge ne peut pas être restitué dans son état actuel.',
             ], 422);
         }
 
@@ -149,12 +145,12 @@ class BadgeController extends Controller
         $badge->update([
             'status' => 'returned',
             'returned_at' => now(),
-            'return_document' => $returnDocument
+            'return_document' => $returnDocument,
         ]);
 
         return response()->json([
             'message' => 'Badge restitué avec succès',
-            'badge' => $badge
+            'badge' => $badge,
         ]);
     }
 
@@ -162,7 +158,7 @@ class BadgeController extends Controller
     {
         $badge = Badge::find($id);
 
-        if (!$badge) {
+        if (! $badge) {
             return response()->json(['message' => 'Badge non trouvé'], 404);
         }
 
@@ -171,7 +167,7 @@ class BadgeController extends Controller
 
         return response()->json([
             'message' => 'Statut mis à jour avec succès',
-            'badge' => $badge
+            'badge' => $badge,
         ]);
     }
 
@@ -184,7 +180,7 @@ class BadgeController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Erreur de validation',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -194,7 +190,7 @@ class BadgeController extends Controller
 
         return response()->json([
             'message' => 'Date d\'expiration mise à jour avec succès',
-            'badge' => $badge
+            'badge' => $badge,
         ]);
     }
 
@@ -209,7 +205,7 @@ class BadgeController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'message' => 'Fichier invalide',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
@@ -235,6 +231,7 @@ class BadgeController extends Controller
                     // Validation simple
                     if (empty($data['nom']) || empty($data['prenom']) || empty($data['email'])) {
                         $errors[] = "Ligne {$rowNumber}: Nom, prénom et email sont obligatoires";
+
                         continue;
                     }
 
@@ -246,7 +243,7 @@ class BadgeController extends Controller
                         'holder_telephone' => $data['telephone'] ?? null,
                         'holder_client' => $data['raison_sociale'] ?? null,
                         'external_request_number' => $data['numero_demande'] ?? null,
-                        'request_date' => !empty($data['date_demande']) ? $data['date_demande'] : null,
+                        'request_date' => ! empty($data['date_demande']) ? $data['date_demande'] : null,
                         'status' => $data['statut'] ?? 'active',
                         'import_source' => 'csv_import',
                         'badge_request_id' => null,
@@ -258,12 +255,12 @@ class BadgeController extends Controller
                     $successCount++;
 
                 } catch (\Exception $e) {
-                    $errors[] = "Ligne {$rowNumber}: " . $e->getMessage();
+                    $errors[] = "Ligne {$rowNumber}: ".$e->getMessage();
                 }
             }
 
             // Insertion en une seule fois
-            if (!empty($badgesToInsert)) {
+            if (! empty($badgesToInsert)) {
                 Badge::insert($badgesToInsert);
             }
 
@@ -271,13 +268,13 @@ class BadgeController extends Controller
                 'message' => 'Import terminé',
                 'success_count' => $successCount,
                 'total_lines' => count($csvData),
-                'errors' => $errors
+                'errors' => $errors,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erreur lors de l\'import',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

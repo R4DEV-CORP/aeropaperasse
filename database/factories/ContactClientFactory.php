@@ -18,7 +18,8 @@ class ContactClientFactory extends Factory
     {
         $firstName = fake()->firstName();
         $lastName = fake()->lastName();
-        $email = strtolower($firstName . '.' . $lastName . '@gmail.com');
+        $email = strtolower($firstName.'.'.$lastName.'@gmail.com');
+
         return [
             'firstname' => $firstName,
             'lastname' => $lastName,

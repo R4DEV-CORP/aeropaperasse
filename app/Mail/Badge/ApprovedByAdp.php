@@ -21,11 +21,11 @@ class ApprovedByAdp extends Mailable
     public function build()
     {
         return $this->view('emails.badge.approved-by-adp')
-                    ->subject('Votre demande de badge a été approuvée par ADP')
-                    ->with([
-                        'nom' => $this->badgeRequest->nom,
-                        'prenom' => $this->badgeRequest->prenom,
-                        'badge_request_id' => $this->badgeRequest->id,
-                    ]);
+            ->subject('Votre demande de badge a été approuvée par ADP')
+            ->with([
+                'nom' => $this->badgeRequest->nom,
+                'prenom' => $this->badgeRequest->prenom,
+                'badge_request_id' => $this->badgeRequest->id,
+            ]);
     }
 }

@@ -9,11 +9,11 @@ class TwoFactorCode extends Model
     protected $fillable = [
         'user_id',
         'code',
-        'expires_at'
+        'expires_at',
     ];
 
     protected $casts = [
-        'expires_at' => 'datetime'
+        'expires_at' => 'datetime',
     ];
 
     public function user()

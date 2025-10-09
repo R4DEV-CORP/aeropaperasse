@@ -17,7 +17,7 @@ class ActivityRequestValidator
                 'last_activity_request_id' => 'required|integer|exists:activity_requests,id',
             ];
         }
-        
+
         // Sinon, validation complète classique
         return [
             // Informations du responsable (obligatoires)
@@ -26,14 +26,14 @@ class ActivityRequestValidator
             'manager_email' => 'required|email|max:255',
             'manager_phone' => 'required|string|max:255',
             'manager_role' => 'required|string|max:255',
-            
+
             // Informations sur l'activité (obligatoires)
             'airport' => 'required|in:ORY,CDG,LBG',
             'description' => 'required|string|max:2000',
             'customer_names' => 'required|string|max:2000',
             'person_count' => 'required|integer|min:1|max:1000',
             'vehicule_count' => 'required|integer|min:0|max:1000',
-            
+
             // Documents (obligatoires)
             'customer_certificate_document' => 'required|file|mimes:pdf|max:8192',
             'prefectural_agreement_document' => 'required|file|mimes:pdf|max:8192',
@@ -54,7 +54,7 @@ class ActivityRequestValidator
                 'last_activity_request_id' => 'required|integer|exists:activity_requests,id',
             ];
         }
-        
+
         // Sinon, tous les champs sont optionnels
         return [
             // Informations du responsable (optionnelles)
@@ -63,14 +63,14 @@ class ActivityRequestValidator
             'manager_email' => 'nullable|email|max:255',
             'manager_phone' => 'nullable|string|max:255',
             'manager_role' => 'nullable|string|max:255',
-            
+
             // Informations sur l'activité (optionnelles)
             'airport' => 'nullable|in:ORY,CDG,LBG',
             'description' => 'nullable|string|max:2000',
             'customer_names' => 'nullable|string|max:2000',
             'person_count' => 'nullable|integer|min:1|max:1000',
             'vehicule_count' => 'nullable|integer|min:0|max:1000',
-            
+
             // Documents (optionnels)
             'customer_certificate_document' => 'nullable|file|mimes:pdf|max:8192',
             'prefectural_agreement_document' => 'nullable|file|mimes:pdf|max:8192',
@@ -89,7 +89,7 @@ class ActivityRequestValidator
             'last_activity_request_id.required' => 'Vous devez sélectionner une demande précédente pour le renouvellement',
             'last_activity_request_id.integer' => 'L\'identifiant de la demande précédente doit être un nombre',
             'last_activity_request_id.exists' => 'La demande précédente sélectionnée n\'existe pas',
-            
+
             // Informations du responsable
             'manager_firstname.required' => 'Le prénom du responsable est obligatoire et ne doit pas dépasser 255 caractères',
             'manager_lastname.required' => 'Le nom du responsable est obligatoire et ne doit pas dépasser 255 caractères',
@@ -97,7 +97,7 @@ class ActivityRequestValidator
             'manager_email.email' => 'L\'email du responsable doit être une adresse email valide',
             'manager_phone.required' => 'Le téléphone du responsable est obligatoire et ne doit pas dépasser 255 caractères',
             'manager_role.required' => 'La fonction du responsable est obligatoire et ne doit pas dépasser 255 caractères',
-            
+
             // Informations sur l'activité
             'airport.required' => 'L\'aéroport est obligatoire',
             'airport.in' => 'L\'aéroport sélectionné n\'est pas valide',
@@ -111,7 +111,7 @@ class ActivityRequestValidator
             'vehicule_count.integer' => 'Le nombre de véhicules doit être un nombre entier',
             'vehicule_count.min' => 'Le nombre de véhicules doit être au minimum 0',
             'vehicule_count.max' => 'Le nombre de véhicules ne peut pas dépasser 1000',
-            
+
             // Documents
             'customer_certificate_document.required' => 'L\'attestation client est obligatoire, doit être un fichier PDF et ne pas dépasser 8MB',
             'customer_certificate_document.file' => 'L\'attestation client doit être un fichier',
@@ -159,7 +159,7 @@ class ActivityRequestValidator
                 'last_activity_request_id' => 'required|integer|exists:activity_requests,id',
             ];
         }
-        
+
         // Règles de base (identiques à getCompleteRules)
         $rules = [
             // Informations du responsable (obligatoires)
@@ -168,7 +168,7 @@ class ActivityRequestValidator
             'manager_email' => 'required|email|max:255',
             'manager_phone' => 'required|string|max:255',
             'manager_role' => 'required|string|max:255',
-            
+
             // Informations sur l'activité (obligatoires)
             'airport' => 'required|in:ORY,CDG,LBG',
             'description' => 'required|string|max:2000',
@@ -176,7 +176,7 @@ class ActivityRequestValidator
             'person_count' => 'required|integer|min:1|max:1000',
             'vehicule_count' => 'required|integer|min:0|max:1000',
         ];
-        
+
         // Gestion des documents : obligatoires seulement s'ils n'existent pas déjà
         $documentFields = [
             'customer_certificate_document',
@@ -184,7 +184,7 @@ class ActivityRequestValidator
             'iata_contract_document',
             'cta_document',
         ];
-        
+
         foreach ($documentFields as $field) {
             if (isset($existingDocuments[$field]) && $existingDocuments[$field]) {
                 // Document existe déjà, il est optionnel
@@ -194,7 +194,7 @@ class ActivityRequestValidator
                 $rules[$field] = 'required|file|mimes:pdf|max:8192';
             }
         }
-        
+
         return $rules;
     }
 

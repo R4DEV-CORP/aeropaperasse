@@ -28,7 +28,7 @@ return new class extends Migration
                 'approved_adp',
                 'rejected_adp',
                 'pending_fabrication',
-                'ready_for_delivery'
+                'ready_for_delivery',
             ])->default('pending_rem');
             $table->string('previous_status')->nullable();
             $table->text('reject_reason')->nullable();
@@ -49,7 +49,7 @@ return new class extends Migration
             $table->string('facture')->nullable();
             $table->unsignedBigInteger('client_id')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
-            
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('set null');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');

@@ -15,18 +15,18 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
-            //Relation avec la table clients
+            // Relation avec la table clients
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('clients');
 
-            //Relation avec la table user : créateur de la demande
+            // Relation avec la table user : créateur de la demande
             $table->unsignedBigInteger('created_by');
             $table->foreign('created_by')->references('id')->on('users');
 
             // Aéroport concerné
             $table->enum('airport', ['ORY', 'CDG', 'LBG'])->nullable();
 
-            //Gestion du renouvellement
+            // Gestion du renouvellement
             $table->boolean('renewal')->default(false); // renouvellement
             $table->unsignedBigInteger('last_activity_request_id')->nullable();
             $table->foreign('last_activity_request_id')->references('id')->on('activity_requests');

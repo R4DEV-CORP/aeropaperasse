@@ -8,7 +8,6 @@ use App\Observers\BadgeObserver;
 use App\Observers\BadgeRequestObserver;
 use Illuminate\Support\ServiceProvider;
 
-
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -27,7 +26,6 @@ class AppServiceProvider extends ServiceProvider
         // Enregistrer les observers
         Badge::observe(BadgeObserver::class);
         BadgeRequest::observe(BadgeRequestObserver::class);
-        //BadgeRequest::observe(BadgeRequesterObserver::class);
+        // BadgeRequest::observe(BadgeRequesterObserver::class);
     }
 }
-

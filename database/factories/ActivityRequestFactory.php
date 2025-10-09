@@ -18,7 +18,8 @@ class ActivityRequestFactory extends Factory
     {
         $firstName = fake()->firstName();
         $lastName = fake()->lastName();
-        $email = strtolower($firstName . '.' . $lastName . '@gmail.com');
+        $email = strtolower($firstName.'.'.$lastName.'@gmail.com');
+
         return [
             'manager_firstname' => $firstName,
             'manager_lastname' => $lastName,

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('discussion_id');
             $table->timestamp('last_read_at')->useCurrent()->useCurrentOnUpdate();
             $table->timestamps();
-            
+
             $table->unique(['user_id', 'discussion_id']);
             $table->foreign('discussion_id')->references('id')->on('discussions')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

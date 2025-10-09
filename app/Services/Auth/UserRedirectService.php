@@ -12,7 +12,7 @@ class UserRedirectService
     public function getRedirectPath(User $user): string
     {
         // Supprimer les logs de debug pour simplifier
-        
+
         // Si première connexion, changement de mot de passe obligatoire
         if ($user->is_new) {
             return '/change-password';

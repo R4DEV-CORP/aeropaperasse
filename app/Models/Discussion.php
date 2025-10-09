@@ -16,11 +16,11 @@ class Discussion extends Model
         'content',
         'status',
         'user_id',
-        'last_comment_user_id'
+        'last_comment_user_id',
     ];
 
     protected $casts = [
-        'status' => 'string'
+        'status' => 'string',
     ];
 
     public function user(): BelongsTo
@@ -50,8 +50,8 @@ class Discussion extends Model
 
     /**
      * Vérifie si la discussion est non lue pour un utilisateur spécifique
-     * 
-     * @param int $userId ID de l'utilisateur
+     *
+     * @param  int  $userId  ID de l'utilisateur
      * @return bool true si la discussion est non lue, false sinon
      */
     public function isUnreadForUser(int $userId): bool
@@ -59,26 +59,26 @@ class Discussion extends Model
         $readStatus = $this->readStatuses()
             ->where('user_id', $userId)
             ->first();
-        
-        if (!$readStatus) {
+
+        if (! $readStatus) {
             return true;
         }
-        
+
         $lastComment = $this->messageComments()
             ->latest()
             ->first();
-        
-        if (!$lastComment) {
+
+        if (! $lastComment) {
             return false;
         }
-        
+
         return $readStatus->last_read_at < $lastComment->created_at;
     }
-    
+
     /**
      * Marque la discussion comme lue pour un utilisateur spécifique
-     * 
-     * @param int $userId ID de l'utilisateur
+     *
+     * @param  int  $userId  ID de l'utilisateur
      * @return DiscussionReadStatus Le statut de lecture créé ou mis à jour
      */
     public function markAsReadForUser(int $userId): DiscussionReadStatus

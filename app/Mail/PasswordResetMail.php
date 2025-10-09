@@ -11,7 +11,9 @@ class PasswordResetMail extends Mailable
     use Queueable, SerializesModels;
 
     public $token;
+
     public $email;
+
     public $appUrl;
 
     public function __construct($token, $email)
@@ -24,9 +26,9 @@ class PasswordResetMail extends Mailable
     public function build()
     {
         return $this->subject('Réinitialisation de votre mot de passe')
-                    ->view('emails.password-reset')
-                    ->with([
-                        'resetUrl' => "{$this->appUrl}/reset-password?token={$this->token}&email={$this->email}"
-                    ]);
+            ->view('emails.password-reset')
+            ->with([
+                'resetUrl' => "{$this->appUrl}/reset-password?token={$this->token}&email={$this->email}",
+            ]);
     }
 }

@@ -85,12 +85,20 @@
                         </td>
                         <td class="px-3 py-2">
                             <div class="flex items-center gap-2">   
-                                <flux:icon.eye class="size-6"/>    
-                                <flux:icon.check-circle class="size-6" />    
-                                <flux:icon.x-circle class="size-6" />   
-                                <flux:icon.arrow-down-tray class="size-6" /> 
-                                <flux:icon.arrow-left-circle class="size-6" />
-                                <flux:icon.wrench class="size-6" />
+                                <flux:tooltip content="Voir">
+                                    <flux:icon.eye color="blue" class="size-6 hover:cursor-pointer"/>
+                                </flux:tooltip>
+                                @if($activityRequest->status == 'pending')   
+                                <flux:tooltip content="Approuver">
+                                    <flux:icon.check-circle color="green" class="size-6 hover:cursor-pointer" />    
+                                </flux:tooltip>
+                                <flux:tooltip content="Rejeter">
+                                    <flux:icon.x-circle color="red" class="size-6 hover:cursor-pointer" />  
+                                </flux:tooltip>
+                                @endif
+                                <flux:tooltip content="Télécharger les documents">
+                                    <flux:icon.arrow-down-tray color="blue" class="size-6 hover:cursor-pointer" /> 
+                                </flux:tooltip>
                             </div>
                         </td>
                     </tr>
@@ -170,7 +178,9 @@
                         </td>
                         <td class="px-3 py-2">
                             <div class="flex items-center gap-2">   
-                                <flux:icon.pencil-square wire:click="editDraft({{ $activityRequest->id }})" color="blue" class="size-6 cursor-pointer"/>    
+                                <flux:tooltip content="Modifier le brouillon">
+                                    <flux:icon.pencil-square wire:click="editDraft({{ $activityRequest->id }})" color="blue" class="size-6 cursor-pointer"/>    
+                                </flux:tooltip>
                             </div>
                         </td>
                     </tr>

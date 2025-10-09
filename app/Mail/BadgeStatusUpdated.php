@@ -12,6 +12,7 @@ class BadgeStatusUpdated extends Mailable
     use Queueable, SerializesModels;
 
     public $badge;
+
     public $previousStatus;
 
     public function __construct(Badge $badge, string $previousStatus)
@@ -33,12 +34,12 @@ class BadgeStatusUpdated extends Mailable
 
         if ($this->badge->status === 'ready_for_delivery') {
             return $this->view('emails.badge-request.ready-for-pickup')
-                        ->subject('Votre badge est prêt à être récupéré')
-                        ->with($data);
+                ->subject('Votre badge est prêt à être récupéré')
+                ->with($data);
         }
 
         return $this->view('emails.badge.status-updated')
-                    ->subject('Statut du badge modifié')
-                    ->with($data);
-}
+            ->subject('Statut du badge modifié')
+            ->with($data);
+    }
 }

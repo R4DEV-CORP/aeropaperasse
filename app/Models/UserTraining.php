@@ -16,13 +16,13 @@ class UserTraining extends Model
         'started_at',
         'expires_at',
         'certificate_path',
-        'validity_years'
+        'validity_years',
     ];
 
     protected $casts = [
         'started_at' => 'datetime',
         'expires_at' => 'datetime',
-        'validity_years' => 'integer'
+        'validity_years' => 'integer',
     ];
 
     public function user(): BelongsTo

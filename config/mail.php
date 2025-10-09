@@ -70,9 +70,9 @@ return [
             'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
         ],
 
-	'resend' => [
-	    'transport' => 'resend',
-	],
+        'resend' => [
+            'transport' => 'resend',
+        ],
 
         'log' => [
             'transport' => 'log',
@@ -110,7 +110,7 @@ return [
     | used globally for all e-mails that are sent by your application.
     |
     */
-    //'admin_address' => env('ADMIN_EMAIL', 'n.dupin@r4web.fr'),
+    // 'admin_address' => env('ADMIN_EMAIL', 'n.dupin@r4web.fr'),
     'admin_address' => env('ADMIN_EMAIL', 'admin@rem-distribution.com'),
 
     'from' => [

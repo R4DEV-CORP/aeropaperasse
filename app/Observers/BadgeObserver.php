@@ -25,7 +25,7 @@ class BadgeObserver
 
     /**
      * Handle the Badge "updating" event.
-     * 
+     *
      * Cette méthode est appelée avant la mise à jour.
      * Nous sauvegardons l'ancien statut pour le comparer après la mise à jour.
      */
@@ -37,7 +37,7 @@ class BadgeObserver
 
     /**
      * Handle the Badge "updated" event.
-     * 
+     *
      * Cette méthode est appelée après la mise à jour.
      */
     public function updated(Badge $badge): void
@@ -49,4 +49,3 @@ class BadgeObserver
         }
     }
 }
-

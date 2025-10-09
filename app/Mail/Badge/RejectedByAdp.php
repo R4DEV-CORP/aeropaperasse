@@ -21,11 +21,11 @@ class RejectedByAdp extends Mailable
     public function build()
     {
         return $this->view('emails.badge.rejected-by-adp')
-                    ->subject('Votre demande de badge a été rejetée par ADP')
-                    ->with([
-                        'nom' => $this->badgeRequest->nom,
-                        'prenom' => $this->badgeRequest->prenom,
-                        'badge_request_id' => $this->badgeRequest->id,
-                    ]);
+            ->subject('Votre demande de badge a été rejetée par ADP')
+            ->with([
+                'nom' => $this->badgeRequest->nom,
+                'prenom' => $this->badgeRequest->prenom,
+                'badge_request_id' => $this->badgeRequest->id,
+            ]);
     }
 }

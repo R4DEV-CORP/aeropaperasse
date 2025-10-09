@@ -8,6 +8,7 @@ use App\Services\BadgeRequestMailService;
 class BadgeRequesterObserver
 {
     protected $badgeRequestMailService;
+
     private $originalStatus;
 
     public function __construct(BadgeRequestMailService $badgeRequestMailService)

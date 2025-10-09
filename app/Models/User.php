@@ -58,7 +58,7 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        //return $this->role === 'admin'; // ou votre logique d'admin
+        // return $this->role === 'admin'; // ou votre logique d'admin
         return $this->role === 'admin' || $this->role === 'sadmin';
     }
 
@@ -80,8 +80,8 @@ class User extends Authenticatable
     public function trainings()
     {
         return $this->belongsToMany(Training::class, 'user_trainings')
-                    ->withPivot(['id', 'started_at', 'expires_at', 'certificate_path'])
-                    ->withTimestamps();
+            ->withPivot(['id', 'started_at', 'expires_at', 'certificate_path'])
+            ->withTimestamps();
     }
 
     public function vehiclePasses()

@@ -3,12 +3,11 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\User;
-use App\Models\Client;
-use App\Models\BadgeRequest;
 use App\Models\ActivityRequest;
+use App\Models\Client;
 use App\Models\ContactClient;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,33 +17,33 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $clients = Client::factory()
-                ->count(3)
-                ->create();
+            ->count(3)
+            ->create();
 
-        foreach($clients as $client) {
+        foreach ($clients as $client) {
 
             $user = User::factory()
                 ->for($client)
                 ->create([
-                    'role' => 'sclient'
+                    'role' => 'sclient',
                 ]);
 
             $contactSafety = ContactClient::factory()
                 ->for($client)
                 ->create([
-                    'role' => 'safety'
+                    'role' => 'safety',
                 ]);
 
             $contactSecurity = ContactClient::factory()
                 ->for($client)
                 ->create([
-                    'role' => 'security'
+                    'role' => 'security',
                 ]);
 
             $contactHr = ContactClient::factory()
                 ->for($client)
                 ->create([
-                    'role' => 'hr'
+                    'role' => 'hr',
                 ]);
 
             $activityRequests = ActivityRequest::factory()
@@ -71,7 +70,7 @@ class DatabaseSeeder extends Seeder
             ->create([
                 'name' => 'R4Web',
                 'email' => 'contact@r4web.fr',
-                'role' => 'admin'
+                'role' => 'admin',
             ]);
     }
 }

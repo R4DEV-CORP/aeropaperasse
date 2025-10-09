@@ -23,41 +23,38 @@ class SaveActivityRequestAction
 
     /**
      * Exécute la sauvegarde (création ou mise à jour) d'une demande d'activité
-     * 
-     * @param CreateActivityRequestData $data
-     * @param Client $client
-     * @param int|null $activityRequestId Si fourni, mise à jour; sinon création
-     * @return ActivityRequestResult
+     *
+     * @param  int|null  $activityRequestId  Si fourni, mise à jour; sinon création
      */
     public function execute(
         CreateActivityRequestData $data,
         Client $client,
         ?int $activityRequestId = null
     ): ActivityRequestResult {
-        $isUpdate = !is_null($activityRequestId);
+        $isUpdate = ! is_null($activityRequestId);
         $operation = $this->determineOperation($isUpdate, $data->is_draft);
-        
+
         try {
             return DB::transaction(function () use ($data, $client, $activityRequestId, $isUpdate, $operation) {
-                
+
                 // Créer ou récupérer la demande d'activité
-                $activityRequest = $isUpdate 
+                $activityRequest = $isUpdate
                     ? $this->getExistingRequest($activityRequestId, $client)
                     : $this->createNewRequest($data);
-                
+
                 // Mettre à jour les données de base
                 if ($isUpdate) {
                     $activityRequest->update($data->getActivityRequestData());
                 }
-                
+
                 // Gérer les documents
                 $this->handleDocuments($data, $client, $activityRequest);
-                
+
                 // Log de succès
                 $this->logOperationSuccess($operation, $activityRequest, $client, $data);
-                
+
                 $message = $this->getSuccessMessage($operation);
-                
+
                 return ActivityRequestResult::success($activityRequest, $message, $operation);
             });
         } catch (\Exception $e) {
@@ -73,6 +70,7 @@ class SaveActivityRequestAction
         if ($isDraft) {
             return $isUpdate ? 'update_draft' : 'create_draft';
         }
+
         return $isUpdate ? 'update' : 'create';
     }
 
@@ -82,11 +80,11 @@ class SaveActivityRequestAction
     private function getExistingRequest(int $activityRequestId, Client $client): ActivityRequest
     {
         $activityRequest = ActivityRequest::findOrFail($activityRequestId);
-        
+
         if ($activityRequest->client_id !== $client->id) {
             throw new \Exception('Cette demande n\'appartient pas à ce client');
         }
-        
+
         return $activityRequest;
     }
 
@@ -96,9 +94,9 @@ class SaveActivityRequestAction
     private function createNewRequest(CreateActivityRequestData $data): ActivityRequest
     {
         $activityRequestData = $data->getActivityRequestData();
-        
+
         $activityRequest = ActivityRequest::create($activityRequestData);
-        
+
         return $activityRequest;
     }
 
@@ -125,15 +123,14 @@ class SaveActivityRequestAction
         Client $client,
         ActivityRequest $activityRequest
     ): void {
-        
+
         $copiedDocuments = $this->documentService->copyDocumentsFromPreviousRequest(
             $data->last_activity_request_id,
             $client,
             $activityRequest->id
         );
-        
-        
-        if (!empty($copiedDocuments)) {
+
+        if (! empty($copiedDocuments)) {
             $activityRequest->update($copiedDocuments);
         }
     }
@@ -151,7 +148,7 @@ class SaveActivityRequestAction
             $client,
             $activityRequest->id
         );
-        
+
         $activityRequest->update($storedDocuments);
     }
 
@@ -160,7 +157,7 @@ class SaveActivityRequestAction
      */
     private function getSuccessMessage(string $operation): string
     {
-        return match($operation) {
+        return match ($operation) {
             'create' => 'Demande d\'activité créée avec succès',
             'update' => 'Demande d\'activité mise à jour et soumise avec succès',
             'create_draft' => 'Brouillon enregistré avec succès',
@@ -208,7 +205,7 @@ class SaveActivityRequestAction
         ]);
 
         $message = $this->getErrorMessage($operation, $e);
-        
+
         return ActivityRequestResult::failure($message, $operation);
     }
 
@@ -217,15 +214,14 @@ class SaveActivityRequestAction
      */
     private function getErrorMessage(string $operation, \Exception $e): string
     {
-        $baseMessage = match($operation) {
+        $baseMessage = match ($operation) {
             'create' => 'Erreur lors de la création de la demande d\'activité',
             'update' => 'Erreur lors de la mise à jour de la demande d\'activité',
             'create_draft' => 'Erreur lors de l\'enregistrement du brouillon',
             'update_draft' => 'Erreur lors de la mise à jour du brouillon',
             default => 'Erreur lors de l\'opération',
         };
-        
-        return $baseMessage . ' : ' . $e->getMessage();
+
+        return $baseMessage.' : '.$e->getMessage();
     }
 }
-

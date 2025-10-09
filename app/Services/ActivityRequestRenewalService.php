@@ -12,21 +12,21 @@ class ActivityRequestRenewalService
 {
     /**
      * Récupère les données d'une demande précédente pour un renouvellement
-     * 
-     * @param int $previousActivityRequestId
+     *
      * @return array|null Retourne les données de la demande ou null si non trouvée
      */
     public function getPreviousRequestData(int $previousActivityRequestId): ?array
     {
         $previousRequest = ActivityRequest::find($previousActivityRequestId);
-        
-        if (!$previousRequest) {
+
+        if (! $previousRequest) {
             Log::warning('Demande d\'activité précédente non trouvée pour le renouvellement', [
                 'previous_id' => $previousActivityRequestId,
             ]);
+
             return null;
         }
-        
+
         // Retourner toutes les données nécessaires pour le renouvellement
         return [
             'manager_firstname' => $previousRequest->manager_firstname,
@@ -41,37 +41,27 @@ class ActivityRequestRenewalService
             'vehicule_count' => $previousRequest->vehicule_count,
         ];
     }
-    
+
     /**
      * Vérifie si une demande précédente existe et appartient au client
-     * 
-     * @param int $previousActivityRequestId
-     * @param int $clientId
-     * @return bool
      */
     public function validatePreviousRequest(int $previousActivityRequestId, int $clientId): bool
     {
         $previousRequest = ActivityRequest::find($previousActivityRequestId);
-        
-        if (!$previousRequest) {
+
+        if (! $previousRequest) {
             return false;
         }
-        
+
         if ($previousRequest->client_id !== $clientId) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     /**
      * Prépare les données pour une nouvelle demande basée sur un renouvellement
-     * 
-     * @param int $previousActivityRequestId
-     * @param int $clientId
-     * @param int $userId
-     * @param bool $isDraft
-     * @return array
      */
     public function prepareRenewalData(
         int $previousActivityRequestId,
@@ -80,17 +70,17 @@ class ActivityRequestRenewalService
         bool $isDraft
     ): array {
         $previousData = $this->getPreviousRequestData($previousActivityRequestId);
-        
-        if (!$previousData) {
+
+        if (! $previousData) {
             throw new \Exception('Impossible de récupérer les données de la demande précédente');
         }
-        
+
         // Ajouter les métadonnées nécessaires
         $previousData['client_id'] = $clientId;
         $previousData['created_by'] = $userId;
         $previousData['renewal'] = true;
         $previousData['last_activity_request_id'] = $previousActivityRequestId;
-        
+
         // Définir le statut
         if ($isDraft) {
             $previousData['status'] = 'draft';
@@ -99,8 +89,7 @@ class ActivityRequestRenewalService
             $previousData['status'] = 'pending';
             $previousData['pending_at'] = now();
         }
-        
+
         return $previousData;
     }
 }
-

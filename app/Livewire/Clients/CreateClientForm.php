@@ -5,53 +5,85 @@ namespace App\Livewire\Clients;
 use App\Actions\Client\CreateClientAction;
 use App\DataTransferObjects\CreateClientData;
 use App\Validators\ClientValidator;
+use Flux\Flux;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Flux\Flux;
 
 class CreateClientForm extends Component
 {
     use WithFileUploads;
-    
+
     // Propriétés pour le formulaire
     public $company_name;
+
     public $trade_name;
+
     public $siret_number;
+
     public $address;
+
     public $zip_code;
+
     public $city;
+
     public $kbis_document;
+
     public $safety_document;
+
     public $security_document;
+
     public $badge_limit;
+
     public $vehicle_pass_limit;
+
     public $notification_email;
+
     public $subcontractor_of;
 
     // Propriétés contacts
     public $safety_referent_1_prenom;
+
     public $safety_referent_1_nom;
+
     public $safety_referent_1_email;
+
     public $safety_referent_1_phone;
+
     public $safety_referent_2_prenom;
+
     public $safety_referent_2_nom;
+
     public $safety_referent_2_email;
+
     public $safety_referent_2_phone;
+
     public $safety_referent_3_prenom;
+
     public $safety_referent_3_nom;
+
     public $safety_referent_3_email;
+
     public $safety_referent_3_phone;
+
     public $security_correspondent_prenom;
+
     public $security_correspondent_nom;
+
     public $security_correspondent_email;
+
     public $security_correspondent_phone;
+
     public $hr_contact_prenom;
+
     public $hr_contact_nom;
+
     public $hr_contact_email;
+
     public $hr_contact_phone;
 
     // Propriétés pour la gestion des messages
     public $successMessage = '';
+
     public $errorMessage = '';
 
     public function createClient()
@@ -59,25 +91,26 @@ class CreateClientForm extends Component
         try {
             // 1. Récupérer les données du formulaire
             $formData = $this->getFormData();
-            
+
             // 2. Valider les données
             $validator = ClientValidator::validate($formData);
-            
+
             if ($validator->fails()) {
                 $this->errorMessage = 'Erreurs de validation détectées.';
                 foreach ($validator->errors()->messages() as $field => $messages) {
                     $this->addError($field, $messages[0]);
                 }
+
                 return;
             }
-            
+
             // 3. Créer le DTO avec les données validées
             $clientData = CreateClientData::fromArray($formData);
-            
+
             // 4. Exécuter l'action de création
             $action = app(CreateClientAction::class);
             $result = $action->execute($clientData);
-            
+
             if ($result->isSuccessful()) {
                 $this->successMessage = $result->getMessage();
                 $this->dispatch('client-created');
@@ -86,10 +119,10 @@ class CreateClientForm extends Component
             } else {
                 $this->errorMessage = $result->getMessage();
             }
-            
+
         } catch (\Exception $e) {
             // Gérer les erreurs inattendues
-            $this->errorMessage = 'Une erreur inattendue s\'est produite : ' . $e->getMessage();
+            $this->errorMessage = 'Une erreur inattendue s\'est produite : '.$e->getMessage();
         }
     }
 

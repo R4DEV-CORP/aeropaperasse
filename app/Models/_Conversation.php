@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Conversation extends Model
 {
@@ -25,7 +25,7 @@ class Conversation extends Model
     {
         return $this->messages()->latest()->first();
     }
-    
+
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'conversation_user', 'conversation_id', 'user_id');

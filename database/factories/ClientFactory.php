@@ -18,11 +18,11 @@ class ClientFactory extends Factory
     {
         // Générer des données cohérentes
         $companyName = fake()->company();
-        $companyDomain = strtolower(str_replace([' ', '&', '-', '.'], ['', 'and', '', ''], $companyName)) . '.com';
-        
+        $companyDomain = strtolower(str_replace([' ', '&', '-', '.'], ['', 'and', '', ''], $companyName)).'.com';
+
         // Email de notification
-        $notificationEmail = 'contact@' . $companyDomain;
-        
+        $notificationEmail = 'contact@'.$companyDomain;
+
         return [
             'company_name' => $companyName,
             'trade_name' => $companyName,

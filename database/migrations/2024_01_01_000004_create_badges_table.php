@@ -9,7 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-          public function up(): void
+    public function up(): void
     {
         Schema::create('badges', function (Blueprint $table) {
             $table->id();
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('return_document')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->foreign('badge_request_id')->references('id')->on('badge_requests')->onDelete('cascade');
         });
     }

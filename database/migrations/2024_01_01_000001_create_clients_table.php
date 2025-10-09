@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
-            //Informations entreprise
+            // Informations entreprise
             $table->string('company_name'); // raison sociale
             $table->string('trade_name'); // nom commercial
             $table->string('siret_number');
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('city');
             $table->text('subcontractor_of')->nullable(); // Sous traitant de quelles entreprises
 
-            //Chemins documents obligatoires
+            // Chemins documents obligatoires
             $table->string('kbis_document');
             $table->string('safety_document');
             $table->string('security_document');
@@ -33,7 +33,7 @@ return new class extends Migration
             $table->integer('badge_limit')->default(1);
             $table->integer('vehicle_pass_limit')->default(1);
 
-            //Autres informations
+            // Autres informations
             $table->string('notification_email')->nullable();
         });
     }

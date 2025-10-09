@@ -25,10 +25,10 @@ class UserFactory extends Factory
     {
         $firstName = fake()->firstName();
         $lastName = fake()->lastName();
-        $email = strtolower($firstName . '.' . $lastName . '@gmail.com');
-        
+        $email = strtolower($firstName.'.'.$lastName.'@gmail.com');
+
         return [
-            'name' => $firstName . ' ' . $lastName,
+            'name' => $firstName.' '.$lastName,
             'email' => $email,
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('r4web2025$'),

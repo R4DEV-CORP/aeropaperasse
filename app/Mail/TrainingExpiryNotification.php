@@ -2,24 +2,22 @@
 
 namespace App\Mail;
 
+use App\Models\UserTraining;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\UserTraining;
 
 class TrainingExpiryNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $userTraining;
+
     public $daysRemaining;
 
     /**
      * Create a new message instance.
      *
-     * @param UserTraining $userTraining
-     * @param int $daysRemaining
      * @return void
      */
     public function __construct(UserTraining $userTraining, int $daysRemaining)
@@ -43,7 +41,7 @@ class TrainingExpiryNotification extends Mailable
                 'prenom' => $this->userTraining->user->prenom ?? '',
                 'trainingTitle' => $this->userTraining->training->title ?? 'Formation',
                 'expiryDate' => $this->userTraining->expires_at,
-                'daysRemaining' => $this->daysRemaining
+                'daysRemaining' => $this->daysRemaining,
             ]);
     }
 }

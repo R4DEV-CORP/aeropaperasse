@@ -4,8 +4,8 @@ namespace App\Services;
 
 use App\Models\BadgeRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class BadgeRequestMailService
 {
@@ -16,7 +16,7 @@ class BadgeRequestMailService
     {
         try {
             // Envoyer un email au demandeur
-            if($badgeRequest->status === 'draft'){
+            if ($badgeRequest->status === 'draft') {
                 return true;
             }
 
@@ -26,8 +26,8 @@ class BadgeRequestMailService
                 Mail::send('emails.badge-request.created', [
                     'badgeRequest' => $badgeRequest,
                     'nom' => $badgeRequest->nom,
-                    'prenom' => $badgeRequest->prenom
-                ], function($message) use ($recipientEmail) {
+                    'prenom' => $badgeRequest->prenom,
+                ], function ($message) use ($recipientEmail) {
                     $message->to($recipientEmail);
                     $message->subject('Votre demande de badge a été soumise');
                 });
@@ -37,12 +37,13 @@ class BadgeRequestMailService
             $this->notifyAdmins('emails.badge-request.admin-notification', [
                 'badgeRequest' => $badgeRequest,
                 'subject' => 'Nouvelle demande de badge soumise',
-                'action' => 'créée'
+                'action' => 'créée',
             ]);
 
             return true;
         } catch (\Exception $e) {
-            Log::error('Erreur lors de l\'envoi du mail de création de demande: ' . $e->getMessage());
+            Log::error('Erreur lors de l\'envoi du mail de création de demande: '.$e->getMessage());
+
             return false;
         }
     }
@@ -95,21 +96,21 @@ class BadgeRequestMailService
                         'badgeRequest' => $badgeRequest,
                         'nom' => $badgeRequest->nom,
                         'prenom' => $badgeRequest->prenom,
-                        'status' => $this->getStatusLabel($badgeRequest->status)
-                    ], function($message) use ($recipientEmail) {
+                        'status' => $this->getStatusLabel($badgeRequest->status),
+                    ], function ($message) use ($recipientEmail) {
                         $message->to($recipientEmail);
                         $message->subject('Votre badge est prêt à être récupéré');
                     });
-                } elseif($badgeRequest->status === 'draft'){
-                    //do nothing
+                } elseif ($badgeRequest->status === 'draft') {
+                    // do nothing
                 } else {
                     // Sinon, utiliser le template de mise à jour standard
                     Mail::send('emails.badge-request.status-updated', [
                         'badgeRequest' => $badgeRequest,
                         'nom' => $badgeRequest->nom,
                         'prenom' => $badgeRequest->prenom,
-                        'status' => $this->getStatusLabel($badgeRequest->status)
-                    ], function($message) use ($recipientEmail) {
+                        'status' => $this->getStatusLabel($badgeRequest->status),
+                    ], function ($message) use ($recipientEmail) {
                         $message->to($recipientEmail);
                         $message->subject('Mise à jour de votre demande de badge');
                     });
@@ -127,7 +128,8 @@ class BadgeRequestMailService
 
             return true;
         } catch (\Exception $e) {
-            Log::error('Erreur lors de l\'envoi du mail de mise à jour de statut: ' . $e->getMessage());
+            Log::error('Erreur lors de l\'envoi du mail de mise à jour de statut: '.$e->getMessage());
+
             return false;
         }
     }
@@ -144,7 +146,7 @@ class BadgeRequestMailService
                 ->get();
 
             foreach ($admins as $admin) {
-                Mail::send($view, $data, function($message) use ($admin, $data) {
+                Mail::send($view, $data, function ($message) use ($admin, $data) {
                     $message->to($admin->email);
                     $message->subject($data['subject']);
                 });
@@ -152,7 +154,8 @@ class BadgeRequestMailService
 
             return true;
         } catch (\Exception $e) {
-            Log::error('Erreur lors de l\'envoi des notifications aux admins: ' . $e->getMessage());
+            Log::error('Erreur lors de l\'envoi des notifications aux admins: '.$e->getMessage());
+
             return false;
         }
     }
@@ -169,7 +172,7 @@ class BadgeRequestMailService
             'approved_adp' => 'Approuvée par ADP',
             'rejected_adp' => 'Rejetée par ADP',
             'pending_fabrication' => 'En cours de fabrication',
-            'ready_for_delivery' => 'Prête à être remis'
+            'ready_for_delivery' => 'Prête à être remis',
         ];
 
         return $labels[$status] ?? $status;
@@ -181,7 +184,7 @@ class BadgeRequestMailService
     private function getRecipientEmail($badgeRequest)
     {
         // Priorité 1 : Email de notification par défaut
-        if ($badgeRequest->client && !empty($badgeRequest->client->notification_email)) {
+        if ($badgeRequest->client && ! empty($badgeRequest->client->notification_email)) {
             return $badgeRequest->client->notification_email;
         }
 

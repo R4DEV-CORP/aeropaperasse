@@ -12,16 +12,15 @@ class VehiclePassStatusUpdated extends Mailable
     use Queueable, SerializesModels;
 
     public $vehiclePass;
+
     public $previousStatus;
 
     /**
      * Create a new message instance.
      *
-     * @param VehiclePass $vehiclePass
-     * @param string $previousStatus
      * @return void
      */
-    public function __construct(VehiclePass $vehiclePass, string $previousStatus = null)
+    public function __construct(VehiclePass $vehiclePass, ?string $previousStatus = null)
     {
         $this->vehiclePass = $vehiclePass;
         $this->previousStatus = $previousStatus;
@@ -34,21 +33,21 @@ class VehiclePassStatusUpdated extends Mailable
      */
     public function build()
     {
-        $subject = "Mise à jour de votre demande de laisser-passer véhicule - " . $this->getStatusLabel();
+        $subject = 'Mise à jour de votre demande de laisser-passer véhicule - '.$this->getStatusLabel();
 
         return $this->view('emails.vehicle-pass.status-updated')
-                    ->subject($subject)
-                    ->with([
-                        'immatriculation' => $this->vehiclePass->immatriculation,
-                        'nom_entreprise' => $this->vehiclePass->nom_entreprise,
-                        'aeroport' => $this->vehiclePass->aeroport,
-                        'marque_vehicule' => $this->vehiclePass->marque_vehicule,
-                        'previous_status' => $this->previousStatus,
-                        'current_status' => $this->vehiclePass->status,
-                        'status_label' => $this->getStatusLabel(),
-                        'approved_at' => $this->vehiclePass->approved_at,
-                        'rejected_at' => $this->vehiclePass->rejected_at,
-                    ]);
+            ->subject($subject)
+            ->with([
+                'immatriculation' => $this->vehiclePass->immatriculation,
+                'nom_entreprise' => $this->vehiclePass->nom_entreprise,
+                'aeroport' => $this->vehiclePass->aeroport,
+                'marque_vehicule' => $this->vehiclePass->marque_vehicule,
+                'previous_status' => $this->previousStatus,
+                'current_status' => $this->vehiclePass->status,
+                'status_label' => $this->getStatusLabel(),
+                'approved_at' => $this->vehiclePass->approved_at,
+                'rejected_at' => $this->vehiclePass->rejected_at,
+            ]);
     }
 
     /**

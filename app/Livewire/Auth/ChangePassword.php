@@ -2,33 +2,38 @@
 
 namespace App\Livewire\Auth;
 
-use Livewire\Component;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\UserRedirectService;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
 class ChangePassword extends Component
 {
     public string $password = '';
+
     public string $password_confirmation = '';
+
     public string $current_password = '';
+
     public bool $isFirstLogin = false;
+
     public ?string $userEmail = null;
 
     public function mount()
     {
         $authService = app(AuthService::class);
-        
+
         // Vérifier les droits d'accès
         $accessCheck = $authService->canAccessChangePassword();
-        
-        if (!$accessCheck['can_access']) {
+
+        if (! $accessCheck['can_access']) {
             $this->redirect('/login');
+
             return;
         }
-        
+
         $this->isFirstLogin = $accessCheck['is_first_login'];
-        
+
         if (Auth::check()) {
             $this->userEmail = Auth::user()->email;
         }
@@ -37,7 +42,7 @@ class ChangePassword extends Component
     public function changePassword()
     {
         $authService = app(AuthService::class);
-        
+
         $this->validate([
             'current_password' => 'required|string',
             'password' => 'required|string|min:8|confirmed',
@@ -54,15 +59,16 @@ class ChangePassword extends Component
 
         $result = $authService->changePasswordAuthenticated($user, $this->current_password, $this->password);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             $this->addError('current_password', $result['message']);
+
             return;
         }
 
         // Succès : redirection vers le dashboard
         $redirectService = app(UserRedirectService::class);
         $redirectPath = $redirectService->getRedirectPath($user);
-        
+
         session()->flash('success', $result['message']);
         $this->redirect($redirectPath);
     }

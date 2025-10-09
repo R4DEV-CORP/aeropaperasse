@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('max_users')->nullable();
             $table->string('status')->default('active');
             $table->timestamps();
-            
+
             $table->unique(['client_id', 'training_id']);
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->foreign('training_id')->references('id')->on('trainings')->onDelete('cascade');

@@ -21,13 +21,13 @@ class BadgeCreated extends Mailable
     public function build()
     {
         return $this->view('emails.badge.created')
-                    ->subject('Nouveau badge créé')
-                    ->with([
-                        'badge_number' => $this->badge->badge_number,
-                        'nom' => $this->badge->badgeRequest->nom,
-                        'prenom' => $this->badge->badgeRequest->prenom,
-                        'email' => $this->badge->badgeRequest->email,
-                        'expiry_date' => $this->badge->expiry_date,
-                    ]);
+            ->subject('Nouveau badge créé')
+            ->with([
+                'badge_number' => $this->badge->badge_number,
+                'nom' => $this->badge->badgeRequest->nom,
+                'prenom' => $this->badge->badgeRequest->prenom,
+                'email' => $this->badge->badgeRequest->email,
+                'expiry_date' => $this->badge->expiry_date,
+            ]);
     }
 }

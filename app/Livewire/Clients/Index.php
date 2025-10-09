@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Clients;
 
-use Livewire\Component;
-use Livewire\Attributes\On; 
 use App\Models\Client;
+use Livewire\Attributes\On;
+use Livewire\Component;
 
 class Index extends Component
 {
@@ -33,11 +33,12 @@ class Index extends Component
 
     public function render()
     {
-        if(! empty($this->search)) {
+        if (! empty($this->search)) {
             $clients = $this->buildScoutQuery()->get();
         } else {
-                $clients = $this->loadClients();
+            $clients = $this->loadClients();
         }
+
         return view('livewire.clients.index', [
             'clients' => $clients,
         ]);

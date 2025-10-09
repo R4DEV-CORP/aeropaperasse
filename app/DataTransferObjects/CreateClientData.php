@@ -15,19 +15,19 @@ class CreateClientData
         public string $zip_code,
         public string $city,
         public ?string $subcontractor_of,
-        
+
         // Documents
         public UploadedFile $kbis_document,
         public UploadedFile $safety_document,
         public UploadedFile $security_document,
-        
+
         // Configuration des quotas
         public int $badge_limit,
         public int $vehicle_pass_limit,
-        
+
         // Email de notification
         public ?string $notification_email,
-        
+
         // Contacts
         public array $contacts,
     ) {}
@@ -73,10 +73,10 @@ class CreateClientData
 
         // Référent sûreté 2 (optionnel)
         // SI au moins une donne n'est pas vide, on créer le contact
-        if (!empty($data['safety_referent_2_prenom']) || 
-            !empty($data['safety_referent_2_nom']) || 
-            !empty($data['safety_referent_2_email']) || 
-            !empty($data['safety_referent_2_phone'])) {
+        if (! empty($data['safety_referent_2_prenom']) ||
+            ! empty($data['safety_referent_2_nom']) ||
+            ! empty($data['safety_referent_2_email']) ||
+            ! empty($data['safety_referent_2_phone'])) {
             $contacts[] = [
                 'firstname' => $data['safety_referent_2_prenom'] ?? '',
                 'lastname' => $data['safety_referent_2_nom'] ?? '',
@@ -87,10 +87,10 @@ class CreateClientData
         }
 
         // Référent sûreté 3 (optionnel)
-        if (!empty($data['safety_referent_3_prenom']) || 
-            !empty($data['safety_referent_3_nom']) || 
-            !empty($data['safety_referent_3_email']) || 
-            !empty($data['safety_referent_3_phone'])) {
+        if (! empty($data['safety_referent_3_prenom']) ||
+            ! empty($data['safety_referent_3_nom']) ||
+            ! empty($data['safety_referent_3_email']) ||
+            ! empty($data['safety_referent_3_phone'])) {
             $contacts[] = [
                 'firstname' => $data['safety_referent_3_prenom'] ?? '',
                 'lastname' => $data['safety_referent_3_nom'] ?? '',

@@ -2,8 +2,8 @@
 
 namespace App\DataTransferObjects;
 
-use Illuminate\Http\UploadedFile;
 use App\Forms\ActivityRequestFormData;
+use Illuminate\Http\UploadedFile;
 
 class CreateActivityRequestData
 {
@@ -14,20 +14,20 @@ class CreateActivityRequestData
         public ?string $manager_email,
         public ?string $manager_phone,
         public ?string $manager_role,
-        
+
         // Informations sur l'activité
         public ?string $airport,
         public ?string $description,
         public ?string $customer_names,
         public ?int $person_count,
         public ?int $vehicule_count,
-        
+
         // Documents (optionnels pour le brouillon)
         public ?UploadedFile $customer_certificate_document,
         public ?UploadedFile $prefectural_agreement_document,
         public ?UploadedFile $iata_contract_document,
         public ?UploadedFile $cta_document,
-        
+
         // Metadata
         public int $client_id,
         public int $created_by,
@@ -44,8 +44,8 @@ class CreateActivityRequestData
     public static function fromArray(array $data, int $clientId, int $userId, bool $isDraft = false): self
     {
         $isRenewal = $data['renewal'] ?? false;
-        $lastActivityRequestId = !empty($data['last_activity_request_id']) ? (int) $data['last_activity_request_id'] : null;
-        
+        $lastActivityRequestId = ! empty($data['last_activity_request_id']) ? (int) $data['last_activity_request_id'] : null;
+
         return new self(
             manager_firstname: $data['manager_firstname'] ?? null,
             manager_lastname: $data['manager_lastname'] ?? null,
@@ -68,7 +68,7 @@ class CreateActivityRequestData
             last_activity_request_id: $lastActivityRequestId,
         );
     }
-    
+
     /**
      * Créer le DTO à partir du ActivityRequestFormData
      */
@@ -134,7 +134,7 @@ class CreateActivityRequestData
 
         // Filtrer uniquement les valeurs null (garder false et 0)
         return array_filter($data, function ($value) {
-            return !is_null($value);
+            return ! is_null($value);
         });
     }
 
@@ -166,6 +166,6 @@ class CreateActivityRequestData
      */
     public function hasDocuments(): bool
     {
-        return !empty($this->getDocuments());
+        return ! empty($this->getDocuments());
     }
 }

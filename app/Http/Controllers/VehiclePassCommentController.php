@@ -30,14 +30,14 @@ class VehiclePassCommentController extends Controller
             // Validation
             $validated = $request->validate([
                 'content' => 'required|string',
-                'vehicle_pass_id' => 'required|exists:vehicle_passes,id'
+                'vehicle_pass_id' => 'required|exists:vehicle_passes,id',
             ]);
 
             // Création du commentaire
             $comment = VehiclePassComment::create([
                 'content' => $validated['content'],
                 'vehicle_pass_id' => $validated['vehicle_pass_id'],
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
 
             // Charger les relations et retourner
@@ -49,12 +49,12 @@ class VehiclePassCommentController extends Controller
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la création du commentaire de laisser-passer véhicule:', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return response()->json([
                 'message' => 'Erreur lors de la création du commentaire',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 422);
         }
     }
@@ -65,7 +65,7 @@ class VehiclePassCommentController extends Controller
             // Vérifier si l'utilisateur est autorisé à modifier ce commentaire
             if ($comment->user_id !== auth()->id()) {
                 return response()->json([
-                    'message' => 'Non autorisé à modifier ce commentaire'
+                    'message' => 'Non autorisé à modifier ce commentaire',
                 ], 403);
             }
 
@@ -73,11 +73,11 @@ class VehiclePassCommentController extends Controller
             $request->replace($data);
 
             $validated = $request->validate([
-                'content' => 'required|string'
+                'content' => 'required|string',
             ]);
 
             $comment->update([
-                'content' => $validated['content']
+                'content' => $validated['content'],
             ]);
 
             return response()->json($comment->load(['user', 'replies']));
@@ -85,7 +85,7 @@ class VehiclePassCommentController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erreur lors de la modification du commentaire',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 422);
         }
     }
@@ -109,13 +109,13 @@ class VehiclePassCommentController extends Controller
             $request->replace($data);
 
             $validated = $request->validate([
-                'content' => 'required|string'
+                'content' => 'required|string',
             ]);
 
             $reply = VehiclePassReply::create([
                 'content' => $validated['content'],
                 'vehicle_pass_comment_id' => $comment->id,
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
 
             return response()->json(
@@ -126,12 +126,12 @@ class VehiclePassCommentController extends Controller
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la création de la réponse au commentaire de laisser-passer véhicule:', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return response()->json([
                 'message' => 'Erreur lors de la création de la réponse',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 422);
         }
     }
@@ -144,7 +144,7 @@ class VehiclePassCommentController extends Controller
         $request->replace($data);
 
         $validated = $request->validate([
-            'content' => 'required|string'
+            'content' => 'required|string',
         ]);
 
         $reply->update($validated);

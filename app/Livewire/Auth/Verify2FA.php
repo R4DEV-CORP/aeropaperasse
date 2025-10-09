@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Auth;
 
-use Livewire\Component;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\UserRedirectService;
+use Livewire\Component;
 
 class Verify2FA extends Component
 {
@@ -15,8 +15,8 @@ class Verify2FA extends Component
         // Vérifier si une session 2FA est active
         $authService = app(AuthService::class);
         $user = $authService->getTwoFAUser();
-        
-        if (!$user) {
+
+        if (! $user) {
             // Pas de session 2FA active, rediriger vers login
             $this->redirect('/login');
         }
@@ -34,12 +34,13 @@ class Verify2FA extends Component
         ]);
 
         $authService = app(AuthService::class);
-        
+
         // Vérifier le code 2FA
         $result = $authService->verifyTwoFACode($this->code);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             $this->addError('code', $result['message']);
+
             return;
         }
 
@@ -47,13 +48,14 @@ class Verify2FA extends Component
         if ($result['user']->is_new) {
             // Redirect vers la page de changement de mot de passe obligatoire
             $this->redirect('/change-password');
+
             return;
         }
 
         // Redirection vers le dashboard selon le rôle
         $redirectService = app(UserRedirectService::class);
         $redirectPath = $redirectService->getRedirectPath($result['user']);
-        
+
         $this->redirect($redirectPath);
     }
 
@@ -61,7 +63,7 @@ class Verify2FA extends Component
     {
         $authService = app(AuthService::class);
         $authService->cancelTwoFA();
-        
+
         $this->redirect('/login');
     }
 
@@ -70,9 +72,9 @@ class Verify2FA extends Component
         // Récupérer l'utilisateur pour afficher son email dans la vue
         $authService = app(AuthService::class);
         $user = $authService->getTwoFAUser();
-        
+
         return view('livewire.auth.verify2-f-a', [
-            'userEmail' => $user ? $user->email : null
+            'userEmail' => $user ? $user->email : null,
         ]);
     }
 }

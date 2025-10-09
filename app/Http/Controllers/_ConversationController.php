@@ -4,42 +4,40 @@ namespace App\Http\Controllers;
 
 use App\Models\Conversation;
 use App\Models\Message;
-use App\Models\Attachment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ConversationController extends Controller
 {
     public function index()
     {
         $conversations = auth()->user()->conversations()
-        ->with([
-            'messages' => function ($query) {
-                $query->latest(); // Charger les messages par ordre décroissant
-            },
-        ])
-        ->withCount([
-            'messages as unread_count' => function ($query) {
-                $query->where('is_read', false)
-                    ->where('user_id', '!=', auth()->id()); // Exclure les messages lus par l'utilisateur
-            },
-        ])
-        ->get();
-    
-    // Statistiques
-    $stats = [
-        'total' => $conversations->count(),
-        'open' => $conversations->where('status', 'pending')->count(),
-        'closed' => $conversations->where('status', 'completed')->count(),
-        'unread' => $conversations->sum('unread_count'),
-    ];
-    
-    // Réponse JSON
-    return response()->json([
-        'conversations' => $conversations,
-        'stats' => $stats,
-    ]);
-    
+            ->with([
+                'messages' => function ($query) {
+                    $query->latest(); // Charger les messages par ordre décroissant
+                },
+            ])
+            ->withCount([
+                'messages as unread_count' => function ($query) {
+                    $query->where('is_read', false)
+                        ->where('user_id', '!=', auth()->id()); // Exclure les messages lus par l'utilisateur
+                },
+            ])
+            ->get();
+
+        // Statistiques
+        $stats = [
+            'total' => $conversations->count(),
+            'open' => $conversations->where('status', 'pending')->count(),
+            'closed' => $conversations->where('status', 'completed')->count(),
+            'unread' => $conversations->sum('unread_count'),
+        ];
+
+        // Réponse JSON
+        return response()->json([
+            'conversations' => $conversations,
+            'stats' => $stats,
+        ]);
+
     }
 
     public function show($id)
@@ -61,14 +59,14 @@ class ConversationController extends Controller
         $validated = $request->validate([
             'object' => 'required|string|max:255',
             'message' => 'required|string',
-            'attachments.*' => 'file|max:10240' // 10MB max par fichier
+            'attachments.*' => 'file|max:10240', // 10MB max par fichier
         ]);
-        \Log::info("Tentative conv : ".auth()->id());
+        \Log::info('Tentative conv : '.auth()->id());
         $conversation = Conversation::create([
             'object' => $validated['object'],
-            'status' => "pending",
+            'status' => 'pending',
             'created_by' => auth()->id(),
-            'status' => 'open'
+            'status' => 'open',
         ]);
 
         // // Ajouter les participants
@@ -80,7 +78,7 @@ class ConversationController extends Controller
         // Créer le premier message
         $message = $conversation->messages()->create([
             'content' => $validated['message'],
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
         ]);
 
         // Gérer les pièces jointes
@@ -91,7 +89,7 @@ class ConversationController extends Controller
                     'original_name' => $file->getClientOriginalName(),
                     'mime_type' => $file->getMimeType(),
                     'file_size' => $file->getSize(),
-                    'file_path' => $path
+                    'file_path' => $path,
                 ]);
             }
         }
@@ -101,17 +99,17 @@ class ConversationController extends Controller
 
     public function addMessage(Request $request, $id)
     {
-        \Log::info("Tentative de message : ".json_encode($request->input()));
+        \Log::info('Tentative de message : '.json_encode($request->input()));
         $validated = $request->validate([
             'content' => 'required|string',
-            'attachments.*' => 'file|max:10240'
+            'attachments.*' => 'file|max:10240',
         ]);
 
         $conversation = Conversation::findOrFail($id);
-        
+
         $message = $conversation->messages()->create([
             'content' => $validated['content'],
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
         ]);
 
         if ($request->hasFile('attachments')) {
@@ -119,7 +117,7 @@ class ConversationController extends Controller
                 $path = $file->store('attachments');
                 $message->attachments()->create([
                     'filename' => $file->getClientOriginalName(),
-                    'path' => $path
+                    'path' => $path,
                 ]);
             }
         }
@@ -140,7 +138,7 @@ class ConversationController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $validated = $request->validate([
-            'status' => 'required|in:open,closed'
+            'status' => 'required|in:open,closed',
         ]);
 
         $conversation = Conversation::findOrFail($id);

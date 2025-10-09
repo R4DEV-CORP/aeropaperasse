@@ -2,9 +2,9 @@
 
 namespace App\Livewire\ActivityRequests;
 
-use Livewire\Component;
-use Livewire\Attributes\On; 
 use App\Models\ActivityRequest;
+use Livewire\Attributes\On;
+use Livewire\Component;
 
 class Index extends Component
 {
@@ -14,6 +14,7 @@ class Index extends Component
     {
         return ActivityRequest::with('client')
             ->where('status', '!=', 'draft')
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 
@@ -21,6 +22,7 @@ class Index extends Component
     {
         return ActivityRequest::with('client')
             ->where('status', 'draft')
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 
@@ -56,10 +58,10 @@ class Index extends Component
 
     public function render()
     {
-        if(! empty($this->search)) {
+        if (! empty($this->search)) {
             $activityRequests = $this->buildScoutQuery()->get();
         } else {
-                $activityRequests = $this->loadActivityRequests();
+            $activityRequests = $this->loadActivityRequests();
         }
 
         $draftActivityRequests = $this->loadDraftActivityRequests();

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Mail;
-use App\Models\VehiclePass;
-use App\Models\User;
 use App\Mail\VehiclePassCreated;
 use App\Mail\VehiclePassStatusUpdated;
+use App\Models\User;
+use App\Models\VehiclePass;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class VehiclePassController extends Controller
 {
@@ -38,7 +38,7 @@ class VehiclePassController extends Controller
             'total' => $requests->count(),
             'pending' => $requests->where('status', 'pending')->count(),
             'approved' => $requests->where('status', 'approved')->count(),
-            'rejected' => $requests->where('status', 'rejected')->count()
+            'rejected' => $requests->where('status', 'rejected')->count(),
         ];
 
         return response()->json([
@@ -46,7 +46,7 @@ class VehiclePassController extends Controller
             'requests' => $requests,
             'has_drafts' => $draftCount > 0,
             'draft_count' => $draftCount,
-            'stats' => $stats
+            'stats' => $stats,
         ]);
 
     }
@@ -78,6 +78,7 @@ class VehiclePassController extends Controller
                 'input' => $request->all(),
                 'user_id' => $user->id,
             ]);
+
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
@@ -117,13 +118,13 @@ class VehiclePassController extends Controller
 
             return response()->json([
                 'message' => 'Demande de laisser-passer véhicule créée avec succès',
-                'vehicle_pass' => $vehiclePass
+                'vehicle_pass' => $vehiclePass,
             ], 201);
 
         } catch (\Exception $e) {
-            \Log::error('Erreur lors de la création de la demande de laisser-passer véhicule: ' . $e->getMessage(), [
+            \Log::error('Erreur lors de la création de la demande de laisser-passer véhicule: '.$e->getMessage(), [
                 'user_id' => $user->id,
-                'immatriculation' => $request->immatriculation ?? 'N/A'
+                'immatriculation' => $request->immatriculation ?? 'N/A',
             ]);
 
             // Nettoyage des fichiers en cas d'erreur
@@ -136,7 +137,7 @@ class VehiclePassController extends Controller
 
             return response()->json([
                 'message' => 'Erreur lors de la création de la demande de laisser-passer véhicule',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -149,6 +150,7 @@ class VehiclePassController extends Controller
 
         if ($validator->fails()) {
             \Log::error('Validation échouée:', $validator->errors()->toArray());
+
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
@@ -170,7 +172,7 @@ class VehiclePassController extends Controller
 
         return response()->json([
             'message' => 'Statut mis à jour avec succès',
-            'request' => $vehiclePass->fresh()
+            'request' => $vehiclePass->fresh(),
         ]);
     }
 
@@ -181,8 +183,7 @@ class VehiclePassController extends Controller
         // Si l'utilisateur est admin, récupérer tous les brouillons
         if ($user->role === 'admin' || $user->role === 'sadmin') {
             $drafts = VehiclePass::where('status', 'draft')->with('user')->latest()->get();
-        }
-        else {
+        } else {
             // Sinon, récupérer uniquement les brouillons de l'utilisateur
             $drafts = VehiclePass::where('status', 'draft')
                 ->where('user_id', $user->id)
@@ -191,7 +192,7 @@ class VehiclePassController extends Controller
         }
 
         return response()->json([
-            'drafts' => $drafts
+            'drafts' => $drafts,
         ]);
     }
 
@@ -224,14 +225,14 @@ class VehiclePassController extends Controller
             // Traitement des champs textuels
             $textFields = [
                 'nom_entreprise', 'siret', 'adresse', 'code_postal', 'ville',
-                'aeroport', 'immatriculation', 'marque_vehicule'
+                'aeroport', 'immatriculation', 'marque_vehicule',
             ];
 
             foreach ($textFields as $field) {
                 if ($request->has($field) && $request->input($field) !== null) {
                     $value = $request->input($field);
                     // Normalisation de l'immatriculation en majuscules si présente
-                    if ($field === 'immatriculation' && !empty($value)) {
+                    if ($field === 'immatriculation' && ! empty($value)) {
                         $value = strtoupper($value);
                     }
                     $draftData[$field] = $value;
@@ -241,7 +242,7 @@ class VehiclePassController extends Controller
             // Traitement des fichiers
             $fileFields = [
                 'tampon_entreprise' => 'vehicle_passes/tampons',
-                'carte_grise' => 'vehicle_passes/cartes_grises'
+                'carte_grise' => 'vehicle_passes/cartes_grises',
             ];
 
             foreach ($fileFields as $field => $folder) {
@@ -260,7 +261,7 @@ class VehiclePassController extends Controller
                 // Vérification des permissions
                 if ($vehiclePass->status !== 'draft' || $vehiclePass->user_id !== auth()->id()) {
                     return response()->json([
-                        'message' => 'Vous ne pouvez pas modifier cette demande'
+                        'message' => 'Vous ne pouvez pas modifier cette demande',
                     ], 403);
                 }
 
@@ -271,15 +272,15 @@ class VehiclePassController extends Controller
 
             return response()->json([
                 'message' => 'Brouillon enregistré avec succès',
-                'draft' => $vehiclePass
+                'draft' => $vehiclePass,
             ], 201);
 
         } catch (\Exception $e) {
-            \Log::error('Erreur lors de la création du brouillon de laisser-passer véhicule: ' . $e->getMessage());
+            \Log::error('Erreur lors de la création du brouillon de laisser-passer véhicule: '.$e->getMessage());
 
             return response()->json([
                 'message' => 'Erreur lors de la création du brouillon',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -292,7 +293,7 @@ class VehiclePassController extends Controller
 
         if ($draft->status !== 'draft' || $draft->user_id !== $user->id) {
             return response()->json([
-                'message' => 'Vous ne pouvez pas soumettre ce brouillon'
+                'message' => 'Vous ne pouvez pas soumettre ce brouillon',
             ], 403);
         }
 
@@ -313,7 +314,7 @@ class VehiclePassController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Formulaire incomplet - Veuillez compléter tous les champs requis',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -327,24 +328,24 @@ class VehiclePassController extends Controller
             return response()->json([
                 'message' => 'Cette immatriculation est déjà enregistrée dans le système',
                 'errors' => [
-                    'immatriculation' => ['Cette immatriculation existe déjà']
-                ]
+                    'immatriculation' => ['Cette immatriculation existe déjà'],
+                ],
             ], 422);
         }
 
         // Vérification que les fichiers existent toujours sur le serveur
         $filesToCheck = [
             'tampon_entreprise' => 'Tampon d\'entreprise',
-            'carte_grise_path' => 'Carte grise'
+            'carte_grise_path' => 'Carte grise',
         ];
 
         foreach ($filesToCheck as $field => $label) {
-            if ($draft->$field && !Storage::disk('public')->exists($draft->$field)) {
+            if ($draft->$field && ! Storage::disk('public')->exists($draft->$field)) {
                 return response()->json([
                     'message' => "Le fichier {$label} n'existe plus. Veuillez le télécharger à nouveau.",
                     'errors' => [
-                        $field => ["Le fichier {$label} est manquant"]
-                    ]
+                        $field => ["Le fichier {$label} est manquant"],
+                    ],
                 ], 422);
             }
         }
@@ -361,15 +362,15 @@ class VehiclePassController extends Controller
             $this->sendVehiclePassCreatedEmails($draft->fresh());
 
         } catch (\Exception $e) {
-            \Log::error('Erreur lors de la soumission du brouillon de laisser-passer véhicule: ' . $e->getMessage(), [
+            \Log::error('Erreur lors de la soumission du brouillon de laisser-passer véhicule: '.$e->getMessage(), [
                 'draft_id' => $id,
                 'user_id' => $user->id,
-                'immatriculation' => $draft->immatriculation ?? 'N/A'
+                'immatriculation' => $draft->immatriculation ?? 'N/A',
             ]);
 
             return response()->json([
                 'message' => 'Erreur lors de la soumission de la demande',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -381,7 +382,7 @@ class VehiclePassController extends Controller
 
             if ($draft->status !== 'draft') {
                 return response()->json([
-                    'message' => 'Seuls les brouillons peuvent être supprimés'
+                    'message' => 'Seuls les brouillons peuvent être supprimés',
                 ], 403);
             }
 
@@ -389,19 +390,19 @@ class VehiclePassController extends Controller
             // - L'utilisateur qui a créé le brouillon peut le supprimer
             // - Les admin/sadmin peuvent supprimer n'importe quel brouillon
             $user = $request->user();
-            if ($draft->user_id !== $user->id && !in_array($user->role, ['admin', 'sadmin'])) {
+            if ($draft->user_id !== $user->id && ! in_array($user->role, ['admin', 'sadmin'])) {
                 return response()->json([
-                    'message' => 'Vous n\'êtes pas autorisé à supprimer ce brouillon'
+                    'message' => 'Vous n\'êtes pas autorisé à supprimer ce brouillon',
                 ], 403);
             }
 
             $fileFields = [
                 'tampon_entreprise',
-                'carte_grise_path'
+                'carte_grise_path',
             ];
 
             foreach ($fileFields as $field) {
-                if (!empty($draft->$field)) {
+                if (! empty($draft->$field)) {
                     Storage::disk('public')->delete($draft->$field);
                 }
             }
@@ -409,15 +410,15 @@ class VehiclePassController extends Controller
             $draft->delete();
 
             return response()->json([
-                'message' => 'Brouillon supprimé avec succès'
+                'message' => 'Brouillon supprimé avec succès',
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('Erreur lors de la suppression du brouillon: ' . $e->getMessage());
+            \Log::error('Erreur lors de la suppression du brouillon: '.$e->getMessage());
 
             return response()->json([
                 'message' => 'Erreur lors de la suppression du brouillon',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -442,13 +443,13 @@ class VehiclePassController extends Controller
             \Log::info('Emails de création de laisser-passer envoyés avec succès', [
                 'vehicle_pass_id' => $vehiclePass->id,
                 'user_email' => $vehiclePass->user->email,
-                'admin_count' => $adminUsers->count()
+                'admin_count' => $adminUsers->count(),
             ]);
 
         } catch (\Exception $e) {
             \Log::error('Erreur lors de l\'envoi des emails de création de laisser-passer', [
                 'vehicle_pass_id' => $vehiclePass->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
             // Ne pas faire échouer la création si l'email ne fonctionne pas
         }
@@ -467,13 +468,13 @@ class VehiclePassController extends Controller
                 'vehicle_pass_id' => $vehiclePass->id,
                 'user_email' => $vehiclePass->user->email,
                 'previous_status' => $previousStatus,
-                'new_status' => $vehiclePass->status
+                'new_status' => $vehiclePass->status,
             ]);
 
         } catch (\Exception $e) {
             \Log::error('Erreur lors de l\'envoi de l\'email de changement de statut', [
                 'vehicle_pass_id' => $vehiclePass->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
         }
     }

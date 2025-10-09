@@ -21,10 +21,10 @@ class BadgeMailService
     /**
      * Envoie un email en fonction du changement de statut d'une demande de badge
      */
-    public function sendBadgeRequestStatusMail(BadgeRequest $badgeRequest, string $previousStatus = null)
+    public function sendBadgeRequestStatusMail(BadgeRequest $badgeRequest, ?string $previousStatus = null)
     {
         $recipientEmail = $this->getRecipientEmail($badgeRequest);
-        if (!$recipientEmail) {
+        if (! $recipientEmail) {
             return; // Ne pas envoyer d'email si l'adresse n'est pas disponible
         }
 
@@ -63,7 +63,7 @@ class BadgeMailService
         $badgeRequest = $badge->badgeRequest;
         $recipientEmail = $this->getRecipientEmail($badgeRequest);
 
-        if (!$recipientEmail) {
+        if (! $recipientEmail) {
             return;
         }
 
@@ -78,7 +78,7 @@ class BadgeMailService
         $badgeRequest = $badge->badgeRequest;
         $recipientEmail = $this->getRecipientEmail($badgeRequest);
 
-        if (!$recipientEmail) {
+        if (! $recipientEmail) {
             return;
         }
 
@@ -109,7 +109,7 @@ class BadgeMailService
     private function getRecipientEmail($badgeRequest)
     {
         // Priorité 1 : Email de notification par défaut
-        if ($badgeRequest->client && !empty($badgeRequest->client->notification_email)) {
+        if ($badgeRequest->client && ! empty($badgeRequest->client->notification_email)) {
             return $badgeRequest->client->notification_email;
         }
 

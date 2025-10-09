@@ -54,14 +54,14 @@ class ActivityRequestResult
             'status' => $this->activityRequest?->status,
         ];
     }
-    
+
     /**
      * Créer un résultat de succès
      */
     public static function success(
         ActivityRequest $activityRequest,
         string $message,
-        string $operation = null
+        ?string $operation = null
     ): self {
         return new self(
             success: true,
@@ -70,13 +70,13 @@ class ActivityRequestResult
             operation: $operation
         );
     }
-    
+
     /**
      * Créer un résultat d'échec
      */
     public static function failure(
         string $message,
-        string $operation = null
+        ?string $operation = null
     ): self {
         return new self(
             success: false,
@@ -86,4 +86,3 @@ class ActivityRequestResult
         );
     }
 }
-

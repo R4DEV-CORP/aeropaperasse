@@ -21,13 +21,13 @@ class BadgeReturned extends Mailable
     public function build()
     {
         return $this->view('emails.badge.returned')
-                    ->subject('Badge restitué')
-                    ->with([
-                        'badge_number' => $this->badge->badge_number,
-                        'nom' => $this->badge->badgeRequest->nom,
-                        'prenom' => $this->badge->badgeRequest->prenom,
-                        'returned_at' => $this->badge->returned_at,
-                        'return_document' => $this->badge->return_document,
-                    ]);
+            ->subject('Badge restitué')
+            ->with([
+                'badge_number' => $this->badge->badge_number,
+                'nom' => $this->badge->badgeRequest->nom,
+                'prenom' => $this->badge->badgeRequest->prenom,
+                'returned_at' => $this->badge->returned_at,
+                'return_document' => $this->badge->return_document,
+            ]);
     }
 }

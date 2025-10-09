@@ -23,7 +23,7 @@ class Badge extends Model
         'holder_client',
         'external_request_number',
         'request_date',
-        'import_source'
+        'import_source',
     ];
 
     protected $casts = [

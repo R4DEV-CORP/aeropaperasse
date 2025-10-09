@@ -9,6 +9,7 @@ use App\Services\BadgeRequestMailService;
 class BadgeRequestObserver
 {
     protected $badgeMailService;
+
     protected $badgeRequestMailService;
 
     public function __construct(
@@ -30,6 +31,7 @@ class BadgeRequestObserver
             $this->badgeRequestMailService->sendCreatedMail($badgeRequest);
         }
     }
+
     /**
      * Handle the BadgeRequest "updating" event.
      *

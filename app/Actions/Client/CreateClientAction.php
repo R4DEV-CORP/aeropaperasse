@@ -7,7 +7,6 @@ use App\Models\Client;
 use App\Services\ClientDocumentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class CreateClientAction
 {
@@ -29,7 +28,7 @@ class CreateClientAction
             return DB::transaction(function () use ($data) {
                 // 1. Stocker les documents avec le nom de l'entreprise
                 $storedDocuments = $this->documentService->storeDocuments($data->getDocuments(), $data->company_name);
-                
+
                 // 2. Préparer les données du client avec les chemins des documents
                 $clientData = array_merge($data->getClientData(), $storedDocuments);
 
@@ -64,11 +63,10 @@ class CreateClientAction
             return new CreateClientResult(
                 success: false,
                 client: null,
-                message: 'Erreur lors de la création du client : ' . $e->getMessage()
+                message: 'Erreur lors de la création du client : '.$e->getMessage()
             );
         }
     }
-
 
     /**
      * Création des contacts pour le client
@@ -82,7 +80,7 @@ class CreateClientAction
             });
 
             // Ne créer le contact que s'il y a des données valides
-            if (!empty($filteredData) && count($filteredData) >= 4) { // Au moins prénom, nom, email, téléphone
+            if (! empty($filteredData) && count($filteredData) >= 4) { // Au moins prénom, nom, email, téléphone
                 $client->contacts()->create($contactData);
             }
         }

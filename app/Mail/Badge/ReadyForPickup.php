@@ -21,11 +21,11 @@ class ReadyForPickup extends Mailable
     public function build()
     {
         return $this->view('emails.badge.ready-for-pickup')
-                    ->subject('Votre badge est prêt à être remis')
-                    ->with([
-                        'nom' => $this->badgeRequest->nom,
-                        'prenom' => $this->badgeRequest->prenom,
-                        'badge_request_id' => $this->badgeRequest->id,
-                    ]);
+            ->subject('Votre badge est prêt à être remis')
+            ->with([
+                'nom' => $this->badgeRequest->nom,
+                'prenom' => $this->badgeRequest->prenom,
+                'badge_request_id' => $this->badgeRequest->id,
+            ]);
     }
 }

@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Discussion;
-use App\Models\MessageComment;
-use App\Models\DiscussionFile;
-use App\Models\User;
 use App\Mail\NewMessage;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Mail;
+use App\Models\Discussion;
+use App\Models\DiscussionFile;
 use App\Models\DiscussionReadStatus;
+use App\Models\MessageComment;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class MessageCommentController extends Controller
 {
@@ -24,7 +22,7 @@ class MessageCommentController extends Controller
                 'content' => 'required|string',
                 'parent_id' => 'nullable|exists:message_comments,id',
                 'files' => 'nullable|array',
-                'files.*' => 'nullable|file|max:10240'
+                'files.*' => 'nullable|file|max:10240',
             ]);
 
             \DB::beginTransaction();
@@ -33,7 +31,7 @@ class MessageCommentController extends Controller
                 'content' => $request->content,
                 'user_id' => $currentUserId,
                 'discussion_id' => $discussion->id,
-                'parent_id' => $request->parent_id
+                'parent_id' => $request->parent_id,
             ]);
 
             if ($request->hasFile('files')) {
@@ -42,19 +40,19 @@ class MessageCommentController extends Controller
                     DiscussionFile::create([
                         'name' => $file->getClientOriginalName(),
                         'path' => $path,
-                        'message_comment_id' => $comment->id
+                        'message_comment_id' => $comment->id,
                     ]);
                 }
             }
 
             $discussion->update([
-                'last_comment_user_id' => $currentUserId
+                'last_comment_user_id' => $currentUserId,
             ]);
             $discussion->markAsReadForUser($currentUserId);
 
             DiscussionReadStatus::where('discussion_id', $discussion->id)
-            ->where('user_id', '!=', $currentUserId)
-            ->delete();
+                ->where('user_id', '!=', $currentUserId)
+                ->delete();
 
             // Envoyer une notification par email
             $this->sendNewMessageNotification($discussion, $comment);
@@ -66,15 +64,16 @@ class MessageCommentController extends Controller
 
             return response()->json([
                 'message' => 'Commentaire créé avec succès',
-                'comment' => $comment
+                'comment' => $comment,
             ], 201);
 
         } catch (\Exception $e) {
             \DB::rollBack();
-            \Log::error('Erreur lors de la création du commentaire: ' . $e->getMessage());
+            \Log::error('Erreur lors de la création du commentaire: '.$e->getMessage());
+
             return response()->json([
                 'message' => 'Erreur lors de la création du commentaire',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -89,7 +88,7 @@ class MessageCommentController extends Controller
     {
         $currentUser = auth()->user();
         $currentUserId = $currentUser->id;
-        
+
         // Si c'est une réponse à un message existant
         if ($comment->parent_id) {
             // Vérifier qui est l'auteur de la réponse et à qui il faut envoyer la notification
@@ -108,13 +107,13 @@ class MessageCommentController extends Controller
                     }
                 }
             }
-        } 
+        }
         // Si c'est un nouveau message (pas une réponse)
         else {
             // Si le message vient d'un client, envoyer à tous les admins et super admins
             if ($currentUser->role !== 'admin' && $currentUser->role !== 'sadmin') {
                 $admins = User::whereIn('role', ['admin', 'sadmin'])->get();
-                
+
                 foreach ($admins as $admin) {
                     if ($admin->email) {
                         Mail::to($admin->email)->send(new NewMessage($discussion, $comment));

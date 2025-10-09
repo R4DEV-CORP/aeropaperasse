@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('activity_request_id');
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('activity_request_id')->references('id')->on('activity_requests')->onDelete('cascade');
         });

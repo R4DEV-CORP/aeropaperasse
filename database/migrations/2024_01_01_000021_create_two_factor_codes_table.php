@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('code', 6);
             $table->timestamp('expires_at')->useCurrent()->useCurrentOnUpdate();
             $table->timestamps();
-            
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Badge;
 
 class BadgeRequest extends Model
 {
@@ -36,7 +35,7 @@ class BadgeRequest extends Model
         'approved_adp_at',
         'rejected_adp_at',
         'pending_fabrication_at',
-        'ready_for_delivery_at'
+        'ready_for_delivery_at',
     ];
 
     protected $casts = [
@@ -51,15 +50,16 @@ class BadgeRequest extends Model
         'approved_adp_at' => 'datetime',
         'rejected_adp_at' => 'datetime',
         'pending_fabrication_at' => 'datetime',
-        'ready_for_delivery_at' => 'datetime'
+        'ready_for_delivery_at' => 'datetime',
     ];
 
     // Scope local pour filtrer les demandes d'un utilisateur
     public function scopeForUser($query, User $user)
     {
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $query->where('user_id', $user->id);
         }
+
         return $query;
     }
 

@@ -17,6 +17,28 @@
         </div>
     @endif
 
+    <!-- Sélection du client (pour les admins uniquement) -->
+    @if($user->isAdmin())
+        <div class="border border-red-200 p-4 rounded-lg bg-red-50">
+            <div class="flex items-center justify-between">
+                <flux:heading size="lg" class="mb-4">Sélection du client</flux:heading>
+                <flux:badge color="rose">Admin</flux:badge>
+            </div>
+            <flux:field>
+                <flux:label>Client<span class="text-red-500">*</span></flux:label>
+                <select wire:model.live="selected_client_id" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">Sélectionnez un client...</option>
+                    @foreach($allClients as $clientOption)
+                        <option value="{{ $clientOption->id }}">
+                            {{ $clientOption->company_name }} - {{ $clientOption->siret_number }}
+                        </option>
+                    @endforeach
+                </select>
+            </flux:field>
+        </div>
+    @endif
+
     <!-- Informations de la précédente demande -->
     @if($previousActivityRequests->count() > 0)
         <div class="border border-gray-800/10 p-4 rounded-lg">
@@ -48,16 +70,18 @@
     @endif
 
     <!-- Informations de la société -->
-    @if(!$renewal)
+    @if(!$renewal && $client)
     <flux:separator text="ou" />
     <div class="border border-gray-800/10 p-4 rounded-lg">
         <flux:heading size="lg">Informations sur la société</flux:heading>
+        @if(!$user->isAdmin())
         <flux:callout class="mt-4" icon="information-circle" color="blue" inline>
             <flux:callout.heading>Pour modifier les informations de la société, veuillez vous rendre dans la page société.</flux:callout.heading>
             <x-slot name="actions">
                 <flux:button href="/clients">Modifier -></flux:button>
             </x-slot>
         </flux:callout>
+        @endif
         <div class="grid grid-cols-2 gap-4 mt-2">
             <flux:input readonly variant="filled" value="{{ $client->company_name }}" label="Raison sociale"/>
             <flux:input readonly variant="filled" value="{{ $client->trade_name }}" label="Nom commercial"/>
@@ -67,8 +91,10 @@
             <flux:input readonly variant="filled" value="{{ $client->city }}" label="Ville"/>
         </div>
     </div>
+    @endif
 
     <!-- Responsable -->
+    @if(!$renewal && $client)
     <div class="border border-gray-800/10 p-4 rounded-lg">
         <flux:heading size="lg">Responsable</flux:heading>
         <div class="grid grid-cols-2 gap-4 mt-2">

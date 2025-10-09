@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ActivityRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use App\Mail\ActivityRequestConfirmation;
 use App\Mail\ActivityRequestCreated;
 use App\Mail\ActivityRequestStatusUpdated;
+use App\Models\ActivityRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ActivityRequestController extends Controller
@@ -39,7 +38,7 @@ class ActivityRequestController extends Controller
             'total' => $requests->count(),
             'pending' => $requests->where('status', 'pending')->count(),
             'approved' => $requests->where('status', 'approved')->count(),
-            'rejected' => $requests->where('status', 'rejected')->count()
+            'rejected' => $requests->where('status', 'rejected')->count(),
         ];
 
         return response()->json([
@@ -47,7 +46,7 @@ class ActivityRequestController extends Controller
             'requests' => $requests,
             'has_drafts' => $draftCount > 0,
             'draft_count' => $draftCount,
-            'stats' => $stats
+            'stats' => $stats,
         ]);
     }
 
@@ -93,8 +92,9 @@ class ActivityRequestController extends Controller
             \Log::error('Erreurs de validation pour la demande d\'activité', [
                 'errors' => $validator->errors()->toArray(),
                 'input' => $request->all(),
-                'user_id' => $user->id
+                'user_id' => $user->id,
             ]);
+
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
@@ -152,23 +152,22 @@ class ActivityRequestController extends Controller
                     ->send(new ActivityRequestConfirmation($activityRequest));
             } catch (\Exception $e) {
                 // Log l'erreur mais ne pas interrompre le processus
-                \Log::error('Erreur lors de l\'envoi de l\'email: ' . $e->getMessage());
+                \Log::error('Erreur lors de l\'envoi de l\'email: '.$e->getMessage());
             }
 
             return response()->json([
                 'message' => 'Demande d\'activité créée avec succès',
-                'request' => $activityRequest
+                'request' => $activityRequest,
             ], 201);
 
         } catch (\Exception $e) {
-            \Log::error('Erreur lors de la création de la demande d\'activité: ' . $e->getMessage());
+            \Log::error('Erreur lors de la création de la demande d\'activité: '.$e->getMessage());
 
             return response()->json([
                 'message' => 'Erreur lors de la création de la demande',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
-
 
     }
 
@@ -190,7 +189,7 @@ class ActivityRequestController extends Controller
         // Mettre à jour le statut
         $activityRequest->status = $request->status;
 
-        $timestampField = $request->status . '_at';
+        $timestampField = $request->status.'_at';
         $activityRequest->$timestampField = now();
 
         $activityRequest->save();
@@ -206,9 +205,9 @@ class ActivityRequestController extends Controller
                 // Mail::to(config('mail.admin_address', 'admin@example.com'))
                 //     ->send(new ActivityRequestStatusUpdated($activityRequest, true)); // Version admin
 
-                \Log::info('Email de notification de changement de statut envoyé à ' . $activityRequest->responsable_email);
+                \Log::info('Email de notification de changement de statut envoyé à '.$activityRequest->responsable_email);
             } catch (\Exception $e) {
-                \Log::error('Erreur lors de l\'envoi de l\'email de notification de statut: ' . $e->getMessage());
+                \Log::error('Erreur lors de l\'envoi de l\'email de notification de statut: '.$e->getMessage());
             }
         }
 
@@ -231,7 +230,7 @@ class ActivityRequestController extends Controller
         }
 
         return response()->json([
-            'drafts' => $drafts
+            'drafts' => $drafts,
         ]);
     }
 
@@ -259,7 +258,7 @@ class ActivityRequestController extends Controller
             'agrement_prefectoral' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048',
             'contrat_iata' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048',
             'cta' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048',
-            'draft_id' => 'nullable|integer|exists:activity_requests,id'
+            'draft_id' => 'nullable|integer|exists:activity_requests,id',
         ]);
 
         if ($validator->fails()) {
@@ -271,7 +270,7 @@ class ActivityRequestController extends Controller
                 'user_id' => auth()->id(),
                 'status' => 'draft',
                 'draft_at' => now(),
-                'created_by' => auth()->id()
+                'created_by' => auth()->id(),
             ];
 
             // Traitement des champs textuels
@@ -290,7 +289,7 @@ class ActivityRequestController extends Controller
                 'activite_description',
                 'nombre_personnes',
                 'nombre_vehicules',
-                'clients_denomination'
+                'clients_denomination',
             ];
 
             foreach ($textFields as $field) {
@@ -306,7 +305,7 @@ class ActivityRequestController extends Controller
                 'formulaire_surete' => 'formulaire_surete_path',
                 'agrement_prefectoral' => 'agrement_prefectoral_path',
                 'contrat_iata' => 'contrat_iata_path',
-                'cta' => 'cta_path'
+                'cta' => 'cta_path',
             ];
 
             foreach ($fileFields as $field => $dbField) {
@@ -324,7 +323,7 @@ class ActivityRequestController extends Controller
                 // Vérification des permissions
                 if ($activityRequest->status !== 'draft' || $activityRequest->user_id !== auth()->id()) {
                     return response()->json([
-                        'message' => 'Vous ne pouvez pas modifier cette demande'
+                        'message' => 'Vous ne pouvez pas modifier cette demande',
                     ], 403);
                 }
 
@@ -335,15 +334,15 @@ class ActivityRequestController extends Controller
 
             return response()->json([
                 'message' => 'Brouillon enregistré avec succès',
-                'draft' => $activityRequest
+                'draft' => $activityRequest,
             ], 201);
 
         } catch (\Exception $e) {
-            \Log::error('Erreur lors de la création du brouillon: ' . $e->getMessage());
+            \Log::error('Erreur lors de la création du brouillon: '.$e->getMessage());
 
             return response()->json([
                 'message' => 'Erreur lors de la création du brouillon',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -356,7 +355,7 @@ class ActivityRequestController extends Controller
 
         if ($draft->status !== 'draft' || $draft->user_id !== auth()->id()) {
             return response()->json([
-                'message' => 'Vous ne pouvez pas soumettre cette demande'
+                'message' => 'Vous ne pouvez pas soumettre cette demande',
             ], 403);
         }
 
@@ -382,13 +381,13 @@ class ActivityRequestController extends Controller
 
         if ($draft->renouvellement) {
             $additionalValidator = Validator::make($draft->toArray(), [
-                'autorisation_anterieur' => 'required|string|max:255'
+                'autorisation_anterieur' => 'required|string|max:255',
             ]);
 
             if ($additionalValidator->fails()) {
                 return response()->json([
                     'message' => 'Numéro d\'autorisation antérieure requis pour un renouvellement',
-                    'errors' => $additionalValidator->errors()
+                    'errors' => $additionalValidator->errors(),
                 ], 422);
             }
         }
@@ -396,7 +395,7 @@ class ActivityRequestController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Formulaire incomplet',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -409,15 +408,15 @@ class ActivityRequestController extends Controller
 
             return response()->json([
                 'message' => 'Demande soumise avec succès',
-                'request' => $draft
+                'request' => $draft,
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('Erreur lors de la soumission du brouillon: ' . $e->getMessage());
+            \Log::error('Erreur lors de la soumission du brouillon: '.$e->getMessage());
 
             return response()->json([
                 'message' => 'Erreur lors de la soumission de la demande',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -428,14 +427,14 @@ class ActivityRequestController extends Controller
             'id' => $id,
             'method' => $request->method(),
             'url' => $request->url(),
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
         ]);
         try {
             $originalRequest = ActivityRequest::findOrFail($id);
 
             if ($originalRequest->status !== 'approved') {
                 return response()->json([
-                    'message' => 'Seules les demandes approuvées peuvent être renouvelées'
+                    'message' => 'Seules les demandes approuvées peuvent être renouvelées',
                 ], 400);
             }
 
@@ -467,7 +466,7 @@ class ActivityRequestController extends Controller
                 'formulaire_surete_path',
                 'agrement_prefectoral_path',
                 'contrat_iata_path',
-                'cta_path'
+                'cta_path',
             ];
 
             foreach ($fileFields as $field) {
@@ -477,8 +476,8 @@ class ActivityRequestController extends Controller
                     if (Storage::disk('public')->exists($originalPath)) {
                         // Créer un nouveau nom de fichier
                         $pathInfo = pathinfo($originalPath);
-                        $newFileName = $pathInfo['filename'] . '_copy_' . time() . '.' . $pathInfo['extension'];
-                        $newPath = $pathInfo['dirname'] . '/' . $newFileName;
+                        $newFileName = $pathInfo['filename'].'_copy_'.time().'.'.$pathInfo['extension'];
+                        $newPath = $pathInfo['dirname'].'/'.$newFileName;
 
                         // Copier le fichier
                         Storage::disk('public')->copy($originalPath, $newPath);
@@ -494,15 +493,15 @@ class ActivityRequestController extends Controller
 
             return response()->json([
                 'message' => 'Demande renouvelée avec succès',
-                'request' => $newRequest
+                'request' => $newRequest,
             ], 201);
 
         } catch (\Exception $e) {
-            \Log::error('Erreur lors du renouvellement: ' . $e->getMessage());
+            \Log::error('Erreur lors du renouvellement: '.$e->getMessage());
 
             return response()->json([
                 'message' => 'Erreur lors du renouvellement de la demande',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
