@@ -119,10 +119,28 @@ class CreateActivityRequestForm extends Component
     protected function loadDraft(int $activityRequestId): void
     {
         try {
-            $activityRequest = ActivityRequest::where('id', $activityRequestId)
-                ->where('client_id', $this->client->id)
-                ->where('status', 'draft')
-                ->firstOrFail();
+            // Pour les admins, on ne filtre pas par client_id car ils peuvent éditer n'importe quel brouillon
+            $query = ActivityRequest::where('id', $activityRequestId)
+                ->where('status', 'draft');
+            
+            // Pour les utilisateurs normaux, on filtre par leur client
+            if (! $this->user->isAdmin()) {
+                $query->where('client_id', $this->client->id);
+            }
+
+            $activityRequest = $query->firstOrFail();
+
+            // Pour les admins, charger le client du brouillon
+            if ($this->user->isAdmin()) {
+                $this->client = $activityRequest->client;
+                $this->selected_client_id = $this->client->id;
+                
+                // Charger les demandes précédentes du client
+                $this->previousActivityRequests = $this->client->activityRequests()
+                    ->where('status', '!=', 'draft')
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }
 
             // ⚠️ IMPORTANT : Conserver l'ID du brouillon pour les mises à jour ultérieures
             $this->activityRequestId = $activityRequestId;

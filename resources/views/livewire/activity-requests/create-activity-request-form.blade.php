@@ -18,7 +18,7 @@
     @endif
 
     <!-- Sélection du client (pour les admins uniquement) -->
-    @if($user->isAdmin())
+    @if($user->isAdmin() && !$activityRequestId)
         <div class="border border-red-200 p-4 rounded-lg bg-red-50">
             <div class="flex items-center justify-between">
                 <flux:heading size="lg" class="mb-4">Sélection du client</flux:heading>
@@ -36,6 +36,19 @@
                     @endforeach
                 </select>
             </flux:field>
+        </div>
+    @endif
+
+    <!-- Information du client pour l'édition d'un brouillon (admin uniquement) -->
+    @if($user->isAdmin() && $activityRequestId && $client)
+        <div class="border border-red-200 p-4 rounded-lg bg-red-50">
+            <div class="flex items-center justify-between">
+                <flux:heading size="lg">Client du brouillon</flux:heading>
+                <flux:badge color="red">Admin</flux:badge>
+            </div>
+            <flux:text class="mt-2">
+                <strong>{{ $client->company_name }}</strong> - SIRET: {{ $client->siret_number }}
+            </flux:text>
         </div>
     @endif
 
