@@ -107,7 +107,7 @@
         </div>
         
         <div class="content">
-            <p>Bonjour {{ $activityRequest->responsable_prenom }} {{ $activityRequest->responsable_nom }},</p>
+            <p>Bonjour,</p>
             
             <p>Le statut de votre demande d'activité a été mis à jour.</p>
             
@@ -152,11 +152,11 @@
                 <div class="info-box">
                     <div class="info-item">
                         <span class="label">Raison sociale :</span><br>
-                        <span class="value">{{ $activityRequest->raison_sociale }}</span>
+                        <span class="value">{{ $client->company_name }}</span>
                     </div>
                     <div class="info-item">
                         <span class="label">Nom commercial :</span><br>
-                        <span class="value">{{ $activityRequest->nom_commercial }}</span>
+                        <span class="value">{{ $client->trade_name }}</span>
                     </div>
                     <div class="info-item">
                         <span class="label">Date de la demande :</span><br>

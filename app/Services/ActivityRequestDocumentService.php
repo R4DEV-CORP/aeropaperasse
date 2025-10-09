@@ -7,6 +7,7 @@ use App\Models\Client;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class ActivityRequestDocumentService
 {
@@ -162,5 +163,98 @@ class ActivityRequestDocumentService
         }
 
         return $copiedDocuments;
+    }
+
+    /**
+     * Créer un fichier ZIP contenant tous les documents d'une demande d'activité
+     *
+     * @return string|null Le chemin du fichier ZIP créé, ou null si aucun document n'est disponible
+     */
+    public function createDocumentsZip(ActivityRequest $activityRequest): ?string
+    {
+        // Types de documents à inclure dans le ZIP
+        $documentTypes = [
+            'customer_certificate_document' => 'attestation-client',
+            'prefectural_agreement_document' => 'agrement-prefectoral',
+            'iata_contract_document' => 'contrat-iata',
+            'cta_document' => 'cta',
+        ];
+
+        // Créer un nom de fichier pour le ZIP
+        $zipFileName = 'demande-activite-'.$activityRequest->id.'-'.now()->timestamp.'.zip';
+        $zipPath = storage_path('app/temp/'.$zipFileName);
+
+        // Créer le dossier temp s'il n'existe pas
+        if (! file_exists(storage_path('app/temp'))) {
+            mkdir(storage_path('app/temp'), 0755, true);
+        }
+
+        // Créer l'archive ZIP
+        $zip = new ZipArchive;
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            Log::error('Service - Impossible de créer l\'archive ZIP', ['path' => $zipPath]);
+
+            return null;
+        }
+
+        $disk = Storage::disk('public');
+        $filesAdded = false;
+
+        // Ajouter chaque document au ZIP s'il existe
+        foreach ($documentTypes as $field => $friendlyName) {
+            if (! empty($activityRequest->$field) && $disk->exists($activityRequest->$field)) {
+                $filePath = $disk->path($activityRequest->$field);
+                $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                $zipEntryName = $friendlyName.'.'.$extension;
+
+                $zip->addFile($filePath, $zipEntryName);
+                $filesAdded = true;
+            }
+        }
+
+        $zip->close();
+
+        // Vérifier si des fichiers ont été ajoutés
+        if (! $filesAdded) {
+            // Supprimer le ZIP vide
+            if (file_exists($zipPath)) {
+                unlink($zipPath);
+            }
+            Log::info('Service - Aucun document disponible pour créer le ZIP', ['activity_request_id' => $activityRequest->id]);
+
+            return null;
+        }
+
+        return $zipPath;
+    }
+
+    /**
+     * Récupère le chemin d'un document spécifique d'une demande d'activité
+     *
+     * @param  string  $documentType  Le type de document (customer_certificate_document, etc.)
+     * @return string|null Le chemin complet du fichier, ou null si le document n'existe pas
+     */
+    public function getDocumentPath(ActivityRequest $activityRequest, string $documentType): ?string
+    {
+        // Vérifier si le document existe dans la demande
+        if (empty($activityRequest->$documentType)) {
+            return null;
+        }
+
+        $disk = Storage::disk('public');
+        $documentPath = $activityRequest->$documentType;
+
+        // Vérifier si le fichier existe physiquement
+        if (! $disk->exists($documentPath)) {
+            Log::warning('Service - Document non trouvé', [
+                'activity_request_id' => $activityRequest->id,
+                'document_type' => $documentType,
+                'path' => $documentPath,
+            ]);
+
+            return null;
+        }
+
+        return $disk->path($documentPath);
     }
 }

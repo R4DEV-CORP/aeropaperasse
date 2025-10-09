@@ -1,9 +1,12 @@
 <div class="mt-8">
+    @if (session()->has('message'))
+        <flux:callout variant="success" icon="check-circle" heading="{{ session('message') }}" />
+    @endif
     <div class="grid grid-cols-4 gap-4 mt-4">
-        <x-badge-info-card title="Demandes totales" value="15" bg-color="violet-200" />
-        <x-badge-info-card title="En attente" value="15" bg-color="yellow-200" />
-        <x-badge-info-card title="Approuvées" value="15" bg-color="green-200" />
-        <x-badge-info-card title="Rejetées" value="15" bg-color="red-200" />
+        <x-badge-info-card title="Demandes totales" value="{{ $statistics['total'] }}" bg-color="violet-200" />
+        <x-badge-info-card title="En attente" value="{{ $statistics['pending'] }}" bg-color="yellow-200" />
+        <x-badge-info-card title="Approuvées" value="{{ $statistics['approved'] }}" bg-color="green-200" />
+        <x-badge-info-card title="Rejetées" value="{{ $statistics['rejected'] }}" bg-color="red-200" />
     </div>
     <div class="flex items-center gap-3 mt-4">
         <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher une demande..." />
@@ -52,17 +55,14 @@
                         </td>
                         <td class="px-3 py-2">
                             @switch($activityRequest->status)
-                                @case('draft')
-                                    <flux:badge color="gray" size="sm">Brouillon</flux:badge>
-                                    @break
                                 @case('pending')
-                                    <flux:badge color="blue" size="sm">En attente</flux:badge>
+                                    <flux:badge icon="clock" color="yellow" size="sm">En attente</flux:badge>
                                     @break
                                 @case('approved')
-                                    <flux:badge color="green" size="sm">Approuvé</flux:badge>
+                                    <flux:badge icon="check-circle" color="green" size="sm">Approuvé</flux:badge>
                                     @break
                                 @case('rejected')
-                                    <flux:badge color="red" size="sm">Rejeté</flux:badge>
+                                    <flux:badge icon="x-circle" color="red" size="sm">Rejeté</flux:badge>
                                     @break
                             @endswitch
                         </td>
@@ -84,21 +84,19 @@
                             @endswitch
                         </td>
                         <td class="px-3 py-2">
-                            <div class="flex items-center gap-2">   
-                                <flux:tooltip content="Voir">
-                                    <flux:icon.eye color="blue" class="size-6 hover:cursor-pointer"/>
-                                </flux:tooltip>
-                                @if($activityRequest->status == 'pending')   
-                                <flux:tooltip content="Approuver">
-                                    <flux:icon.check-circle color="green" class="size-6 hover:cursor-pointer" />    
-                                </flux:tooltip>
-                                <flux:tooltip content="Rejeter">
-                                    <flux:icon.x-circle color="red" class="size-6 hover:cursor-pointer" />  
-                                </flux:tooltip>
+                            <div class="flex items-center">   
+                                <flux:modal.trigger :name="'view-activity-request-'.$activityRequest->id">
+                                    <flux:button icon="eye" icon:variant="outline" variant="subtle" square="true" tooltip="Voir" color="blue" class="hover:cursor-pointer"/>
+                                </flux:modal.trigger>
+                                <!-- Modal visualisation demande -->
+                                <flux:modal :name="'view-activity-request-'.$activityRequest->id" class="min-w-4xl !max-w-6xl">
+                                    <livewire:activity-requests.view-activity-request :activityRequest="$activityRequest"/>
+                                </flux:modal>
+                                @if($activityRequest->status == 'pending' && auth()->user()->isAdmin())
+                                    <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Approuver" wire:click="approve({{ $activityRequest->id }})" class="!text-green-500 hover:cursor-pointer"/>
+                                    <flux:button variant="subtle" icon="x-circle" icon:variant="outline" square="true" tooltip="Rejeter" wire:click="reject({{ $activityRequest->id }})" class="!text-red-500 hover:cursor-pointer"/>
                                 @endif
-                                <flux:tooltip content="Télécharger les documents">
-                                    <flux:icon.arrow-down-tray color="blue" class="size-6 hover:cursor-pointer" /> 
-                                </flux:tooltip>
+                                <flux:button variant="subtle" icon="document-arrow-down" icon:variant="outline" square="true" tooltip="Télécharger les documents" wire:click="downloadDocuments({{ $activityRequest->id }})" class="!text-blue-500 hover:cursor-pointer"/>
                             </div>
                         </td>
                     </tr>
@@ -144,20 +142,7 @@
                             <flux:text>{{ $activityRequest->manager_phone }}</flux:text>
                         </td>
                         <td class="px-3 py-2">
-                            @switch($activityRequest->status)
-                                @case('draft')
-                                    <flux:badge color="gray" size="sm">Brouillon</flux:badge>
-                                    @break
-                                @case('pending')
-                                    <flux:badge color="blue" size="sm">En attente</flux:badge>
-                                    @break
-                                @case('approved')
-                                    <flux:badge color="green" size="sm">Approuvé</flux:badge>
-                                    @break
-                                @case('rejected')
-                                    <flux:badge color="red" size="sm">Rejeté</flux:badge>
-                                    @break
-                            @endswitch
+                            <flux:badge icon="pencil-square" color="gray" size="sm">Brouillon</flux:badge>    
                         </td>
                         <td class="px-3 py-2">
                             <flux:text>{{ $activityRequest->description }}</flux:text>

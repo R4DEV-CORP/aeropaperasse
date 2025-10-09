@@ -122,7 +122,7 @@ class CreateActivityRequestForm extends Component
             // Pour les admins, on ne filtre pas par client_id car ils peuvent éditer n'importe quel brouillon
             $query = ActivityRequest::where('id', $activityRequestId)
                 ->where('status', 'draft');
-            
+
             // Pour les utilisateurs normaux, on filtre par leur client
             if (! $this->user->isAdmin()) {
                 $query->where('client_id', $this->client->id);
@@ -134,7 +134,7 @@ class CreateActivityRequestForm extends Component
             if ($this->user->isAdmin()) {
                 $this->client = $activityRequest->client;
                 $this->selected_client_id = $this->client->id;
-                
+
                 // Charger les demandes précédentes du client
                 $this->previousActivityRequests = $this->client->activityRequests()
                     ->where('status', '!=', 'draft')

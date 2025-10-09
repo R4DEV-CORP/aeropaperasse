@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\ActivityRequest;
+use App\Models\Client;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -13,6 +14,8 @@ class ActivityRequestStatusUpdated extends Mailable
 
     public $activityRequest;
 
+    public $client;
+
     public $isAdminNotification;
 
     /**
@@ -21,10 +24,11 @@ class ActivityRequestStatusUpdated extends Mailable
      * @param  bool  $isAdminNotification  Indique si c'est une notification pour l'admin
      * @return void
      */
-    public function __construct(ActivityRequest $activityRequest, $isAdminNotification = false)
+    public function __construct(ActivityRequest $activityRequest, Client $client, $isAdminNotification = false)
     {
         $this->activityRequest = $activityRequest;
         $this->isAdminNotification = $isAdminNotification;
+        $this->client = $client;
     }
 
     /**
