@@ -27,7 +27,7 @@ class ClientFactory extends Factory
             'company_name' => $companyName,
             'trade_name' => $companyName,
             'siret_number' => fake()->randomNumber(8),
-            'address' => fake()->address(),
+            'address' => fake()->streetAddress(),
             'zip_code' => fake()->postcode(),
             'city' => fake()->city(),
             'subcontractor_of' => fake()->company(),

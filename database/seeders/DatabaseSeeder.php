@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\ActivityRequest;
+use App\Models\ActivityComment;
 use App\Models\Client;
 use App\Models\ContactClient;
 use App\Models\User;
@@ -16,6 +17,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Compte Admin pour tester
+
+        $clientAdmin = Client::factory()
+            ->create([
+                'company_name' => 'Admin',
+                'trade_name' => 'Admin',
+                'siret_number' => '12345678901234',
+                'address' => '53 avenue du bois de la pie',
+                'zip_code' => '93290',
+                'city' => 'Tremblay en Ffrance',
+            ]);
+
+        $userAdmin = User::factory()
+            ->for($clientAdmin)
+            ->create([
+                'name' => 'Corentin Sarda',
+                'email' => 'contact@r4web.fr',
+                'role' => 'admin',
+            ]);
+
+
+        // Jeu de test avec 3 clients
         $clients = Client::factory()
             ->count(3)
             ->create();
@@ -51,26 +74,28 @@ class DatabaseSeeder extends Seeder
                 ->for($user, 'creator')
                 ->count(5)
                 ->create();
+            
+            foreach($activityRequests as $activityRequest) {
+                ActivityComment::factory()
+                    ->for($activityRequest)
+                    ->for($user)
+                    ->create();
+
+                ActivityComment::factory()
+                    ->for($activityRequest)
+                    ->for($userAdmin)
+                    ->create();
+
+                ActivityComment::factory()
+                    ->for($activityRequest)
+                    ->for($user)
+                    ->create();
+
+                ActivityComment::factory()
+                    ->for($activityRequest)
+                    ->for($userAdmin)
+                    ->create();
+            }
         }
-
-        // Compte Admin pour tester
-
-        $clientAdmin = Client::factory()
-            ->create([
-                'company_name' => 'R4Web',
-                'trade_name' => 'R4Web',
-                'siret_number' => '12345678901234',
-                'address' => '53 avenue du bois de la pie',
-                'zip_code' => '93290',
-                'city' => 'Tremblay en Ffrance',
-            ]);
-
-        $userAdmin = User::factory()
-            ->for($clientAdmin)
-            ->create([
-                'name' => 'R4Web',
-                'email' => 'contact@r4web.fr',
-                'role' => 'admin',
-            ]);
     }
 }

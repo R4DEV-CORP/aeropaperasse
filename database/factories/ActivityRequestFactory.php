@@ -25,10 +25,10 @@ class ActivityRequestFactory extends Factory
             'manager_lastname' => $lastName,
             'manager_email' => $email,
             'manager_phone' => fake()->phoneNumber(),
-            'manager_role' => fake()->randomElement(['hr', 'safety', 'security', 'manager']),
+            'manager_role' => fake()->randomElement(['Chef de chantier', 'Chef de site', 'Directeur', "Chef d'équipe"]),
             'description' => fake()->text(),
-            'person_count' => fake()->numberBetween(1, 5),
-            'vehicule_count' => fake()->numberBetween(0, 5),
+            'person_count' => fake()->numberBetween(1, 3),
+            'vehicule_count' => fake()->numberBetween(0, 3),
             'customer_names' => fake()->company(),
             'customer_certificate_document' => fake()->mimeType(),
             'prefectural_agreement_document' => fake()->mimeType(),
@@ -36,6 +36,7 @@ class ActivityRequestFactory extends Factory
             'cta_document' => fake()->mimeType(),
             'status' => fake()->randomElement(['draft', 'pending', 'approved', 'rejected']),
             'previous_status' => fake()->randomElement(['draft', 'pending', 'approved', 'rejected']),
+            'airport' => fake()->randomElement(['ORY', 'CDG', 'LBG']),
         ];
     }
 }

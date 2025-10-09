@@ -3,7 +3,7 @@
         <flux:callout variant="success" icon="check-circle" heading="{{ session('message') }}" />
     @endif
     <div class="grid grid-cols-4 gap-4 mt-4">
-        <x-badge-info-card title="Demandes totales" value="{{ $statistics['total'] }}" bg-color="violet-200" />
+        <x-badge-info-card title="Demandes totales" value="{{ $statistics['total'] }}" bg-color="blue-200" />
         <x-badge-info-card title="En attente" value="{{ $statistics['pending'] }}" bg-color="yellow-200" />
         <x-badge-info-card title="Approuvées" value="{{ $statistics['approved'] }}" bg-color="green-200" />
         <x-badge-info-card title="Rejetées" value="{{ $statistics['rejected'] }}" bg-color="red-200" />
