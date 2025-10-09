@@ -1,4 +1,4 @@
-<form wire:submit="createActivityRequest" class="space-y-6">
+<form wire:submit.prevent="createActivityRequest" novalidate class="space-y-6">
     <div class="border-b border-gray-800/10 pb-4">
         <flux:heading size="xl">
             {{ $activityRequestId ? 'Modifier le brouillon' : 'Nouvelle demande d\'activité' }}
@@ -158,7 +158,7 @@
                         <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
                     @endif
                 </flux:label>
-                <flux:input wire:model="customer_certificate_document" type="file" icon="document-plus" name="customer_certificate_document" :required="!$hasExistingCustomerCertificate" />
+                <flux:input wire:model="customer_certificate_document" type="file" icon="document-plus" name="customer_certificate_document" />
                 <flux:error name="customer_certificate_document" />
             </flux:field>
             <flux:field class="mt-2">
@@ -170,7 +170,7 @@
                         <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
                     @endif
                 </flux:label>
-                <flux:input wire:model="prefectural_agreement_document" type="file" icon="document-plus" name="prefectural_agreement_document" :required="!$hasExistingPrefecturalAgreement" />
+                <flux:input wire:model="prefectural_agreement_document" type="file" icon="document-plus" name="prefectural_agreement_document" />
                 <flux:error name="prefectural_agreement_document" />
             </flux:field>
             <flux:field class="mt-2">
@@ -182,7 +182,7 @@
                         <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
                     @endif
                 </flux:label>
-                <flux:input wire:model="iata_contract_document" type="file" icon="document-plus" name="iata_contract_document" :required="!$hasExistingIataContract" />
+                <flux:input wire:model="iata_contract_document" type="file" icon="document-plus" name="iata_contract_document" />
                 <flux:error name="iata_contract_document" />
             </flux:field>
             <flux:field class="mt-2">
@@ -194,7 +194,7 @@
                         <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
                     @endif
                 </flux:label>
-                <flux:input wire:model="cta_document" type="file" icon="document-plus" name="cta_document" :required="!$hasExistingCta" />
+                <flux:input wire:model="cta_document" type="file" icon="document-plus" name="cta_document" />
                 <flux:error name="cta_document" />
             </flux:field>
     </div>

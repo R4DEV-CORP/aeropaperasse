@@ -3,6 +3,7 @@
 namespace App\DataTransferObjects;
 
 use Illuminate\Http\UploadedFile;
+use App\Forms\ActivityRequestFormData;
 
 class CreateActivityRequestData
 {
@@ -37,43 +38,14 @@ class CreateActivityRequestData
 
     /**
      * Créer le DTO à partir d'un array
+     * Note : La logique de renouvellement a été déplacée vers ActivityRequestRenewalService
+     * Cette méthode se contente de mapper les données
      */
     public static function fromArray(array $data, int $clientId, int $userId, bool $isDraft = false): self
     {
         $isRenewal = $data['renewal'] ?? false;
         $lastActivityRequestId = !empty($data['last_activity_request_id']) ? (int) $data['last_activity_request_id'] : null;
         
-        // Si c'est un renouvellement, charger les données de l'ancienne demande
-        if ($isRenewal && $lastActivityRequestId) {
-            $previousRequest = \App\Models\ActivityRequest::find($lastActivityRequestId);
-            
-            if ($previousRequest) {
-                // Utiliser les données de l'ancienne demande
-                return new self(
-                    manager_firstname: $previousRequest->manager_firstname,
-                    manager_lastname: $previousRequest->manager_lastname,
-                    manager_email: $previousRequest->manager_email,
-                    manager_phone: $previousRequest->manager_phone,
-                    manager_role: $previousRequest->manager_role,
-                    airport: $previousRequest->airport,
-                    description: $previousRequest->description,
-                    customer_names: $previousRequest->customer_names,
-                    person_count: $previousRequest->person_count,
-                    vehicule_count: $previousRequest->vehicule_count,
-                    customer_certificate_document: null, // Pas de nouveaux documents
-                    prefectural_agreement_document: null,
-                    iata_contract_document: null,
-                    cta_document: null,
-                    client_id: $clientId,
-                    created_by: $userId,
-                    is_draft: $isDraft,
-                    renewal: true,
-                    last_activity_request_id: $lastActivityRequestId,
-                );
-            }
-        }
-        
-        // Sinon, utiliser les données du formulaire (création classique)
         return new self(
             manager_firstname: $data['manager_firstname'] ?? null,
             manager_lastname: $data['manager_lastname'] ?? null,
@@ -94,6 +66,38 @@ class CreateActivityRequestData
             is_draft: $isDraft,
             renewal: $isRenewal,
             last_activity_request_id: $lastActivityRequestId,
+        );
+    }
+    
+    /**
+     * Créer le DTO à partir du ActivityRequestFormData
+     */
+    public static function fromFormData(
+        ActivityRequestFormData $formData,
+        int $clientId,
+        int $userId,
+        bool $isDraft = false
+    ): self {
+        return new self(
+            manager_firstname: $formData->manager_firstname,
+            manager_lastname: $formData->manager_lastname,
+            manager_email: $formData->manager_email,
+            manager_phone: $formData->manager_phone,
+            manager_role: $formData->manager_role,
+            airport: $formData->airport,
+            description: $formData->description,
+            customer_names: $formData->customer_names,
+            person_count: $formData->person_count,
+            vehicule_count: $formData->vehicule_count,
+            customer_certificate_document: $formData->customer_certificate_document,
+            prefectural_agreement_document: $formData->prefectural_agreement_document,
+            iata_contract_document: $formData->iata_contract_document,
+            cta_document: $formData->cta_document,
+            client_id: $clientId,
+            created_by: $userId,
+            is_draft: $isDraft,
+            renewal: $formData->renewal,
+            last_activity_request_id: $formData->last_activity_request_id,
         );
     }
 

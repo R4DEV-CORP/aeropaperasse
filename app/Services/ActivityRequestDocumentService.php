@@ -101,12 +101,6 @@ class ActivityRequestDocumentService
     {
         $copiedDocuments = [];
         
-        Log::info('Service - Début copie documents', [
-            'previous_id' => $previousActivityRequestId,
-            'new_id' => $newActivityRequestId,
-            'client' => $client->company_name,
-        ]);
-        
         // Récupérer l'ancienne demande
         $previousRequest = ActivityRequest::find($previousActivityRequestId);
         
@@ -138,11 +132,6 @@ class ActivityRequestDocumentService
                 // Le chemin du fichier source (déjà stocké dans la BDD)
                 $oldFilePath = $previousRequest->$documentType;
                 
-                Log::info('Service - Tentative de copie document', [
-                    'type' => $documentType,
-                    'source' => $oldFilePath,
-                ]);
-                
                 // Générer un nouveau nom de fichier avec un nouveau timestamp
                 $timestamp = now()->timestamp;
                 $newFilename = "{$documentType}-{$clientFolderName}-{$timestamp}.pdf";
@@ -154,7 +143,6 @@ class ActivityRequestDocumentService
                     // Créer le répertoire de destination s'il n'existe pas
                     if (!$disk->exists($destinationBasePath)) {
                         $disk->makeDirectory($destinationBasePath);
-                        Log::info('Service - Répertoire créé', ['path' => $destinationBasePath]);
                     }
                     
                     // Copier le fichier
@@ -162,12 +150,8 @@ class ActivityRequestDocumentService
                     
                     // Enregistrer le nouveau chemin
                     $copiedDocuments[$documentType] = $destinationPath;
-                    Log::info('Service - Document copié avec succès', [
-                        'type' => $documentType,
-                        'destination' => $destinationPath,
-                    ]);
                 } else {
-                    Log::warning('Service - Fichier source non trouvé', [
+                    Log::warning('Document Service - Fichier source non trouvé', [
                         'type' => $documentType,
                         'path' => $oldFilePath,
                     ]);
@@ -176,8 +160,6 @@ class ActivityRequestDocumentService
                 Log::info('Service - Pas de document dans ancienne demande', ['type' => $documentType]);
             }
         }
-        
-        Log::info('Service - Fin copie documents', ['copied_count' => count($copiedDocuments)]);
         
         return $copiedDocuments;
     }

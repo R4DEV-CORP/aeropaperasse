@@ -2,11 +2,12 @@
 
 namespace App\Livewire\ActivityRequests;
 
-use App\Actions\ActivityRequest\CreateActivityRequestAction;
-use App\Actions\ActivityRequest\UpdateActivityRequestAction;
+use App\Actions\ActivityRequest\SaveActivityRequestAction;
 use App\DataTransferObjects\CreateActivityRequestData;
+use App\Forms\ActivityRequestFormData;
+use App\Forms\ActivityRequestFormValidator;
 use App\Models\ActivityRequest;
-use App\Validators\ActivityRequestValidator;
+use App\Services\ActivityRequestRenewalService;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\On;
@@ -85,41 +86,23 @@ class CreateActivityRequestForm extends Component
                 ->where('status', 'draft')
                 ->firstOrFail();
             
-            // ⚠️ IMPORTANT : Définir l'ID pour indiquer qu'on est en mode édition
+            // ⚠️ IMPORTANT : Conserver l'ID du brouillon pour les mises à jour ultérieures
             $this->activityRequestId = $activityRequestId;
             
-            // Charger les données dans les propriétés du formulaire
-            $this->manager_firstname = $activityRequest->manager_firstname;
-            $this->manager_lastname = $activityRequest->manager_lastname;
-            $this->manager_email = $activityRequest->manager_email;
-            $this->manager_phone = $activityRequest->manager_phone;
-            $this->manager_role = $activityRequest->manager_role;
-            $this->airport = $activityRequest->airport;
-            $this->description = $activityRequest->description;
-            $this->customer_names = $activityRequest->customer_names;
-            $this->person_count = $activityRequest->person_count;
-            $this->vehicule_count = $activityRequest->vehicule_count;
+            // Utiliser le Form Object pour charger les données
+            $formData = new ActivityRequestFormData();
+            $formData->fillFromActivityRequest($activityRequest);
             
-            // ⚠️ IMPORTANT : Lors de l'édition d'un brouillon, on désactive le mode renouvellement
-            // car le brouillon contient déjà toutes les données (qui ont été copiées lors de la création)
-            // L'utilisateur doit voir et modifier les données du brouillon, pas refaire un renouvellement
-            $this->renewal = false;
-            $this->selectedPreviousActivityRequest = null;
+            // Mapper les données vers les propriétés du composant
+            $this->fillFromFormData($formData);
             
-            // Vérifier la présence de documents existants
-            $this->hasExistingCustomerCertificate = !empty($activityRequest->customer_certificate_document);
-            $this->hasExistingPrefecturalAgreement = !empty($activityRequest->prefectural_agreement_document);
-            $this->hasExistingIataContract = !empty($activityRequest->iata_contract_document);
-            $this->hasExistingCta = !empty($activityRequest->cta_document);
+            // Récupérer les indicateurs de documents existants
+            $documentsFlags = $formData->getExistingDocumentsFlags($activityRequest);
+            $this->hasExistingCustomerCertificate = $documentsFlags['hasExistingCustomerCertificate'];
+            $this->hasExistingPrefecturalAgreement = $documentsFlags['hasExistingPrefecturalAgreement'];
+            $this->hasExistingIataContract = $documentsFlags['hasExistingIataContract'];
+            $this->hasExistingCta = $documentsFlags['hasExistingCta'];
             
-            // Note : Les documents ne sont pas rechargés car Livewire ne peut pas 
-            // pré-remplir les champs de fichiers pour des raisons de sécurité
-            
-            Log::info('Brouillon chargé avec succès', [
-                'activity_request_id' => $activityRequestId,
-                'client_id' => $this->client->id,
-                'has_documents' => $this->hasExistingCustomerCertificate || $this->hasExistingPrefecturalAgreement || $this->hasExistingIataContract || $this->hasExistingCta,
-            ]);
         } catch (\Exception $e) {
             Log::error('Erreur lors du chargement du brouillon', [
                 'error' => $e->getMessage(),
@@ -136,10 +119,7 @@ class CreateActivityRequestForm extends Component
     #[On('edit-draft')]
     public function handleEditDraft(int $activityRequestId): void
     {
-        // Charger le brouillon
         $this->loadDraft($activityRequestId);
-        
-        // Ouvrir la modale
         Flux::modal('new-activity-request')->show();
     }
 
@@ -148,7 +128,6 @@ class CreateActivityRequestForm extends Component
      */
     public function updatedRenewal($value)
     {
-        // Si on décoche le renouvellement, réinitialiser la sélection
         if (!$value) {
             $this->selectedPreviousActivityRequest = null;
             $this->resetFormFields();
@@ -160,11 +139,9 @@ class CreateActivityRequestForm extends Component
      */
     public function updatedSelectedPreviousActivityRequest($value)
     {
-        // Nettoyer la valeur si c'est une chaîne vide
         if ($value === '' || $value === null) {
             $this->selectedPreviousActivityRequest = null;
         } else {
-            // Forcer la conversion en integer
             $this->selectedPreviousActivityRequest = (int) $value;
         }
     }
@@ -193,7 +170,7 @@ class CreateActivityRequestForm extends Component
      */
     public function createActivityRequest()
     {
-        $this->processActivityRequest(false);
+        $this->processActivityRequest(isDraft: false);
     }
 
     /**
@@ -201,69 +178,57 @@ class CreateActivityRequestForm extends Component
      */
     public function saveDraft()
     {
-        $this->processActivityRequest(true);
+        $this->processActivityRequest(isDraft: true);
     }
 
     /**
      * Traiter la demande d'activité (brouillon ou complète)
+     * Logique simplifiée grâce aux nouveaux services
      */
-    protected function processActivityRequest(bool $isDraft)
+    protected function processActivityRequest(bool $isDraft): void
     {
         try {
-            // 1. Récupérer les données du formulaire
-            $formData = $this->getFormData();
+            // 1. Créer le Form Object à partir des données du composant
+            $formData = $this->createFormData();
             
-            // 2. Valider les données selon le type (brouillon ou complet) et le mode (création ou édition)
-            if ($this->activityRequestId && !$isDraft) {
-                // Mode édition avec soumission complète : utiliser validateUpdate
-                $existingDocs = [
-                    'customer_certificate_document' => $this->hasExistingCustomerCertificate,
-                    'prefectural_agreement_document' => $this->hasExistingPrefecturalAgreement,
-                    'iata_contract_document' => $this->hasExistingIataContract,
-                    'cta_document' => $this->hasExistingCta,
-                ];
-                $validator = ActivityRequestValidator::validateUpdate($formData, $this->renewal, $existingDocs);
-            } elseif ($isDraft) {
-                // Mode brouillon (création ou édition)
-                $validator = ActivityRequestValidator::validateDraft($formData, $this->renewal);
-            } else {
-                // Mode création complète
-                $validator = ActivityRequestValidator::validateComplete($formData, $this->renewal);
-            }
+            // 2. Valider les données selon le contexte
+            $isUpdate = !is_null($this->activityRequestId);
+            $existingDocs = $this->getExistingDocumentsArray();
+            
+            $validator = ActivityRequestFormValidator::validate(
+                $formData,
+                $isDraft,
+                $isUpdate,
+                $existingDocs
+            );
             
             if ($validator->fails()) {
-                $this->errorMessage = 'Erreurs de validation détectées.';
-                Log::warning('Validation échouée', [
-                    'errors' => $validator->errors()->toArray(),
-                    'is_draft' => $isDraft,
-                    'renewal' => $this->renewal,
-                    'is_update' => !is_null($this->activityRequestId),
-                ]);
-                foreach ($validator->errors()->messages() as $field => $messages) {
-                    $this->addError($field, $messages[0]);
-                }
+                $this->handleValidationErrors($validator, $isDraft, $isUpdate);
                 return;
             }
             
-            // 3. Créer le DTO avec les données validées
-            $activityRequestData = CreateActivityRequestData::fromArray(
+            // 3. Gérer le renouvellement si nécessaire
+            if ($formData->isRenewal()) {
+                $formData = $this->handleRenewal($formData);
+            }
+            
+            // 4. Créer le DTO
+            $activityRequestData = CreateActivityRequestData::fromFormData(
                 $formData, 
                 $this->client->id, 
                 $this->user->id,
                 $isDraft
             );
             
-            // 4. Exécuter l'action appropriée (création ou mise à jour)
-            if ($this->activityRequestId) {
-                // Mode édition : mise à jour
-                $action = app(UpdateActivityRequestAction::class);
-                $result = $action->execute($activityRequestData, $this->client, $this->activityRequestId);
-            } else {
-                // Mode création
-                $action = app(CreateActivityRequestAction::class);
-                $result = $action->execute($activityRequestData, $this->client);
-            }
+            // 5. Exécuter l'action unifiée
+            $action = app(SaveActivityRequestAction::class);
+            $result = $action->execute(
+                $activityRequestData,
+                $this->client,
+                $this->activityRequestId
+            );
             
+            // 6. Traiter le résultat
             if ($result->isSuccessful()) {
                 $this->successMessage = $result->getMessage();
                 $this->dispatch('activity-request-created');
@@ -274,47 +239,16 @@ class CreateActivityRequestForm extends Component
             }
             
         } catch (\Exception $e) {
-            // Logger l'erreur complète pour le debug
-            Log::error('Erreur lors du traitement de la demande d\'activité', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'user_id' => $this->user->id,
-                'client_id' => $this->client->id,
-                'is_draft' => $isDraft,
-                'is_update' => !is_null($this->activityRequestId),
-            ]);
-            
-            // Afficher un message générique à l'utilisateur
-            $isUpdate = !is_null($this->activityRequestId);
-            
-            if ($isUpdate) {
-                $message = $isDraft 
-                    ? 'Une erreur est survenue lors de la mise à jour du brouillon. Veuillez réessayer.'
-                    : 'Une erreur est survenue lors de la mise à jour de la demande d\'activité. Veuillez réessayer.';
-            } else {
-                $message = $isDraft 
-                    ? 'Une erreur est survenue lors de l\'enregistrement du brouillon. Veuillez réessayer.'
-                    : 'Une erreur est survenue lors de la création de la demande d\'activité. Veuillez réessayer.';
-            }
-            
-            $this->errorMessage = $message;
+            $this->handleException($e, $isDraft, !is_null($this->activityRequestId));
         }
     }
 
     /**
-     * Récupérer toutes les données du formulaire
+     * Crée un FormData à partir des propriétés du composant
      */
-    protected function getFormData(): array
+    protected function createFormData(): ActivityRequestFormData
     {
-        // Conversion explicite : si chaîne vide, convertir en null
-        $lastActivityRequestId = $this->selectedPreviousActivityRequest;
-        if ($lastActivityRequestId === '' || $lastActivityRequestId === null) {
-            $lastActivityRequestId = null;
-        } else {
-            $lastActivityRequestId = (int) $lastActivityRequestId;
-        }
-        
-        return [
+        return ActivityRequestFormData::fromArray([
             'manager_firstname' => $this->manager_firstname,
             'manager_lastname' => $this->manager_lastname,
             'manager_email' => $this->manager_email,
@@ -330,8 +264,117 @@ class CreateActivityRequestForm extends Component
             'iata_contract_document' => $this->iata_contract_document,
             'cta_document' => $this->cta_document,
             'renewal' => $this->renewal,
-            'last_activity_request_id' => $lastActivityRequestId,
+            'last_activity_request_id' => $this->selectedPreviousActivityRequest,
+        ]);
+    }
+
+    /**
+     * Remplit les propriétés du composant depuis un FormData
+     */
+    protected function fillFromFormData(ActivityRequestFormData $formData): void
+    {
+        $this->manager_firstname = $formData->manager_firstname;
+        $this->manager_lastname = $formData->manager_lastname;
+        $this->manager_email = $formData->manager_email;
+        $this->manager_phone = $formData->manager_phone;
+        $this->manager_role = $formData->manager_role;
+        $this->airport = $formData->airport;
+        $this->description = $formData->description;
+        $this->customer_names = $formData->customer_names;
+        $this->person_count = $formData->person_count;
+        $this->vehicule_count = $formData->vehicule_count;
+        $this->renewal = $formData->renewal;
+        $this->selectedPreviousActivityRequest = $formData->last_activity_request_id;
+    }
+
+    /**
+     * Gère le renouvellement en utilisant le service dédié
+     */
+    protected function handleRenewal(ActivityRequestFormData $formData): ActivityRequestFormData
+    {
+        $renewalService = app(ActivityRequestRenewalService::class);
+        
+        // Valider que la demande précédente appartient au client
+        if (!$renewalService->validatePreviousRequest($formData->last_activity_request_id, $this->client->id)) {
+            throw new \Exception('La demande précédente sélectionnée n\'est pas valide');
+        }
+        
+        // Récupérer les données de la demande précédente
+        $previousData = $renewalService->getPreviousRequestData($formData->last_activity_request_id);
+        
+        if (!$previousData) {
+            throw new \Exception('Impossible de récupérer les données de la demande précédente');
+        }
+        
+        // Créer un nouveau FormData avec les données de renouvellement
+        $renewalFormData = ActivityRequestFormData::fromArray(array_merge(
+            $previousData,
+            [
+                'renewal' => true,
+                'last_activity_request_id' => $formData->last_activity_request_id,
+            ]
+        ));
+        
+        return $renewalFormData;
+    }
+
+    /**
+     * Retourne les documents existants sous forme de tableau
+     */
+    protected function getExistingDocumentsArray(): array
+    {
+        return [
+            'customer_certificate_document' => $this->hasExistingCustomerCertificate,
+            'prefectural_agreement_document' => $this->hasExistingPrefecturalAgreement,
+            'iata_contract_document' => $this->hasExistingIataContract,
+            'cta_document' => $this->hasExistingCta,
         ];
+    }
+
+    /**
+     * Gère les erreurs de validation
+     */
+    protected function handleValidationErrors($validator, bool $isDraft, bool $isUpdate): void
+    {
+        $this->errorMessage = 'Erreurs de validation détectées.';
+        
+        foreach ($validator->errors()->messages() as $field => $messages) {
+            $this->addError($field, $messages[0]);
+        }
+    }
+
+    /**
+     * Gère les exceptions
+     */
+    protected function handleException(\Exception $e, bool $isDraft, bool $isUpdate): void
+    {
+        Log::error('Erreur lors du traitement de la demande d\'activité', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+            'user_id' => $this->user->id,
+            'client_id' => $this->client->id,
+            'is_draft' => $isDraft,
+            'is_update' => $isUpdate,
+        ]);
+        
+        $message = $this->getErrorMessage($isDraft, $isUpdate);
+        $this->errorMessage = $message;
+    }
+
+    /**
+     * Retourne le message d'erreur approprié
+     */
+    protected function getErrorMessage(bool $isDraft, bool $isUpdate): string
+    {
+        if ($isUpdate) {
+            return $isDraft 
+                ? 'Une erreur est survenue lors de la mise à jour du brouillon. Veuillez réessayer.'
+                : 'Une erreur est survenue lors de la mise à jour de la demande d\'activité. Veuillez réessayer.';
+        }
+        
+        return $isDraft 
+            ? 'Une erreur est survenue lors de l\'enregistrement du brouillon. Veuillez réessayer.'
+            : 'Une erreur est survenue lors de la création de la demande d\'activité. Veuillez réessayer.';
     }
 
     /**
