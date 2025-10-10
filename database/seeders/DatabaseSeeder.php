@@ -59,6 +59,8 @@ class DatabaseSeeder extends Seeder
                 ->for($client)
                 ->create([
                     'role' => 'sclient',
+                    'name' => 'Clément Richard',
+                    'email' => 'clement.richard@r4web.fr',
                 ]);
 
             $contactSafety = ContactClient::factory()
