@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
             ->for($clientAdmin)
             ->create([
                 'name' => 'Corentin Sarda',
-                'email' => 'contact@r4web.fr',
+                'email' => 'admin@r4web.fr',
                 'role' => 'admin',
             ]);
 
@@ -60,7 +60,7 @@ class DatabaseSeeder extends Seeder
                 ->create([
                     'role' => 'sclient',
                     'name' => 'Clément Richard',
-                    'email' => 'clement.richard@r4web.fr',
+                    'email' => 'sclient@r4web.fr',
                 ]);
 
             $contactSafety = ContactClient::factory()
