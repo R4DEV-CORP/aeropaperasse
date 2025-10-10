@@ -8,6 +8,8 @@ use App\Models\ActivityComment;
 use App\Models\Client;
 use App\Models\ContactClient;
 use App\Models\User;
+use App\Models\Coworker;
+use App\Models\BadgeRequest;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,6 +18,14 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void
+    {
+        // Désactiver les observers pendant le seeding
+        \App\Models\BadgeRequest::withoutEvents(function () {
+            $this->seedData();
+        });
+    }
+
+    private function seedData(): void
     {
         // Compte Admin pour tester
 
@@ -69,6 +79,11 @@ class DatabaseSeeder extends Seeder
                     'role' => 'hr',
                 ]);
 
+            $coworkers = Coworker::factory()
+                ->for($client)
+                ->count(2)
+                ->create();
+
             $activityRequests = ActivityRequest::factory()
                 ->for($client)
                 ->for($user, 'creator')
@@ -94,6 +109,12 @@ class DatabaseSeeder extends Seeder
                 ActivityComment::factory()
                     ->for($activityRequest)
                     ->for($userAdmin)
+                    ->create();
+
+                $badgeRequest = BadgeRequest::factory()
+                    ->for($activityRequest)
+                    ->for($coworkers[0])
+                    ->for($user, 'creator')
                     ->create();
             }
         }

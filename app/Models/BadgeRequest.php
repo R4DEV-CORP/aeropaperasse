@@ -10,24 +10,8 @@ class BadgeRequest extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'nom',
-        'prenom',
-        'email',
-        'telephone',
         'status',
         'reject_reason',
-        'photoIdentite',
-        'pieceIdentite',
-        'autorisationActivite',
-        'certificatFormation',
-        'attestationFormation',
-        'est_habilitation',
-        'documentFor',
-        'facture',
-        'airport',
-        'client_id',
-        'created_by',
         'draft_at',
         'pending_rem_at',
         'rejected_rem_at',
@@ -36,11 +20,19 @@ class BadgeRequest extends Model
         'rejected_adp_at',
         'pending_fabrication_at',
         'ready_for_delivery_at',
+        'selfie_photo',
+        'identification_card',
+        'activity_authorization',
+        'for_document',
+        'fomation_certificate_document',
+        'invoice_document',
+        'application_authorization',
+        'validate_training',
     ];
 
     protected $casts = [
-        'est_habilitation' => 'boolean',
-        'attestationFormation' => 'boolean',
+        'application_authorization' => 'boolean',
+        'validate_training' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'draft_at' => 'datetime',
@@ -63,11 +55,6 @@ class BadgeRequest extends Model
         return $query;
     }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function badge()
     {
         return $this->hasOne(Badge::class);
@@ -82,4 +69,16 @@ class BadgeRequest extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function activityRequest()
+    {
+        return $this->belongsTo(ActivityRequest::class);
+    }
+
+    public function coworker()
+    {
+        return $this->belongsTo(Coworker::class);
+    }
+
+    
 }

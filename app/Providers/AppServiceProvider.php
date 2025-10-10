@@ -25,7 +25,8 @@ class AppServiceProvider extends ServiceProvider
     {
         // Enregistrer les observers
         Badge::observe(BadgeObserver::class);
-        BadgeRequest::observe(BadgeRequestObserver::class);
+        // Désactivé temporairement pour le seeding
+        // BadgeRequest::observe(BadgeRequestObserver::class);
         // BadgeRequest::observe(BadgeRequesterObserver::class);
     }
 }

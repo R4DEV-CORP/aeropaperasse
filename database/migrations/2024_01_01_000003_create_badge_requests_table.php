@@ -13,13 +13,21 @@ return new class extends Migration
     {
         Schema::create('badge_requests', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('airport')->nullable();
-            $table->timestamp('draft_at')->nullable();
-            $table->string('nom')->nullable();
-            $table->string('prenom')->nullable();
-            $table->string('email')->nullable();
-            $table->string('telephone')->nullable();
+            $table->timestamps();
+
+            // Créateur de la demande de badge
+            $table->unsignedBigInteger('created_by');
+            $table->foreign('created_by')->references('id')->on('users');
+
+            // Relation avec la demande d'activité
+            $table->unsignedBigInteger('activity_request_id');
+            $table->foreign('activity_request_id')->references('id')->on('activity_requests');
+
+            // Informations / Relation sur le bénéficiaire du badge
+            $table->unsignedBigInteger('coworker_id');
+            $table->foreign('coworker_id')->references('id')->on('coworkers');
+
+            // Gestion du statut de la demande de badge
             $table->enum('status', [
                 'draft',
                 'pending_rem',
@@ -31,12 +39,7 @@ return new class extends Migration
                 'ready_for_delivery',
             ])->default('pending_rem');
             $table->string('previous_status')->nullable();
-            $table->text('reject_reason')->nullable();
-            $table->string('photoIdentite')->nullable();
-            $table->string('pieceIdentite')->nullable();
-            $table->string('autorisationActivite')->nullable();
-            $table->string('certificatFormation')->nullable();
-            $table->timestamps();
+            $table->timestamp('draft_at')->nullable();
             $table->timestamp('pending_rem_at')->nullable();
             $table->timestamp('rejected_rem_at')->nullable();
             $table->timestamp('pending_adp_at')->nullable();
@@ -44,15 +47,19 @@ return new class extends Migration
             $table->timestamp('rejected_adp_at')->nullable();
             $table->timestamp('pending_fabrication_at')->nullable();
             $table->timestamp('ready_for_delivery_at')->nullable();
-            $table->boolean('est_habilitation')->default(false);
-            $table->string('documentFor')->nullable();
-            $table->string('facture')->nullable();
-            $table->unsignedBigInteger('client_id')->nullable();
-            $table->unsignedBigInteger('created_by')->nullable();
+            $table->text('reject_reason')->nullable();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('client_id')->references('id')->on('clients')->onDelete('set null');
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+            // Chemin des documents
+            $table->string('selfie_photo')->nullable(); // Photo d'identité
+            $table->string('identification_card')->nullable(); // Carte d'identité
+            $table->string('activity_authorization')->nullable(); // Autorisation d'activité
+            $table->string('for_document')->nullable(); // Document FOR
+            $table->string('fomation_certificate_document')->nullable(); // Certificat de formation
+            $table->string('invoice_document')->nullable(); // Facture
+
+            // Informations sur la demande de badge
+            $table->boolean('application_authorization')->default(false); // Demande d'habillitation
+            $table->boolean('validate_training')->default(false); // Validation de la formation par la société
         });
     }
 

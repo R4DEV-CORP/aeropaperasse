@@ -43,7 +43,7 @@
                 <tbody class=" divide-slate-800/10 text-sm text-gray-700">
                     @if($activityRequests->count() > 0)
                     @foreach($activityRequests as $activityRequest)
-                    <tr wire:loading.remove wire:target="search">
+                    <tr wire:loading.remove wire:target="search" wire:key="activity-request-{{ $activityRequest->id }}">
                         <td class="px-3 py-2">
                             <p class="text-gray-800 font-medium">{{ $activityRequest->client->company_name }}</p>
                             <flux:text>{{ $activityRequest->client->trade_name }}</flux:text>
@@ -90,7 +90,7 @@
                                 </flux:modal.trigger>
                                 <!-- Modal visualisation demande -->
                                 <flux:modal :name="'view-activity-request-'.$activityRequest->id" class="min-w-4xl !max-w-6xl">
-                                    <livewire:activity-requests.view-activity-request :activityRequest="$activityRequest"/>
+                                    <livewire:activity-requests.view-activity-request :activityRequest="$activityRequest" wire:key="activity-request-modal-view-{{ $activityRequest->id }}"/>
                                 </flux:modal>
                                 @if($activityRequest->status == 'pending' && auth()->user()->isAdmin())
                                     <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Approuver" wire:click="approve({{ $activityRequest->id }})" class="!text-green-500 hover:cursor-pointer"/>
@@ -109,6 +109,11 @@
                 </tbody>
             </table>
         </div>
+        @if($activityRequests->hasPages())
+        <div class="px-4 py-3 border-t border-gray-800/10">
+            {{ $activityRequests->links('pagination.custom') }}
+        </div>
+        @endif
     </div>
 
     <!-- Brouillons -->
@@ -162,10 +167,8 @@
                             @endswitch
                         </td>
                         <td class="px-3 py-2">
-                            <div class="flex items-center gap-2">   
-                                <flux:tooltip content="Modifier le brouillon">
-                                    <flux:icon.pencil-square wire:click="editDraft({{ $activityRequest->id }})" color="blue" class="size-6 cursor-pointer"/>    
-                                </flux:tooltip>
+                            <div class="flex items-center gap-2">
+                                <flux:button wire:click="editDraft({{ $activityRequest->id }})" icon="pencil-square" icon:variant="outline" variant="subtle" square="true" tooltip="Modifier le brouillon" color="blue" class="hover:cursor-pointer"/>
                             </div>
                         </td>
                     </tr>
@@ -178,6 +181,11 @@
                 </tbody>
             </table>
         </div>
+        @if($draftActivityRequests->hasPages())
+        <div class="px-4 py-3 border-t border-gray-800/10">
+            {{ $draftActivityRequests->links('pagination.custom') }}
+        </div>
+        @endif
     </div>
 
     <!-- Modal création société -->

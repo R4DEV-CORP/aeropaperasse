@@ -8,10 +8,22 @@ use App\Services\ActivityRequestDocumentService;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithPagination;
+use Livewire\WithoutUrlPagination;
 
 class Index extends Component
 {
+    use WithPagination, WithoutUrlPagination;
+
     public string $search = '';
+
+    /**
+     * Réinitialiser la pagination lors d'une recherche
+     */
+    public function updatedSearch()
+    {
+        $this->resetPage('page');
+    }
 
     private function getStatistics()
     {
@@ -40,7 +52,7 @@ class Index extends Component
             $query->where('client_id', auth()->user()->client_id);
         }
 
-        return $query->orderBy('created_at', 'desc')->get();
+        return $query->orderBy('created_at', 'desc')->paginate(10, ['*'], 'page');
     }
 
     private function loadDraftActivityRequests()
@@ -53,7 +65,7 @@ class Index extends Component
             $query->where('client_id', auth()->user()->client_id);
         }
 
-        return $query->orderBy('created_at', 'desc')->get();
+        return $query->orderBy('created_at', 'desc')->paginate(10, ['*'], 'draftPage');
     }
 
     private function buildScoutQuery()
@@ -176,7 +188,7 @@ class Index extends Component
     public function render()
     {
         if (! empty($this->search)) {
-            $activityRequests = $this->buildScoutQuery()->get();
+            $activityRequests = $this->buildScoutQuery()->paginate(10, 'page');
         } else {
             $activityRequests = $this->loadActivityRequests();
         }
