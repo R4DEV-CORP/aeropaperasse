@@ -20,13 +20,13 @@ class ActivityRequestDocumentService
 
         // Créer le nom du dossier client
         $clientFolderName = $this->generateClientFolderName($client->company_name);
-
+        
         foreach ($documents as $documentType => $file) {
             if ($file instanceof UploadedFile) {
                 $storedDocuments[$documentType] = $this->storeDocument(
-                    $file,
-                    $documentType,
-                    $clientFolderName,
+                    $file, 
+                    $documentType, 
+                    $clientFolderName, 
                     $activityRequestId
                 );
             }
@@ -39,21 +39,22 @@ class ActivityRequestDocumentService
      * Stock UN document dans le dossier de la demande d'activité du client
      */
     protected function storeDocument(
-        UploadedFile $file,
-        string $documentType,
-        string $clientFolderName,
+        UploadedFile $file, 
+        string $documentType, 
+        string $clientFolderName, 
         int $activityRequestId
-    ): string {
-        // Générer un nom de fichier
+    ): string
+    {
+        // Générer un nom de fichier 
         $filename = $this->generateFilename($file, $documentType, $clientFolderName);
-
+        
         // Définir le chemin de stockage : storage/public/clients/[nom-client]/documents/activity-requests/[id]/
         $path = "clients/{$clientFolderName}/documents/activity-requests/{$activityRequestId}";
-
+        
         // Stocker le fichier
         $storedPath = $file->storeAs($path, $filename, 'public');
-
-        if (! $storedPath) {
+        
+        if (!$storedPath) {
             throw new \Exception("Erreur lors du stockage du document {$documentType}");
         }
 
@@ -67,19 +68,19 @@ class ActivityRequestDocumentService
     {
         // Convertir en minuscules
         $folderName = strtolower($companyName);
-
+        
         // Remplacer les espaces par des tirets
         $folderName = str_replace(' ', '-', $folderName);
-
+        
         // Supprimer les caractères spéciaux (garder seulement lettres, chiffres et tirets)
         $folderName = preg_replace('/[^a-z0-9\-]/', '', $folderName);
-
+        
         // Supprimer les tirets multiples consécutifs
         $folderName = preg_replace('/-+/', '-', $folderName);
-
+        
         // Supprimer les tirets en début et fin
         $folderName = trim($folderName, '-');
-
+        
         return $folderName;
     }
 
@@ -89,7 +90,7 @@ class ActivityRequestDocumentService
     protected function generateFilename(UploadedFile $file, string $documentType, string $clientFolderName): string
     {
         $timestamp = now()->timestamp;
-
+        
         // Format : [type-document]-[nom-entreprise]-[timestamp].pdf
         return "{$documentType}-{$clientFolderName}-{$timestamp}.pdf";
     }
@@ -100,59 +101,63 @@ class ActivityRequestDocumentService
     public function copyDocumentsFromPreviousRequest(int $previousActivityRequestId, Client $client, int $newActivityRequestId): array
     {
         $copiedDocuments = [];
-
+        
         // Récupérer l'ancienne demande
         $previousRequest = ActivityRequest::find($previousActivityRequestId);
-
-        if (! $previousRequest) {
+        
+        if (!$previousRequest) {
             Log::warning('Service - Demande précédente non trouvée', ['previous_id' => $previousActivityRequestId]);
-
             return $copiedDocuments;
         }
 
         // Créer le nom du dossier client
         $clientFolderName = $this->generateClientFolderName($client->company_name);
-
+        
         // Chemins source et destination
         $destinationBasePath = "clients/{$clientFolderName}/documents/activity-requests/{$newActivityRequestId}";
-
+        
         // Types de documents à copier
         $documentTypes = [
             'customer_certificate_document',
             'prefectural_agreement_document',
             'iata_contract_document',
-            'cta_document',
+            'cta_document'
         ];
-
+        
         // Utiliser le disque public explicitement
         $disk = Storage::disk('public');
-
+        
         foreach ($documentTypes as $documentType) {
             // Vérifier si le document existe dans l'ancienne demande
-            if (! empty($previousRequest->$documentType)) {
+            if (!empty($previousRequest->$documentType)) {
                 // Le chemin du fichier source (déjà stocké dans la BDD)
                 $oldFilePath = $previousRequest->$documentType;
-
+                
                 // Générer un nouveau nom de fichier avec un nouveau timestamp
                 $timestamp = now()->timestamp;
                 $newFilename = "{$documentType}-{$clientFolderName}-{$timestamp}.pdf";
-
+                
                 $destinationPath = "{$destinationBasePath}/{$newFilename}";
-
+                
                 // Copier le fichier s'il existe
                 if ($disk->exists($oldFilePath)) {
                     // Créer le répertoire de destination s'il n'existe pas
-                    if (! $disk->exists($destinationBasePath)) {
+                    if (!$disk->exists($destinationBasePath)) {
                         $disk->makeDirectory($destinationBasePath);
+                        Log::info('Service - Répertoire créé', ['path' => $destinationBasePath]);
                     }
-
+                    
                     // Copier le fichier
                     $disk->copy($oldFilePath, $destinationPath);
-
+                    
                     // Enregistrer le nouveau chemin
                     $copiedDocuments[$documentType] = $destinationPath;
+                    Log::info('Service - Document copié avec succès', [
+                        'type' => $documentType,
+                        'destination' => $destinationPath,
+                    ]);
                 } else {
-                    Log::warning('Document Service - Fichier source non trouvé', [
+                    Log::warning('Service - Fichier source non trouvé', [
                         'type' => $documentType,
                         'path' => $oldFilePath,
                     ]);
@@ -161,7 +166,7 @@ class ActivityRequestDocumentService
                 Log::info('Service - Pas de document dans ancienne demande', ['type' => $documentType]);
             }
         }
-
+        
         return $copiedDocuments;
     }
 
@@ -225,36 +230,8 @@ class ActivityRequestDocumentService
             return null;
         }
 
+        Log::info('Service - ZIP créé avec succès', ['activity_request_id' => $activityRequest->id, 'path' => $zipPath]);
+
         return $zipPath;
-    }
-
-    /**
-     * Récupère le chemin d'un document spécifique d'une demande d'activité
-     *
-     * @param  string  $documentType  Le type de document (customer_certificate_document, etc.)
-     * @return string|null Le chemin complet du fichier, ou null si le document n'existe pas
-     */
-    public function getDocumentPath(ActivityRequest $activityRequest, string $documentType): ?string
-    {
-        // Vérifier si le document existe dans la demande
-        if (empty($activityRequest->$documentType)) {
-            return null;
-        }
-
-        $disk = Storage::disk('public');
-        $documentPath = $activityRequest->$documentType;
-
-        // Vérifier si le fichier existe physiquement
-        if (! $disk->exists($documentPath)) {
-            Log::warning('Service - Document non trouvé', [
-                'activity_request_id' => $activityRequest->id,
-                'document_type' => $documentType,
-                'path' => $documentPath,
-            ]);
-
-            return null;
-        }
-
-        return $disk->path($documentPath);
     }
 }

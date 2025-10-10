@@ -56,7 +56,7 @@
                 <tbody class=" divide-slate-800/10 text-sm text-gray-700">
                     @if($badgeRequests->count() > 0)
                     @foreach($badgeRequests as $badgeRequest)
-                    <tr>
+                    <tr wire:loading.remove wire:target="search" wire:key="badge-request-{{ $badgeRequest->id }}">
                         <td class="px-3 py-2">
                             <p class="text-gray-800 font-medium">{{ $badgeRequest->coworker->firstname }} {{ $badgeRequest->coworker->lastname }}</p>
                             <flux:text>{{ $badgeRequest->activityRequest->client->company_name }}</flux:text>
@@ -105,13 +105,34 @@
                             @endswitch
                         </td>
                         <td class="px-3 py-2">
-                            <div class="flex items-center gap-2">   
-                                <flux:icon.eye class="size-6"/>    
-                                <flux:icon.check-circle class="size-6" />    
-                                <flux:icon.x-circle class="size-6" />   
-                                <flux:icon.arrow-down-tray class="size-6" /> 
-                                <flux:icon.arrow-left-circle class="size-6" />
-                                <flux:icon.wrench class="size-6" />
+                            <div class="flex items-center">   
+                                <flux:modal.trigger :name="'view-badge-request-'.$badgeRequest->id">
+                                    <flux:button icon="eye" icon:variant="outline" variant="subtle" square="true" tooltip="Voir" color="blue" class="hover:cursor-pointer"/>
+                                </flux:modal.trigger>
+                                <!-- Modal visualisation demande -->
+                                <flux:modal :name="'view-badge-request-'.$badgeRequest->id" class="min-w-4xl !max-w-6xl">
+                                    
+                                </flux:modal>
+                                @if(auth()->user()->isAdmin())
+                                    @if($badgeRequest->status == 'pending_rem')
+                                        <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Approuver (REM)" wire:click="approveRem({{ $badgeRequest->id }})" class="!text-green-500 hover:cursor-pointer"/>
+                                        <flux:button variant="subtle" icon="x-circle" icon:variant="outline" square="true" tooltip="Rejetter (REM)" wire:click="rejectRem({{ $badgeRequest->id }})" class="!text-red-500 hover:cursor-pointer"/>
+                                    @endif
+                                    @if($badgeRequest->status == 'pending_adp')
+                                        <flux:button variant="subtle" icon="arrow-left-circle" icon:variant="outline" square="true" tooltip="Retour en attente REM" wire:click="backToPendingRem({{ $badgeRequest->id }})" class="!text-amber-500 hover:cursor-pointer"/>
+                                        <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Approuver (ADP)" wire:click="approveAdp({{ $badgeRequest->id }})" class="!text-green-500 hover:cursor-pointer"/>
+                                        <flux:button variant="subtle" icon="x-circle" icon:variant="outline" square="true" tooltip="Rejetter (ADP)" wire:click="rejectAdp({{ $badgeRequest->id }})" class="!text-red-500 hover:cursor-pointer"/>
+                                    @endif
+                                    @if($badgeRequest->status == 'approved_adp')
+                                        <flux:button variant="subtle" icon="arrow-left-circle" icon:variant="outline" square="true" tooltip="Retour en attente ADP" wire:click="backToPendingAdp({{ $badgeRequest->id }})" class="!text-amber-500 hover:cursor-pointer"/>
+                                        <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Passer en fabrication" wire:click="fabrication({{ $badgeRequest->id }})" class="!text-green-500 hover:cursor-pointer"/>
+                                    @endif
+                                    @if($badgeRequest->status == 'pending_fabrication')
+                                        <flux:button variant="subtle" icon="arrow-left-circle" icon:variant="outline" square="true" tooltip="Retour en approuvé ADP" wire:click="backToApprovedAdp({{ $badgeRequest->id }})" class="!text-amber-500 hover:cursor-pointer"/>
+                                        <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Passer à remettre" wire:click="toDelivery({{ $badgeRequest->id }})" class="!text-green-500 hover:cursor-pointer"/>
+                                    @endif
+                                @endif
+                                <flux:button variant="subtle" icon="document-arrow-down" icon:variant="outline" square="true" tooltip="Télécharger les documents" wire:click="downloadDocuments({{ $badgeRequest->id }})" class="!text-blue-500 hover:cursor-pointer"/>
                             </div>
                         </td>
                     </tr>

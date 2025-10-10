@@ -7,6 +7,7 @@ use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\WithoutUrlPagination;
 use App\Models\BadgeRequest;
+use App\Services\BadgeRequestDocumentService;
 
 class Index extends Component
 {
@@ -109,6 +110,208 @@ class Index extends Component
     {
         // Dispatcher un événement pour informer le formulaire de charger ce brouillon
         $this->dispatch('edit-draft', badgeRequestId: $badgeRequestId);
+    }
+
+    /**
+     * Approuver une demande de badge par REM (admin seulement)
+     */
+    public function approveRem(int $badgeRequestId)
+    {
+        // Vérifier que l'utilisateur est admin
+        if (! auth()->user()->isAdmin()) {
+            return;
+        }
+
+        $badgeRequest = BadgeRequest::findOrFail($badgeRequestId);
+        $badgeRequest->update([
+            'status' => 'pending_adp',
+            'pending_adp_at' => now(),
+        ]);
+
+        // Afficher un message de succès
+        session()->flash('message', 'Demande approuvée par REM et transmise à ADP.');
+    }
+
+    /**
+     * Rejeter une demande de badge par REM (admin seulement)
+     */
+    public function rejectRem(int $badgeRequestId)
+    {
+        // Vérifier que l'utilisateur est admin
+        if (! auth()->user()->isAdmin()) {
+            return;
+        }
+
+        $badgeRequest = BadgeRequest::findOrFail($badgeRequestId);
+        $badgeRequest->update([
+            'status' => 'rejected_rem',
+            'rejected_rem_at' => now(),
+        ]);
+
+        // Afficher un message de succès
+        session()->flash('message', 'Demande rejetée par REM.');
+    }
+
+    /**
+     * Retourner une demande en attente REM depuis pending_adp (admin seulement)
+     */
+    public function backToPendingRem(int $badgeRequestId)
+    {
+        // Vérifier que l'utilisateur est admin
+        if (! auth()->user()->isAdmin()) {
+            return;
+        }
+
+        $badgeRequest = BadgeRequest::findOrFail($badgeRequestId);
+        $badgeRequest->update([
+            'status' => 'pending_rem',
+            'pending_rem_at' => now(),
+        ]);
+
+        // Afficher un message de succès
+        session()->flash('message', 'Demande retournée en attente REM.');
+    }
+
+    /**
+     * Approuver une demande de badge par ADP (admin seulement)
+     */
+    public function approveAdp(int $badgeRequestId)
+    {
+        // Vérifier que l'utilisateur est admin
+        if (! auth()->user()->isAdmin()) {
+            return;
+        }
+
+        $badgeRequest = BadgeRequest::findOrFail($badgeRequestId);
+        $badgeRequest->update([
+            'status' => 'approved_adp',
+            'approved_adp_at' => now(),
+        ]);
+
+        // Afficher un message de succès
+        session()->flash('message', 'Demande approuvée par ADP.');
+    }
+
+    /**
+     * Rejeter une demande de badge par ADP (admin seulement)
+     */
+    public function rejectAdp(int $badgeRequestId)
+    {
+        // Vérifier que l'utilisateur est admin
+        if (! auth()->user()->isAdmin()) {
+            return;
+        }
+
+        $badgeRequest = BadgeRequest::findOrFail($badgeRequestId);
+        $badgeRequest->update([
+            'status' => 'rejected_adp',
+            'rejected_adp_at' => now(),
+        ]);
+
+        // Afficher un message de succès
+        session()->flash('message', 'Demande rejetée par ADP.');
+    }
+
+    /**
+     * Retourner une demande en attente ADP depuis approved_adp (admin seulement)
+     */
+    public function backToPendingAdp(int $badgeRequestId)
+    {
+        // Vérifier que l'utilisateur est admin
+        if (! auth()->user()->isAdmin()) {
+            return;
+        }
+
+        $badgeRequest = BadgeRequest::findOrFail($badgeRequestId);
+        $badgeRequest->update([
+            'status' => 'pending_adp',
+            'pending_adp_at' => now(),
+        ]);
+
+        // Afficher un message de succès
+        session()->flash('message', 'Demande retournée en attente ADP.');
+    }
+
+    /**
+     * Passer une demande de badge en fabrication (admin seulement)
+     */
+    public function fabrication(int $badgeRequestId)
+    {
+        // Vérifier que l'utilisateur est admin
+        if (! auth()->user()->isAdmin()) {
+            return;
+        }
+
+        $badgeRequest = BadgeRequest::findOrFail($badgeRequestId);
+        $badgeRequest->update([
+            'status' => 'pending_fabrication',
+            'pending_fabrication_at' => now(),
+        ]);
+
+        // Afficher un message de succès
+        session()->flash('message', 'Demande passée en fabrication.');
+    }
+
+    /**
+     * Retourner une demande en approuvé ADP depuis pending_fabrication (admin seulement)
+     */
+    public function backToApprovedAdp(int $badgeRequestId)
+    {
+        // Vérifier que l'utilisateur est admin
+        if (! auth()->user()->isAdmin()) {
+            return;
+        }
+
+        $badgeRequest = BadgeRequest::findOrFail($badgeRequestId);
+        $badgeRequest->update([
+            'status' => 'approved_adp',
+            'approved_adp_at' => now(),
+        ]);
+
+        // Afficher un message de succès
+        session()->flash('message', 'Demande retournée en approuvé ADP.');
+    }
+
+    /**
+     * Passer une demande de badge à prêt pour remise (admin seulement)
+     */
+    public function toDelivery(int $badgeRequestId)
+    {
+        // Vérifier que l'utilisateur est admin
+        if (! auth()->user()->isAdmin()) {
+            return;
+        }
+
+        $badgeRequest = BadgeRequest::findOrFail($badgeRequestId);
+        $badgeRequest->update([
+            'status' => 'ready_for_delivery',
+            'ready_for_delivery_at' => now(),
+        ]);
+
+        // Afficher un message de succès
+        session()->flash('message', 'Badge prêt à être remis.');
+    }
+
+    /**
+     * Télécharger tous les documents d'une demande de badge dans un ZIP
+     */
+    public function downloadDocuments(int $badgeRequestId)
+    {
+        $badgeRequest = BadgeRequest::findOrFail($badgeRequestId);
+
+        $documentService = new BadgeRequestDocumentService;
+        $zipPath = $documentService->createDocumentsZip($badgeRequest);
+
+        if (! $zipPath) {
+            session()->flash('error', 'Aucun document disponible pour cette demande.');
+
+            return;
+        }
+
+        $zipFileName = 'demande-badge-'.$badgeRequest->id.'-'.now()->timestamp.'.zip';
+
+        // Retourner le téléchargement du fichier ZIP
+        return response()->download($zipPath, $zipFileName)->deleteFileAfterSend(true);
     }
 
     public function render()
