@@ -53,15 +53,15 @@ class DatabaseSeeder extends Seeder
             ->count(3)
             ->create();
 
-        foreach ($clients as $client) {
+        $user = User::factory()
+            ->for($clients[0])
+            ->create([
+                'role' => 'sclient',
+                'name' => 'Clément Richard',
+                'email' => 'sclient@r4web.fr',
+            ]);
 
-            $user = User::factory()
-                ->for($client)
-                ->create([
-                    'role' => 'sclient',
-                    'name' => 'Clément Richard',
-                    'email' => 'sclient@r4web.fr',
-                ]);
+        foreach ($clients as $client) {
 
             $contactSafety = ContactClient::factory()
                 ->for($client)
