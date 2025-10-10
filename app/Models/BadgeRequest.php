@@ -4,12 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class BadgeRequest extends Model
 {
     use HasFactory;
+    use Searchable;
 
     protected $fillable = [
+        'created_by',
+        'activity_request_id',
+        'coworker_id',
         'status',
         'reject_reason',
         'draft_at',
@@ -24,7 +29,7 @@ class BadgeRequest extends Model
         'identification_card',
         'activity_authorization',
         'for_document',
-        'fomation_certificate_document',
+        'formation_certificate_document',
         'invoice_document',
         'application_authorization',
         'validate_training',
@@ -44,6 +49,20 @@ class BadgeRequest extends Model
         'pending_fabrication_at' => 'datetime',
         'ready_for_delivery_at' => 'datetime',
     ];
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'coworkers.firstname' => $this->coworker->firstname ?? '',
+            'coworkers.lastname' => $this->coworker->lastname ?? '',
+            'coworkers.email' => $this->coworker->email ?? '',
+        ];
+    }
 
     // Scope local pour filtrer les demandes d'un utilisateur
     public function scopeForUser($query, User $user)

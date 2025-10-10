@@ -45,7 +45,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-2 border border-gray-800/10 p-4 rounded-lg">
+    <div class="border border-gray-800/10 p-4 rounded-lg">
         <div>
             <flux:heading size="lg">Informations sur l'activité</flux:heading>
             <div class="mt-2">

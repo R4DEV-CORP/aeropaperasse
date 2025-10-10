@@ -54,7 +54,7 @@ return new class extends Migration
             $table->string('identification_card')->nullable(); // Carte d'identité
             $table->string('activity_authorization')->nullable(); // Autorisation d'activité
             $table->string('for_document')->nullable(); // Document FOR
-            $table->string('fomation_certificate_document')->nullable(); // Certificat de formation
+            $table->string('formation_certificate_document')->nullable(); // Certificat de formation
             $table->string('invoice_document')->nullable(); // Facture
 
             // Informations sur la demande de badge

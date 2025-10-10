@@ -72,6 +72,11 @@ class User extends Authenticatable
         return $this->belongsTo(Client::class);
     }
 
+    public function coworker()
+    {
+        return $this->hasOne(Coworker::class);
+    }
+
     public function conversations()
     {
         return $this->hasMany(Conversation::class, 'created_by');

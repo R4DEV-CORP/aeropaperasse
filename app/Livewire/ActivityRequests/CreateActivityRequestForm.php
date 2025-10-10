@@ -7,6 +7,7 @@ use App\DataTransferObjects\CreateActivityRequestData;
 use App\Forms\ActivityRequestFormData;
 use App\Forms\ActivityRequestFormValidator;
 use App\Models\ActivityRequest;
+use App\Models\Client;
 use App\Services\ActivityRequestRenewalService;
 use Flux\Flux;
 use Illuminate\Support\Facades\Log;
@@ -86,7 +87,7 @@ class CreateActivityRequestForm extends Component
 
         // Si l'utilisateur est admin ou sadmin, charger tous les clients
         if ($this->user->isAdmin()) {
-            $this->allClients = \App\Models\Client::orderBy('company_name')->get();
+            $this->allClients = Client::orderBy('company_name')->get();
             // Par défaut, ne pas sélectionner de client
             $this->selected_client_id = null;
             $this->client = null;
@@ -426,6 +427,16 @@ class CreateActivityRequestForm extends Component
     protected function handleValidationErrors($validator, bool $isDraft, bool $isUpdate): void
     {
         $this->errorMessage = 'Erreurs de validation détectées.';
+
+        // Logger les erreurs de validation pour faciliter le débogage
+        Log::warning('Erreurs de validation lors de la soumission d\'une demande d\'activité', [
+            'user_id' => $this->user->id,
+            'client_id' => $this->client?->id,
+            'activity_request_id' => $this->activityRequestId,
+            'is_draft' => $isDraft,
+            'is_update' => $isUpdate,
+            'validation_errors' => $validator->errors()->messages(),
+        ]);
 
         foreach ($validator->errors()->messages() as $field => $messages) {
             $this->addError($field, $messages[0]);

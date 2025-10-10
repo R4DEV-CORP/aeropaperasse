@@ -16,8 +16,8 @@
     </div>
     <div class="mt-4 py-4 bg-white rounded-lg border border-zinc-200">
         <flux:heading size="lg" class="px-4">Demandes récentes</flux:heading>
-         <!-- Indicateur de chargement -->
-         <div wire:loading wire:target="search" 
+        <!-- Indicateur de chargement -->
+        <div wire:loading wire:target="search" 
              class="absolute top-[450px] left-1/2 transform -translate-x-1/2 bg-white/80 flex items-center justify-center z-10 rounded-xl px-4 py-2 shadow-lg">
             <div class="flex items-center gap-2 text-slate-600">
                 <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

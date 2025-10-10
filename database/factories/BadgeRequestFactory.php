@@ -17,12 +17,12 @@ class BadgeRequestFactory extends Factory
     public function definition(): array
     {
         return [
-            'status' => fake()->randomElement(['pending_rem', 'rejected_rem', 'pending_adp', 'approved_adp', 'rejected_adp', 'pending_fabrication', 'ready_for_delivery']),
+            'status' => fake()->randomElement(['draft','pending_rem', 'rejected_rem', 'pending_adp', 'approved_adp', 'rejected_adp', 'pending_fabrication', 'ready_for_delivery']),
             'selfie_photo' => fake()->mimeType(),
             'identification_card' => fake()->mimeType(),
             'activity_authorization' => fake()->mimeType(),
             'for_document' => fake()->mimeType(),
-            'fomation_certificate_document' => fake()->mimeType(),
+            'formation_certificate_document' => fake()->mimeType(),
             'invoice_document' => fake()->mimeType(),
             'application_authorization' => fake()->boolean(),
             'validate_training' => fake()->boolean(),

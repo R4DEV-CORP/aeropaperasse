@@ -48,6 +48,11 @@ class Client extends Model
         return $this->hasMany(User::class);
     }
 
+    public function coworkers()
+    {
+        return $this->hasMany(Coworker::class);
+    }
+
     public function badgeRequests()
     {
         return $this->hasMany(BadgeRequest::class);
