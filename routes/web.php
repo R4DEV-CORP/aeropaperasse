@@ -55,3 +55,11 @@ Route::get('/activity-requests', function () {
 Route::get('/badge-requests', function () {
     return view('badge-requests.index');
 })->middleware('auth');
+
+/*
+* Routes badge management
+*/
+
+Route::get('/badge-management', function () {
+    return view('badge-management.index');
+})->middleware('auth');

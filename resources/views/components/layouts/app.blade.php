@@ -25,7 +25,7 @@
             <flux:sidebar.nav>
                 <flux:sidebar.item icon="document-text" href="/activity-requests">Demande d'activité</flux:sidebar.item>
                 <flux:sidebar.item icon="identification" href="/badge-requests">Demande de badge</flux:sidebar.item>
-                <flux:sidebar.item icon="document-check" href="#">Suivi des badges</flux:sidebar.item>
+                <flux:sidebar.item icon="rectangle-stack" href="/badge-management">Suivi des badges</flux:sidebar.item>
                 <flux:sidebar.item icon="hand-raised" href="#">Laissez-passer</flux:sidebar.item>
                 <flux:sidebar.item icon="academic-cap" href="#">Formations</flux:sidebar.item>
                 <flux:sidebar.item icon="building-office" href="/clients">Sociétés</flux:sidebar.item>
