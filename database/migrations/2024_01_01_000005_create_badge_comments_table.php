@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('badge_comments', function (Blueprint $table) {
             $table->id();
             $table->text('content');
             $table->unsignedBigInteger('user_id');
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('badge_comments');
     }
 };

@@ -99,5 +99,8 @@ class BadgeRequest extends Model
         return $this->belongsTo(Coworker::class);
     }
 
-    
+    public function comments()
+    {
+        return $this->hasMany(BadgeComment::class);
+    }
 }

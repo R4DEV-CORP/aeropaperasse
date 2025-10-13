@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('replies', function (Blueprint $table) {
             $table->id();
             $table->text('content');
-            $table->unsignedBigInteger('comment_id');
+            $table->unsignedBigInteger('badge_comment_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('comment_id')->references('id')->on('comments')->onDelete('cascade');
+            $table->foreign('badge_comment_id')->references('id')->on('badge_comments')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

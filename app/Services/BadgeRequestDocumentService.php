@@ -162,5 +162,10 @@ class BadgeRequestDocumentService
 
         return $zipPath;
     }
+
+    public function getDocumentPath(BadgeRequest $badgeRequest, string $documentType): ?string
+    {
+        return $badgeRequest->$documentType;
+    }
 }
 

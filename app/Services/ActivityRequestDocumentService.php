@@ -234,4 +234,9 @@ class ActivityRequestDocumentService
 
         return $zipPath;
     }
+
+    public function getDocumentPath(ActivityRequest $activityRequest, string $documentType): ?string
+    {
+        return $activityRequest->$documentType;
+    }
 }

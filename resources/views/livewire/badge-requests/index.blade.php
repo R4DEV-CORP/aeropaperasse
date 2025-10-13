@@ -111,7 +111,7 @@
                                 </flux:modal.trigger>
                                 <!-- Modal visualisation demande -->
                                 <flux:modal :name="'view-badge-request-'.$badgeRequest->id" class="min-w-4xl !max-w-6xl">
-                                    
+                                    <livewire:badge-requests.view-badge-request :badgeRequest="$badgeRequest" wire:key="badge-request-modal-view-{{ $badgeRequest->id }}"/>
                                 </flux:modal>
                                 @if(auth()->user()->isAdmin())
                                     @if($badgeRequest->status == 'pending_rem')

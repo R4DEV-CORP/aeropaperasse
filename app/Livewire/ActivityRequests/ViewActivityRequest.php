@@ -5,6 +5,7 @@ namespace App\Livewire\ActivityRequests;
 use App\Models\ActivityComment;
 use App\Services\ActivityRequestDocumentService;
 use Livewire\Component;
+use Illuminate\Support\Facades\Storage;
 
 class ViewActivityRequest extends Component
 {
@@ -54,18 +55,30 @@ class ViewActivityRequest extends Component
     public function downloadDocument(string $documentType)
     {
         $documentService = new ActivityRequestDocumentService;
-        $filePath = $documentService->getDocumentPath($this->activityRequest, $documentType);
+        $relativePath = $documentService->getDocumentPath($this->activityRequest, $documentType);
 
-        if (! $filePath) {
+        if (! $relativePath) {
             session()->flash('error', 'Document non disponible.');
 
             return;
         }
 
-        // Récupérer le nom original du fichier
-        $filename = basename($filePath);
+        $disk = Storage::disk('public');
+        
+        // Vérifier si le fichier existe
+        if (! $disk->exists($relativePath)) {
+            session()->flash('error', 'Le fichier n\'existe pas.');
 
-        return response()->download($filePath, $filename);
+            return;
+        }
+
+        // Obtenir le chemin absolu du fichier
+        $absolutePath = $disk->path($relativePath);
+        
+        // Récupérer le nom original du fichier
+        $filename = basename($relativePath);
+
+        return response()->download($absolutePath, $filename);
     }
 
     /**
