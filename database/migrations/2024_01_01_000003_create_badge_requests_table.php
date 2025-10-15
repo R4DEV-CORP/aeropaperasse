@@ -37,6 +37,7 @@ return new class extends Migration
                 'rejected_adp',
                 'pending_fabrication',
                 'ready_for_delivery',
+                'terminated',
             ])->default('pending_rem');
             $table->string('previous_status')->nullable();
             $table->timestamp('draft_at')->nullable();
@@ -47,6 +48,7 @@ return new class extends Migration
             $table->timestamp('rejected_adp_at')->nullable();
             $table->timestamp('pending_fabrication_at')->nullable();
             $table->timestamp('ready_for_delivery_at')->nullable();
+            $table->timestamp('terminated_at')->nullable();
             $table->text('reject_reason')->nullable();
 
             // Chemin des documents

@@ -17,7 +17,7 @@ class BadgeRequestFactory extends Factory
     public function definition(): array
     {
         return [
-            'status' => fake()->randomElement(['draft','pending_rem', 'rejected_rem', 'pending_adp', 'approved_adp', 'rejected_adp', 'pending_fabrication', 'ready_for_delivery']),
+            'status' => fake()->randomElement(['draft','pending_rem', 'rejected_rem', 'pending_adp', 'approved_adp', 'rejected_adp', 'pending_fabrication', 'ready_for_delivery', 'terminated']),
             'selfie_photo' => fake()->mimeType(),
             'identification_card' => fake()->mimeType(),
             'activity_authorization' => fake()->mimeType(),

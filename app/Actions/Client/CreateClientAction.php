@@ -4,6 +4,7 @@ namespace App\Actions\Client;
 
 use App\DataTransferObjects\CreateClientData;
 use App\Models\Client;
+use App\Models\Badge;
 use App\Services\ClientDocumentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

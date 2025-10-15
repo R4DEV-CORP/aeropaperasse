@@ -109,11 +109,11 @@ class BadgeMailService
     private function getRecipientEmail($badgeRequest)
     {
         // Priorité 1 : Email de notification par défaut
-        if ($badgeRequest->client && ! empty($badgeRequest->client->notification_email)) {
-            return $badgeRequest->client->notification_email;
+        if ($badgeRequest->activityRequest->client && ! empty($badgeRequest->activityRequest->client->notification_email)) {
+            return $badgeRequest->activityRequest->client->notification_email;
         }
 
         // Priorité 2 : Sinon, email du demandeur
-        return $badgeRequest->email;
+        return $badgeRequest->creator->email;
     }
 }

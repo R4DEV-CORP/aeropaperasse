@@ -25,6 +25,7 @@ class BadgeRequest extends Model
         'rejected_adp_at',
         'pending_fabrication_at',
         'ready_for_delivery_at',
+        'terminated_at',
         'selfie_photo',
         'identification_card',
         'activity_authorization',
@@ -48,6 +49,7 @@ class BadgeRequest extends Model
         'rejected_adp_at' => 'datetime',
         'pending_fabrication_at' => 'datetime',
         'ready_for_delivery_at' => 'datetime',
+        'terminated_at' => 'datetime',
     ];
 
     /**

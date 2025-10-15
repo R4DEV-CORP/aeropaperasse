@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('badges', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('badge_request_id');
-            $table->string('badge_number')->unique();
-            $table->enum('status', ['active', 'expired', 'returned', 'not_returned'])->default('active');
+            $table->enum('status', ['active', 'expired', 'returned', 'not_returned'])->default('returned');
             $table->string('previous_status')->nullable();
             $table->date('expiry_date');
             $table->timestamp('returned_at')->nullable();

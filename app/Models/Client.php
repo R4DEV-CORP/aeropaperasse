@@ -55,7 +55,7 @@ class Client extends Model
 
     public function badgeRequests()
     {
-        return $this->hasMany(BadgeRequest::class);
+        return $this->hasManyThrough(BadgeRequest::class, ActivityRequest::class);
     }
 
     public function activityRequests()
@@ -71,7 +71,7 @@ class Client extends Model
     public function getActiveBadgesCountAttribute(): int
     {
         return $this->badgeRequests()
-            ->where('status', 'ready_for_delivery')
+            ->where('badge_requests.status', 'ready_for_delivery')
             ->count();
     }
 
@@ -99,5 +99,10 @@ class Client extends Model
     public function contacts()
     {
         return $this->hasMany(ContactClient::class);
+    }
+
+    public function badges()
+    {
+        return $this->hasMany(Badge::class);
     }
 }

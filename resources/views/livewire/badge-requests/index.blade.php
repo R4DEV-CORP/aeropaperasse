@@ -56,7 +56,7 @@
                 <tbody class=" divide-slate-800/10 text-sm text-gray-700">
                     @if($badgeRequests->count() > 0)
                     @foreach($badgeRequests as $badgeRequest)
-                    <tr wire:loading.remove wire:target="search" wire:key="badge-request-{{ $badgeRequest->id }}">
+                    <tr wire:loading.remove wire:target="search" wire:key="badge-request-{{ $badgeRequest->id }}" class="{{ $badgeRequest->status == 'terminated' ? 'opacity-50' : '' }}">
                         <td class="px-3 py-2">
                             <p class="text-gray-800 font-medium">{{ $badgeRequest->coworker->firstname }} {{ $badgeRequest->coworker->lastname }}</p>
                             <flux:text>{{ $badgeRequest->activityRequest->client->company_name }}</flux:text>
@@ -87,6 +87,9 @@
                                     @break
                                 @case('ready_for_delivery')
                                     <flux:badge icon="check-badge" color="blue" size="sm">Prêt à être Remis</flux:badge>
+                                    @break
+                                @case('terminated')
+                                    <flux:badge icon="check-circle" color="violet" size="sm">Terminé</flux:badge>
                                     @break
                             @endswitch
                         </td>
