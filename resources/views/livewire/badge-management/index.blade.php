@@ -80,16 +80,23 @@
                                 <flux:modal.trigger :name="'view-badge-'.$badge->id">
                                     <flux:button icon="eye" icon:variant="outline" variant="subtle" square="true" tooltip="Voir" color="blue" class="hover:cursor-pointer"/>
                                 </flux:modal.trigger>
-                                <!-- Modal visualisation demande -->
+                                <!-- Modal visualisation badge -->
                                 <flux:modal :name="'view-badge-'.$badge->id" class="min-w-4xl !max-w-6xl">
                                     <livewire:badge-management.view-badge :badge="$badge" wire:key="badge-modal-view-{{ $badge->id }}" />
                                 </flux:modal>
                                 @if(auth()->user()->isAdmin())
-                                    @if($badge->status == 'active' || $badge->status == 'expired')
-                                        <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Restituer" wire:click="returnBadge({{ $badge->id }})" class="!text-green-500 hover:cursor-pointer"/>
+                                    <flux:modal.trigger :name="'edit-badge-expiry-date-'.$badge->id">
+                                        <flux:button variant="subtle" icon="calendar" icon:variant="outline" square="true" tooltip="Modifier la date d'expiration" class="!text-blue-500 hover:cursor-pointer"/>
+                                    </flux:modal.trigger>
+                                    <!-- Modal edition expiry_date -->
+                                    <flux:modal :name="'edit-badge-expiry-date-'.$badge->id" class="min-w-4xl !max-w-6xl border !bg-red-50">
+                                        <livewire:badge-management.edit-badge-expiry-date-form :badge="$badge" wire:key="badge-modal-edit-expiry-date-{{ $badge->id }}" />
+                                    </flux:modal>
+                                        @if($badge->status == 'active' || $badge->status == 'expired' || $badge->status == 'not_returned')
+                                        <flux:button variant="subtle" icon="inbox-arrow-down" icon:variant="outline" square="true" tooltip="Marquer comme restitué" wire:click="returnBadge({{ $badge->id }})" class="!text-blue-500 hover:cursor-pointer"/>
                                     @endif
                                     @if($badge->status == 'expired')
-                                        <flux:button variant="subtle" icon="shield-exclamation" icon:variant="outline" square="true" tooltip="Marqué non restitué" wire:click="notReturnedBadge({{ $badge->id }})" class="!text-yellow-500 hover:cursor-pointer"/>
+                                        <flux:button variant="subtle" icon="shield-exclamation" icon:variant="outline" square="true" tooltip="Marquer non restitué" wire:click="notReturnedBadge({{ $badge->id }})" class="!text-yellow-500 hover:cursor-pointer"/>
                                     @endif
                                 @endif
                             </div
@@ -134,7 +141,7 @@
 
      <!-- Modal création de badge -->
      @if(auth()->user()->isAdmin())
-     <flux:modal :dismissible="false" name="add-badge" class="min-w-4xl !max-w-6xl">
+     <flux:modal :dismissible="false" name="add-badge" class="min-w-4xl !max-w-6xl border !bg-red-50">
         <livewire:badge-management.create-badge-form />
     </flux:modal>
     @endif
@@ -155,6 +162,27 @@ document.addEventListener('livewire:init', () => {
                 } 
             }));
         }, 500);
+    });
+
+    Livewire.on('badge-expiry-date-updated', (badgeId) => {
+        // Afficher une notification de succès
+        setTimeout(() => {
+            document.dispatchEvent(new CustomEvent('notify', { 
+                detail: { 
+                    message: 'Date d\'expiration modifiée avec succès !', 
+                    type: 'success' 
+                } 
+            }));
+        }, 500);
+    });
+
+    // Gestionnaire pour fermer les modals
+    Livewire.on('close-modal', (event) => {
+        const modalName = event.detail.name;
+        const modal = document.querySelector(`[data-modal-name="${modalName}"]`);
+        if (modal) {
+            modal.dispatchEvent(new CustomEvent('close'));
+        }
     });
 });
 </script>

@@ -1,8 +1,11 @@
 <form wire:submit.prevent="createBadge" novalidate class="space-y-6">
     <div class="border-b border-gray-800/10 pb-4">
-        <flux:heading size="xl">
-            Créer un badge
-        </flux:heading>
+        <div class="flex justify-between">
+            <flux:heading size="xl">
+                Créer un badge
+            </flux:heading>
+            <flux:badge color="red" class="mr-8">Admin</flux:badge>
+        </div>
         <flux:text class="mt-2">
             Créer un badge pour l'attribuer à une demande de badge.
         </flux:text>

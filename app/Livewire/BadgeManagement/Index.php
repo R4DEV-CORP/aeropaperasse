@@ -12,7 +12,10 @@ class Index extends Component
 
     public $search = '';
 
-    protected $listeners = ['badge-created' => 'refreshBadges'];
+    protected $listeners = [
+        'badge-created' => 'refreshBadges',
+        'badge-expiry-date-updated' => 'refreshBadges'
+    ];
 
     private function loadBadges()
     {
