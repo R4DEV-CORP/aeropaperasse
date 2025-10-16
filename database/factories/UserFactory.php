@@ -35,10 +35,8 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'role' => 'client',
             'is_new' => false,
-            'is_student' => false,
-            'has_left' => false,
             'two_factor_enabled' => false,
-            'departure_date' => null,
+            'function' => null,
         ];
     }
 

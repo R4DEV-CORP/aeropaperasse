@@ -24,11 +24,8 @@ class User extends Authenticatable
         'is_new',
         'role',
         'client_id',
-        'has_left',
         'function',
         'two_factor_enabled',
-        'departure_date',
-        'is_student',
     ];
 
     /**
@@ -51,9 +48,6 @@ class User extends Authenticatable
         'two_factor_enabled' => 'boolean',
         'password' => 'hashed',
         'is_new' => 'boolean',
-        'departure_date' => 'date',
-        'has_left' => 'boolean',
-        'is_student' => 'boolean',
     ];
 
     public function isAdmin(): bool

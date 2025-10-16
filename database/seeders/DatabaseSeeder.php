@@ -47,6 +47,18 @@ class DatabaseSeeder extends Seeder
                 'role' => 'admin',
             ]);
 
+        $coworkerAdmin = Coworker::factory()
+            ->for($clientAdmin)
+            ->for($userAdmin)
+            ->create([
+                'firstname' => 'Corentin',
+                'lastname' => 'Sarda',
+                'email' => 'admin@r4web.fr',
+            ]);
+
+        $userAdmin->coworker_id = $coworkerAdmin->id;
+        $userAdmin->save();
+
 
         // Jeu de test avec 3 clients
         $clients = Client::factory()
@@ -58,6 +70,15 @@ class DatabaseSeeder extends Seeder
             ->create([
                 'role' => 'sclient',
                 'name' => 'Clément Richard',
+                'email' => 'sclient@r4web.fr',
+            ]);
+        
+        $coworker = Coworker::factory()
+            ->for($user)
+            ->for($clients[0])
+            ->create([
+                'firstname' => 'Clément',
+                'lastname' => 'Richard',
                 'email' => 'sclient@r4web.fr',
             ]);
 

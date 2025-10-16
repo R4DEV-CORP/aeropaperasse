@@ -26,6 +26,7 @@ class CoworkerFactory extends Factory
             'email' => $email,
             'phone' => fake()->phoneNumber(),
             'has_leave' => false,
+            'departure_date' => null,
             'can_access_formation' => fake()->boolean(),
         ];
     }

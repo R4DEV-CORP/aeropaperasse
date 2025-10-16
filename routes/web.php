@@ -63,3 +63,11 @@ Route::get('/badge-requests', function () {
 Route::get('/badge-management', function () {
     return view('badge-management.index');
 })->middleware('auth');
+
+/*
+* Routes coworkers
+*/
+
+Route::get('/coworkers', function () {
+    return view('coworkers.index');
+})->middleware('auth');

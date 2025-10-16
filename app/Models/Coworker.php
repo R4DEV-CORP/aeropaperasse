@@ -21,6 +21,10 @@ class Coworker extends Model
         'can_access_formation',
     ];
 
+    protected $casts = [
+        'departure_date' => 'date',
+    ];
+
     public function client()
     {
         return $this->belongsTo(Client::class);

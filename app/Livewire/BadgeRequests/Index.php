@@ -6,13 +6,31 @@ use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\WithoutUrlPagination;
+use App\Models\Badge;
 use App\Models\BadgeRequest;
 use App\Services\BadgeRequestDocumentService;
 
 class Index extends Component
 {
     use WithPagination, WithoutUrlPagination;
+
     public string $search = '';
+
+    public $badgeCount = 0;
+
+    public $client;
+
+    public function mount()
+    {
+        // Compter les badges via les relations : Badge -> BadgeRequest -> ActivityRequest -> client_id
+        $this->badgeCount = Badge::where('status', '!=', 'returned')
+                                ->whereHas('badgeRequest.activityRequest', function ($query) {
+                                    $query->where('client_id', auth()->user()->client_id);
+                                })
+                                ->count();
+
+        $this->client = auth()->user()->client;
+    }
 
     /**
      * Réinitialiser la pagination lors d'une recherche

@@ -18,21 +18,39 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
+            'phone' => 'required|string|max:255',
             'password' => 'required|string|min:8',
             'role' => 'nullable|string|in:sclient,sadmin,client,admin', // Facultatif : rôle spécifique
         ]);
-        $userData = [
-            'name' => $validated['name'],
+
+        $user = User::create([
+            'name' => $validated['firstname'] . ' ' . $validated['lastname'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role' => $validated['role'] ?? 'client', // Par défaut "user"
             'is_new' => true, // Nouvel utilisateur est marqué comme nouveau
-            'is_student' => false,
-        ];
+            'phone' => $validated['phone'],
+            'coworker_id' => null,
+        ]);
 
-        $user = User::create($userData);
+        $coworker = Coworker::create([
+            'user_id' => $user->id,
+            'client_id' => $user->client_id,
+            'firstname' => $validated['firstname'],
+            'lastname' => $validated['lastname'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'has_leave' => false,
+            'departure_date' => null,
+            'can_access_formation' => false,
+            'is_student' => false,
+        ]);
+
+        $user->coworker_id = $coworker->id;
+        $user->save();
 
         return response()->json(['user' => $user], 201);
     }

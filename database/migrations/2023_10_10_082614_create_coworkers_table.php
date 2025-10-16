@@ -34,6 +34,11 @@ return new class extends Migration
             $table->date('departure_date')->nullable();
             $table->boolean('can_access_formation')->default(false);
         });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->unsignedBigInteger('coworker_id')->nullable();
+            $table->foreign('coworker_id')->references('id')->on('coworkers')->onDelete('set null');
+        });
     }
 
     /**
@@ -42,5 +47,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('coworkers');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['coworker_id']);
+            $table->dropColumn('coworker_id');
+        });
     }
 };

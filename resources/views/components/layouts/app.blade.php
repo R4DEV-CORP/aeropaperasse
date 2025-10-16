@@ -29,7 +29,7 @@
                 <flux:sidebar.item icon="hand-raised" href="#">Laissez-passer</flux:sidebar.item>
                 <flux:sidebar.item icon="academic-cap" href="#">Formations</flux:sidebar.item>
                 <flux:sidebar.item icon="building-office" href="/clients">Sociétés</flux:sidebar.item>
-                <flux:sidebar.item icon="users" href="#">Collaborateurs</flux:sidebar.item>
+                <flux:sidebar.item icon="users" href="/coworkers">Collaborateurs & utilisateurs</flux:sidebar.item>
                 <flux:sidebar.item icon="chat-bubble-left-right" href="#">Messagerie</flux:sidebar.item>
             </flux:sidebar.nav>
             <flux:sidebar.spacer />
