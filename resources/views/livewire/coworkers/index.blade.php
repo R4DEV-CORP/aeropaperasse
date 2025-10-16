@@ -5,7 +5,7 @@
     <div class="flex items-center gap-3 mt-4">
         <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher un collaborateur ou un utilisateur..." />
         <flux:modal.trigger name="new-coworker">
-            <flux:button variant="primary" icon="plus">Nouveau collaborateur/utilisateur</flux:button>
+            <flux:button variant="primary" icon="user-plus">Nouveau collaborateur/utilisateur</flux:button>
         </flux:modal.trigger>
     </div>
     <div class="mt-4 py-4 bg-white rounded-lg border border-zinc-200">
