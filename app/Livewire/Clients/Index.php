@@ -10,6 +10,17 @@ class Index extends Component
 {
     public string $search = '';
 
+    public $openClientId = null;
+
+    public function developpeClient(int $clientId)
+    {
+        if($this->openClientId == $clientId) {
+            $this->openClientId = null;
+        } else {
+            $this->openClientId = $clientId;
+        }
+    }
+
     private function loadClients()
     {
         return Client::all();

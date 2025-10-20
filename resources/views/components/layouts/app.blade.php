@@ -23,14 +23,14 @@
                 <flux:sidebar.collapse class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2" />
             </flux:sidebar.header>
             <flux:sidebar.nav>
-                <flux:sidebar.item icon="document-text" href="/activity-requests">Demande d'activité</flux:sidebar.item>
-                <flux:sidebar.item icon="identification" href="/badge-requests">Demande de badge</flux:sidebar.item>
-                <flux:sidebar.item icon="rectangle-stack" href="/badge-management">Suivi des badges</flux:sidebar.item>
-                <flux:sidebar.item icon="hand-raised" href="#">Laissez-passer</flux:sidebar.item>
-                <flux:sidebar.item icon="academic-cap" href="#">Formations</flux:sidebar.item>
-                <flux:sidebar.item icon="building-office" href="/clients">Sociétés</flux:sidebar.item>
-                <flux:sidebar.item icon="users" href="/coworkers">Collaborateurs & utilisateurs</flux:sidebar.item>
-                <flux:sidebar.item icon="chat-bubble-left-right" href="#">Messagerie</flux:sidebar.item>
+                <flux:sidebar.item icon="document-text" href="/activity-requests" wire:navigate>Demande d'activité</flux:sidebar.item>
+                <flux:sidebar.item icon="identification" href="/badge-requests" wire:navigate>Demande de badge</flux:sidebar.item>
+                <flux:sidebar.item icon="rectangle-stack" href="/badge-management" wire:navigate>Suivi des badges</flux:sidebar.item>
+                <flux:sidebar.item icon="hand-raised" href="#" wire:navigate>Laissez-passer</flux:sidebar.item>
+                <flux:sidebar.item icon="academic-cap" href="#" wire:navigate>Formations</flux:sidebar.item>
+                <flux:sidebar.item icon="building-office" href="/clients" wire:navigate>Sociétés</flux:sidebar.item>
+                <flux:sidebar.item icon="users" href="/coworkers" wire:navigate>Collaborateurs & utilisateurs</flux:sidebar.item>
+                <flux:sidebar.item icon="chat-bubble-left-right" href="#" wire:navigate>Messagerie</flux:sidebar.item>
             </flux:sidebar.nav>
             <flux:sidebar.spacer />
             <flux:sidebar.nav>

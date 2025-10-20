@@ -81,6 +81,8 @@ class CreateClientForm extends Component
 
     public $hr_contact_phone;
 
+    public $slug;
+
     // Propriétés pour la gestion des messages
     public $successMessage = '';
 
@@ -91,6 +93,9 @@ class CreateClientForm extends Component
         try {
             // 1. Récupérer les données du formulaire
             $formData = $this->getFormData();
+
+            $this->slug = uuid_create();
+            $formData['slug'] = $this->slug;
 
             // 2. Valider les données
             $validator = ClientValidator::validate($formData);

@@ -21,4 +21,14 @@ class ContactClient extends Model
     {
         return $this->belongsTo(Client::class);
     }
+
+    public function getRoleLabelAttribute()
+    {
+        return match($this->role) {
+            'safety' => 'Référent sûreté',
+            'security' => 'Correspondant sécurité',
+            'hr' => 'Contact RH',
+            'manager' => 'Gestionnaire',
+        };
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
+use App\Models\Badge;
 
 class Client extends Model
 {
@@ -25,6 +26,7 @@ class Client extends Model
         'badge_limit',
         'vehicle_pass_limit',
         'notification_email',
+        'slug',
     ];
 
     /**
@@ -104,5 +106,14 @@ class Client extends Model
     public function badges()
     {
         return $this->hasMany(Badge::class);
+    }
+
+    public function getActiveBadgeCount() : int
+    {
+        return Badge::where('status', '!=', 'returned')
+            ->whereHas('badgeRequest.activityRequest', function ($query) {
+                $query->where('client_id', $this->id);
+            })
+            ->count();
     }
 }

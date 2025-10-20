@@ -60,8 +60,6 @@
         </div>
     </div>
 
-    <flux:icon.chevron-double-down class="size-6 text-center mx-auto"/>
-
     <!-- Référents et contact -->
     <div class="border border-gray-800/10 p-4 rounded-lg">
         <div>
@@ -194,8 +192,6 @@
         </div>
     </div>
 
-    <flux:icon.chevron-double-down class="size-6 text-center mx-auto"/>
-
     <!-- Document -->
     <div class="border border-gray-800/10 p-4 rounded-lg">
         <div>
@@ -223,8 +219,6 @@
             </flux:field>
         </div>
     </div>
-        
-    <flux:icon.chevron-double-down class="size-6 text-center mx-auto"/>
 
     <!-- Informations complémentaires -->
     <div class="border border-gray-800/10 p-4 rounded-lg">

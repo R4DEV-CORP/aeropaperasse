@@ -4,8 +4,6 @@
         <flux:modal.trigger name="new-client">
             <flux:button variant="primary" icon="plus">Nouvelle société</flux:button>
         </flux:modal.trigger>
-
-        <flux:button icon="arrow-path">Actualiser</flux:button>
     </div>
     <div class="mt-4 py-4 bg-white rounded-lg border border-zinc-200 relative">
         <flux:heading size="lg" class="px-4">Sociétés</flux:heading>
@@ -27,7 +25,6 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">NOM</th>
-                        <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">SIRET</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">COLLABORATEURS</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DATE DE CREATION</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">ACTIONS</th>
@@ -37,28 +34,56 @@
                     <!-- Résultats de la recherche -->
                     @foreach($clients as $client)
                     <tr wire:loading.remove wire:target="search">
-                        <td class="px-3 py-2">
-                            <p class="text-gray-800 font-medium">{{ $client->company_name }}</p>
-                            <flux:text>{{ $client->trade_name }}</flux:text>
+                        <td class="px-3 py-2" wire:click="developpeClient({{ $client->id }})">
+                            <div class="flex items-center gap-2">
+                                <div>
+                                    <p class="text-gray-800 font-medium">{{ $client->company_name }}</p>
+                                    <flux:text>{{ $client->trade_name }}</flux:text>
+                                </div>
+                                @if($openClientId != $client->id)
+                                    <flux:icon.chevron-right class="size-4 hover:cursor-pointer hover:text-gray-500"/>
+                                @else
+                                    <flux:icon.chevron-down class="size-4 hover:cursor-pointer hover:text-gray-500"/>
+                                @endif
+                            </div>
+
                         </td>
                         <td class="px-3 py-2">
-                            <p class="text-gray-800 font-medium">{{ $client->siret_number }}</p>
-                        </td>
-                        <td class="px-3 py-2">
-                            <p class="text-gray-800 font-medium">{{ $client->users->count() }}</p>
+                            <a href="/coworkers"><flux:badge as="button" variant="pill" icon="user" class="hover:cursor-pointer">{{ $client->coworkers->count() }}</flux:badge></a>
                         </td>
                         <td class="px-3 py-2">{{ $client->created_at->format('d/m/Y') }}</td>
                         <td class="px-3 py-2">
-                            <div class="flex items-center gap-2">   
-                                <flux:icon.eye class="size-6"/>    
-                                <flux:icon.check-circle class="size-6" />    
-                                <flux:icon.x-circle class="size-6" />   
-                                <flux:icon.arrow-down-tray class="size-6" /> 
-                                <flux:icon.arrow-left-circle class="size-6" />
-                                <flux:icon.wrench class="size-6" />
+                            <div class="flex items-center">
+                                <flux:button href="/clients/{{ $client->slug }}" wire:navigate icon="eye" icon:variant="outline" variant="subtle" square="true" tooltip="Voir" color="blue" class="hover:cursor-pointer"/>
+                                @if(auth()->user()->isAdmin())
+                                    <flux:modal.trigger :name="'edit-client-'.$client->id">
+                                        <flux:button variant="subtle" icon="pencil-square" icon:variant="outline" square="true" tooltip="Modifier" class="!text-blue-500 hover:cursor-pointer"/>
+                                    </flux:modal.trigger>
+                                    <!-- Modal edition expiry_date -->
+                                    <flux:modal :name="'edit-client-'.$client->id" class="min-w-4xl !max-w-6xl border !bg-red-50">
+                                        
+                                    </flux:modal>
+                                    <flux:button variant="subtle" icon="trash" icon:variant="outline" square="true" tooltip="Supprimer la société" class="!text-red-500 hover:cursor-pointer"/>
+                                @endif
                             </div>
                         </td>
                     </tr>
+                    @if($openClientId == $client->id)
+                    <tr wire:loading.remove wire:target="search" wire:key="developped-client-{{ $client->id }}" class="border-b border-slate-800/10">
+                        <td colspan="2" class="px-3 py-2">
+                            <div class="mt-4 p-4 bg-white rounded-lg border border-zinc-200">
+                                <div class="flex justify-between">
+                                    <flux:heading size="lg">Quota de bagdes</flux:heading>
+                                    <flux:text>{{ $client->getActiveBadgeCount() }}/{{ $client->badge_limit }}</flux:text>
+                                </div>
+                                <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
+                                    <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->getActiveBadgeCount() / $client->badge_limit * 100 }}%"></div>
+                                </div>
+                                <flux:text class="mt-2">La société dispose de <span class="font-medium">{{ $client->getActiveBadgeCount() }} badges.</span> Il leur reste donc <span class="font-medium">{{ $client->badge_limit - $client->getActiveBadgeCount() }} demandes de badge disponibles.</span></flux:text>
+                            </div>
+                        </td>
+                    </tr>
+                    @endif
                     @endforeach
                 </tbody>
             </table>

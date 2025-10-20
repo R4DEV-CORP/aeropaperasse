@@ -15,6 +15,7 @@ class CreateClientData
         public string $zip_code,
         public string $city,
         public ?string $subcontractor_of,
+        public string $slug,
 
         // Documents
         public UploadedFile $kbis_document,
@@ -45,6 +46,7 @@ class CreateClientData
             zip_code: $data['zip_code'],
             city: $data['city'],
             subcontractor_of: $data['subcontractor_of'] ?? null,
+            slug: $data['slug'],
             kbis_document: $data['kbis_document'],
             safety_document: $data['safety_document'],
             security_document: $data['security_document'],
@@ -134,6 +136,7 @@ class CreateClientData
             'zip_code' => $this->zip_code,
             'city' => $this->city,
             'subcontractor_of' => $this->subcontractor_of,
+            'slug' => $this->slug,
             'badge_limit' => $this->badge_limit,
             'vehicle_pass_limit' => $this->vehicle_pass_limit,
             'notification_email' => $this->notification_email,

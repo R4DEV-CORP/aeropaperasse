@@ -40,6 +40,10 @@ Route::get('/clients', function () {
     return view('clients.index');
 })->middleware('auth');
 
+Route::get('/clients/{slug}', function ($slug) {
+    return view('clients.show', ['slug' => $slug]);
+})->middleware('auth');
+
 /*
 * Routes demande d'activité
 */
