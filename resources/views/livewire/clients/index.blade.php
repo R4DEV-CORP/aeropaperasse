@@ -59,9 +59,9 @@
                                     <flux:modal.trigger :name="'edit-client-'.$client->id">
                                         <flux:button variant="subtle" icon="pencil-square" icon:variant="outline" square="true" tooltip="Modifier" class="!text-blue-500 hover:cursor-pointer"/>
                                     </flux:modal.trigger>
-                                    <!-- Modal edition expiry_date -->
-                                    <flux:modal :name="'edit-client-'.$client->id" class="min-w-4xl !max-w-6xl border !bg-red-50">
-                                        
+                                    <!-- Modal edition -->
+                                    <flux:modal :name="'edit-client-'.$client->id" class="min-w-4xl !max-w-6xl" wire:key="edit-client-modal-{{ $client->id }}">
+                                        <livewire:clients.edit-client-form :clientId="$client->id" />
                                     </flux:modal>
                                     <flux:button variant="subtle" icon="trash" icon:variant="outline" square="true" tooltip="Supprimer la société" class="!text-red-500 hover:cursor-pointer"/>
                                 @endif
@@ -95,3 +95,18 @@
         <livewire:clients.create-client-form />
     </flux:modal>
 </div>
+
+<script>
+document.addEventListener('livewire:init', () => {
+    Livewire.on('close-modal', (event) => {
+        const modalName = event.modal;
+        if (modalName) {
+            // Fermer la modal spécifique
+            const modal = document.querySelector(`[data-modal="${modalName}"]`);
+            if (modal) {
+                modal.close();
+            }
+        }
+    });
+});
+</script>

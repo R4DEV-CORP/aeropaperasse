@@ -42,6 +42,17 @@ class Index extends Component
         $this->render();
     }
 
+    /**
+     * Écoute l'événement 'client-updated' et recharge la liste des clients
+     */
+    #[On('client-updated')]
+    public function refreshClientsAfterUpdate()
+    {
+        // Force le re-rendu du composant pour mettre à jour la liste
+        $this->search = '';
+        $this->render();
+    }
+
     public function render()
     {
         if (! empty($this->search)) {

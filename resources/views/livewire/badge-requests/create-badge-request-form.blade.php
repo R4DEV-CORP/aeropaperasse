@@ -276,7 +276,7 @@
         </div>
     </div>
     @elseif($coworkers && $coworkers->count() === 0 && $selected_activity_request_id)
-    <flux:callout class="mt-4" icon="information-warning" color="warning" inline>
+    <flux:callout class="mt-4" icon="exclamation-triangle" color="warning" inline>
         <flux:callout.heading>Aucun collaborateur n'est disponible.</flux:callout.heading>
         <x-slot name="actions">
             <flux:button href="/coworkers">Créer un collaborateur</flux:button>

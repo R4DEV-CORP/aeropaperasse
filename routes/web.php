@@ -75,3 +75,11 @@ Route::get('/badge-management', function () {
 Route::get('/coworkers', function () {
     return view('coworkers.index');
 })->middleware('auth');
+
+/*
+* Routes trainings
+*/
+
+Route::get('/trainings', function () {
+    return view('trainings.index');
+})->middleware('auth');
