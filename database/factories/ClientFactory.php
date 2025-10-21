@@ -37,6 +37,7 @@ class ClientFactory extends Factory
             'badge_limit' => fake()->numberBetween(5, 15),
             'vehicle_pass_limit' => fake()->numberBetween(0, 10),
             'notification_email' => $notificationEmail,
+            'slug' => fake()->uuid(),
         ];
     }
 }

@@ -69,11 +69,6 @@
                 <flux:error name="phone" />
             </flux:field>
             <flux:field variant="inline">
-                <flux:checkbox wire:model="can_access_formation" />
-                <flux:label>Le collaborateur a accès aux formations</flux:label>
-                <flux:error name="can_access_formation" />
-            </flux:field>
-            <flux:field variant="inline">
                 <flux:checkbox wire:model.live="has_leave" />
                 <flux:label>Le collaborateur est en départ</flux:label>
                 <flux:error name="has_leave" />
@@ -110,6 +105,11 @@
                 <flux:label>Confirmer le mot de passe<span class="text-red-500">*</span></flux:label>
                 <flux:input wire:model="password_confirmation" icon="lock-closed" name="password_confirmation" type="password" required />
                 <flux:error name="password_confirmation" />
+            </flux:field>
+            <flux:field variant="inline">
+                <flux:checkbox wire:model="can_access_formation" />
+                <flux:label>L'utilisateur a accès à l'onglet formations.</flux:label>
+                <flux:error name="can_access_formation" />
             </flux:field>
             <flux:radio.group wire:model="role" label="Rôle" variant="segmented" size="sm" class="col-span-2">
                 <flux:radio value="client" label="Client" />

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -26,6 +25,7 @@ class User extends Authenticatable
         'client_id',
         'function',
         'two_factor_enabled',
+        'can_access_formation',
     ];
 
     /**
@@ -48,6 +48,7 @@ class User extends Authenticatable
         'two_factor_enabled' => 'boolean',
         'password' => 'hashed',
         'is_new' => 'boolean',
+        'can_access_formation' => 'boolean',
     ];
 
     public function isAdmin(): bool

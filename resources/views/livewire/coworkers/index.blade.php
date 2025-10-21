@@ -34,8 +34,10 @@
                     @endif
                     <td class="px-3 py-2 flex items-center gap-2">
                         <p>{{ $coworker->firstname }} {{ $coworker->lastname }}</p>
-                        @if($coworker->can_access_formation)
+                        @if($coworker->user_id)
+                            @if($coworker->user->can_access_formation)
                             <flux:icon.academic-cap variant="micro" color="blue" />
+                            @endif
                         @endif
                     </td>
                     <td class="px-3 py-2">

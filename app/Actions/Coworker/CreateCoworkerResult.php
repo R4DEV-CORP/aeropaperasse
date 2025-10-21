@@ -96,7 +96,6 @@ class CreateCoworkerResult
             'email' => $this->coworker->email,
             'phone' => $this->coworker->phone,
             'client_id' => $this->coworker->client_id,
-            'can_access_formation' => $this->coworker->can_access_formation,
             'has_leave' => $this->coworker->has_leave,
             'departure_date' => $this->coworker->departure_date,
             'user_id' => $this->coworker->user_id,

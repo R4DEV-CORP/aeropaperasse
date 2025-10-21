@@ -11,19 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_trainings', function (Blueprint $table) {
+        Schema::create('coworker_trainings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('coworker_id');
             $table->unsignedBigInteger('training_id');
-            $table->timestamp('started_at')->nullable();
-            $table->timestamp('expires_at')->nullable();
+            $table->timestamp('started_at');
+            $table->timestamp('expires_at');
             $table->string('certificate_path')->nullable();
             $table->timestamps();
 
-            $table->unique(['user_id', 'training_id']);
+            $table->unique(['coworker_id', 'training_id']);
             $table->foreign('training_id')->references('id')->on('trainings')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->index('expires_at');
+            $table->foreign('coworker_id')->references('id')->on('coworkers')->onDelete('cascade');
         });
     }
 
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_trainings');
+        Schema::dropIfExists('coworker_trainings');
     }
 };

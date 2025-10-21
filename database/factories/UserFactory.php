@@ -36,6 +36,7 @@ class UserFactory extends Factory
             'role' => 'client',
             'is_new' => false,
             'two_factor_enabled' => false,
+            'can_access_formation' => fake()->boolean(),
             'function' => null,
         ];
     }

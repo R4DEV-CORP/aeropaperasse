@@ -10,6 +10,7 @@ use App\Models\ContactClient;
 use App\Models\User;
 use App\Models\Coworker;
 use App\Models\BadgeRequest;
+use App\Models\Training;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -141,5 +142,38 @@ class DatabaseSeeder extends Seeder
                     ->create();
             }
         }
+
+        // Training
+        $trainings = Training::factory()
+            ->create([
+                'title' => '11.2.6.2 (ditTCA)'
+            ])
+            ->create([
+                'title' => '11.2.3.9'
+            ])
+            ->create([
+                'title' => '11.2.3.9 plus TCA'
+            ])
+            ->create([
+                'title' => '11.2.3.10'
+            ])
+            ->create([
+                'title' => '11.2.3.10 plus TCA'
+            ])
+            ->create([
+                'title' => 'Sécurité piétons'
+            ])
+            ->create([
+                'title' => 'Permis T'
+            ])
+            ->create([
+                'title' => 'Pratique permis T'
+            ])
+            ->create([
+                'title' => 'Facteur humain'
+            ])
+            ->create([
+                'title' => 'Co activité'
+            ]);
     }
 }

@@ -15,7 +15,6 @@ class CreateCoworkerData
         public int $client_id,
         
         // Options du collaborateur
-        public bool $can_access_formation = false,
         public bool $has_leave = false,
         public ?Carbon $departure_date = null,
         
@@ -23,6 +22,7 @@ class CreateCoworkerData
         public bool $create_user = false,
         public ?string $password = null,
         public ?string $role = null,
+        public bool $can_access_formation = false,
         
         // Metadata
         public int $created_by,
@@ -39,7 +39,6 @@ class CreateCoworkerData
             email: $data['email'],
             phone: $data['phone'],
             client_id: (int) $data['client_id'],
-            can_access_formation: (bool) ($data['can_access_formation'] ?? false),
             has_leave: (bool) ($data['has_leave'] ?? false),
             departure_date: isset($data['departure_date']) && $data['departure_date'] 
                 ? Carbon::parse($data['departure_date']) 
@@ -62,7 +61,6 @@ class CreateCoworkerData
             'lastname' => $this->lastname,
             'email' => $this->email,
             'phone' => $this->phone,
-            'can_access_formation' => $this->can_access_formation,
             'has_leave' => $this->has_leave,
             'departure_date' => $this->departure_date,
         ];
@@ -90,6 +88,7 @@ class CreateCoworkerData
             'role' => $this->role ?? 'client',
             'is_new' => true,
             'client_id' => $this->client_id,
+            'can_access_formation' => $this->can_access_formation,
         ];
     }
 

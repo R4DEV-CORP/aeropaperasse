@@ -6,7 +6,7 @@
     </div>
     <div class="flex items-center gap-3 mt-4">
         <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher une société..."/>
-        <flux:modal.trigger name="new-client">
+        <flux:modal.trigger name="add-coworker-to-formation-modal">
             <flux:button variant="primary" icon="plus">Attribuer une formation</flux:button>
         </flux:modal.trigger>
     </div>
@@ -56,4 +56,9 @@
             </table>
         </div>
     </div>
+
+    <!-- Modal attribution formation -->
+    <flux:modal :dismissible="false" name="add-coworker-to-formation-modal" class="min-w-4xl !max-w-6xl">
+        <livewire:training.add-coworker-to-training-form />
+    </flux:modal>
 </div>

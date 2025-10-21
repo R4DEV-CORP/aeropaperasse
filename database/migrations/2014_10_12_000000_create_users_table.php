@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('function')->nullable();
             $table->unsignedBigInteger('client_id')->nullable();
             $table->boolean('two_factor_enabled')->default(true);
+            $table->boolean('can_access_formation')->default(false);
         });
     }
 

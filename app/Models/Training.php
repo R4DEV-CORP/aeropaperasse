@@ -13,10 +13,10 @@ class Training extends Model
         'title',
     ];
 
-    public function users()
+    public function coworkers()
     {
-        return $this->belongsToMany(User::class, 'user_trainings')
-            ->withPivot(['id', 'started_at', 'expires_at', 'certificate_path', 'validity_years'])
+        return $this->belongsToMany(Coworker::class, 'coworker_trainings')
+            ->withPivot(['id', 'started_at', 'expires_at', 'certificate_path'])
             ->withTimestamps();
     }
 }

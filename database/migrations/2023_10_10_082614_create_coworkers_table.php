@@ -32,7 +32,6 @@ return new class extends Migration
             // Informations état collaborateur
             $table->boolean('has_leave')->default(false);
             $table->date('departure_date')->nullable();
-            $table->boolean('can_access_formation')->default(false);
         });
 
         Schema::table('users', function (Blueprint $table) {

@@ -18,7 +18,6 @@ class Coworker extends Model
         'phone',
         'has_leave',
         'departure_date',
-        'can_access_formation',
     ];
 
     protected $casts = [
@@ -38,5 +37,12 @@ class Coworker extends Model
     public function badgeRequests()
     {
         return $this->hasMany(BadgeRequest::class);
+    }
+
+    public function trainings()
+    {
+        return $this->belongsToMany(Training::class, 'coworker_trainings')
+            ->withPivot(['id', 'started_at', 'expires_at', 'certificate_path'])
+            ->withTimestamps();
     }
 }
