@@ -65,6 +65,11 @@ class Client extends Model
         return $this->hasMany(ActivityRequest::class);
     }
 
+    public function trainings()
+    {
+        return $this->belongsToMany(Training::class, Coworker::class)->withPivot(['started_at', 'expires_at', 'certificate_path', 'validity_years']);
+    }
+
     public function vehiclePasses()
     {
         return $this->hasManyThrough(VehiclePass::class, User::class);

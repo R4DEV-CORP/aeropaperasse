@@ -47,7 +47,7 @@
                         <td class="px-3 py-2">0</td>
                         <td class="px-3 py-2">
                             <div class="flex items-center">
-                                <flux:button href="/clients/{{ $client->slug }}" wire:navigate icon="eye" icon:variant="outline" variant="subtle" square="true" tooltip="Voir" color="blue" class="hover:cursor-pointer"/>
+                                <flux:button href="/trainings/client/{{ $client->slug }}" wire:navigate icon="eye" icon:variant="outline" variant="subtle" square="true" tooltip="Voir" color="blue" class="hover:cursor-pointer"/>
                             </div>
                         </td>
                     </tr>

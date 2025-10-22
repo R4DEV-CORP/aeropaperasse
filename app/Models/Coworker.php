@@ -42,7 +42,6 @@ class Coworker extends Model
     public function trainings()
     {
         return $this->belongsToMany(Training::class, 'coworker_trainings')
-            ->withPivot(['id', 'started_at', 'expires_at', 'certificate_path'])
-            ->withTimestamps();
+            ->withPivot(['id', 'started_at', 'expires_at', 'certificate_path']);
     }
 }

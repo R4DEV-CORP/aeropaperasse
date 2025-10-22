@@ -83,3 +83,7 @@ Route::get('/coworkers', function () {
 Route::get('/trainings', function () {
     return view('trainings.index');
 })->middleware('auth');
+
+Route::get('/trainings/client/{slug}', function ($slug) {
+    return view('trainings.client', ['slug' => $slug]);
+})->middleware('auth');
