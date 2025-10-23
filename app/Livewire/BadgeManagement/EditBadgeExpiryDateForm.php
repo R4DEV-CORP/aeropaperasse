@@ -2,6 +2,7 @@
 
 namespace App\Livewire\BadgeManagement;
 
+use Flux\Flux;
 use Livewire\Component;
 
 class EditBadgeExpiryDateForm extends Component
@@ -51,12 +52,27 @@ class EditBadgeExpiryDateForm extends Component
             $this->dispatch('badge-expiry-date-updated', $this->badge->id);
 
             // Fermer la modal après un délai
-            $this->dispatch('close-modal', name: 'edit-badge-expiry-date-' . $this->badge->id);
+            $this->dispatch('close-modal', name: 'edit-badge-expiry-date-'.$this->badge->id);
 
         } catch (\Exception $e) {
-            \Log::error("Erreur lors de la modification de la date d'expiration du badge {$this->badge->id}: " . $e->getMessage());
+            \Log::error("Erreur lors de la modification de la date d'expiration du badge {$this->badge->id}: ".$e->getMessage());
             $this->errorMessage = 'Une erreur est survenue lors de la modification de la date d\'expiration.';
         }
+    }
+
+    public function closeModal(): void
+    {
+        $this->resetForm();
+        Flux::modal('edit-badge-expiry-date-'.$this->badge->id)->close();
+    }
+
+    public function resetForm(): void
+    {
+        $this->reset([
+            'errorMessage',
+            'successMessage',
+            'expiryDate',
+        ]);
     }
 
     public function render()

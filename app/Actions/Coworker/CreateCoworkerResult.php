@@ -73,10 +73,10 @@ class CreateCoworkerResult
             'operation' => $this->operation,
             'coworker_id' => $this->coworker?->id,
             'user_id' => $this->user?->id,
-            'coworker_name' => $this->coworker ? 
-                $this->coworker->firstname . ' ' . $this->coworker->lastname : null,
+            'coworker_name' => $this->coworker ?
+                $this->coworker->firstname.' '.$this->coworker->lastname : null,
             'coworker_email' => $this->coworker?->email,
-            'user_created' => !is_null($this->user),
+            'user_created' => ! is_null($this->user),
         ];
     }
 
@@ -85,7 +85,7 @@ class CreateCoworkerResult
      */
     public function getCoworkerData(): ?array
     {
-        if (!$this->coworker) {
+        if (! $this->coworker) {
             return null;
         }
 
@@ -108,7 +108,7 @@ class CreateCoworkerResult
      */
     public function getUserData(): ?array
     {
-        if (!$this->user) {
+        if (! $this->user) {
             return null;
         }
 

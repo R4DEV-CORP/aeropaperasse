@@ -31,13 +31,13 @@ class CertificateTrainingDocumentService
             ->where('coworker_trainings.id', $trainingId)
             ->first();
 
-        if (!$coworkerTraining) {
+        if (! $coworkerTraining) {
             throw new \Exception("Association coworker-training non trouvée avec l'ID: {$trainingId}");
         }
 
         // Générer le nom du dossier client
         $clientFolderName = $this->generateClientFolderName($coworkerTraining->company_name);
-        
+
         // Générer le nom du fichier
         $filename = $this->generateFilename(
             $file,
@@ -45,15 +45,15 @@ class CertificateTrainingDocumentService
             $coworkerTraining->lastname,
             $coworkerTraining->training_title
         );
-        
+
         // Définir le chemin de stockage : storage/app/public/clients/[nom-client]/documents/trainings/
         $path = "clients/{$clientFolderName}/documents/trainings";
-        
+
         // Stocker le fichier
         $storedPath = $file->storeAs($path, $filename, 'public');
-        
-        if (!$storedPath) {
-            throw new \Exception("Erreur lors du stockage du certificat de formation");
+
+        if (! $storedPath) {
+            throw new \Exception('Erreur lors du stockage du certificat de formation');
         }
 
         // Mettre à jour le chemin du certificat dans la table coworker_trainings
@@ -65,7 +65,7 @@ class CertificateTrainingDocumentService
             'training_id' => $trainingId,
             'path' => $storedPath,
             'coworker' => "{$coworkerTraining->firstname} {$coworkerTraining->lastname}",
-            'training' => $coworkerTraining->training_title
+            'training' => $coworkerTraining->training_title,
         ]);
 
         return $storedPath;
@@ -78,19 +78,19 @@ class CertificateTrainingDocumentService
     {
         // Convertir en minuscules
         $folderName = strtolower($companyName);
-        
+
         // Remplacer les espaces par des tirets
         $folderName = str_replace(' ', '-', $folderName);
-        
+
         // Supprimer les caractères spéciaux (garder seulement lettres, chiffres et tirets)
         $folderName = preg_replace('/[^a-z0-9\-]/', '', $folderName);
-        
+
         // Supprimer les tirets multiples consécutifs
         $folderName = preg_replace('/-+/', '-', $folderName);
-        
+
         // Supprimer les tirets en début et fin
         $folderName = trim($folderName, '-');
-        
+
         return $folderName;
     }
 
@@ -98,21 +98,21 @@ class CertificateTrainingDocumentService
      * Génère un nom de fichier : [prenom-coworker]-[nom-coworker]-[nom-training]-[timestamp].[extension]
      */
     protected function generateFilename(
-        UploadedFile $file, 
-        string $coworkerFirstname, 
-        string $coworkerLastname, 
+        UploadedFile $file,
+        string $coworkerFirstname,
+        string $coworkerLastname,
         string $trainingTitle
     ): string {
         $timestamp = now()->timestamp;
-        
+
         // Formater les noms selon les spécifications
         $formattedFirstname = $this->formatName($coworkerFirstname);
         $formattedLastname = $this->formatName($coworkerLastname);
         $formattedTrainingTitle = $this->formatTrainingTitle($trainingTitle);
-        
+
         // Récupérer l'extension du fichier
         $extension = $file->getClientOriginalExtension();
-        
+
         // Format : [prenom-coworker]-[nom-coworker]-[nom-training]-[timestamp].[extension]
         return "{$formattedFirstname}-{$formattedLastname}-{$formattedTrainingTitle}-{$timestamp}.{$extension}";
     }
@@ -124,19 +124,19 @@ class CertificateTrainingDocumentService
     {
         // Convertir en minuscules
         $formatted = strtolower($name);
-        
+
         // Remplacer les espaces par des tirets
         $formatted = str_replace(' ', '-', $formatted);
-        
+
         // Supprimer les caractères spéciaux (garder seulement lettres, chiffres et tirets)
         $formatted = preg_replace('/[^a-z0-9\-]/', '', $formatted);
-        
+
         // Supprimer les tirets multiples consécutifs
         $formatted = preg_replace('/-+/', '-', $formatted);
-        
+
         // Supprimer les tirets en début et fin
         $formatted = trim($formatted, '-');
-        
+
         return $formatted;
     }
 
@@ -147,19 +147,19 @@ class CertificateTrainingDocumentService
     {
         // Convertir en minuscules
         $formatted = strtolower($title);
-        
+
         // Remplacer les espaces et les points par des tirets
         $formatted = str_replace([' ', '.'], '-', $formatted);
-        
+
         // Supprimer les caractères spéciaux (garder seulement lettres, chiffres et tirets)
         $formatted = preg_replace('/[^a-z0-9\-]/', '', $formatted);
-        
+
         // Supprimer les tirets multiples consécutifs
         $formatted = preg_replace('/-+/', '-', $formatted);
-        
+
         // Supprimer les tirets en début et fin
         $formatted = trim($formatted, '-');
-        
+
         return $formatted;
     }
 

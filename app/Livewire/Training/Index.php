@@ -2,12 +2,11 @@
 
 namespace App\Livewire\Training;
 
-use Livewire\Component;
 use App\Models\Client;
+use Livewire\Component;
 
 class Index extends Component
 {
-
     public $clients;
 
     public function mount()

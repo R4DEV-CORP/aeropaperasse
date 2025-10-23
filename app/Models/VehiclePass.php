@@ -25,7 +25,7 @@ class VehiclePass extends Model
     ];
 
     protected $casts = [
-        'pending' => 'datetime',    
+        'pending' => 'datetime',
         'rejected' => 'datetime',
         'approved' => 'datetime',
     ];

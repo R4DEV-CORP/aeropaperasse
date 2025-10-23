@@ -2,13 +2,14 @@
 
 namespace App\Livewire\Coworkers;
 
-use Livewire\Component;
 use App\Models\Coworker;
 use Livewire\Attributes\On;
+use Livewire\Component;
 
 class Index extends Component
 {
     public $search = '';
+
     public $selectedCoworkerId = null;
 
     private function loadCoworkers()
@@ -16,17 +17,17 @@ class Index extends Component
         $query = Coworker::with(['client', 'user']);
 
         // Filtrage par client si l'utilisateur n'est pas admin
-        if (!auth()->user()->isAdmin()) {
+        if (! auth()->user()->isAdmin()) {
             $query->where('client_id', auth()->user()->client_id);
         }
 
         // Filtrage par recherche
-        if (!empty($this->search)) {
+        if (! empty($this->search)) {
             $query->where(function ($q) {
-                $q->where('firstname', 'like', '%' . $this->search . '%')
-                  ->orWhere('lastname', 'like', '%' . $this->search . '%')
-                  ->orWhere('email', 'like', '%' . $this->search . '%')
-                  ->orWhere('phone', 'like', '%' . $this->search . '%');
+                $q->where('firstname', 'like', '%'.$this->search.'%')
+                    ->orWhere('lastname', 'like', '%'.$this->search.'%')
+                    ->orWhere('email', 'like', '%'.$this->search.'%')
+                    ->orWhere('phone', 'like', '%'.$this->search.'%');
             });
         }
 

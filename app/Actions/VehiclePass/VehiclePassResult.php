@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Actions\BadgeRequest;
+namespace App\Actions\VehiclePass;
 
-use App\Models\BadgeRequest;
+use App\Models\VehiclePass;
 
 /**
- * Classe de résultat unifiée pour toutes les opérations sur les demandes de badge
+ * Classe de résultat unifiée pour toutes les opérations sur les laissez-passer véhicule
  */
-class BadgeRequestResult
+class VehiclePassResult
 {
     public function __construct(
         public bool $success,
-        public ?BadgeRequest $badgeRequest,
+        public ?VehiclePass $vehiclePass,
         public string $message,
         public ?string $operation = null // 'create', 'update', 'draft'
     ) {}
@@ -33,11 +33,11 @@ class BadgeRequestResult
     }
 
     /**
-     * Retourne la demande de badge
+     * Retourne le laissez-passer véhicule
      */
-    public function getBadgeRequest(): ?BadgeRequest
+    public function getVehiclePass(): ?VehiclePass
     {
-        return $this->badgeRequest;
+        return $this->vehiclePass;
     }
 
     /**
@@ -49,8 +49,8 @@ class BadgeRequestResult
             'success' => $this->success,
             'message' => $this->message,
             'operation' => $this->operation,
-            'badge_request_id' => $this->badgeRequest?->id,
-            'status' => $this->badgeRequest?->status,
+            'vehicle_pass_id' => $this->vehiclePass?->id,
+            'status' => $this->vehiclePass?->status,
         ];
     }
 
@@ -58,13 +58,13 @@ class BadgeRequestResult
      * Créer un résultat de succès
      */
     public static function success(
-        BadgeRequest $badgeRequest,
+        VehiclePass $vehiclePass,
         string $message,
         ?string $operation = null
     ): self {
         return new self(
             success: true,
-            badgeRequest: $badgeRequest,
+            vehiclePass: $vehiclePass,
             message: $message,
             operation: $operation
         );
@@ -79,7 +79,7 @@ class BadgeRequestResult
     ): self {
         return new self(
             success: false,
-            badgeRequest: null,
+            vehiclePass: null,
             message: $message,
             operation: $operation
         );

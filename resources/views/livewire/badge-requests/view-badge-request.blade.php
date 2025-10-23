@@ -68,6 +68,8 @@
                 <flux:callout.heading>Voir la demande d'activité liée à cette demande de badge.</flux:callout.heading>
                 <x-slot name="actions">
                     <flux:button 
+                        href="/activity-requests"
+                        wire:navigate
                         icon:trailing="arrow-top-right-on-square" 
                     >
                         Voir la demande d'activité

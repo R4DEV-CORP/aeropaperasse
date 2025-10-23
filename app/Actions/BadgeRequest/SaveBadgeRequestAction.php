@@ -201,4 +201,3 @@ class SaveBadgeRequestAction
         return $baseMessage.' : '.$e->getMessage();
     }
 }
-

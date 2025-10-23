@@ -21,8 +21,8 @@ class CreateBadgeRequestData
         public ?UploadedFile $invoice_document,
 
         // Flags
-        public bool $application_authorization = false,
-        public bool $validate_training = false,
+        public bool $application_authorization,
+        public bool $validate_training,
 
         // Metadata
         public int $client_id,
@@ -143,4 +143,3 @@ class CreateBadgeRequestData
         return ! empty($this->getDocuments());
     }
 }
-

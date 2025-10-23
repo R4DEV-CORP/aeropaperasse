@@ -2,8 +2,8 @@
 
 namespace App\Forms;
 
-use Illuminate\Http\UploadedFile;
 use App\Models\BadgeRequest;
+use Illuminate\Http\UploadedFile;
 
 /**
  * Encapsule les données du formulaire de demande de badge
@@ -150,4 +150,3 @@ class BadgeRequestFormData
         ];
     }
 }
-

@@ -34,17 +34,13 @@
                 <flux:error>{{ $message }}</flux:error>
             @enderror
         </flux:field>
-    @endif
 
-    <div class="mt-6 flex justify-end gap-3">
-        <flux:button type="button" variant="subtle" wire:click="$dispatch('close-modal', { name: 'edit-badge-expiry-date-{{ $badge->id }}' })">
-            Annuler
-        </flux:button>
-        <flux:button type="submit" variant="primary" wire:loading.attr="disabled">
-            <span wire:loading.remove>Modifier la date</span>
-            <span wire:loading>Modification...</span>
-        </flux:button>
-    </div>
+        <div class="flex gap-2 mt-4">
+            <flux:button wire:click="closeModal">Annuler</flux:button>
+            <flux:spacer />
+            <flux:button type="submit" icon="pencil" variant="primary" wire:loading.attr="disabled" wire:target="editExpiryDate">Modifier la date</flux:button>
+        </div>
+    @endif
 </form>
 
 <script>

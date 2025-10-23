@@ -126,12 +126,12 @@ class ClientValidator
     public static function getUpdateRules(): array
     {
         $rules = self::getRules();
-        
+
         // Rendre les documents optionnels pour la mise à jour
         $rules['kbis_document'] = 'nullable|file|mimes:pdf|max:8192';
         $rules['safety_document'] = 'nullable|file|mimes:pdf|max:8192';
         $rules['security_document'] = 'nullable|file|mimes:pdf|max:8192';
-        
+
         return $rules;
     }
 

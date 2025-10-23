@@ -36,7 +36,7 @@ class UpdateClientAction
 
                 // 2. Gérer les documents s'ils sont fournis
                 $documents = $this->getDocumentsFromFormData($formData);
-                if (!empty($documents)) {
+                if (! empty($documents)) {
                     $storedDocuments = $this->documentService->storeDocuments($documents, $formData['company_name']);
                     $clientData = array_merge($clientData, $storedDocuments);
                 }
@@ -51,7 +51,7 @@ class UpdateClientAction
                 Log::info('Client mis à jour avec succès', [
                     'client_id' => $client->id,
                     'company_name' => $client->company_name,
-                    'documents_updated' => !empty($documents),
+                    'documents_updated' => ! empty($documents),
                     'contacts_updated' => true,
                 ]);
 
@@ -73,7 +73,7 @@ class UpdateClientAction
             return new UpdateClientResult(
                 success: false,
                 client: null,
-                message: 'Erreur lors de la mise à jour du client : ' . $e->getMessage()
+                message: 'Erreur lors de la mise à jour du client : '.$e->getMessage()
             );
         }
     }
@@ -85,13 +85,13 @@ class UpdateClientAction
     {
         $documents = [];
 
-        if (!empty($formData['kbis_document'])) {
+        if (! empty($formData['kbis_document'])) {
             $documents['kbis_document'] = $formData['kbis_document'];
         }
-        if (!empty($formData['safety_document'])) {
+        if (! empty($formData['safety_document'])) {
             $documents['safety_document'] = $formData['safety_document'];
         }
-        if (!empty($formData['security_document'])) {
+        if (! empty($formData['security_document'])) {
             $documents['security_document'] = $formData['security_document'];
         }
 
@@ -110,7 +110,7 @@ class UpdateClientAction
         $contacts = [];
 
         // Référent sûreté 1 (obligatoire)
-        if (!empty($formData['safety_referent_1_prenom']) && !empty($formData['safety_referent_1_nom'])) {
+        if (! empty($formData['safety_referent_1_prenom']) && ! empty($formData['safety_referent_1_nom'])) {
             $contacts[] = [
                 'firstname' => $formData['safety_referent_1_prenom'],
                 'lastname' => $formData['safety_referent_1_nom'],
@@ -121,7 +121,7 @@ class UpdateClientAction
         }
 
         // Référent sûreté 2 (optionnel)
-        if (!empty($formData['safety_referent_2_prenom']) && !empty($formData['safety_referent_2_nom'])) {
+        if (! empty($formData['safety_referent_2_prenom']) && ! empty($formData['safety_referent_2_nom'])) {
             $contacts[] = [
                 'firstname' => $formData['safety_referent_2_prenom'],
                 'lastname' => $formData['safety_referent_2_nom'],
@@ -132,7 +132,7 @@ class UpdateClientAction
         }
 
         // Référent sûreté 3 (optionnel)
-        if (!empty($formData['safety_referent_3_prenom']) && !empty($formData['safety_referent_3_nom'])) {
+        if (! empty($formData['safety_referent_3_prenom']) && ! empty($formData['safety_referent_3_nom'])) {
             $contacts[] = [
                 'firstname' => $formData['safety_referent_3_prenom'],
                 'lastname' => $formData['safety_referent_3_nom'],
@@ -143,7 +143,7 @@ class UpdateClientAction
         }
 
         // Correspondant sécurité (obligatoire)
-        if (!empty($formData['security_correspondent_prenom']) && !empty($formData['security_correspondent_nom'])) {
+        if (! empty($formData['security_correspondent_prenom']) && ! empty($formData['security_correspondent_nom'])) {
             $contacts[] = [
                 'firstname' => $formData['security_correspondent_prenom'],
                 'lastname' => $formData['security_correspondent_nom'],
@@ -154,7 +154,7 @@ class UpdateClientAction
         }
 
         // Contact RH (obligatoire)
-        if (!empty($formData['hr_contact_prenom']) && !empty($formData['hr_contact_nom'])) {
+        if (! empty($formData['hr_contact_prenom']) && ! empty($formData['hr_contact_nom'])) {
             $contacts[] = [
                 'firstname' => $formData['hr_contact_prenom'],
                 'lastname' => $formData['hr_contact_nom'],

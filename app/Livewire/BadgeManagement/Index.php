@@ -14,7 +14,7 @@ class Index extends Component
 
     protected $listeners = [
         'badge-created' => 'refreshBadges',
-        'badge-expiry-date-updated' => 'refreshBadges'
+        'badge-expiry-date-updated' => 'refreshBadges',
     ];
 
     private function loadBadges()
@@ -62,9 +62,9 @@ class Index extends Component
                     $subQuery->where('firstname', 'like', "%{$searchTerm}%")
                         ->orWhere('lastname', 'like', "%{$searchTerm}%");
                 })
-                ->orWhereHas('badgeRequest.activityRequest.client', function ($subQuery) use ($searchTerm) {
-                    $subQuery->where('company_name', 'like', "%{$searchTerm}%");
-                });
+                    ->orWhereHas('badgeRequest.activityRequest.client', function ($subQuery) use ($searchTerm) {
+                        $subQuery->where('company_name', 'like', "%{$searchTerm}%");
+                    });
             });
         }
 
@@ -77,7 +77,7 @@ class Index extends Component
     private function checkAndUpdateExpiredBadges()
     {
         $today = now()->toDateString();
-        
+
         // Trouver tous les badges actifs dont la date d'expiration est dépassée
         $expiredBadges = Badge::where('status', 'active')
             ->where('expiry_date', '<', $today)
@@ -112,11 +112,11 @@ class Index extends Component
             $badge->returned_at = now();
             $badge->save();
 
-            \Log::info("Badge {$badgeId} marqué comme retourné par l'utilisateur " . auth()->id());
+            \Log::info("Badge {$badgeId} marqué comme retourné par l'utilisateur ".auth()->id());
             session()->flash('success', 'Le badge a été marqué comme retourné avec succès.');
-            
+
         } catch (\Exception $e) {
-            \Log::error("Erreur lors du retour du badge {$badgeId}: " . $e->getMessage());
+            \Log::error("Erreur lors du retour du badge {$badgeId}: ".$e->getMessage());
             session()->flash('error', 'Une erreur est survenue lors de la mise à jour du badge.');
         }
     }
@@ -135,11 +135,11 @@ class Index extends Component
             $badge->returned_at = null; // Réinitialiser la date de retour
             $badge->save();
 
-            \Log::info("Badge {$badgeId} marqué comme non retourné par l'utilisateur " . auth()->id());
+            \Log::info("Badge {$badgeId} marqué comme non retourné par l'utilisateur ".auth()->id());
             session()->flash('success', 'Le badge a été marqué comme non retourné avec succès.');
-            
+
         } catch (\Exception $e) {
-            \Log::error("Erreur lors de la mise à jour du badge {$badgeId}: " . $e->getMessage());
+            \Log::error("Erreur lors de la mise à jour du badge {$badgeId}: ".$e->getMessage());
             session()->flash('error', 'Une erreur est survenue lors de la mise à jour du badge.');
         }
     }

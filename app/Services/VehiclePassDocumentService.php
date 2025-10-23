@@ -2,19 +2,19 @@
 
 namespace App\Services;
 
-use App\Models\BadgeRequest;
 use App\Models\Client;
+use App\Models\VehiclePass;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 
-class BadgeRequestDocumentService
+class VehiclePassDocumentService
 {
     /**
-     * Stock les documents de la demande de badge dans le dossier du client
+     * Stock les documents du laissez-passer véhicule dans le dossier du client
      */
-    public function storeDocuments(array $documents, Client $client, int $badgeRequestId): array
+    public function storeDocuments(array $documents, Client $client, int $vehiclePassId): array
     {
         $storedDocuments = [];
 
@@ -27,7 +27,7 @@ class BadgeRequestDocumentService
                     $file,
                     $documentType,
                     $clientFolderName,
-                    $badgeRequestId
+                    $vehiclePassId
                 );
             }
         }
@@ -36,19 +36,19 @@ class BadgeRequestDocumentService
     }
 
     /**
-     * Stock UN document dans le dossier de la demande de badge du client
+     * Stock UN document dans le dossier du laissez-passer véhicule du client
      */
     protected function storeDocument(
         UploadedFile $file,
         string $documentType,
         string $clientFolderName,
-        int $badgeRequestId
+        int $vehiclePassId
     ): string {
         // Générer un nom de fichier
         $filename = $this->generateFilename($file, $documentType, $clientFolderName);
 
-        // Définir le chemin de stockage : storage/public/clients/[nom-client]/documents/badge-requests/[id]/
-        $path = "clients/{$clientFolderName}/documents/badge-requests/{$badgeRequestId}";
+        // Définir le chemin de stockage : storage/public/clients/[nom-client]/documents/vehicle-pass/[id]/
+        $path = "clients/{$clientFolderName}/documents/vehicle-pass/{$vehiclePassId}";
 
         // Stocker le fichier
         $storedPath = $file->storeAs($path, $filename, 'public');
@@ -61,9 +61,9 @@ class BadgeRequestDocumentService
     }
 
     /**
-     * Générer le nom du dossier client (même logique que ClientDocumentService)
+     * Générer le nom du dossier client (même logique que les autres services)
      */
-    protected function generateClientFolderName(string $companyName): string
+    public function generateClientFolderName(string $companyName): string
     {
         // Convertir en minuscules
         $folderName = strtolower($companyName);
@@ -84,36 +84,31 @@ class BadgeRequestDocumentService
     }
 
     /**
-     * Génère un nom de fichier : [type-document]-[nom-entreprise]-[timestamp].extension
+     * Génère un nom de fichier : [type-document]-[nom-entreprise]-[timestamp].pdf
      */
     protected function generateFilename(UploadedFile $file, string $documentType, string $clientFolderName): string
     {
         $timestamp = now()->timestamp;
-        $extension = $file->getClientOriginalExtension();
 
-        // Format : [type-document]-[nom-entreprise]-[timestamp].extension
-        return "{$documentType}-{$clientFolderName}-{$timestamp}.{$extension}";
+        // Format : [type-document]-[nom-entreprise]-[timestamp].pdf
+        return "{$documentType}-{$clientFolderName}-{$timestamp}.pdf";
     }
 
     /**
-     * Créer un fichier ZIP contenant tous les documents d'une demande de badge
+     * Créer un fichier ZIP contenant tous les documents d'un laissez-passer véhicule
      *
      * @return string|null Le chemin du fichier ZIP créé, ou null si aucun document n'est disponible
      */
-    public function createDocumentsZip(BadgeRequest $badgeRequest): ?string
+    public function createDocumentsZip(VehiclePass $vehiclePass): ?string
     {
         // Types de documents à inclure dans le ZIP
         $documentTypes = [
-            'selfie_photo' => 'photo-selfie',
-            'identification_card' => 'carte-identite',
-            'activity_authorization' => 'autorisation-activite',
-            'for_document' => 'document-for',
-            'formation_certificate_document' => 'certificat-formation',
-            'invoice_document' => 'facture',
+            'certificate_of_registration' => 'certificat-immatriculation',
+            'company_stamp' => 'tampon-entreprise',
         ];
 
         // Créer un nom de fichier pour le ZIP
-        $zipFileName = 'demande-badge-'.$badgeRequest->id.'-'.now()->timestamp.'.zip';
+        $zipFileName = 'laissez-passer-vehicule-'.$vehiclePass->id.'-'.now()->timestamp.'.zip';
         $zipPath = storage_path('app/temp/'.$zipFileName);
 
         // Créer le dossier temp s'il n'existe pas
@@ -134,8 +129,8 @@ class BadgeRequestDocumentService
 
         // Ajouter chaque document au ZIP s'il existe
         foreach ($documentTypes as $field => $friendlyName) {
-            if (! empty($badgeRequest->$field) && $disk->exists($badgeRequest->$field)) {
-                $filePath = $disk->path($badgeRequest->$field);
+            if (! empty($vehiclePass->$field) && $disk->exists($vehiclePass->$field)) {
+                $filePath = $disk->path($vehiclePass->$field);
                 $extension = pathinfo($filePath, PATHINFO_EXTENSION);
                 $zipEntryName = $friendlyName.'.'.$extension;
 
@@ -152,18 +147,21 @@ class BadgeRequestDocumentService
             if (file_exists($zipPath)) {
                 unlink($zipPath);
             }
-            Log::info('Service - Aucun document disponible pour créer le ZIP', ['badge_request_id' => $badgeRequest->id]);
+            Log::info('Service - Aucun document disponible pour créer le ZIP', ['vehicle_pass_id' => $vehiclePass->id]);
 
             return null;
         }
 
-        Log::info('Service - ZIP créé avec succès', ['badge_request_id' => $badgeRequest->id, 'path' => $zipPath]);
+        Log::info('Service - ZIP créé avec succès', ['vehicle_pass_id' => $vehiclePass->id, 'path' => $zipPath]);
 
         return $zipPath;
     }
 
-    public function getDocumentPath(BadgeRequest $badgeRequest, string $documentType): ?string
+    /**
+     * Retourne le chemin d'un document spécifique
+     */
+    public function getDocumentPath(VehiclePass $vehiclePass, string $documentType): ?string
     {
-        return $badgeRequest->$documentType;
+        return $vehiclePass->$documentType;
     }
 }

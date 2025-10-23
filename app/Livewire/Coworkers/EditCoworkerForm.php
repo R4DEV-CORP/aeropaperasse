@@ -2,33 +2,40 @@
 
 namespace App\Livewire\Coworkers;
 
-use Livewire\Component;
 use App\Models\Coworker;
-use App\Models\User;
 use App\Validators\CoworkerValidator;
 use Illuminate\Support\Facades\Log;
-use Flux;
+use Livewire\Component;
 
 class EditCoworkerForm extends Component
 {
     public $coworkerId;
+
     public $coworker;
+
     public $user;
+
     public $client;
 
     // Messages
     public $errorMessage;
+
     public $successMessage;
 
     // Données du formulaire
     public $firstname;
+
     public $lastname;
+
     public $email;
+
     public $phone;
-    
+
     // Données utilisateur (si existe)
     public $has_user_account = false;
+
     public $can_access_formation = false;
+
     public $role = 'client';
 
     // État du formulaire
@@ -38,14 +45,14 @@ class EditCoworkerForm extends Component
     {
         $this->coworkerId = $coworkerId;
         $this->user = auth()->user();
-        
+
         // Charger le collaborateur avec ses relations
         $this->coworker = Coworker::with(['user', 'client'])->findOrFail($coworkerId);
         $this->client = $this->coworker->client;
-        
+
         // Pré-remplir le formulaire
         $this->loadCoworkerData();
-        
+
         // Réinitialiser les messages
         $this->clearMessages();
     }
@@ -56,7 +63,7 @@ class EditCoworkerForm extends Component
         $this->lastname = $this->coworker->lastname;
         $this->email = $this->coworker->email;
         $this->phone = $this->coworker->phone;
-        
+
         // Si le collaborateur a un compte utilisateur
         if ($this->coworker->user_id) {
             $this->has_user_account = true;
@@ -64,7 +71,6 @@ class EditCoworkerForm extends Component
             $this->role = $this->coworker->user->role;
         }
     }
-
 
     public function submit()
     {
@@ -75,10 +81,11 @@ class EditCoworkerForm extends Component
             // Validation avec CoworkerValidator
             $validationData = $this->getValidationData();
             $validator = CoworkerValidator::validateUpdate($validationData, $this->coworkerId);
-            
+
             if ($validator->fails()) {
                 // Afficher la première erreur
                 $this->errorMessage = $validator->errors()->first();
+
                 return;
             }
 
@@ -95,15 +102,15 @@ class EditCoworkerForm extends Component
                 $this->coworker->user->update([
                     'can_access_formation' => $this->can_access_formation,
                     'role' => $this->role,
-                    'name' => $this->firstname . ' ' . $this->lastname,
+                    'name' => $this->firstname.' '.$this->lastname,
                 ]);
             }
 
             $this->successMessage = 'Le collaborateur a été modifié avec succès.';
-            
+
             // Fermer la modal
             $this->dispatch('close-modal', name: 'edit-coworker-'.$this->coworkerId);
-            
+
             // Émettre un événement pour rafraîchir la liste
             $this->dispatch('coworker-updated');
 
@@ -114,7 +121,7 @@ class EditCoworkerForm extends Component
                 'user_id' => $this->user->id,
                 'coworker_id' => $this->coworkerId,
             ]);
-            
+
             $this->errorMessage = 'Une erreur est survenue lors de la modification du collaborateur.';
         } finally {
             $this->isSubmitting = false;

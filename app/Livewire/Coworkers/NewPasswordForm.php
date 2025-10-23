@@ -2,26 +2,30 @@
 
 namespace App\Livewire\Coworkers;
 
-use Livewire\Component;
 use App\Models\Coworker;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Component;
 
 class NewPasswordForm extends Component
 {
     public $coworkerId;
+
     public $coworker;
+
     public $user;
+
     public $userAccount;
 
     // Messages
     public $errorMessage;
+
     public $successMessage;
 
     // Données du formulaire
     public $password;
+
     public $password_confirmation;
 
     // État du formulaire
@@ -31,18 +35,19 @@ class NewPasswordForm extends Component
     {
         $this->coworkerId = $coworkerId;
         $this->user = auth()->user();
-        
+
         // Charger le collaborateur avec ses relations
         $this->coworker = Coworker::with(['user'])->findOrFail($coworkerId);
-        
+
         // Vérifier que le collaborateur a un compte utilisateur
-        if (!$this->coworker->user_id) {
+        if (! $this->coworker->user_id) {
             $this->errorMessage = 'Ce collaborateur n\'a pas de compte utilisateur.';
+
             return;
         }
-        
+
         $this->userAccount = $this->coworker->user;
-        
+
         // Réinitialiser les messages
         $this->clearMessages();
     }
@@ -69,11 +74,11 @@ class NewPasswordForm extends Component
                 'is_new' => true,
             ]);
 
-            $this->successMessage = 'Le mot de passe a été réinitialisé avec succès pour ' . $this->coworker->firstname . ' ' . $this->coworker->lastname . '.';
-            
+            $this->successMessage = 'Le mot de passe a été réinitialisé avec succès pour '.$this->coworker->firstname.' '.$this->coworker->lastname.'.';
+
             // Fermer la modal
             $this->dispatch('close-modal', name: 'reset-password-'.$this->coworkerId);
-            
+
             // Émettre un événement pour rafraîchir la liste
             $this->dispatch('coworker-updated');
 
@@ -85,7 +90,7 @@ class NewPasswordForm extends Component
                 'coworker_id' => $this->coworkerId,
                 'target_user_id' => $this->userAccount->id,
             ]);
-            
+
             $this->errorMessage = 'Une erreur est survenue lors de la réinitialisation du mot de passe.';
         } finally {
             $this->isSubmitting = false;

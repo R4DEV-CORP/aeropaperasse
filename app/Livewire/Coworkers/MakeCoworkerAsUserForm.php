@@ -2,27 +2,33 @@
 
 namespace App\Livewire\Coworkers;
 
-use Livewire\Component;
 use App\Models\Coworker;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Component;
 
 class MakeCoworkerAsUserForm extends Component
 {
     public $coworkerId;
+
     public $coworker;
+
     public $user;
 
     // Messages
     public $errorMessage;
+
     public $successMessage;
 
     // Données du formulaire
     public $password;
+
     public $password_confirmation;
+
     public $can_access_formation = false;
+
     public $role = 'client';
 
     // État du formulaire
@@ -32,16 +38,17 @@ class MakeCoworkerAsUserForm extends Component
     {
         $this->coworkerId = $coworkerId;
         $this->user = auth()->user();
-        
+
         // Charger le collaborateur avec ses relations
         $this->coworker = Coworker::with(['client'])->findOrFail($coworkerId);
-        
+
         // Vérifier que le collaborateur n'a pas déjà un compte utilisateur
         if ($this->coworker->user_id) {
             $this->errorMessage = 'Ce collaborateur a déjà un compte utilisateur.';
+
             return;
         }
-        
+
         // Réinitialiser les messages
         $this->clearMessages();
     }
@@ -68,7 +75,7 @@ class MakeCoworkerAsUserForm extends Component
 
             // Créer l'utilisateur
             $newUser = User::create([
-                'name' => $this->coworker->firstname . ' ' . $this->coworker->lastname,
+                'name' => $this->coworker->firstname.' '.$this->coworker->lastname,
                 'email' => $this->coworker->email,
                 'password' => Hash::make($this->password),
                 'role' => $this->role,
@@ -83,11 +90,11 @@ class MakeCoworkerAsUserForm extends Component
                 'user_id' => $newUser->id,
             ]);
 
-            $this->successMessage = 'Le compte utilisateur a été créé avec succès pour ' . $this->coworker->firstname . ' ' . $this->coworker->lastname . '.';
-            
+            $this->successMessage = 'Le compte utilisateur a été créé avec succès pour '.$this->coworker->firstname.' '.$this->coworker->lastname.'.';
+
             // Fermer la modal
             $this->dispatch('close-modal', name: 'make-user-'.$this->coworkerId);
-            
+
             // Émettre un événement pour rafraîchir la liste
             $this->dispatch('coworker-updated');
 
@@ -98,7 +105,7 @@ class MakeCoworkerAsUserForm extends Component
                 'user_id' => $this->user->id,
                 'coworker_id' => $this->coworkerId,
             ]);
-            
+
             $this->errorMessage = 'Une erreur est survenue lors de la création du compte utilisateur.';
         } finally {
             $this->isSubmitting = false;

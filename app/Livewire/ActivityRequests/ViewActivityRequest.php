@@ -4,8 +4,8 @@ namespace App\Livewire\ActivityRequests;
 
 use App\Models\ActivityComment;
 use App\Services\ActivityRequestDocumentService;
-use Livewire\Component;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Component;
 
 class ViewActivityRequest extends Component
 {
@@ -64,7 +64,7 @@ class ViewActivityRequest extends Component
         }
 
         $disk = Storage::disk('public');
-        
+
         // Vérifier si le fichier existe
         if (! $disk->exists($relativePath)) {
             session()->flash('error', 'Le fichier n\'existe pas.');
@@ -74,7 +74,7 @@ class ViewActivityRequest extends Component
 
         // Obtenir le chemin absolu du fichier
         $absolutePath = $disk->path($relativePath);
-        
+
         // Récupérer le nom original du fichier
         $filename = basename($relativePath);
 

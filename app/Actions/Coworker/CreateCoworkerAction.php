@@ -3,9 +3,9 @@
 namespace App\Actions\Coworker;
 
 use App\DataTransferObjects\CreateCoworkerData;
+use App\Models\Client;
 use App\Models\Coworker;
 use App\Models\User;
-use App\Models\Client;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -55,8 +55,8 @@ class CreateCoworkerAction
     private function createUser(CreateCoworkerData $data): User
     {
         $userData = $data->getUserData();
-        
-        if (!$userData) {
+
+        if (! $userData) {
             throw new \Exception('Données utilisateur manquantes');
         }
 
@@ -72,7 +72,7 @@ class CreateCoworkerAction
     private function createCoworker(CreateCoworkerData $data, ?User $user): Coworker
     {
         $coworkerData = $data->getCoworkerData();
-        
+
         // Ajouter l'ID de l'utilisateur si créé
         if ($user) {
             $coworkerData['user_id'] = $user->id;
@@ -94,9 +94,9 @@ class CreateCoworkerAction
      * Log le succès de la création
      */
     private function logCreationSuccess(
-        Coworker $coworker, 
-        ?User $user, 
-        Client $client, 
+        Coworker $coworker,
+        ?User $user,
+        Client $client,
         CreateCoworkerData $data
     ): void {
         Log::info('Collaborateur créé avec succès', [
@@ -122,7 +122,7 @@ class CreateCoworkerAction
             'coworker_data' => $data->getLogData(),
         ]);
 
-        $message = 'Erreur lors de la création du collaborateur : ' . $e->getMessage();
+        $message = 'Erreur lors de la création du collaborateur : '.$e->getMessage();
 
         return CreateCoworkerResult::failure($message);
     }

@@ -3,14 +3,14 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\ActivityRequest;
 use App\Models\ActivityComment;
+use App\Models\ActivityRequest;
+use App\Models\BadgeRequest;
 use App\Models\Client;
 use App\Models\ContactClient;
-use App\Models\User;
 use App\Models\Coworker;
-use App\Models\BadgeRequest;
 use App\Models\Training;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -60,7 +60,6 @@ class DatabaseSeeder extends Seeder
         $userAdmin->coworker_id = $coworkerAdmin->id;
         $userAdmin->save();
 
-
         // Jeu de test avec 3 clients
         $clients = Client::factory()
             ->count(3)
@@ -73,7 +72,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Clément Richard',
                 'email' => 'sclient@r4web.fr',
             ]);
-        
+
         $coworker = Coworker::factory()
             ->for($user)
             ->for($clients[0])
@@ -83,27 +82,27 @@ class DatabaseSeeder extends Seeder
                 'email' => 'sclient@r4web.fr',
             ]);
 
-             // Training
+        // Training
         $training1 = Training::factory()
-                    ->create(['title' => '11.2.6.2 (ditTCA)']);
+            ->create(['title' => '11.2.6.2 (ditTCA)']);
         $training2 = Training::factory()
-                    ->create(['title' => '11.2.3.9']);
+            ->create(['title' => '11.2.3.9']);
         $training3 = Training::factory()
-                    ->create(['title' => '11.2.3.9 plus TCA']);
+            ->create(['title' => '11.2.3.9 plus TCA']);
         $training4 = Training::factory()
-                    ->create(['title' => '11.2.3.10']);
+            ->create(['title' => '11.2.3.10']);
         $training5 = Training::factory()
-                    ->create(['title' => '11.2.3.10 plus TCA']);
+            ->create(['title' => '11.2.3.10 plus TCA']);
         $training6 = Training::factory()
-                    ->create(['title' => 'Sécurité piétons']);
+            ->create(['title' => 'Sécurité piétons']);
         $training7 = Training::factory()
-                    ->create(['title' => 'Permis T']);
+            ->create(['title' => 'Permis T']);
         $training8 = Training::factory()
-                    ->create(['title' => 'Pratique permis T']);
+            ->create(['title' => 'Pratique permis T']);
         $training9 = Training::factory()
-                    ->create(['title' => 'Facteur humain']);
+            ->create(['title' => 'Facteur humain']);
         $training10 = Training::factory()
-                    ->create(['title' => 'Co activité']);
+            ->create(['title' => 'Co activité']);
 
         foreach ($clients as $client) {
 
@@ -130,7 +129,7 @@ class DatabaseSeeder extends Seeder
                 ->count(2)
                 ->create();
 
-            foreach($coworkers as $coworker) {
+            foreach ($coworkers as $coworker) {
                 $coworker->trainings()->attach($training1->id, ['started_at' => now(), 'expires_at' => now()->addYears(5)]);
                 $coworker->save();
 
@@ -146,8 +145,8 @@ class DatabaseSeeder extends Seeder
                 ->for($user, 'creator')
                 ->count(5)
                 ->create();
-            
-            foreach($activityRequests as $activityRequest) {
+
+            foreach ($activityRequests as $activityRequest) {
                 ActivityComment::factory()
                     ->for($activityRequest)
                     ->for($user)

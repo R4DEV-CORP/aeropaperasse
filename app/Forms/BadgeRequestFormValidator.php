@@ -76,4 +76,3 @@ class BadgeRequestFormValidator
         return ! $validator->fails();
     }
 }
-

@@ -87,3 +87,12 @@ Route::get('/trainings', function () {
 Route::get('/trainings/client/{slug}', function ($slug) {
     return view('trainings.client', ['slug' => $slug]);
 })->middleware('auth');
+
+/*
+*
+* Routes vehicle passes
+*/
+
+Route::get('/vehicle-pass', function () {
+    return view('vehicle-pass.index');
+})->middleware('auth');

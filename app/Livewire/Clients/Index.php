@@ -14,7 +14,7 @@ class Index extends Component
 
     public function developpeClient(int $clientId)
     {
-        if($this->openClientId == $clientId) {
+        if ($this->openClientId == $clientId) {
             $this->openClientId = null;
         } else {
             $this->openClientId = $clientId;

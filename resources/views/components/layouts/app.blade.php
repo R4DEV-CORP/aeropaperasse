@@ -26,7 +26,7 @@
                 <flux:sidebar.item icon="document-text" href="/activity-requests" wire:navigate>Demande d'activité</flux:sidebar.item>
                 <flux:sidebar.item icon="identification" href="/badge-requests" wire:navigate>Demande de badge</flux:sidebar.item>
                 <flux:sidebar.item icon="rectangle-stack" href="/badge-management" wire:navigate>Suivi des badges</flux:sidebar.item>
-                <flux:sidebar.item icon="hand-raised" href="#" wire:navigate>Laissez-passer</flux:sidebar.item>
+                <flux:sidebar.item icon="hand-raised" href="/vehicle-pass" wire:navigate>Laissez-passer</flux:sidebar.item>
                 <flux:sidebar.item icon="academic-cap" href="/trainings" wire:navigate>Formations</flux:sidebar.item>
                 <flux:sidebar.item icon="building-office" href="/clients" wire:navigate>Sociétés</flux:sidebar.item>
                 <flux:sidebar.item icon="users" href="/coworkers" wire:navigate>Collaborateurs & utilisateurs</flux:sidebar.item>

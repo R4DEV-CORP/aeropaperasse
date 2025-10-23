@@ -2,15 +2,14 @@
 
 namespace App\Livewire\Clients;
 
-use Livewire\Component;
 use App\Models\Client;
+use Livewire\Component;
 
 class ViewClient extends Component
 {
-
     public string $slug;
 
-    public function mount(string $slug) : void
+    public function mount(string $slug): void
     {
         $this->slug = $slug;
 

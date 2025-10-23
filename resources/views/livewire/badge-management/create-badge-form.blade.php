@@ -71,14 +71,11 @@
                 <flux:input wire:model.live="expiry_date" type="date" />
             </flux:field>
             
-            <div class="mt-6 flex justify-end">
-                <flux:button type="submit" 
-                            variant="primary"
-                            wire:loading.attr="disabled"
-                            wire:target="createBadge">
-                    <span wire:loading.remove wire:target="createBadge">Créer le badge</span>
-                    <span wire:loading wire:target="createBadge">Création en cours...</span>
-                </flux:button>
+            <!-- Actions -->
+            <div class="flex gap-2 mt-4">
+                <flux:button wire:click="closeModal">Annuler</flux:button>
+                <flux:spacer />
+                <flux:button type="submit" icon="plus" variant="primary" wire:loading.attr="disabled" wire:target="createBadge">Créer le badge</flux:button>
             </div>
         </div>
     @endif

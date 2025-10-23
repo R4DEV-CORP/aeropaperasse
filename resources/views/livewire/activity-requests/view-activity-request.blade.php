@@ -46,29 +46,37 @@
     </div>
 
     <div class="border border-gray-800/10 p-4 rounded-lg">
-        <div>
-            <flux:heading size="lg">Informations sur l'activité</flux:heading>
-            <div class="mt-2">
-                <p class="text-gray-800 font-medium mt-2">Description</p>
-                <flux:text>{{ $activityRequest->description }}</flux:text>
-                <p class="text-gray-800 font-medium mt-2">Nombre de personnes</p>
-                <flux:text>{{ $activityRequest->person_count }}</flux:text>
-                <p class="text-gray-800 font-medium mt-2">Nombre de véhicules</p>
-                <flux:text>{{ $activityRequest->vehicule_count }}</flux:text>
-                <p class="text-gray-800 font-medium mt-2">Denomination des clients</p>
-                <flux:text>{{ $activityRequest->customer_names }}</flux:text>
-                <p class="text-gray-800 font-medium mt-2">Aéroport</p>
-                @switch($activityRequest->airport)
-                    @case('CDG')
-                        <flux:badge color="cyan" size="sm">CDG</flux:badge>
-                        @break
-                    @case('ORY')
-                        <flux:badge color="violet" size="sm">ORY</flux:badge>
-                        @break
-                    @case('LBG')
-                        <flux:badge color="lime" size="sm">LBG</flux:badge>
-                        @break
-                @endswitch
+        <flux:heading size="lg">Informations sur l'activité</flux:heading>
+        <div class="mt-2">
+            <p class="text-gray-800 font-medium mt-2">Description</p>
+            <flux:text>{{ $activityRequest->description }}</flux:text>
+            <div class="grid grid-cols-4 gap-2 mt-2">
+                <div>
+                    <p class="text-gray-800 font-medium mt-2">Nombre de personnes</p>
+                    <flux:text>{{ $activityRequest->person_count }}</flux:text>
+                </div>
+                <div>
+                    <p class="text-gray-800 font-medium mt-2">Nombre de véhicules</p>
+                    <flux:text>{{ $activityRequest->vehicule_count }}</flux:text>
+                </div>
+                <div>
+                    <p class="text-gray-800 font-medium mt-2">Denomination des clients</p>
+                    <flux:text>{{ $activityRequest->customer_names }}</flux:text>
+                </div>
+                <div>
+                    <p class="text-gray-800 font-medium mt-2">Aéroport</p>
+                    @switch($activityRequest->airport)
+                        @case('CDG')
+                            <flux:badge color="cyan" size="sm">CDG</flux:badge>
+                            @break
+                        @case('ORY')
+                            <flux:badge color="violet" size="sm">ORY</flux:badge>
+                            @break
+                        @case('LBG')
+                            <flux:badge color="lime" size="sm">LBG</flux:badge>
+                            @break
+                    @endswitch
+                </div>
             </div>
         </div>
     </div>

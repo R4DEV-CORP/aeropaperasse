@@ -2,17 +2,17 @@
 
 namespace App\Livewire\BadgeRequests;
 
-use Livewire\Component;
-use Livewire\Attributes\On;
-use Livewire\WithPagination;
-use Livewire\WithoutUrlPagination;
 use App\Models\Badge;
 use App\Models\BadgeRequest;
 use App\Services\BadgeRequestDocumentService;
+use Livewire\Attributes\On;
+use Livewire\Component;
+use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination, WithoutUrlPagination;
+    use WithoutUrlPagination, WithPagination;
 
     public string $search = '';
 
@@ -24,10 +24,10 @@ class Index extends Component
     {
         // Compter les badges via les relations : Badge -> BadgeRequest -> ActivityRequest -> client_id
         $this->badgeCount = Badge::where('status', '!=', 'returned')
-                                ->whereHas('badgeRequest.activityRequest', function ($query) {
-                                    $query->where('client_id', auth()->user()->client_id);
-                                })
-                                ->count();
+            ->whereHas('badgeRequest.activityRequest', function ($query) {
+                $query->where('client_id', auth()->user()->client_id);
+            })
+            ->count();
 
         $this->client = auth()->user()->client;
     }
@@ -83,7 +83,7 @@ class Index extends Component
         $query = BadgeRequest::with('activityRequest')
             ->where('status', 'draft');
 
-        /// Si l'utilisateur n'est pas admin, filtrer par client_id de l'ActivityRequest liée
+        // / Si l'utilisateur n'est pas admin, filtrer par client_id de l'ActivityRequest liée
         if (! auth()->user()->isAdmin()) {
             $query->whereHas('activityRequest', function ($q) {
                 $q->where('client_id', auth()->user()->client_id);
@@ -101,7 +101,7 @@ class Index extends Component
                     ->select('badge_requests.*', 'coworkers.firstname as firstname', 'coworkers.lastname as lastname', 'coworkers.email as email')
                     ->where('badge_requests.status', '!=', 'draft');
 
-                /// Si l'utilisateur n'est pas admin, filtrer par client_id de l'ActivityRequest liée
+                // / Si l'utilisateur n'est pas admin, filtrer par client_id de l'ActivityRequest liée
                 if (! auth()->user()->isAdmin()) {
                     $query->whereHas('activityRequest', function ($q) {
                         $q->where('client_id', auth()->user()->client_id);
@@ -342,6 +342,7 @@ class Index extends Component
 
         $draftBadgeRequests = $this->loadDraftBadgeRequests();
         $statistics = $this->getStatistics();
+
         return view('livewire.badge-requests.index', [
             'badgeRequests' => $badgeRequests,
             'draftBadgeRequests' => $draftBadgeRequests,

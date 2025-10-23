@@ -2,36 +2,49 @@
 
 namespace App\Livewire\Coworkers;
 
-use Livewire\Component;
+use App\Actions\Coworker\CreateCoworkerAction;
+use App\DataTransferObjects\CreateCoworkerData;
 use App\Models\Client;
 use App\Validators\CoworkerValidator;
-use App\DataTransferObjects\CreateCoworkerData;
-use App\Actions\Coworker\CreateCoworkerAction;
 use Illuminate\Support\Facades\Log;
-use Flux;
+use Livewire\Component;
 
 class CreateCoworkerForm extends Component
 {
     public $user;
+
     public $client;
+
     public $allClients;
+
     public $selected_client_id;
 
     // Messages
     public $errorMessage;
+
     public $successMessage;
 
     // Données du formulaire
     public $create_user = false;
+
     public $firstname;
+
     public $lastname;
+
     public $email;
+
     public $phone;
+
     public $can_access_formation = false;
+
     public $has_leave = false;
+
     public $departure_date;
+
     public $password;
+
     public $password_confirmation;
+
     public $role = 'client';
 
     // État du formulaire
@@ -61,7 +74,7 @@ class CreateCoworkerForm extends Component
     public function updatedCreateUser()
     {
         // Réinitialiser les champs de mot de passe quand on change l'option
-        if (!$this->create_user) {
+        if (! $this->create_user) {
             $this->password = '';
             $this->password_confirmation = '';
         }
@@ -70,7 +83,7 @@ class CreateCoworkerForm extends Component
     public function updatedHasLeave()
     {
         // Réinitialiser la date de départ si on désactive le départ
-        if (!$this->has_leave) {
+        if (! $this->has_leave) {
             $this->departure_date = null;
         }
     }
@@ -84,10 +97,11 @@ class CreateCoworkerForm extends Component
             // Validation avec CoworkerValidator uniquement
             $validationData = $this->getValidationData();
             $validator = CoworkerValidator::validateComplete($validationData);
-            
+
             if ($validator->fails()) {
                 // Afficher la première erreur
                 $this->errorMessage = $validator->errors()->first();
+
                 return;
             }
 
@@ -95,16 +109,16 @@ class CreateCoworkerForm extends Component
             $data = CreateCoworkerData::fromArray($validationData, $this->user->id);
 
             // Exécuter l'action
-            $action = new CreateCoworkerAction();
+            $action = new CreateCoworkerAction;
             $result = $action->execute($data);
 
             if ($result->isSuccessful()) {
                 $this->successMessage = $result->getMessage();
                 $this->resetForm();
-                
+
                 // Fermer la modal
                 $this->dispatch('close-modal', name: 'new-coworker');
-                
+
                 // Émettre un événement pour rafraîchir la liste
                 $this->dispatch('coworker-created', $result->getData());
             } else {
@@ -117,7 +131,7 @@ class CreateCoworkerForm extends Component
                 'trace' => $e->getTraceAsString(),
                 'user_id' => $this->user->id,
             ]);
-            
+
             $this->errorMessage = 'Une erreur est survenue lors de la création du collaborateur.';
         } finally {
             $this->isSubmitting = false;
@@ -145,7 +159,7 @@ class CreateCoworkerForm extends Component
         ];
 
         // Si create_user est false, nettoyer les champs password
-        if (!$this->create_user) {
+        if (! $this->create_user) {
             $data['password'] = null;
             $data['password_confirmation'] = null;
         }
@@ -169,7 +183,7 @@ class CreateCoworkerForm extends Component
         $this->password = '';
         $this->password_confirmation = '';
         $this->role = 'client';
-        
+
         // Réinitialiser les erreurs de validation
         $this->resetErrorBag();
     }

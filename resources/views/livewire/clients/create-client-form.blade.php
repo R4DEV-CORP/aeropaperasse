@@ -251,8 +251,8 @@
 
     <!-- Actions -->
     <div class="flex gap-2 mt-4">
-        <flux:spacer />
         <flux:button wire:click="cancelModal">Annuler</flux:button>
+        <flux:spacer />
         <flux:button type="submit" variant="primary" icon="plus">Créer la société</flux:button>
     </div>
 </form>

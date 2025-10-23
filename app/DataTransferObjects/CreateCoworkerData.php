@@ -13,17 +13,17 @@ class CreateCoworkerData
         public string $email,
         public string $phone,
         public int $client_id,
-        
+
         // Options du collaborateur
-        public bool $has_leave = false,
-        public ?Carbon $departure_date = null,
-        
+        public bool $has_leave,
+        public ?Carbon $departure_date,
+
         // Informations utilisateur (optionnelles)
-        public bool $create_user = false,
-        public ?string $password = null,
-        public ?string $role = null,
-        public bool $can_access_formation = false,
-        
+        public bool $create_user,
+        public ?string $password,
+        public ?string $role,
+        public bool $can_access_formation,
+
         // Metadata
         public int $created_by,
     ) {}
@@ -40,8 +40,8 @@ class CreateCoworkerData
             phone: $data['phone'],
             client_id: (int) $data['client_id'],
             has_leave: (bool) ($data['has_leave'] ?? false),
-            departure_date: isset($data['departure_date']) && $data['departure_date'] 
-                ? Carbon::parse($data['departure_date']) 
+            departure_date: isset($data['departure_date']) && $data['departure_date']
+                ? Carbon::parse($data['departure_date'])
                 : null,
             create_user: (bool) ($data['create_user'] ?? false),
             password: $data['password'] ?? null,
@@ -77,12 +77,12 @@ class CreateCoworkerData
      */
     public function getUserData(): ?array
     {
-        if (!$this->create_user) {
+        if (! $this->create_user) {
             return null;
         }
 
         return [
-            'name' => $this->firstname . ' ' . $this->lastname,
+            'name' => $this->firstname.' '.$this->lastname,
             'email' => $this->email,
             'password' => $this->password,
             'role' => $this->role ?? 'client',
@@ -97,7 +97,7 @@ class CreateCoworkerData
      */
     public function shouldCreateUser(): bool
     {
-        return $this->create_user && !empty($this->password);
+        return $this->create_user && ! empty($this->password);
     }
 
     /**
@@ -105,7 +105,7 @@ class CreateCoworkerData
      */
     public function getFullName(): string
     {
-        return $this->firstname . ' ' . $this->lastname;
+        return $this->firstname.' '.$this->lastname;
     }
 
     /**
@@ -113,7 +113,7 @@ class CreateCoworkerData
      */
     public function hasDepartureDate(): bool
     {
-        return !is_null($this->departure_date);
+        return ! is_null($this->departure_date);
     }
 
     /**

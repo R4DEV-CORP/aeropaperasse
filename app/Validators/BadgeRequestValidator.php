@@ -207,4 +207,3 @@ class BadgeRequestValidator
         return Validator::make($data, $rules, self::getMessages());
     }
 }
-

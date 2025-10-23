@@ -24,8 +24,9 @@
     </flux:callout>
 
     <div class="grid grid-cols-4 gap-2 border border-gray-800/10 p-4 rounded-lg">
-        <div class="col-span-4">
+        <div class="col-span-4 flex justify-between">
             <flux:heading size="lg">Bénéficiaire</flux:heading>
+            <flux:button href="/badge-requests" wire:navigate icon:trailing="arrow-top-right-on-square">Voir la demande de badge</flux:button>
         </div>
         <div>
             <p class="text-gray-800 font-medium mt-2">Nom</p>
@@ -47,7 +48,7 @@
     <div class="grid grid-cols-4 gap-2 border border-gray-800/10 p-4 rounded-lg">
         <div class="col-span-4 flex justify-between">
             <flux:heading size="lg">Activité</flux:heading>
-            <flux:button variant="subtle" icon:trailing="arrow-top-right-on-square">Voir l'activité</flux:button>
+            <flux:button href="/activity-requests" wire:navigate icon:trailing="arrow-top-right-on-square">Voir l'activité</flux:button>
         </div>
         <div>
             <p class="text-gray-800 font-medium mt-2">Date de création</p>

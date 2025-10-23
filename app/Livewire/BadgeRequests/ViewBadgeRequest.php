@@ -2,10 +2,10 @@
 
 namespace App\Livewire\BadgeRequests;
 
-use Livewire\Component;
+use App\Models\BadgeComment;
 use App\Services\BadgeRequestDocumentService;
 use Illuminate\Support\Facades\Storage;
-use App\Models\BadgeComment;
+use Livewire\Component;
 
 class ViewBadgeRequest extends Component
 {
@@ -64,7 +64,7 @@ class ViewBadgeRequest extends Component
         }
 
         $disk = Storage::disk('public');
-        
+
         // Vérifier si le fichier existe
         if (! $disk->exists($relativePath)) {
             session()->flash('error', 'Le fichier n\'existe pas.');
@@ -74,7 +74,7 @@ class ViewBadgeRequest extends Component
 
         // Obtenir le chemin absolu du fichier
         $absolutePath = $disk->path($relativePath);
-        
+
         // Récupérer le nom original du fichier
         $filename = basename($relativePath);
 

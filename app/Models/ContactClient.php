@@ -24,7 +24,7 @@ class ContactClient extends Model
 
     public function getRoleLabelAttribute()
     {
-        return match($this->role) {
+        return match ($this->role) {
             'safety' => 'Référent sûreté',
             'security' => 'Correspondant sécurité',
             'hr' => 'Contact RH',

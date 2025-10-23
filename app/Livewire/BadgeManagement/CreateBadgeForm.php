@@ -2,10 +2,11 @@
 
 namespace App\Livewire\BadgeManagement;
 
-use Livewire\Component;
-use App\Models\BadgeRequest;
 use App\Models\Badge;
+use App\Models\BadgeRequest;
 use App\Models\Client;
+use Flux\Flux;
+use Livewire\Component;
 
 class CreateBadgeForm extends Component
 {
@@ -40,11 +41,11 @@ class CreateBadgeForm extends Component
     public function updatedSelectedClientId()
     {
         $this->selected_badge_request_id = null; // Réinitialiser la sélection de badge request
-        
+
         if ($this->selected_client_id) {
             // Charger les badge requests pour ce client via activity request
             $this->badgeRequests = BadgeRequest::with(['activityRequest', 'coworker'])
-                ->whereHas('activityRequest', function($query) {
+                ->whereHas('activityRequest', function ($query) {
                     $query->where('client_id', $this->selected_client_id);
                 })
                 ->orderBy('created_at', 'desc')
@@ -73,7 +74,7 @@ class CreateBadgeForm extends Component
     public function createBadge()
     {
         $this->validate();
-        
+
         try {
             $badge = Badge::create([
                 'badge_request_id' => $this->selected_badge_request_id,
@@ -84,12 +85,42 @@ class CreateBadgeForm extends Component
             $this->successMessage = 'Badge créé avec succès !';
             $this->reset(['selected_client_id', 'selected_badge_request_id', 'expiry_date', 'errorMessage']);
             $this->badgeRequests = collect();
-            
+
             $this->dispatch('badge-created');
         } catch (\Exception $e) {
-            $this->errorMessage = 'Erreur lors de la création du badge : ' . $e->getMessage();
+            $this->errorMessage = 'Erreur lors de la création du badge : '.$e->getMessage();
         }
     }
+
+    /**
+     * Réinitialiser le formulaire
+     */
+    public function resetForm(): void
+    {
+        $this->reset([
+            'errorMessage',
+            'successMessage',
+            'selected_client_id',
+            'selected_badge_request_id',
+            'expiry_date',
+        ]);
+
+        // Réinitialiser la sélection de client pour les admins
+        if (auth()->user()->isAdmin()) {
+            $this->selected_client_id = null;
+            $this->clients = collect();
+        }
+    }
+
+    /**
+     * Fermer la modal
+     */
+    public function closeModal(): void
+    {
+        $this->resetForm();
+        Flux::modal('add-badge')->close();
+    }
+
     public function render()
     {
         return view('livewire.badge-management.create-badge-form');
