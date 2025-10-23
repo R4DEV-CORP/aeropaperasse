@@ -154,4 +154,45 @@ class CoworkerValidator
 
         return Validator::make($data, $rules, self::getMessages());
     }
+
+    /**
+     * Validation pour la mise à jour d'un collaborateur
+     */
+    public static function validateUpdate(array $data, $coworkerId): \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:coworkers,email,' . $coworkerId,
+            'phone' => 'required|string|max:255',
+            'can_access_formation' => 'nullable|boolean',
+            'role' => 'nullable|string|in:sclient,sadmin,client,admin',
+        ];
+
+        $messages = [
+            'firstname.required' => 'Le prénom est obligatoire',
+            'firstname.string' => 'Le prénom doit être une chaîne de caractères',
+            'firstname.max' => 'Le prénom ne doit pas dépasser 255 caractères',
+            
+            'lastname.required' => 'Le nom est obligatoire',
+            'lastname.string' => 'Le nom doit être une chaîne de caractères',
+            'lastname.max' => 'Le nom ne doit pas dépasser 255 caractères',
+            
+            'email.required' => 'L\'email est obligatoire',
+            'email.email' => 'L\'email doit être une adresse email valide',
+            'email.max' => 'L\'email ne doit pas dépasser 255 caractères',
+            'email.unique' => 'Cette adresse email est déjà utilisée par un autre collaborateur',
+            
+            'phone.required' => 'Le téléphone est obligatoire',
+            'phone.string' => 'Le téléphone doit être une chaîne de caractères',
+            'phone.max' => 'Le téléphone ne doit pas dépasser 255 caractères',
+            
+            'can_access_formation.boolean' => 'L\'accès à la formation doit être vrai ou faux',
+            
+            'role.string' => 'Le rôle doit être une chaîne de caractères',
+            'role.in' => 'Le rôle sélectionné n\'est pas valide',
+        ];
+
+        return Validator::make($data, $rules, $messages);
+    }
 }

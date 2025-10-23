@@ -26,7 +26,7 @@
                 </thead>
                 <tbody class=" divide-slate-800/10 text-sm text-gray-700">
                     @foreach($coworkers as $coworker)
-                    <tr>
+                    <tr wire:loading.remove wire:target="search" wire:key="coworker-{{ $coworker->id }}">
                         @if(auth()->user()->isAdmin())
                         <td class="px-3 py-2">
                             <p class="text-gray-800 font-medium">{{ $coworker->client->company_name }}</p>
@@ -74,7 +74,22 @@
                         </td>
                         <td class="px-3 py-2">
                             <div class="flex items-center"> 
-                                <flux:button variant="subtle" icon="eye" icon:variant="outline" square="true" tooltip="Voir" color="blue" class="hover:cursor-pointer"/>
+                                <flux:button variant="subtle" icon="eye" icon:variant="outline" square="true" tooltip="Voir" class="hover:cursor-pointer"/>
+                                <flux:modal.trigger :name="'edit-coworker-'.$coworker->id">
+                                    <flux:button variant="subtle" icon="pencil-square" icon:variant="outline" square="true" tooltip="Modifier" class="hover:cursor-pointer !text-blue-500"/>
+                                </flux:modal.trigger>
+                                <flux:modal :name="'edit-coworker-'.$coworker->id" class="min-w-4xl !max-w-6xl" wire:key="edit-coworker-modal-{{ $coworker->id }}">
+                                    <livewire:coworkers.edit-coworker-form :coworkerId="$coworker->id" :key="'edit-form-'.$coworker->id" />
+                                </flux:modal>
+                                @if($coworker->user_id)
+                                    <flux:button variant="subtle" icon="key" icon:variant="outline" square="true" tooltip="Réinitialiser le mot de passe" class="hover:cursor-pointer !text-yellow-500"/>
+                                @else
+                                    <flux:button variant="subtle" icon="user-plus" icon:variant="outline" square="true" tooltip="Créer un compte" class="hover:cursor-pointer !text-green-500"/>
+                                @endif
+                                @if(!$coworker->has_leave)
+                                    <flux:button variant="subtle" icon="arrow-right-start-on-rectangle" icon:variant="outline" square="true" tooltip="A quitté l'entreprise" class="hover:cursor-pointer !text-orange-500"/>
+                                @endif
+                                <flux:button variant="subtle" icon="trash" icon:variant="outline" square="true" tooltip="Supprimer le collaborateur" class="hover:cursor-pointer !text-red-500"/>
                             </div>
                         </td>
                     </tr>
@@ -88,3 +103,18 @@
         <livewire:coworkers.create-coworker-form />
     </flux:modal>
 </div>
+
+<script>
+document.addEventListener('livewire:init', () => {
+    Livewire.on('close-modal', (event) => {
+        const modalName = event.name;
+        if (modalName) {
+            // Fermer la modal spécifique
+            const modal = document.querySelector(`[data-modal="${modalName}"]`);
+            if (modal) {
+                modal.close();
+            }
+        }
+    });
+});
+</script>

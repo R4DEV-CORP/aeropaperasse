@@ -83,6 +83,28 @@ class DatabaseSeeder extends Seeder
                 'email' => 'sclient@r4web.fr',
             ]);
 
+             // Training
+        $training1 = Training::factory()
+                    ->create(['title' => '11.2.6.2 (ditTCA)']);
+        $training2 = Training::factory()
+                    ->create(['title' => '11.2.3.9']);
+        $training3 = Training::factory()
+                    ->create(['title' => '11.2.3.9 plus TCA']);
+        $training4 = Training::factory()
+                    ->create(['title' => '11.2.3.10']);
+        $training5 = Training::factory()
+                    ->create(['title' => '11.2.3.10 plus TCA']);
+        $training6 = Training::factory()
+                    ->create(['title' => 'Sécurité piétons']);
+        $training7 = Training::factory()
+                    ->create(['title' => 'Permis T']);
+        $training8 = Training::factory()
+                    ->create(['title' => 'Pratique permis T']);
+        $training9 = Training::factory()
+                    ->create(['title' => 'Facteur humain']);
+        $training10 = Training::factory()
+                    ->create(['title' => 'Co activité']);
+
         foreach ($clients as $client) {
 
             $contactSafety = ContactClient::factory()
@@ -107,6 +129,17 @@ class DatabaseSeeder extends Seeder
                 ->for($client)
                 ->count(2)
                 ->create();
+
+            foreach($coworkers as $coworker) {
+                $coworker->trainings()->attach($training1->id, ['started_at' => now(), 'expires_at' => now()->addYears(5)]);
+                $coworker->save();
+
+                $coworker->trainings()->attach($training2->id, ['started_at' => now()->subYears(3)->subMonths(6), 'expires_at' => now()->subMonths(6)]);
+                $coworker->save();
+
+                $coworker->trainings()->attach($training3->id, ['started_at' => now()->subYears(3)->addMonths(5), 'expires_at' => now()->addMonths(5)]);
+                $coworker->save();
+            }
 
             $activityRequests = ActivityRequest::factory()
                 ->for($client)
@@ -143,37 +176,5 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // Training
-        $trainings = Training::factory()
-            ->create([
-                'title' => '11.2.6.2 (ditTCA)'
-            ])
-            ->create([
-                'title' => '11.2.3.9'
-            ])
-            ->create([
-                'title' => '11.2.3.9 plus TCA'
-            ])
-            ->create([
-                'title' => '11.2.3.10'
-            ])
-            ->create([
-                'title' => '11.2.3.10 plus TCA'
-            ])
-            ->create([
-                'title' => 'Sécurité piétons'
-            ])
-            ->create([
-                'title' => 'Permis T'
-            ])
-            ->create([
-                'title' => 'Pratique permis T'
-            ])
-            ->create([
-                'title' => 'Facteur humain'
-            ])
-            ->create([
-                'title' => 'Co activité'
-            ]);
     }
 }

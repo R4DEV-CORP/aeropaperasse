@@ -103,7 +103,7 @@ class CreateCoworkerForm extends Component
                 $this->resetForm();
                 
                 // Fermer la modal
-                Flux::modal('new-coworker')->close();
+                $this->dispatch('close-modal', name: 'new-coworker');
                 
                 // Émettre un événement pour rafraîchir la liste
                 $this->dispatch('coworker-created', $result->getData());

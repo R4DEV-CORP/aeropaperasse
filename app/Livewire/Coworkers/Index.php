@@ -4,20 +4,14 @@ namespace App\Livewire\Coworkers;
 
 use Livewire\Component;
 use App\Models\Coworker;
+use Livewire\Attributes\On;
 
 class Index extends Component
 {
-    public $coworkers;
     public $search = '';
+    public $selectedCoworkerId = null;
 
-    protected $listeners = ['coworker-created' => 'refreshCoworkers'];
-
-    public function mount()
-    {
-        $this->loadCoworkers();
-    }
-
-    public function loadCoworkers()
+    private function loadCoworkers()
     {
         $query = Coworker::with(['client', 'user']);
 
@@ -36,21 +30,35 @@ class Index extends Component
             });
         }
 
-        $this->coworkers = $query->get();
+        return $query->get();
     }
 
+    /**
+     * Écoute l'événement 'coworker-created' et recharge la liste des coworkers
+     */
+    #[On('coworker-created')]
     public function refreshCoworkers()
     {
-        $this->loadCoworkers();
+        // Réinitialiser la recherche pour recharger la liste
+        $this->search = '';
     }
 
-    public function updatedSearch()
+    /**
+     * Écoute l'événement 'coworker-updated' et recharge la liste des coworkers
+     */
+    #[On('coworker-updated')]
+    public function refreshCoworkersAfterUpdate()
     {
-        $this->loadCoworkers();
+        // Réinitialiser la recherche pour recharger la liste
+        $this->search = '';
     }
 
     public function render()
     {
-        return view('livewire.coworkers.index');
+        $coworkers = $this->loadCoworkers();
+
+        return view('livewire.coworkers.index', [
+            'coworkers' => $coworkers,
+        ]);
     }
 }
