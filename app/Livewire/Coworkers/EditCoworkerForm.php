@@ -95,6 +95,7 @@ class EditCoworkerForm extends Component
                 $this->coworker->user->update([
                     'can_access_formation' => $this->can_access_formation,
                     'role' => $this->role,
+                    'name' => $this->firstname . ' ' . $this->lastname,
                 ]);
             }
 

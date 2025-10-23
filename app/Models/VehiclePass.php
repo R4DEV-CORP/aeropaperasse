@@ -9,34 +9,34 @@ class VehiclePass extends Model
 {
     use HasFactory;
 
+    protected $table = 'vehicle_passes';
+
     protected $fillable = [
-        'user_id',
-        'nom_entreprise',
-        'siret',
-        'adresse',
-        'code_postal',
-        'ville',
-        'tampon_entreprise',
-        'aeroport',
-        'immatriculation',
-        'marque_vehicule',
-        'carte_grise_path',
+        'created_by',
+        'client_id',
         'status',
         'previous_status',
-        'draft_at',
-        'approved_at',
-        'rejected_at',
+        'reject_reason',
+        'certificate_of_registration',
+        'company_stamp',
+        'airport',
+        'plate_number',
+        'car_brand',
     ];
 
     protected $casts = [
-        'aeroport' => 'string',
-        'draft_at' => 'datetime',
-        'approved_at' => 'datetime',
-        'rejected_at' => 'datetime',
+        'pending' => 'datetime',    
+        'rejected' => 'datetime',
+        'approved' => 'datetime',
     ];
 
-    public function user()
+    public function createdBy()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
     }
 }

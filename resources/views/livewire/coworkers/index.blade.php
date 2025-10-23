@@ -82,12 +82,27 @@
                                     <livewire:coworkers.edit-coworker-form :coworkerId="$coworker->id" :key="'edit-form-'.$coworker->id" />
                                 </flux:modal>
                                 @if($coworker->user_id)
-                                    <flux:button variant="subtle" icon="key" icon:variant="outline" square="true" tooltip="Réinitialiser le mot de passe" class="hover:cursor-pointer !text-yellow-500"/>
+                                    <flux:modal.trigger :name="'reset-password-'.$coworker->id">
+                                        <flux:button variant="subtle" icon="key" icon:variant="outline" square="true" tooltip="Réinitialiser le mot de passe" class="hover:cursor-pointer !text-yellow-500"/>
+                                    </flux:modal.trigger>
+                                    <flux:modal :name="'reset-password-'.$coworker->id" class="min-w-2xl !max-w-4xl" wire:key="reset-password-modal-{{ $coworker->id }}">
+                                        <livewire:coworkers.new-password-form :coworkerId="$coworker->id" :key="'reset-password-form-'.$coworker->id" />
+                                    </flux:modal>
                                 @else
-                                    <flux:button variant="subtle" icon="user-plus" icon:variant="outline" square="true" tooltip="Créer un compte" class="hover:cursor-pointer !text-green-500"/>
+                                    <flux:modal.trigger :name="'make-user-'.$coworker->id">
+                                        <flux:button variant="subtle" icon="user-plus" icon:variant="outline" square="true" tooltip="Créer un compte" class="hover:cursor-pointer !text-green-500"/>
+                                    </flux:modal.trigger>
+                                    <flux:modal :name="'make-user-'.$coworker->id" class="min-w-2xl !max-w-4xl" wire:key="make-user-modal-{{ $coworker->id }}">
+                                        <livewire:coworkers.make-coworker-as-user-form :coworkerId="$coworker->id" :key="'make-user-form-'.$coworker->id" />
+                                    </flux:modal>
                                 @endif
                                 @if(!$coworker->has_leave)
-                                    <flux:button variant="subtle" icon="arrow-right-start-on-rectangle" icon:variant="outline" square="true" tooltip="A quitté l'entreprise" class="hover:cursor-pointer !text-orange-500"/>
+                                    <flux:modal.trigger :name="'has-leave-'.$coworker->id">
+                                        <flux:button variant="subtle" icon="arrow-right-start-on-rectangle" icon:variant="outline" square="true" tooltip="A quitté l'entreprise" class="hover:cursor-pointer !text-orange-500"/>
+                                    </flux:modal.trigger>
+                                    <flux:modal :name="'has-leave-'.$coworker->id" class="min-w-2xl !max-w-4xl" wire:key="has-leave-modal-{{ $coworker->id }}">
+                                        <livewire:coworkers.coworker-has-leave-form :coworkerId="$coworker->id" :key="'has-leave-form-'.$coworker->id" />
+                                    </flux:modal>
                                 @endif
                                 <flux:button variant="subtle" icon="trash" icon:variant="outline" square="true" tooltip="Supprimer le collaborateur" class="hover:cursor-pointer !text-red-500"/>
                             </div>

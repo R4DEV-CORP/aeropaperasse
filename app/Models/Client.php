@@ -72,7 +72,7 @@ class Client extends Model
 
     public function vehiclePasses()
     {
-        return $this->hasManyThrough(VehiclePass::class, User::class);
+        return $this->hasMany(VehiclePass::class);
     }
 
     public function getActiveBadgesCountAttribute(): int

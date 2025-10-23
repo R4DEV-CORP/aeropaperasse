@@ -23,6 +23,7 @@ class User extends Authenticatable
         'is_new',
         'role',
         'client_id',
+        'coworker_id',
         'function',
         'two_factor_enabled',
         'can_access_formation',
@@ -86,6 +87,6 @@ class User extends Authenticatable
 
     public function vehiclePasses()
     {
-        return $this->hasMany(VehiclePass::class);
+        return $this->hasMany(VehiclePass::class, 'created_by');
     }
 }
