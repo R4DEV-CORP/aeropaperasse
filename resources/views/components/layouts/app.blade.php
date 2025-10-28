@@ -18,7 +18,7 @@
             <flux:sidebar.header>
                 <flux:sidebar.brand
                     href="/dashboard/badge-requests"
-                    logo="{{ asset('storage/aeropaperasse-logo-white.png') }}"
+                    logo="{{ asset('images/aeropaperasse-logo-white.png') }}"
                 />
                 <flux:sidebar.collapse class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2" />
             </flux:sidebar.header>
