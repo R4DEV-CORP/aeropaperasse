@@ -80,8 +80,8 @@
             </div>
             <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
                 <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->getActiveBadgeCount() / $client->badge_limit * 100 }}%"></div>
-                <flux:text class="mt-2">La société dispose de <span class="font-medium">{{ $client->getActiveBadgeCount() }} badges.</span> Il leur reste donc <span class="font-medium">{{ $client->badge_limit - $client->getActiveBadgeCount() }} demandes de badge disponibles.</span></flux:text>
             </div>
+            <flux:text class="mt-2">La société dispose de <span class="font-medium">{{ $client->getActiveBadgeCount() }} badges.</span> Il leur reste donc <span class="font-medium">{{ $client->badge_limit - $client->getActiveBadgeCount() }} demandes de badge disponibles.</span></flux:text>
         </div>
     </div>
 

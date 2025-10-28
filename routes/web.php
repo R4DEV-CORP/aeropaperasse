@@ -42,7 +42,7 @@ Route::get('/clients', function () {
 
 Route::get('/clients/{slug}', function ($slug) {
     return view('clients.show', ['slug' => $slug]);
-})->middleware('auth');
+})->middleware('auth')->name('clients.view');
 
 /*
 * Routes demande d'activité
@@ -86,7 +86,7 @@ Route::get('/trainings', function () {
 
 Route::get('/trainings/client/{slug}', function ($slug) {
     return view('trainings.client', ['slug' => $slug]);
-})->middleware('auth');
+})->middleware('auth')->name('training.client');
 
 /*
 *

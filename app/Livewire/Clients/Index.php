@@ -12,6 +12,14 @@ class Index extends Component
 
     public $openClientId = null;
 
+    public function mount()
+    {
+        $user = auth()->user();
+        if (! $user->isAdmin()) {
+            return redirect()->route('clients.view', ['slug' => $user->client->slug]);
+        }
+    }
+
     public function developpeClient(int $clientId)
     {
         if ($this->openClientId == $clientId) {

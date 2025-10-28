@@ -3,11 +3,30 @@
         <flux:callout variant="success" icon="check-circle" heading="{{ session('message') }}" />
     @endif
     <div class="grid grid-cols-4 gap-4 mt-4">
-        <x-badge-info-card title="Demandes totales" value="0" bg-color="blue-200" />
-        <x-badge-info-card title="En attente" value="0" bg-color="yellow-200" />
-        <x-badge-info-card title="Approuvées" value="0" bg-color="green-200" />
-        <x-badge-info-card title="Rejetées" value="0" bg-color="red-200" />
+        <x-badge-info-card title="Demandes totales" value="{{ $statistics['total'] }}" bg-color="blue-200" />
+        <x-badge-info-card title="En attente" value="{{ $statistics['pending'] }}" bg-color="yellow-200" />
+        <x-badge-info-card title="Approuvées" value="{{ $statistics['approved'] }}" bg-color="green-200" />
+        <x-badge-info-card title="Rejetées" value="{{ $statistics['rejected'] }}" bg-color="red-200" />
     </div>
+    @if(auth()->user()->isAdmin())
+        <flux:callout icon="information-circle" color="blue" inline class="mt-4">
+            <flux:callout.heading>Vous êtes administrateur. Pour voir le quota de laissez passer d'une société, rendez vous sur la page société.</flux:callout.heading>
+            <x-slot name="actions">
+                <flux:button href="/clients" icon:trailing="arrow-top-right-on-square">Sociétés</flux:button>
+            </x-slot>
+        </flux:callout>
+    @else
+        <div class="mt-4 p-4 bg-white rounded-lg border border-zinc-200">
+            <div class="flex justify-between">
+                <flux:heading size="lg">Quota de laissez passer</flux:heading>
+                <flux:text>{{ $vehiclePassCount }}/{{ $client->vehicle_pass_limit }}</flux:text>
+            </div>
+            <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
+                <div class="h-full bg-green-600 rounded-full" style="width: {{ $vehiclePassCount / $client->vehicle_pass_limit * 100 }}%"></div>
+            </div>
+            <flux:text class="mt-2">Vous disposez de <span class="font-medium">{{ $vehiclePassCount }} laissez passer.</span> Il vous reste donc <span class="font-medium">{{ $client->vehicle_pass_limit - $vehiclePassCount }} demandes de laissez passer disponibles.</span></flux:text>
+        </div>
+    @endif
     <div class="flex items-center gap-3 mt-4">
         <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher une demande..." />
         <flux:modal.trigger name="new-vehicle-pass-request">
@@ -79,7 +98,18 @@
                         </td>
                         <td class="px-3 py-2">{{ $vehiclePass->created_at->format('d/m/Y') }}</td>
                         <td class="px-3 py-2">
-                            <flux:button variant="primary" icon="eye" size="sm">Voir</flux:button>
+                            <div class="flex items-center">
+                                <flux:modal.trigger :name="'view-vehicle-pass-'.$vehiclePass->id">
+                                    <flux:button variant="subtle" icon="eye" icon:variant="outline" square="true" tooltip="Voir" class="hover:cursor-pointer"/>
+                                </flux:modal.trigger>
+                                <flux:modal :name="'view-vehicle-pass-'.$vehiclePass->id" class="min-w-4xl !max-w-6xl" wire:key="view-vehicle-pass-modal-{{ $vehiclePass->id }}">
+                                    <livewire:vehicle-pass.view-vehicle-pass :vehiclePassId="$vehiclePass->id" :key="'view-vehicle-pass-'.$vehiclePass->id" />
+                                </flux:modal>
+                                @if($vehiclePass->status == 'pending' && auth()->user()->isAdmin())
+                                    <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Approuver" wire:click="approve({{ $vehiclePass->id }})" class="!text-green-500 hover:cursor-pointer"/>
+                                    <flux:button variant="subtle" icon="x-circle" icon:variant="outline" square="true" tooltip="Rejeter" wire:click="reject({{ $vehiclePass->id }})" class="!text-red-500 hover:cursor-pointer"/>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                     @endforeach

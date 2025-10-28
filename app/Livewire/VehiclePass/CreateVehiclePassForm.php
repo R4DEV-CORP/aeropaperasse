@@ -53,6 +53,7 @@ class CreateVehiclePassForm extends Component
         } else {
             // Pour les utilisateurs normaux, utiliser leur client
             $this->client = $this->user->client;
+            $this->selected_client_id = $this->client->id;
         }
     }
 

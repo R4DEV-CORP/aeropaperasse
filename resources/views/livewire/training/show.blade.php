@@ -96,13 +96,13 @@
                             </td>
                             <td>
                                 <div class="flex items-center">
-                                    <flux:modal.trigger name="upload-certificate-modal" wire:key="trigger-{{ $training->id }}">
+                                    <flux:modal.trigger :name="'upload-certificate-modal-'.$training->id" wire:key="trigger-{{ $training->id }}">
                                         <flux:button icon="arrow-up-tray" icon:variant="outline" variant="subtle" square="true" tooltip="Déposer le certificat" class="!text-green-500 hover:cursor-pointer"/>
                                     </flux:modal.trigger>
                                     @if($training->certificate_path)
                                         <flux:button icon="arrow-down-tray" icon:variant="outline" variant="subtle" square="true" tooltip="Télécharger le certificat" class="!text-blue-500 hover:cursor-pointer" wire:click="downloadCertificate({{ $training->id }})"/>
                                     @endif
-                                    <flux:modal name="upload-certificate-modal" wire:key="modal-{{ $training->id }}" class="min-w-4xl !max-w-6xl">
+                                    <flux:modal :name="'upload-certificate-modal-'.$training->id" wire:key="modal-{{ $training->id }}" class="min-w-4xl !max-w-6xl">
                                         <flux:heading size="lg">Déposer le certificat</flux:heading>
                                         
                                         <form wire:submit="uploadCertificate({{ $training->id }})">

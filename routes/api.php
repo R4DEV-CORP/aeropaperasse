@@ -58,7 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/client', [AuthController::class, 'client']);
     Route::get('/clients', [ClientController::class, 'all']);
     Route::get('/clients/{client}/quota', [ClientController::class, 'getQuotaInfo']);
-    Route::get('/client/{id}', [ClientController::class, 'show']);
+    // Route::get('/client/{id}', [ClientController::class, 'show']);
     Route::put('/client/{id}', [ClientController::class, 'updateOverview']);
     Route::get('/client/{id}/export-bilan', [ClientController::class, 'exportOverview']);
 

@@ -11,7 +11,14 @@ class Index extends Component
 
     public function mount()
     {
-        $this->clients = Client::all();
+        $user = auth()->user();
+        if ($user->isAdmin()) {
+            $this->clients = Client::all();
+        } else {
+            $client = Client::where('id', $user->client_id)->first();
+
+            return redirect()->route('training.client', ['slug' => $client->slug]);
+        }
     }
 
     public function render()
