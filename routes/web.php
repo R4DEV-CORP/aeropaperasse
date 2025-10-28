@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +34,7 @@ Route::get('/change-password', function () {
 
 Route::get('/logout', function () {
     auth()->logout();
+
     return redirect()->route('auth.login');
 })->middleware('auth')->name('auth.logout');
 

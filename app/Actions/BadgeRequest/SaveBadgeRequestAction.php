@@ -175,6 +175,7 @@ class SaveBadgeRequestAction
         Log::error("Erreur lors de l'opération [{$operation}]", [
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString(),
+            'Créateur de la demande' => auth()->user()->name.' (ID: '.auth()->user()->id.')',
             'badge_request_id' => $badgeRequestId,
             'client_id' => $client->id,
             'is_draft' => $data->is_draft,

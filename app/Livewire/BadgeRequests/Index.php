@@ -20,6 +20,8 @@ class Index extends Component
 
     public $client;
 
+    public string $rejectReason = '';
+
     public function mount()
     {
         // Compter les badges via les relations : Badge -> BadgeRequest -> ActivityRequest -> client_id
@@ -164,7 +166,9 @@ class Index extends Component
         $badgeRequest->update([
             'status' => 'rejected_rem',
             'rejected_rem_at' => now(),
+            'reject_reason' => $this->rejectReason,
         ]);
+        $this->reset('rejectReason');
 
         // Afficher un message de succès
         session()->flash('message', 'Demande rejetée par REM.');
@@ -224,7 +228,9 @@ class Index extends Component
         $badgeRequest->update([
             'status' => 'rejected_adp',
             'rejected_adp_at' => now(),
+            'reject_reason' => $this->rejectReason,
         ]);
+        $this->reset('rejectReason');
 
         // Afficher un message de succès
         session()->flash('message', 'Demande rejetée par ADP.');

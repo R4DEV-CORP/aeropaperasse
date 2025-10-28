@@ -13,7 +13,10 @@
                     <flux:badge icon="check-circle" color="green">Approuvé</flux:badge>
                     @break
                 @case('rejected')
+                <div class="flex items-center gap-2">
                     <flux:badge icon="x-circle" color="red">Rejeté</flux:badge>
+                    <flux:text>Raison du rejet : {{ $vehiclePass->reject_reason }}</flux:text>
+                </div>
                     @break
             @endswitch
         </flux:callout.text>

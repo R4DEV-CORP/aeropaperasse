@@ -128,12 +128,38 @@
                                 @if(auth()->user()->isAdmin())
                                     @if($badgeRequest->status == 'pending_rem')
                                         <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Approuver (REM)" wire:click="approveRem({{ $badgeRequest->id }})" class="!text-green-500 hover:cursor-pointer"/>
-                                        <flux:button variant="subtle" icon="x-circle" icon:variant="outline" square="true" tooltip="Rejetter (REM)" wire:click="rejectRem({{ $badgeRequest->id }})" class="!text-red-500 hover:cursor-pointer"/>
+                                        <flux:modal.trigger :name="'reject-badge-request-rem-'.$badgeRequest->id">
+                                            <flux:button variant="subtle" icon="x-circle" icon:variant="outline" square="true" tooltip="Rejetter (REM)" class="!text-red-500 hover:cursor-pointer"/>
+                                        </flux:modal.trigger>
+                                        <flux:modal :name="'reject-badge-request-rem-'.$badgeRequest->id" class="min-w-4xl !max-w-6xl space-y-4">
+                                            <flux:heading size="lg">Rejeter la demande (REM)</flux:heading>
+                                            <form wire:submit="rejectRem({{ $badgeRequest->id }})">
+                                                <flux:field>
+                                                    <flux:textarea wire:model="rejectReason" label="Motif du rejet" placeholder="Motif du rejet" />
+                                                </flux:field>
+                                                <div class="flex items-center justify-end mt-2">
+                                                    <flux:button variant="danger" icon="x-circle" icon:variant="outline" type="submit" class="hover:cursor-pointer">Rejeter</flux:button>
+                                                </div>
+                                            </form>
+                                        </flux:modal>
                                     @endif
                                     @if($badgeRequest->status == 'pending_adp')
                                         <flux:button variant="subtle" icon="arrow-left-circle" icon:variant="outline" square="true" tooltip="Retour en attente REM" wire:click="backToPendingRem({{ $badgeRequest->id }})" class="!text-amber-500 hover:cursor-pointer"/>
                                         <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Approuver (ADP)" wire:click="approveAdp({{ $badgeRequest->id }})" class="!text-green-500 hover:cursor-pointer"/>
-                                        <flux:button variant="subtle" icon="x-circle" icon:variant="outline" square="true" tooltip="Rejetter (ADP)" wire:click="rejectAdp({{ $badgeRequest->id }})" class="!text-red-500 hover:cursor-pointer"/>
+                                        <flux:modal.trigger :name="'reject-badge-request-adp-'.$badgeRequest->id">
+                                            <flux:button variant="subtle" icon="x-circle" icon:variant="outline" square="true" tooltip="Rejetter (ADP)" class="!text-red-500 hover:cursor-pointer"/>
+                                        </flux:modal.trigger>
+                                        <flux:modal :name="'reject-badge-request-adp-'.$badgeRequest->id" class="min-w-4xl !max-w-6xl space-y-4">
+                                            <flux:heading size="lg">Rejeter la demande (ADP)</flux:heading>
+                                            <form wire:submit="rejectAdp({{ $badgeRequest->id }})">
+                                                <flux:field>
+                                                    <flux:textarea wire:model="rejectReason" label="Motif du rejet" placeholder="Motif du rejet" />
+                                                </flux:field>
+                                                <div class="flex items-center justify-end mt-2">
+                                                    <flux:button variant="danger" icon="x-circle" icon:variant="outline" type="submit" class="hover:cursor-pointer">Rejeter</flux:button>
+                                                </div>
+                                            </form>
+                                        </flux:modal>
                                     @endif
                                     @if($badgeRequest->status == 'approved_adp')
                                         <flux:button variant="subtle" icon="arrow-left-circle" icon:variant="outline" square="true" tooltip="Retour en attente ADP" wire:click="backToPendingAdp({{ $badgeRequest->id }})" class="!text-amber-500 hover:cursor-pointer"/>

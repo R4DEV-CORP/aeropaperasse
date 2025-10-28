@@ -10,7 +10,10 @@
                     <flux:badge icon="clock" color="yellow">En attente REM</flux:badge>
                     @break
                 @case('rejected_rem')
-                    <flux:badge icon="x-circle" color="red">Rejetée (REM)</flux:badge>
+                    <div class="flex items-center gap-2">
+                        <flux:badge icon="x-circle" color="red">Rejetée (REM)</flux:badge>
+                        <flux:text>Raison du rejet : {{ $badgeRequest->reject_reason }}</flux:text>
+                    </div>
                     @break
                 @case('pending_adp')
                     <flux:badge icon="clock" color="amber">En attente ADP</flux:badge>
@@ -19,7 +22,10 @@
                     <flux:badge icon="check-circle" color="green">Approuvée ADP</flux:badge>
                     @break
                 @case('rejected_adp')
-                    <flux:badge icon="x-circle" color="red">Rejetée ADP</flux:badge>
+                    <div class="flex items-center gap-2">
+                        <flux:badge icon="x-circle" color="red">Rejetée (ADP)</flux:badge>
+                        <flux:text>Raison du rejet : {{ $badgeRequest->reject_reason }}</flux:text>
+                    </div>
                     @break
                 @case('pending_fabrication')
                     <flux:badge icon="clock" color="lime">En fabrication</flux:badge>

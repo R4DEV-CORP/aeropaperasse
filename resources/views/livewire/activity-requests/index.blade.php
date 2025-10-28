@@ -59,10 +59,10 @@
                                     <flux:badge icon="clock" color="yellow" size="sm">En attente</flux:badge>
                                     @break
                                 @case('approved')
-                                    <flux:badge icon="check-circle" color="green" size="sm">Approuvé</flux:badge>
+                                    <flux:badge icon="check-circle" color="green" size="sm">Approuvée</flux:badge>
                                     @break
                                 @case('rejected')
-                                    <flux:badge icon="x-circle" color="red" size="sm">Rejeté</flux:badge>
+                                    <flux:badge icon="x-circle" color="red" size="sm">Rejetée</flux:badge>
                                     @break
                             @endswitch
                         </td>
@@ -94,7 +94,20 @@
                                 </flux:modal>
                                 @if($activityRequest->status == 'pending' && auth()->user()->isAdmin())
                                     <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Approuver" wire:click="approve({{ $activityRequest->id }})" class="!text-green-500 hover:cursor-pointer"/>
-                                    <flux:button variant="subtle" icon="x-circle" icon:variant="outline" square="true" tooltip="Rejeter" wire:click="reject({{ $activityRequest->id }})" class="!text-red-500 hover:cursor-pointer"/>
+                                    <flux:modal.trigger :name="'reject-activity-request-'.$activityRequest->id">
+                                        <flux:button variant="subtle" icon="x-circle" icon:variant="outline" square="true" tooltip="Rejeter" class="!text-red-500 hover:cursor-pointer"/>
+                                    </flux:modal.trigger>
+                                    <flux:modal :name="'reject-activity-request-'.$activityRequest->id" class="min-w-4xl !max-w-6xl space-y-4">
+                                        <flux:heading size="lg">Rejeter la demande</flux:heading>
+                                        <form wire:submit="reject({{ $activityRequest->id }})">
+                                            <flux:field>
+                                                <flux:textarea wire:model="rejectReason" label="Motif du rejet" placeholder="Motif du rejet" />
+                                            </flux:field>
+                                            <div class="flex items-center justify-end mt-2">
+                                                <flux:button variant="danger" icon="x-circle" icon:variant="outline" type="submit" class="hover:cursor-pointer">Rejeter</flux:button>
+                                            </div>
+                                        </form>
+                                    </flux:modal>
                                 @endif
                                 <flux:button variant="subtle" icon="document-arrow-down" icon:variant="outline" square="true" tooltip="Télécharger les documents" wire:click="downloadDocuments({{ $activityRequest->id }})" class="!text-blue-500 hover:cursor-pointer"/>
                             </div>

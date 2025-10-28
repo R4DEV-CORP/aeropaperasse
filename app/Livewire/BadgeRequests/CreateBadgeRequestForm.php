@@ -111,13 +111,14 @@ class CreateBadgeRequestForm extends Component
         $filePath = "templates/{$fileName}";
 
         // Vérifier si le fichier existe
-        if (!Storage::disk('public')->exists($filePath)) {
+        if (! Storage::disk('public')->exists($filePath)) {
             $this->errorMessage = "Le template pour {$airport} n'existe pas.";
+
             return;
         }
 
         $fullPath = Storage::disk('public')->path($filePath);
-        
+
         return response()->download($fullPath, $fileName);
     }
 

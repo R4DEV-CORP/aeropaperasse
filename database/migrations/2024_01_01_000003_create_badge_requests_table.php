@@ -49,6 +49,8 @@ return new class extends Migration
             $table->timestamp('pending_fabrication_at')->nullable();
             $table->timestamp('ready_for_delivery_at')->nullable();
             $table->timestamp('terminated_at')->nullable();
+
+            // Raison du refus
             $table->text('reject_reason')->nullable();
 
             // Chemin des documents

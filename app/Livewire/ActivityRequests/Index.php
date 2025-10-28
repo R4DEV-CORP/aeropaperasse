@@ -17,6 +17,8 @@ class Index extends Component
 
     public string $search = '';
 
+    public string $rejectReason = '';
+
     /**
      * Réinitialiser la pagination lors d'une recherche
      */
@@ -148,7 +150,9 @@ class Index extends Component
             'previous_status' => $activityRequest->status,
             'status' => 'rejected',
             'rejected_at' => now(),
+            'reject_reason' => $this->rejectReason,
         ]);
+        $this->reset('rejectReason');
 
         // Envoyer une notification par email
         $email = $activityRequest->creator->email;

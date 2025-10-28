@@ -37,6 +37,7 @@ class ActivityRequest extends Model
         'pending_at',
         'approved_at',
         'rejected_at',
+        'reject_reason',
     ];
 
     /**

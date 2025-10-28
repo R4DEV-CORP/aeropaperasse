@@ -58,6 +58,7 @@ class CreateClientAction
             Log::error('Erreur lors de la création du client', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
+                'user_id' => auth()->user()->id,
             ]);
 
             return new CreateClientResult(

@@ -107,7 +107,20 @@
                                 </flux:modal>
                                 @if($vehiclePass->status == 'pending' && auth()->user()->isAdmin())
                                     <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Approuver" wire:click="approve({{ $vehiclePass->id }})" class="!text-green-500 hover:cursor-pointer"/>
-                                    <flux:button variant="subtle" icon="x-circle" icon:variant="outline" square="true" tooltip="Rejeter" wire:click="reject({{ $vehiclePass->id }})" class="!text-red-500 hover:cursor-pointer"/>
+                                    <flux:modal.trigger :name="'reject-vehicle-pass-'.$vehiclePass->id">
+                                        <flux:button variant="subtle" icon="x-circle" icon:variant="outline" square="true" tooltip="Rejeter" class="!text-red-500 hover:cursor-pointer"/>
+                                    </flux:modal.trigger>
+                                    <flux:modal :name="'reject-vehicle-pass-'.$vehiclePass->id" class="min-w-4xl !max-w-6xl space-y-4">
+                                        <flux:heading size="lg">Rejeter la demande</flux:heading>
+                                        <form wire:submit="reject({{ $vehiclePass->id }})">
+                                            <flux:field>
+                                                <flux:textarea wire:model="rejectReason" label="Motif du rejet" placeholder="Motif du rejet" />
+                                            </flux:field>
+                                            <div class="flex items-center justify-end mt-2">
+                                                <flux:button variant="danger" icon="x-circle" icon:variant="outline" type="submit" class="hover:cursor-pointer">Rejeter</flux:button>
+                                            </div>
+                                        </form>
+                                    </flux:modal>
                                 @endif
                             </div>
                         </td>

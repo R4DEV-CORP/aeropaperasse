@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Coworkers;
 
-use Livewire\Component;
 use App\Models\Coworker;
+use Livewire\Component;
 
 class ViewCoworker extends Component
 {

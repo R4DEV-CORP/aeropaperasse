@@ -199,6 +199,7 @@ class SaveActivityRequestAction
         Log::error("Erreur lors de l'opération [{$operation}]", [
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString(),
+            'user_id' => auth()->user()->id,
             'activity_request_id' => $activityRequestId,
             'client_id' => $client->id,
             'is_draft' => $data->is_draft,

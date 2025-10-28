@@ -57,6 +57,9 @@ return new class extends Migration
             $table->timestamp('pending_at')->nullable();
             $table->timestamp('approved_at')->nullable();
             $table->timestamp('rejected_at')->nullable();
+
+            // Raison du refus
+            $table->text('reject_reason')->nullable();
         });
     }
 

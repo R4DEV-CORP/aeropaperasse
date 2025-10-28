@@ -17,6 +17,8 @@ class Index extends Component
 
     public $statistics;
 
+    public string $rejectReason = '';
+
     public function mount()
     {
         $this->loadVehiclePasses();
@@ -93,7 +95,9 @@ class Index extends Component
             'previous_status' => $vehiclePass->status,
             'status' => 'rejected',
             'rejected_at' => now(),
+            'reject_reason' => $this->rejectReason,
         ]);
+        $this->reset('rejectReason');
 
         session()->flash('message', 'Demande rejetée avec succès.');
 

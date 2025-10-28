@@ -8,7 +8,10 @@
             @if($activityRequest->status === 'approved')
                 <flux:badge icon="check-circle" color="green">Approuvée</flux:badge>
             @elseif($activityRequest->status === 'rejected')
-                <flux:badge icon="x-circle" color="red">Rejetée</flux:badge>
+                <div class="flex items-center gap-2">
+                    <flux:badge icon="x-circle" color="red">Rejetée</flux:badge>
+                    <flux:text>Raison du rejet : {{ $activityRequest->reject_reason }}</flux:text>
+                </div>
             @elseif($activityRequest->status === 'pending')
                 <flux:badge icon="clock" color="yellow">En attente</flux:badge>
             @endif

@@ -14,13 +14,21 @@ return new class extends Migration
         Schema::create('vehicle_passes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+
+            // Créateur de la demande du laissez-passer
             $table->unsignedBigInteger('created_by');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+
+            // Relation avec la table clients
             $table->unsignedBigInteger('client_id');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
 
-            $table->enum('airport', ['ORY', 'CDG', 'LBG']);
-            $table->string('plate_number');
-            $table->string('car_brand');
+            // Informations sur le laissez-passer
+            $table->enum('airport', ['ORY', 'CDG', 'LBG'])->nullable();
+            $table->string('plate_number')->nullable();
+            $table->string('car_brand')->nullable();
 
+            // Gestion du statut du laissez-passer
             $table->enum('status', [
                 'pending',
                 'rejected',
@@ -32,11 +40,10 @@ return new class extends Migration
             $table->string('previous_status')->nullable();
             $table->text('reject_reason')->nullable();
 
-            $table->string('certificate_of_registration'); // Carte grise
-            $table->string('company_stamp'); // Tampon de l'entreprise
+            // Chemin des documents
+            $table->string('certificate_of_registration')->nullable(); // Carte grise
+            $table->string('company_stamp')->nullable(); // Tampon de l'entreprise
 
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }
 
