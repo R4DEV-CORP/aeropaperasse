@@ -8,7 +8,7 @@
     @endif
     
     <div class="grid grid-cols-1 gap-4 mt-4">
-        <x-badge-info-card title="Arrivent à expiration (6 mois)" value="1" bg-color="yellow-200" />
+        <x-badge-info-card title="Arrivent à expiration (6 mois)" value="{{ $soonExpiringTrainings->count() }}" bg-color="yellow-200" />
     </div>
     <div class="flex items-center gap-3 mt-4">
         <flux:modal.trigger name="add-coworker-to-formation-modal">

@@ -1,8 +1,8 @@
 <div class="mt-8">
     <div class="grid grid-cols-3 gap-4 mt-4">
-        <x-badge-info-card title="Nombre de sociétés" value="1" bg-color="blue-200" />
-        <x-badge-info-card title="Nombre de collaborateurs" value="1" bg-color="green-200" />
-        <x-badge-info-card title="Arrivent à expiration (6 mois)" value="1" bg-color="yellow-200" />
+        <x-badge-info-card title="Nombre de sociétés" value="{{ $statistics['clientCount'] }}" bg-color="blue-200" />
+        <x-badge-info-card title="Nombre de collaborateurs" value="{{ $statistics['coworkerCount'] }}" bg-color="green-200" />
+        <x-badge-info-card title="Arrivent à expiration (6 mois)" value="{{ $statistics['expiresSoonTrainingCount'] }}" bg-color="yellow-200" />
     </div>
     <div class="flex items-center gap-3 mt-4">
         <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher une société..."/>
