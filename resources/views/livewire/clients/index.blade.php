@@ -33,7 +33,7 @@
                 <tbody class=" divide-slate-800/10 text-sm text-gray-700">
                     <!-- Résultats de la recherche -->
                     @foreach($clients as $client)
-                    <tr wire:loading.remove wire:target="search">
+                    <tr wire:loading.remove wire:target="search" class="@if($openClientId == $client->id) border-t border-slate-800/10 @endif">
                         <td class="px-3 py-2" wire:click="developpeClient({{ $client->id }})">
                             <div class="flex items-center gap-2">
                                 <div>
@@ -70,16 +70,28 @@
                     </tr>
                     @if($openClientId == $client->id)
                     <tr wire:loading.remove wire:target="search" wire:key="developped-client-{{ $client->id }}" class="border-b border-slate-800/10">
-                        <td colspan="2" class="px-3 py-2">
-                            <div class="mt-4 p-4 bg-white rounded-lg border border-zinc-200">
-                                <div class="flex justify-between">
-                                    <flux:heading size="lg">Quota de bagdes</flux:heading>
-                                    <flux:text>{{ $client->getActiveBadgeCount() }}/{{ $client->badge_limit }}</flux:text>
+                        <td colspan="3" class="px-3 py-2">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="mt-4 p-4 bg-white rounded-lg border border-zinc-200">
+                                    <div class="flex justify-between">
+                                        <flux:heading size="lg">Quota de bagdes</flux:heading>
+                                        <flux:text>{{ $client->getActiveBadgeCount() }}/{{ $client->badge_limit }}</flux:text>
+                                    </div>
+                                    <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
+                                        <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->getActiveBadgeCount() / $client->badge_limit * 100 }}%"></div>
+                                    </div>
+                                    <flux:text class="mt-2">La société dispose de <span class="font-medium">{{ $client->getActiveBadgeCount() }} badges.</span> Il leur reste donc <span class="font-medium">{{ $client->badge_limit - $client->getActiveBadgeCount() }} demandes de badge disponibles.</span></flux:text>
                                 </div>
-                                <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
-                                    <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->getActiveBadgeCount() / $client->badge_limit * 100 }}%"></div>
+                                <div class="mt-4 p-4 bg-white rounded-lg border border-zinc-200">
+                                    <div class="flex justify-between">
+                                        <flux:heading size="lg">Quota de laissez passer</flux:heading>
+                                        <flux:text>{{ $client->getActiveVehiclePassesCountAttribute() }}/{{ $client->vehicle_pass_limit }}</flux:text>
+                                    </div>
+                                    <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
+                                        <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->getActiveVehiclePassesCountAttribute() / $client->vehicle_pass_limit * 100 }}%"></div>
+                                    </div>
+                                    <flux:text class="mt-2">La société dispose de <span class="font-medium">{{ $client->getActiveVehiclePassesCountAttribute() }} laissez passer.</span> Il leur reste donc <span class="font-medium">{{ $client->vehicle_pass_limit - $client->getActiveVehiclePassesCountAttribute() }} demandes de laissez passer disponibles.</span></flux:text>
                                 </div>
-                                <flux:text class="mt-2">La société dispose de <span class="font-medium">{{ $client->getActiveBadgeCount() }} badges.</span> Il leur reste donc <span class="font-medium">{{ $client->badge_limit - $client->getActiveBadgeCount() }} demandes de badge disponibles.</span></flux:text>
                             </div>
                         </td>
                     </tr>
