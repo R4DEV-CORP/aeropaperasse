@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,11 @@ Route::get('/verify-2fa', function () {
 Route::get('/change-password', function () {
     return view('auth.change-password');
 });
+
+Route::get('/logout', function () {
+    auth()->logout();
+    return redirect()->route('auth.login');
+})->middleware('auth')->name('auth.logout');
 
 /*
 * Route sociétés

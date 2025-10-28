@@ -34,7 +34,7 @@
             </flux:sidebar.nav>
             <flux:sidebar.spacer />
             <flux:sidebar.nav>
-                <flux:sidebar.item icon="arrow-left-start-on-rectangle" href="#">Deconnexion</flux:sidebar.item>
+                <flux:sidebar.item icon="arrow-left-start-on-rectangle" href="{{ route('auth.logout') }}">Deconnexion</flux:sidebar.item>
             </flux:sidebar.nav>
         </flux:sidebar>
         <flux:main>
