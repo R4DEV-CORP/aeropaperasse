@@ -12,6 +12,7 @@ use App\Models\Client;
 use App\Models\Coworker;
 use Flux\Flux;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -102,6 +103,22 @@ class CreateBadgeRequestForm extends Component
         if ($this->badgeRequestId) {
             $this->loadDraft($this->badgeRequestId);
         }
+    }
+
+    public function downloadDocument(string $airport)
+    {
+        $fileName = "template-for-{$airport}.xlsx";
+        $filePath = "templates/{$fileName}";
+
+        // Vérifier si le fichier existe
+        if (!Storage::disk('public')->exists($filePath)) {
+            $this->errorMessage = "Le template pour {$airport} n'existe pas.";
+            return;
+        }
+
+        $fullPath = Storage::disk('public')->path($filePath);
+        
+        return response()->download($fullPath, $fileName);
     }
 
     /**

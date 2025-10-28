@@ -221,7 +221,7 @@
             <flux:callout icon="information-circle" color="blue" inline>
                 <flux:callout.heading>Veuillez cliquer ici pour télécharger le document à remplir et l'insérer dans le champ ci-dessous.</flux:callout.heading>
                 <x-slot name="actions">
-                    <flux:button icon="document-arrow-down">Télécharger le modèle</flux:button>
+                    <flux:button icon="document-arrow-down" wire:click="downloadDocument('{{ $activityRequest->airport }}')">Télécharger le modèle</flux:button>
                 </x-slot>
             </flux:callout>
             <flux:field>

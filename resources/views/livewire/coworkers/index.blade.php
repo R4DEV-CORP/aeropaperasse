@@ -74,7 +74,12 @@
                         </td>
                         <td class="px-3 py-2">
                             <div class="flex items-center"> 
-                                <flux:button variant="subtle" icon="eye" icon:variant="outline" square="true" tooltip="Voir" class="hover:cursor-pointer"/>
+                                <flux:modal.trigger :name="'view-coworker-'.$coworker->id">
+                                    <flux:button variant="subtle" icon="eye" icon:variant="outline" square="true" tooltip="Voir" class="hover:cursor-pointer"/>
+                                </flux:modal.trigger>
+                                <flux:modal :name="'view-coworker-'.$coworker->id" class="min-w-4xl !max-w-6xl" wire:key="view-coworker-modal-{{ $coworker->id }}">
+                                    <livewire:coworkers.view-coworker :coworkerId="$coworker->id" :key="'view-coworker-'.$coworker->id" />
+                                </flux:modal>
                                 <flux:modal.trigger :name="'edit-coworker-'.$coworker->id">
                                     <flux:button variant="subtle" icon="pencil-square" icon:variant="outline" square="true" tooltip="Modifier" class="hover:cursor-pointer !text-blue-500"/>
                                 </flux:modal.trigger>
