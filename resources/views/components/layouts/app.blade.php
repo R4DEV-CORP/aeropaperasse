@@ -14,7 +14,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="min-h-screen bg-gray-50">
-        <flux:sidebar sticky collapsible class="bg-zinc-700 text-white border-r border-zinc-200">
+        <flux:sidebar sticky collapsible class="bg-zinc-700 text-white border-r border-zinc-200 @container/sidebar">
             <flux:sidebar.header>
                 <flux:sidebar.brand
                     href="/dashboard/badge-requests"
@@ -33,7 +33,7 @@
                 <flux:sidebar.item icon="chat-bubble-left-right" href="#" wire:navigate>Messagerie</flux:sidebar.item>
             </flux:sidebar.nav>
             <flux:sidebar.spacer />
-                <div class="bg-linear-to-t from-[#0d0b0a] to-[#272322] p-4 m-4 rounded-lg text-white !max-lg:hidden">
+                <div class="@min-[64px]/sidebar:block hidden bg-linear-to-t from-[#0d0b0a] to-[#272322] p-4 m-4 rounded-lg">
                     <div class="flex gap-1 items-center justify-center font-semibold">
                         <flux:icon.information-circle class="size-6" />
                         <p class="text-center text-lg">Support client</p>
