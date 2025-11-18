@@ -89,29 +89,39 @@ class AuthService
         }
     }
 
-    public function generateAndSendTwoFactorCode(User $user): string
+    private function generateAndSendTwoFactorCode(User $user)
     {
         Log::info('AuthService: Génération et envoi du code 2FA', [
             'user_id' => $user->id,
             'email' => $user->email,
         ]);
-        // Générer un code à 6 chiffres
-        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
-        // Supprimer les anciens codes non utilisés
-        TwoFactorCode::where('user_id', $user->id)->delete();
+        try {
+            // Générer un code à 6 chiffres
+            $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
-        // Créer un nouveau code
-        TwoFactorCode::create([
-            'user_id' => $user->id,
-            'code' => $code,
-            'expires_at' => now()->addMinutes(10), // Le code expire après 10 minutes
-        ]);
+            // Supprimer les anciens codes non utilisés
+            TwoFactorCode::where('user_id', $user->id)->delete();
 
-        // Envoyer le code par email
-        Mail::to($user->email)->send(new TwoFactorCodeMail($code));
+            // Créer un nouveau code
+            TwoFactorCode::create([
+                'user_id' => $user->id,
+                'code' => $code,
+                'expires_at' => now()->addMinutes(10), // Le code expire après 10 minutes
+            ]);
 
-        return $code;
+            // Envoyer le code par email
+            Mail::to($user->email)->send(new TwoFactorCodeMail($code));
+
+        } catch (\Exception $e) {
+            Log::error('AuthService: Erreur génération et envoi du code 2FA', [
+                'message' => $e->getMessage(),
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+        }
     }
 
     /**

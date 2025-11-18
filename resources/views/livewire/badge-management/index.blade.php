@@ -175,14 +175,5 @@ document.addEventListener('livewire:init', () => {
             }));
         }, 500);
     });
-
-    // Gestionnaire pour fermer les modals
-    Livewire.on('close-modal', (event) => {
-        const modalName = event.detail.name;
-        const modal = document.querySelector(`[data-modal-name="${modalName}"]`);
-        if (modal) {
-            modal.dispatchEvent(new CustomEvent('close'));
-        }
-    });
 });
 </script>

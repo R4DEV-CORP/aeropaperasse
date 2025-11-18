@@ -164,6 +164,10 @@ class CreateActivityRequestForm extends Component
             Log::error('Erreur lors du chargement du brouillon', [
                 'error' => $e->getMessage(),
                 'activity_request_id' => $activityRequestId,
+                'user_id' => $this->user->id,
+                'user_email' => $this->user->email,
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
             ]);
 
             $this->errorMessage = 'Erreur lors du chargement du brouillon.';

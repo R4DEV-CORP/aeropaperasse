@@ -18,18 +18,31 @@ class ActivityRequestDocumentService
     {
         $storedDocuments = [];
 
-        // Créer le nom du dossier client
-        $clientFolderName = $this->generateClientFolderName($client->company_name);
+        try {
+            // Créer le nom du dossier client
+            $clientFolderName = $this->generateClientFolderName($client->company_name);
 
-        foreach ($documents as $documentType => $file) {
-            if ($file instanceof UploadedFile) {
-                $storedDocuments[$documentType] = $this->storeDocument(
-                    $file,
-                    $documentType,
-                    $clientFolderName,
-                    $activityRequestId
-                );
+            foreach ($documents as $documentType => $file) {
+                if ($file instanceof UploadedFile) {
+                    $storedDocuments[$documentType] = $this->storeDocument(
+                        $file,
+                        $documentType,
+                        $clientFolderName,
+                        $activityRequestId
+                    );
+                }
             }
+
+        } catch (\Exception $e) {
+            Log::error('Erreur lors du stockage des documents', [
+                'error' => $e->getMessage(),
+                'activity_request_id' => $activityRequestId,
+                'user_id' => $this->user->id,
+                'user_email' => $this->user->email,
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
         }
 
         return $storedDocuments;

@@ -7,6 +7,7 @@ use App\Models\BadgeRequest;
 use App\Models\Client;
 use Flux\Flux;
 use Livewire\Component;
+use Illuminate\Support\Facades\Log;
 
 class CreateBadgeForm extends Component
 {
@@ -75,6 +76,25 @@ class CreateBadgeForm extends Component
     {
         $this->validate();
 
+        $client = Client::find($this->selected_client_id);
+
+        if(!$client) {
+            $this->errorMessage = 'Le client sélectionné n\'existe pas. Veuillez sélectionner un autre client.';
+            return;
+        }
+
+        if(!$client->canCreateBadge()) {
+            $this->errorMessage = 'Le client a atteint le nombre maximum de badges.';
+            return;
+        }
+
+        $badge = Badge::where('badge_request_id', $this->selected_badge_request_id)->first();
+
+        if($badge) {
+            $this->errorMessage = 'Un badge existe déjà pour cette demande. Veuillez sélectionner une autre demande.';
+            return;
+        }
+
         try {
             $badge = Badge::create([
                 'badge_request_id' => $this->selected_badge_request_id,
@@ -82,14 +102,26 @@ class CreateBadgeForm extends Component
                 'expiry_date' => $this->expiry_date,
             ]);
 
+            if(!$badge) {
+                $this->errorMessage = 'Une erreur est survenue lors de la création du badge. Veuillez réessayer.';
+                return;
+            }
+
             $this->successMessage = 'Badge créé avec succès !';
             $this->reset(['selected_client_id', 'selected_badge_request_id', 'expiry_date', 'errorMessage']);
             $this->badgeRequests = collect();
 
             $this->dispatch('badge-created');
         } catch (\Exception $e) {
-            $this->errorMessage = 'Erreur lors de la création du badge : '.$e->getMessage();
+            Log::error('Erreur lors de la création du badge', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => auth()->user()->id,
+                'badge_request_id' => $this->selected_badge_request_id,
+                'client_id' => $this->selected_client_id,
+            ]);
         }
+        $this->closeModal();
     }
 
     /**
