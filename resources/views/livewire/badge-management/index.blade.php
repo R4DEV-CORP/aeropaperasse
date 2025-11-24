@@ -93,7 +93,13 @@
                                         <livewire:badge-management.edit-badge-expiry-date-form :badge="$badge" wire:key="badge-modal-edit-expiry-date-{{ $badge->id }}" />
                                     </flux:modal>
                                         @if($badge->status == 'active' || $badge->status == 'expired' || $badge->status == 'not_returned')
-                                        <flux:button variant="subtle" icon="inbox-arrow-down" icon:variant="outline" square="true" tooltip="Marquer comme restitué" wire:click="returnBadge({{ $badge->id }})" class="!text-blue-500 hover:cursor-pointer"/>
+                                        <flux:modal.trigger :name="'return-badge-'.$badge->id">
+                                            <flux:button variant="subtle" icon="inbox-arrow-down" icon:variant="outline" square="true" tooltip="Marquer comme restitué" class="!text-blue-500 hover:cursor-pointer"/>
+                                        </flux:modal.trigger>
+                                        <!-- Modal return badge -->
+                                        <flux:modal :name="'return-badge-'.$badge->id" class="min-w-4xl !max-w-6xl border" wire:key="badge-modal-return-{{ $badge->id }}">
+                                            <livewire:badge-management.return-badge-form :badge="$badge" wire:key="badge-modal-return-{{ $badge->id }}" />
+                                        </flux:modal>
                                     @endif
                                     @if($badge->status == 'expired')
                                         <flux:button variant="subtle" icon="shield-exclamation" icon:variant="outline" square="true" tooltip="Marquer non restitué" wire:click="notReturnedBadge({{ $badge->id }})" class="!text-yellow-500 hover:cursor-pointer"/>
