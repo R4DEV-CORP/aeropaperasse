@@ -26,9 +26,10 @@ class ActivityRequestFormData
         public ?int $vehicule_count = null,
 
         // Documents
-        public ?UploadedFile $customer_certificate_document = null,
-        public ?UploadedFile $prefectural_agreement_document = null,
-        public ?UploadedFile $iata_contract_document = null,
+        public ?UploadedFile $aao_request_document = null,
+        public ?UploadedFile $kbis_document = null,
+        public ?UploadedFile $term_document = null,
+        public ?UploadedFile $safety_referent_document = null,
         public ?UploadedFile $cta_document = null,
 
         // Flags et métadonnées
@@ -60,9 +61,10 @@ class ActivityRequestFormData
             customer_names: $data['customer_names'] ?? null,
             person_count: isset($data['person_count']) ? (int) $data['person_count'] : null,
             vehicule_count: isset($data['vehicule_count']) ? (int) $data['vehicule_count'] : null,
-            customer_certificate_document: $data['customer_certificate_document'] ?? null,
-            prefectural_agreement_document: $data['prefectural_agreement_document'] ?? null,
-            iata_contract_document: $data['iata_contract_document'] ?? null,
+            aao_request_document: $data['aao_request_document'] ?? null,
+            kbis_document: $data['kbis_document'] ?? null,
+            term_document: $data['term_document'] ?? null,
+            safety_referent_document: $data['safety_referent_document'] ?? null,
             cta_document: $data['cta_document'] ?? null,
             renewal: $data['renewal'] ?? false,
             last_activity_request_id: $lastActivityRequestId,
@@ -85,9 +87,10 @@ class ActivityRequestFormData
             'customer_names' => $this->customer_names,
             'person_count' => $this->person_count,
             'vehicule_count' => $this->vehicule_count,
-            'customer_certificate_document' => $this->customer_certificate_document,
-            'prefectural_agreement_document' => $this->prefectural_agreement_document,
-            'iata_contract_document' => $this->iata_contract_document,
+            'aao_request_document' => $this->aao_request_document,
+            'kbis_document' => $this->kbis_document,
+            'term_document' => $this->term_document,
+            'safety_referent_document' => $this->safety_referent_document,
             'cta_document' => $this->cta_document,
             'renewal' => $this->renewal,
             'last_activity_request_id' => $this->last_activity_request_id,
@@ -107,9 +110,10 @@ class ActivityRequestFormData
      */
     public function hasDocuments(): bool
     {
-        return ! is_null($this->customer_certificate_document)
-            || ! is_null($this->prefectural_agreement_document)
-            || ! is_null($this->iata_contract_document)
+        return ! is_null($this->aao_request_document)
+            || ! is_null($this->kbis_document)
+            || ! is_null($this->term_document)
+            || ! is_null($this->safety_referent_document)
             || ! is_null($this->cta_document);
     }
 
@@ -120,14 +124,17 @@ class ActivityRequestFormData
     {
         $documents = [];
 
-        if ($this->customer_certificate_document) {
-            $documents['customer_certificate_document'] = $this->customer_certificate_document;
+        if ($this->aao_request_document) {
+            $documents['aao_request_document'] = $this->aao_request_document;
         }
-        if ($this->prefectural_agreement_document) {
-            $documents['prefectural_agreement_document'] = $this->prefectural_agreement_document;
+        if ($this->kbis_document) {
+            $documents['kbis_document'] = $this->kbis_document;
         }
-        if ($this->iata_contract_document) {
-            $documents['iata_contract_document'] = $this->iata_contract_document;
+        if ($this->term_document) {
+            $documents['term_document'] = $this->term_document;
+        }
+        if ($this->safety_referent_document) {
+            $documents['safety_referent_document'] = $this->safety_referent_document;
         }
         if ($this->cta_document) {
             $documents['cta_document'] = $this->cta_document;
@@ -164,9 +171,10 @@ class ActivityRequestFormData
     public function getExistingDocumentsFlags(\App\Models\ActivityRequest $activityRequest): array
     {
         return [
-            'hasExistingCustomerCertificate' => ! empty($activityRequest->customer_certificate_document),
-            'hasExistingPrefecturalAgreement' => ! empty($activityRequest->prefectural_agreement_document),
-            'hasExistingIataContract' => ! empty($activityRequest->iata_contract_document),
+            'hasExistingAaoRequest' => ! empty($activityRequest->aao_request_document),
+            'hasExistingKbis' => ! empty($activityRequest->kbis_document),
+            'hasExistingTerm' => ! empty($activityRequest->term_document),
+            'hasExistingSafetyReferent' => ! empty($activityRequest->safety_referent_document),
             'hasExistingCta' => ! empty($activityRequest->cta_document),
         ];
     }

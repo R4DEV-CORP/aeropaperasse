@@ -59,20 +59,24 @@ class CreateActivityRequestForm extends Component
     public $vehicule_count;
 
     // Propriétés pour le formulaire - Documents
-    public $customer_certificate_document;
+    public $aao_request_document;
 
-    public $prefectural_agreement_document;
+    public $kbis_document;
 
-    public $iata_contract_document;
+    public $term_document;
+
+    public $safety_referent_document;
 
     public $cta_document;
 
     // Indicateurs de documents existants (pour l'édition)
-    public bool $hasExistingCustomerCertificate = false;
+    public bool $hasExistingAaoRequest = false;
 
-    public bool $hasExistingPrefecturalAgreement = false;
+    public bool $hasExistingKbis = false;
 
-    public bool $hasExistingIataContract = false;
+    public bool $hasExistingTerm = false;
+
+    public bool $hasExistingSafetyReferent = false;
 
     public bool $hasExistingCta = false;
 
@@ -155,9 +159,10 @@ class CreateActivityRequestForm extends Component
 
             // Récupérer les indicateurs de documents existants
             $documentsFlags = $formData->getExistingDocumentsFlags($activityRequest);
-            $this->hasExistingCustomerCertificate = $documentsFlags['hasExistingCustomerCertificate'];
-            $this->hasExistingPrefecturalAgreement = $documentsFlags['hasExistingPrefecturalAgreement'];
-            $this->hasExistingIataContract = $documentsFlags['hasExistingIataContract'];
+            $this->hasExistingAaoRequest = $documentsFlags['hasExistingAaoRequest'];
+            $this->hasExistingKbis = $documentsFlags['hasExistingKbis'];
+            $this->hasExistingTerm = $documentsFlags['hasExistingTerm'];
+            $this->hasExistingSafetyReferent = $documentsFlags['hasExistingSafetyReferent'];
             $this->hasExistingCta = $documentsFlags['hasExistingCta'];
 
         } catch (\Exception $e) {
@@ -353,9 +358,10 @@ class CreateActivityRequestForm extends Component
             'customer_names' => $this->customer_names,
             'person_count' => $this->person_count,
             'vehicule_count' => $this->vehicule_count,
-            'customer_certificate_document' => $this->customer_certificate_document,
-            'prefectural_agreement_document' => $this->prefectural_agreement_document,
-            'iata_contract_document' => $this->iata_contract_document,
+            'aao_request_document' => $this->aao_request_document,
+            'kbis_document' => $this->kbis_document,
+            'term_document' => $this->term_document,
+            'safety_referent_document' => $this->safety_referent_document,
             'cta_document' => $this->cta_document,
             'renewal' => $this->renewal,
             'last_activity_request_id' => $this->selectedPreviousActivityRequest,
@@ -418,9 +424,10 @@ class CreateActivityRequestForm extends Component
     protected function getExistingDocumentsArray(): array
     {
         return [
-            'customer_certificate_document' => $this->hasExistingCustomerCertificate,
-            'prefectural_agreement_document' => $this->hasExistingPrefecturalAgreement,
-            'iata_contract_document' => $this->hasExistingIataContract,
+            'aao_request_document' => $this->hasExistingAaoRequest,
+            'kbis_document' => $this->hasExistingKbis,
+            'term_document' => $this->hasExistingTerm,
+            'safety_referent_document' => $this->hasExistingSafetyReferent,
             'cta_document' => $this->hasExistingCta,
         ];
     }
@@ -498,16 +505,18 @@ class CreateActivityRequestForm extends Component
             'customer_names',
             'person_count',
             'vehicule_count',
-            'customer_certificate_document',
-            'prefectural_agreement_document',
-            'iata_contract_document',
+            'aao_request_document',
+            'kbis_document',
+            'term_document',
+            'safety_referent_document',
             'cta_document',
             'errorMessage',
             'renewal',
             'selectedPreviousActivityRequest',
-            'hasExistingCustomerCertificate',
-            'hasExistingPrefecturalAgreement',
-            'hasExistingIataContract',
+            'hasExistingAaoRequest',
+            'hasExistingKbis',
+            'hasExistingTerm',
+            'hasExistingSafetyReferent',
             'hasExistingCta',
         ]);
 

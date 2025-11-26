@@ -131,9 +131,10 @@ class ActivityRequestDocumentService
 
         // Types de documents à copier
         $documentTypes = [
-            'customer_certificate_document',
-            'prefectural_agreement_document',
-            'iata_contract_document',
+            'aao_request_document',
+            'kbis_document',
+            'term_document',
+            'safety_referent_document',
             'cta_document',
         ];
 
@@ -192,9 +193,10 @@ class ActivityRequestDocumentService
     {
         // Types de documents à inclure dans le ZIP
         $documentTypes = [
-            'customer_certificate_document' => 'attestation-client',
-            'prefectural_agreement_document' => 'agrement-prefectoral',
-            'iata_contract_document' => 'contrat-iata',
+            'aao_request_document' => 'demande-aao',
+            'kbis_document' => 'extrait-kbis',
+            'term_document' => 'mandat',
+            'safety_referent_document' => 'referent-surete',
             'cta_document' => 'cta',
         ];
 

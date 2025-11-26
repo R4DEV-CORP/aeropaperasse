@@ -35,9 +35,10 @@ class ActivityRequestValidator
             'vehicule_count' => 'required|integer|min:0|max:1000',
 
             // Documents (obligatoires)
-            'customer_certificate_document' => 'required|file|mimes:pdf|max:8192',
-            'prefectural_agreement_document' => 'required|file|mimes:pdf|max:8192',
-            'iata_contract_document' => 'required|file|mimes:pdf|max:8192',
+            'aao_request_document' => 'required|file|mimes:pdf|max:8192',
+            'kbis_document' => 'required|file|mimes:pdf|max:8192',
+            'term_document' => 'required|file|mimes:pdf|max:8192',
+            'safety_referent_document' => 'required|file|mimes:pdf|max:8192',
             'cta_document' => 'required|file|mimes:pdf|max:8192',
         ];
     }
@@ -72,9 +73,10 @@ class ActivityRequestValidator
             'vehicule_count' => 'nullable|integer|min:0|max:1000',
 
             // Documents (optionnels)
-            'customer_certificate_document' => 'nullable|file|mimes:pdf|max:8192',
-            'prefectural_agreement_document' => 'nullable|file|mimes:pdf|max:8192',
-            'iata_contract_document' => 'nullable|file|mimes:pdf|max:8192',
+            'aao_request_document' => 'nullable|file|mimes:pdf|max:8192',
+            'kbis_document' => 'nullable|file|mimes:pdf|max:8192',
+            'term_document' => 'nullable|file|mimes:pdf|max:8192',
+            'safety_referent_document' => 'nullable|file|mimes:pdf|max:8192',
             'cta_document' => 'nullable|file|mimes:pdf|max:8192',
         ];
     }
@@ -113,18 +115,22 @@ class ActivityRequestValidator
             'vehicule_count.max' => 'Le nombre de véhicules ne peut pas dépasser 1000',
 
             // Documents
-            'customer_certificate_document.required' => 'L\'attestation client est obligatoire, doit être un fichier PDF et ne pas dépasser 8MB',
-            'customer_certificate_document.file' => 'L\'attestation client doit être un fichier',
-            'customer_certificate_document.mimes' => 'L\'attestation client doit être un fichier PDF',
-            'customer_certificate_document.max' => 'L\'attestation client ne doit pas dépasser 8MB',
-            'prefectural_agreement_document.required' => 'L\'agrément préfectoral est obligatoire, doit être un fichier PDF et ne pas dépasser 8MB',
-            'prefectural_agreement_document.file' => 'L\'agrément préfectoral doit être un fichier',
-            'prefectural_agreement_document.mimes' => 'L\'agrément préfectoral doit être un fichier PDF',
-            'prefectural_agreement_document.max' => 'L\'agrément préfectoral ne doit pas dépasser 8MB',
-            'iata_contract_document.required' => 'Le contrat IATA est obligatoire, doit être un fichier PDF et ne pas dépasser 8MB',
-            'iata_contract_document.file' => 'Le contrat IATA doit être un fichier',
-            'iata_contract_document.mimes' => 'Le contrat IATA doit être un fichier PDF',
-            'iata_contract_document.max' => 'Le contrat IATA ne doit pas dépasser 8MB',
+            'aao_request_document.required' => 'L\'attestation client est obligatoire, doit être un fichier PDF et ne pas dépasser 8MB',
+            'aao_request_document.file' => 'L\'attestation client doit être un fichier',
+            'aao_request_document.mimes' => 'L\'attestation client doit être un fichier PDF',
+            'aao_request_document.max' => 'L\'attestation client ne doit pas dépasser 8MB',
+            'kbis_document.required' => 'L\'agrément préfectoral est obligatoire, doit être un fichier PDF et ne pas dépasser 8MB',
+            'kbis_document.file' => 'L\'agrément préfectoral doit être un fichier',
+            'kbis_document.mimes' => 'L\'agrément préfectoral doit être un fichier PDF',
+            'kbis_document.max' => 'L\'agrément préfectoral ne doit pas dépasser 8MB',
+            'term_document.required' => 'Le mandat est obligatoire, doit être un fichier PDF et ne pas dépasser 8MB',
+            'term_document.file' => 'Le mandat doit être un fichier',
+            'term_document.mimes' => 'Le mandat doit être un fichier PDF',
+            'term_document.max' => 'Le mandat ne doit pas dépasser 8MB',
+            'safety_referent_document.required' => 'Le responsable de la sureté est obligatoire, doit être un fichier PDF et ne pas dépasser 8MB',
+            'safety_referent_document.file' => 'Le responsable de la sureté doit être un fichier',
+            'safety_referent_document.mimes' => 'Le responsable de la sureté doit être un fichier PDF',
+            'safety_referent_document.max' => 'Le responsable de la sureté ne doit pas dépasser 8MB',
             'cta_document.required' => 'Le CTA est obligatoire, doit être un fichier PDF et ne pas dépasser 8MB',
             'cta_document.file' => 'Le CTA doit être un fichier',
             'cta_document.mimes' => 'Le CTA doit être un fichier PDF',
@@ -179,9 +185,10 @@ class ActivityRequestValidator
 
         // Gestion des documents : obligatoires seulement s'ils n'existent pas déjà
         $documentFields = [
-            'customer_certificate_document',
-            'prefectural_agreement_document',
-            'iata_contract_document',
+            'aao_request_document',
+            'kbis_document',
+            'term_document',
+            'safety_referent_document',
             'cta_document',
         ];
 

@@ -27,9 +27,10 @@ class ActivityRequest extends Model
         'person_count',
         'vehicule_count',
         'customer_names', // dénomination des clients
-        'customer_certificate_document', // attestation client
-        'prefectural_agreement_document', // agrément préfectoral
-        'iata_contract_document', // contrat IATA
+        'aao_request_document', // attestation client
+        'kbis_document', // KBIS
+        'term_document', // Mandat
+        'safety_referent_document', // Responsable de la sureté
         'cta_document', // CTA
         'status',
         'previous_status',
