@@ -8,6 +8,9 @@
             <flux:button variant="primary" icon="user-plus">Nouveau collaborateur/utilisateur</flux:button>
         </flux:modal.trigger>
     </div>
+    @if($errorMessage)
+        <flux:callout variant="danger" icon="x-circle" heading="{{ $errorMessage }}" class="mt-4"/>
+    @endif
     <div class="mt-4 py-4 bg-white rounded-lg border border-zinc-200">
         <flux:heading size="lg" class="px-4">Collaborateurs & Utilisateurs</flux:heading>
         <div class="mt-4 border-t border-gray-800/10">
@@ -109,7 +112,29 @@
                                         <livewire:coworkers.coworker-has-leave-form :coworkerId="$coworker->id" :key="'has-leave-form-'.$coworker->id" />
                                     </flux:modal>
                                 @endif
-                                <flux:button variant="subtle" icon="trash" icon:variant="outline" square="true" tooltip="Supprimer le collaborateur" class="hover:cursor-pointer !text-red-500"/>
+                                @if(auth()->user()->isAdmin())
+                                    <flux:modal.trigger :name="'delete-coworker-'.$coworker->id">
+                                        <flux:button variant="subtle" icon="trash" icon:variant="outline" square="true" tooltip="Supprimer le collaborateur" class="hover:cursor-pointer !text-red-500"/>
+                                    </flux:modal.trigger>
+                                    <flux:modal :name="'delete-coworker-'.$coworker->id" class="min-w-[22rem]" wire:key="delete-coworker-modal-{{ $coworker->id }}">
+                                        <div class="space-y-6">
+                                            <div>
+                                                <flux:heading size="lg">Supprimer</flux:heading>
+                                                <flux:text class="mt-2">
+                                                    Vous êtes sur le point de supprimer {{ $coworker->firstname }} {{ $coworker->lastname }}.<br>
+                                                    Cette action est irréversible.
+                                                </flux:text>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <flux:spacer />
+                                                <flux:modal.close>
+                                                    <flux:button variant="ghost">Annuler</flux:button>
+                                                </flux:modal.close>
+                                                <flux:button type="submit" variant="danger" wire:click="deleteCoworker({{ $coworker->id }})">Supprimer</flux:button>
+                                            </div>
+                                        </div>
+                                    </flux:modal>
+                                @endif
                             </div>
                         </td>
                     </tr>
