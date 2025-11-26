@@ -25,7 +25,7 @@ class BadgeRequestValidator
             'identification_card' => 'required|file|mimes:pdf|max:8192',
             'activity_authorization' => 'required|file|mimes:pdf|max:8192',
             'for_document' => 'required|file|mimes:pdf|max:8192',
-            'invoice_document' => 'required|file|mimes:pdf|max:8192',
+            'invoice_document' => 'nullable|file|mimes:pdf|max:8192',
             // Le certificat de formation est géré conditionnellement dans validateComplete()
         ];
     }
@@ -101,7 +101,6 @@ class BadgeRequestValidator
             'formation_certificate_document.mimes' => 'Le certificat de formation doit être un fichier PDF',
             'formation_certificate_document.max' => 'Le certificat de formation ne doit pas dépasser 8MB',
 
-            'invoice_document.required' => 'La facture est obligatoire',
             'invoice_document.file' => 'La facture doit être un fichier',
             'invoice_document.mimes' => 'La facture doit être un fichier PDF',
             'invoice_document.max' => 'La facture ne doit pas dépasser 8MB',
@@ -159,7 +158,6 @@ class BadgeRequestValidator
             'activity_authorization' => 'pdf',
             'for_document' => 'pdf',
             'formation_certificate_document' => 'pdf',
-            'invoice_document' => 'pdf',
         ];
 
         foreach ($documentFields as $field => $mimes) {
@@ -175,6 +173,9 @@ class BadgeRequestValidator
                 $rules[$field] = "required|file|mimes:{$mimes}|max:8192";
             }
         }
+
+        // invoice_document est toujours optionnel
+        $rules['invoice_document'] = 'nullable|file|mimes:pdf|max:8192';
 
         return $rules;
     }
