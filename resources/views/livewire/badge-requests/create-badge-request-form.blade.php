@@ -264,9 +264,7 @@
             <flux:field>
                 <flux:label>
                     Facture
-                    @if(!$hasExistingInvoice)
-                        <span class="text-red-500">*</span>
-                    @else
+                    @if($hasExistingInvoice)
                         <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
                     @endif
                 </flux:label>
