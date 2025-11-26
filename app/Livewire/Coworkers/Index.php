@@ -5,12 +5,15 @@ namespace App\Livewire\Coworkers;
 use App\Models\Coworker;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Flux\Flux;
 
 class Index extends Component
 {
     public $search = '';
 
     public $selectedCoworkerId = null;
+
+    public $errorMessage = '';
 
     private function loadCoworkers()
     {
@@ -32,6 +35,20 @@ class Index extends Component
         }
 
         return $query->get();
+    }
+
+    public function deleteCoworker(int $coworkerId)
+    {
+        try {
+            $coworker = Coworker::find($coworkerId);
+            $coworker->delete();
+            $this->dispatch('coworker-deleted');
+        } catch (\Exception $e) {
+            $this->errorMessage = 'Impossible de supprimer le collaborateur. Il existe des demandes associées à ce collaborateur.';
+        } finally {
+            Flux::modal('delete-coworker-'.$coworkerId)->close();
+        }
+
     }
 
     /**
