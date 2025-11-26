@@ -23,9 +23,10 @@ class CreateActivityRequestData
         public ?int $vehicule_count,
 
         // Documents (optionnels pour le brouillon)
-        public ?UploadedFile $customer_certificate_document,
-        public ?UploadedFile $prefectural_agreement_document,
-        public ?UploadedFile $iata_contract_document,
+        public ?UploadedFile $aao_request_document,
+        public ?UploadedFile $kbis_document,
+        public ?UploadedFile $term_document,
+        public ?UploadedFile $safety_referent_document,
         public ?UploadedFile $cta_document,
 
         // Metadata
@@ -57,9 +58,10 @@ class CreateActivityRequestData
             customer_names: $data['customer_names'] ?? null,
             person_count: isset($data['person_count']) ? (int) $data['person_count'] : null,
             vehicule_count: isset($data['vehicule_count']) ? (int) $data['vehicule_count'] : null,
-            customer_certificate_document: $data['customer_certificate_document'] ?? null,
-            prefectural_agreement_document: $data['prefectural_agreement_document'] ?? null,
-            iata_contract_document: $data['iata_contract_document'] ?? null,
+            aao_request_document: $data['aao_request_document'] ?? null,
+            kbis_document: $data['kbis_document'] ?? null,
+            term_document: $data['term_document'] ?? null,
+            safety_referent_document: $data['safety_referent_document'] ?? null,
             cta_document: $data['cta_document'] ?? null,
             client_id: $clientId,
             created_by: $userId,
@@ -89,9 +91,10 @@ class CreateActivityRequestData
             customer_names: $formData->customer_names,
             person_count: $formData->person_count,
             vehicule_count: $formData->vehicule_count,
-            customer_certificate_document: $formData->customer_certificate_document,
-            prefectural_agreement_document: $formData->prefectural_agreement_document,
-            iata_contract_document: $formData->iata_contract_document,
+            aao_request_document: $formData->aao_request_document,
+            kbis_document: $formData->kbis_document,
+            term_document: $formData->term_document,
+            safety_referent_document: $formData->safety_referent_document,
             cta_document: $formData->cta_document,
             client_id: $clientId,
             created_by: $userId,
@@ -145,14 +148,17 @@ class CreateActivityRequestData
     {
         $documents = [];
 
-        if ($this->customer_certificate_document) {
-            $documents['customer_certificate_document'] = $this->customer_certificate_document;
+        if ($this->aao_request_document) {
+            $documents['aao_request_document'] = $this->aao_request_document;
         }
-        if ($this->prefectural_agreement_document) {
-            $documents['prefectural_agreement_document'] = $this->prefectural_agreement_document;
+        if ($this->kbis_document) {
+            $documents['kbis_document'] = $this->kbis_document;
         }
-        if ($this->iata_contract_document) {
-            $documents['iata_contract_document'] = $this->iata_contract_document;
+        if ($this->term_document) {
+            $documents['term_document'] = $this->term_document;
+        }
+        if ($this->safety_referent_document) {
+            $documents['safety_referent_document'] = $this->safety_referent_document;
         }
         if ($this->cta_document) {
             $documents['cta_document'] = $this->cta_document;

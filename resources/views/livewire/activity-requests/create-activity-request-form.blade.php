@@ -183,46 +183,58 @@
     <div class="border border-gray-800/10 p-4 rounded-lg">
         <flux:heading size="lg">Documents</flux:heading>
 
-            @if($activityRequestId && ($hasExistingCustomerCertificate || $hasExistingPrefecturalAgreement || $hasExistingIataContract || $hasExistingCta))
+            @if($activityRequestId && ($hasExistingAaoRequest || $hasExistingKbis || $hasExistingTerm || $hasExistingSafetyReferent || $hasExistingCta))
                 <flux:callout class="mt-4" icon="information-circle" color="blue">
                     <flux:callout.heading>Des documents existent déjà pour ce brouillon. Vous pouvez les remplacer en téléchargeant de nouveaux fichiers, sinon les documents existants seront conservés.</flux:callout.heading>
                 </flux:callout>
             @endif
             <flux:field class="mt-2">
                 <flux:label>
-                    Attestation client
-                    @if(!$hasExistingCustomerCertificate)
+                    Demande AAO
+                    @if(!$hasExistingAaoRequest)
                         <span class="text-red-500">*</span>
                     @else
                         <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
                     @endif
                 </flux:label>
-                <flux:input wire:model="customer_certificate_document" type="file" icon="document-plus" name="customer_certificate_document" />
-                <flux:error name="customer_certificate_document" />
+                <flux:input wire:model="aao_request_document" type="file" icon="document-plus" name="aao_request_document" />
+                <flux:error name="aao_request_document" />
             </flux:field>
             <flux:field class="mt-2">
                 <flux:label>
-                    Agrément préfectoral
-                    @if(!$hasExistingPrefecturalAgreement)
+                    Extrait KBIS
+                    @if(!$hasExistingKbis)
                         <span class="text-red-500">*</span>
                     @else
                         <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
                     @endif
                 </flux:label>
-                <flux:input wire:model="prefectural_agreement_document" type="file" icon="document-plus" name="prefectural_agreement_document" />
-                <flux:error name="prefectural_agreement_document" />
+                <flux:input wire:model="kbis_document" type="file" icon="document-plus" name="kbis_document" />
+                <flux:error name="kbis_document" />
             </flux:field>
             <flux:field class="mt-2">
                 <flux:label>
-                    Contrat IATA
-                    @if(!$hasExistingIataContract)
+                    Mandat
+                    @if(!$hasExistingTerm)
                         <span class="text-red-500">*</span>
                     @else
                         <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
                     @endif
                 </flux:label>
-                <flux:input wire:model="iata_contract_document" type="file" icon="document-plus" name="iata_contract_document" />
-                <flux:error name="iata_contract_document" />
+                <flux:input wire:model="term_document" type="file" icon="document-plus" name="term_document" />
+                <flux:error name="term_document" />
+            </flux:field>
+            <flux:field class="mt-2">
+                <flux:label>
+                    Référent sureté
+                    @if(!$hasExistingSafetyReferent)
+                        <span class="text-red-500">*</span>
+                    @else
+                        <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
+                    @endif
+                </flux:label>
+                <flux:input wire:model="safety_referent_document" type="file" icon="document-plus" name="safety_referent_document" />
+                <flux:error name="safety_referent_document" />
             </flux:field>
             <flux:field class="mt-2">
                 <flux:label>

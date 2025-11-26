@@ -93,14 +93,14 @@
             </flux:callout>
         @endif
         
-        @if($activityRequest->customer_certificate_document)
+        @if($activityRequest->aao_request_document)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
-                <flux:callout.heading>Attestation client</flux:callout.heading>
+                <flux:callout.heading>Demande AAO</flux:callout.heading>
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
                         icon="document-arrow-down"
-                        wire:click="downloadDocument('customer_certificate_document')"
+                        wire:click="downloadDocument('aao_request_document')"
                         wire:loading.attr="disabled"
                     >
                         Télécharger
@@ -109,14 +109,14 @@
             </flux:callout>
         @endif
         
-        @if($activityRequest->prefectural_agreement_document)
+        @if($activityRequest->kbis_document)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
-                <flux:callout.heading>Agrément préfectoral</flux:callout.heading>
+                <flux:callout.heading>Extrait KBIS</flux:callout.heading>
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
                         icon="document-arrow-down"
-                        wire:click="downloadDocument('prefectural_agreement_document')"
+                        wire:click="downloadDocument('kbis_document')"
                         wire:loading.attr="disabled"
                     >
                         Télécharger
@@ -125,14 +125,30 @@
             </flux:callout>
         @endif
         
-        @if($activityRequest->iata_contract_document)
+        @if($activityRequest->term_document)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
-                <flux:callout.heading>Contrat IATA</flux:callout.heading>
+                <flux:callout.heading>Mandat</flux:callout.heading>
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
                         icon="document-arrow-down"
-                        wire:click="downloadDocument('iata_contract_document')"
+                        wire:click="downloadDocument('term_document')"
+                        wire:loading.attr="disabled"
+                    >
+                        Télécharger
+                    </flux:button>
+                </x-slot>
+            </flux:callout>
+        @endif
+        
+        @if($activityRequest->safety_referent_document)
+            <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
+                <flux:callout.heading>Référent sûreté</flux:callout.heading>
+                <x-slot name="actions">
+                    <flux:button 
+                        variant="ghost" 
+                        icon="document-arrow-down"
+                        wire:click="downloadDocument('safety_referent_document')"
                         wire:loading.attr="disabled"
                     >
                         Télécharger
@@ -157,9 +173,10 @@
             </flux:callout>
         @endif
         
-        @if($activityRequest->customer_certificate_document || 
-            $activityRequest->prefectural_agreement_document || 
-            $activityRequest->iata_contract_document || 
+        @if($activityRequest->aao_request_document || 
+            $activityRequest->kbis_document || 
+            $activityRequest->term_document || 
+            $activityRequest->safety_referent_document || 
             $activityRequest->cta_document)
             <flux:button 
                 variant="primary" 

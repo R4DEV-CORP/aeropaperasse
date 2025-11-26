@@ -45,9 +45,10 @@ return new class extends Migration
             $table->string('customer_names')->nullable(); // dénomination des clients
 
             // Chemin des documents
-            $table->string('customer_certificate_document')->nullable(); // attestation client
-            $table->string('prefectural_agreement_document')->nullable(); // agrément préfectoral
-            $table->string('iata_contract_document')->nullable(); // contrat IATA
+            $table->string('aao_request_document')->nullable(); // Demande AAO
+            $table->string('kbis_document')->nullable(); // KBIS
+            $table->string('term_document')->nullable(); // Mandat
+            $table->string('safety_referent_document')->nullable(); // Responsable de la sureté
             $table->string('cta_document')->nullable(); // CTA
 
             // Statut de la demande
