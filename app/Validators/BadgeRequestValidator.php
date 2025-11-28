@@ -21,11 +21,11 @@ class BadgeRequestValidator
             'validate_training' => 'required|boolean',
 
             // Documents (obligatoires sauf formation_certificate si validate_training = true)
-            'selfie_photo' => 'required|file|mimes:jpg,jpeg,png,pdf|max:8192',
-            'identification_card' => 'required|file|mimes:pdf|max:8192',
-            'activity_authorization' => 'required|file|mimes:pdf|max:8192',
-            'for_document' => 'required|file|mimes:pdf|max:8192',
-            'invoice_document' => 'nullable|file|mimes:pdf|max:8192',
+            'selfie_photo' => 'required|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'identification_card' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'activity_authorization' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'for_document' => 'required|file|mimes:xlsx,xls|max:10240',
+            'invoice_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
             // Le certificat de formation est géré conditionnellement dans validateComplete()
         ];
     }
@@ -46,12 +46,12 @@ class BadgeRequestValidator
             'validate_training' => 'nullable|boolean',
 
             // Documents (optionnels)
-            'selfie_photo' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:8192',
-            'identification_card' => 'nullable|file|mimes:pdf|max:8192',
-            'activity_authorization' => 'nullable|file|mimes:pdf|max:8192',
-            'for_document' => 'nullable|file|mimes:pdf|max:8192',
+            'selfie_photo' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'identification_card' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'activity_authorization' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'for_document' => 'nullable|file|mimes:xlsx,xls|max:10240',
+            'invoice_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
             'formation_certificate_document' => 'nullable|file|mimes:pdf|max:8192',
-            'invoice_document' => 'nullable|file|mimes:pdf|max:8192',
         ];
     }
 
@@ -83,26 +83,26 @@ class BadgeRequestValidator
 
             'identification_card.required' => 'La carte d\'identité est obligatoire',
             'identification_card.file' => 'La carte d\'identité doit être un fichier',
-            'identification_card.mimes' => 'La carte d\'identité doit être un fichier PDF',
+            'identification_card.mimes' => 'La carte d\'identité doit être un fichier PDF, JPG ou PNG',
             'identification_card.max' => 'La carte d\'identité ne doit pas dépasser 8MB',
 
             'activity_authorization.required' => 'L\'autorisation d\'activité est obligatoire',
             'activity_authorization.file' => 'L\'autorisation d\'activité doit être un fichier',
-            'activity_authorization.mimes' => 'L\'autorisation d\'activité doit être un fichier PDF',
+            'activity_authorization.mimes' => 'L\'autorisation d\'activité doit être un fichier PDF, JPG ou PNG',
             'activity_authorization.max' => 'L\'autorisation d\'activité ne doit pas dépasser 8MB',
 
             'for_document.required' => 'Le document FOR est obligatoire',
             'for_document.file' => 'Le document FOR doit être un fichier',
-            'for_document.mimes' => 'Le document FOR doit être un fichier PDF',
+            'for_document.mimes' => 'Le document FOR doit être un fichier XLSX ou XLS',
             'for_document.max' => 'Le document FOR ne doit pas dépasser 8MB',
 
             'formation_certificate_document.required' => 'Le certificat de formation est obligatoire si vous ne validez pas la formation',
             'formation_certificate_document.file' => 'Le certificat de formation doit être un fichier',
-            'formation_certificate_document.mimes' => 'Le certificat de formation doit être un fichier PDF',
+            'formation_certificate_document.mimes' => 'Le certificat de formation doit être un fichier PDF, JPG ou PNG',
             'formation_certificate_document.max' => 'Le certificat de formation ne doit pas dépasser 8MB',
 
             'invoice_document.file' => 'La facture doit être un fichier',
-            'invoice_document.mimes' => 'La facture doit être un fichier PDF',
+            'invoice_document.mimes' => 'La facture doit être un fichier PDF, JPG ou PNG',
             'invoice_document.max' => 'La facture ne doit pas dépasser 8MB',
         ];
     }
@@ -154,28 +154,28 @@ class BadgeRequestValidator
         // Gestion des documents : obligatoires seulement s'ils n'existent pas déjà
         $documentFields = [
             'selfie_photo' => 'jpg,jpeg,png,pdf',
-            'identification_card' => 'pdf',
-            'activity_authorization' => 'pdf',
-            'for_document' => 'pdf',
-            'formation_certificate_document' => 'pdf',
+            'identification_card' => 'pdf,jpg,jpeg,png',
+            'activity_authorization' => 'pdf,jpg,jpeg,png',
+            'for_document' => 'xlsx,xls',
+            'formation_certificate_document' => 'pdf,jpg,jpeg,png',
         ];
 
         foreach ($documentFields as $field => $mimes) {
             if (isset($existingDocuments[$field]) && $existingDocuments[$field]) {
                 // Document existe déjà, il est optionnel
-                $rules[$field] = "nullable|file|mimes:{$mimes}|max:8192";
+                $rules[$field] = "nullable|file|mimes:{$mimes}|max:10240";
             } else {
                 // Document n'existe pas, il est obligatoire
                 // Note: formation_certificate_document sera géré conditionnellement dans validateUpdate()
                 if ($field === 'formation_certificate_document') {
                     continue; // Géré plus tard
                 }
-                $rules[$field] = "required|file|mimes:{$mimes}|max:8192";
+                $rules[$field] = "required|file|mimes:{$mimes}|max:10240";
             }
         }
 
         // invoice_document est toujours optionnel
-        $rules['invoice_document'] = 'nullable|file|mimes:pdf|max:8192';
+        $rules['invoice_document'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240';
 
         return $rules;
     }
@@ -193,15 +193,15 @@ class BadgeRequestValidator
 
         if ($validateTraining) {
             // Si validate_training = true, le certificat n'est pas obligatoire
-            $rules['formation_certificate_document'] = 'nullable|file|mimes:pdf|max:8192';
+            $rules['formation_certificate_document'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240';
         } else {
             // Si validate_training = false
             if ($hasExistingCertificate) {
                 // Document existe déjà, il est optionnel (on peut garder l'existant)
-                $rules['formation_certificate_document'] = 'nullable|file|mimes:pdf|max:8192';
+                $rules['formation_certificate_document'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240';
             } else {
                 // Document n'existe pas, il est obligatoire
-                $rules['formation_certificate_document'] = 'required|file|mimes:pdf|max:8192';
+                $rules['formation_certificate_document'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:10240';
             }
         }
 

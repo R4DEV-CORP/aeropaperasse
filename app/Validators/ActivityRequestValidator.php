@@ -35,11 +35,11 @@ class ActivityRequestValidator
             'vehicule_count' => 'required|integer|min:0|max:1000',
 
             // Documents (obligatoires)
-            'aao_request_document' => 'required|file|mimes:pdf|max:8192',
-            'kbis_document' => 'required|file|mimes:pdf|max:8192',
-            'term_document' => 'required|file|mimes:pdf|max:8192',
-            'safety_referent_document' => 'required|file|mimes:pdf|max:8192',
-            'cta_document' => 'required|file|mimes:pdf|max:8192',
+            'aao_request_document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'kbis_document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'term_document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'safety_referent_document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'cta_document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
         ];
     }
 
@@ -73,11 +73,11 @@ class ActivityRequestValidator
             'vehicule_count' => 'nullable|integer|min:0|max:1000',
 
             // Documents (optionnels)
-            'aao_request_document' => 'nullable|file|mimes:pdf|max:8192',
-            'kbis_document' => 'nullable|file|mimes:pdf|max:8192',
-            'term_document' => 'nullable|file|mimes:pdf|max:8192',
-            'safety_referent_document' => 'nullable|file|mimes:pdf|max:8192',
-            'cta_document' => 'nullable|file|mimes:pdf|max:8192',
+            'aao_request_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'kbis_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'term_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'safety_referent_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            'cta_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
         ];
     }
 
