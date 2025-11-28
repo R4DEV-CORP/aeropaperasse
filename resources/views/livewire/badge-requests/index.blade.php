@@ -170,7 +170,9 @@
                                         <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Passer à remettre" wire:click="toDelivery({{ $badgeRequest->id }})" class="!text-green-500 hover:cursor-pointer"/>
                                     @endif
                                 @endif
-                                <flux:button variant="subtle" icon="document-arrow-down" icon:variant="outline" square="true" tooltip="Télécharger les documents" wire:click="downloadDocuments({{ $badgeRequest->id }})" class="!text-blue-500 hover:cursor-pointer"/>
+                                @if(auth()->user()->isAdmin())
+                                    <flux:button variant="subtle" icon="document-arrow-down" icon:variant="outline" square="true" tooltip="Télécharger les documents" wire:click="downloadDocuments({{ $badgeRequest->id }})" class="!text-blue-500 hover:cursor-pointer"/>
+                                @endif
                             </div>
                         </td>
                     </tr>

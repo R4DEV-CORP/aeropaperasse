@@ -109,7 +109,9 @@
                                         </form>
                                     </flux:modal>
                                 @endif
+                                @if(auth()->user()->isAdmin())
                                 <flux:button variant="subtle" icon="document-arrow-down" icon:variant="outline" square="true" tooltip="Télécharger les documents" wire:click="downloadDocuments({{ $activityRequest->id }})" class="!text-blue-500 hover:cursor-pointer"/>
+                                @endif
                             </div>
                         </td>
                     </tr>

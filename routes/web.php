@@ -55,6 +55,9 @@ Route::get('/clients/{slug}', function ($slug) {
 */
 
 Route::get('/activity-requests', function () {
+    if(auth()->user()->isClient()) {
+        return redirect()->route('clients.view', ['slug' => auth()->user()->client->slug]);
+    }
     return view('activity-requests.index');
 })->middleware('auth');
 

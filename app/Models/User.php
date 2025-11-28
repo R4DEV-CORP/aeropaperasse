@@ -58,6 +58,21 @@ class User extends Authenticatable
         return $this->role === 'admin' || $this->role === 'sadmin';
     }
 
+    public function isSAdmin(): bool
+    {
+        return $this->role === 'sadmin';
+    }
+
+    public function isClient(): bool
+    {
+        return $this->role === 'client';
+    }
+
+    public function isSClient(): bool
+    {
+        return $this->role === 'sclient';
+    }
+
     public function badgeRequests()
     {
         return $this->hasMany(BadgeRequest::class);

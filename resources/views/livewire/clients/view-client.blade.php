@@ -8,7 +8,17 @@
     <flux:heading size="xl">{{ $client->company_name }}</flux:heading>
     <div class="flex items-end justify-between gap-2">
         <flux:text class="mt-2">Consultez et modifiez les informations de cette société.</flux:text>
-        <flux:button icon="arrow-down-tray" tooltip="Télécharger le bilan" class="hover:cursor-pointer" wire:click="downloadOverview">Télécharger le bilan</flux:button>
+        <div class="flex items-center gap-2">
+            @if(!auth()->user()->isClient())
+            <flux:modal.trigger name="edit-client">
+                <flux:button icon="pencil-square" tooltip="Modifier la société" class="hover:cursor-pointer">Modifier la société</flux:button>
+            </flux:modal.trigger>
+            <flux:modal :name="'edit-client'" class="min-w-4xl !max-w-6xl" wire:key="edit-client-modal">
+                <livewire:clients.edit-client-form :clientId="$client->id" />
+            </flux:modal>
+            @endif
+            <flux:button icon="arrow-down-tray" tooltip="Télécharger le bilan" class="hover:cursor-pointer" wire:click="downloadOverview">Télécharger le bilan</flux:button>
+        </div>
     </div>
     <div class="grid grid-cols-3 gap-2 border border-gray-800/10 p-4 rounded-lg bg-white mt-4">
         <flux:heading size="lg" class="col-span-3">Informations sur la société</flux:heading>

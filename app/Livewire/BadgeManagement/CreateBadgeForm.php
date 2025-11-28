@@ -28,7 +28,17 @@ class CreateBadgeForm extends Component
     public function mount()
     {
         $this->badgeRequests = collect(); // Initialiser avec une collection vide
-        $this->loadClients();
+        if(auth()->user()->isAdmin()) {
+            $this->loadClients();
+        } else {
+            $this->selected_client_id = auth()->user()->client->id;
+            $this->badgeRequests = BadgeRequest::with(['activityRequest', 'coworker'])
+                ->whereHas('activityRequest', function ($query) {
+                    $query->where('client_id', $this->selected_client_id);
+                })
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
     }
 
     public function loadClients()

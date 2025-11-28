@@ -264,6 +264,7 @@
                 <flux:description>Si renseigné, c'est à cet email que seront envoyées les notifications pour toutes les demandes de cette société. Sinon, ce sera à celui du demandeur.</flux:description>
                 <flux:error name="notification_email" />
             </flux:field>
+            @if(auth()->user()->isAdmin())
             <flux:field>
                 <flux:label>Quota de badges</flux:label>
                 <flux:input type="number" icon:trailing="identification" wire:model="badge_limit" name="badge_limit" min="1" max="1000" required />
@@ -274,6 +275,7 @@
                 <flux:input type="number" icon:trailing="truck" wire:model="vehicle_pass_limit" name="vehicle_pass_limit" min="0" max="1000" required />
                 <flux:error name="vehicle_pass_limit" />
             </flux:field>
+            @endif
         </div>
     </div>
 

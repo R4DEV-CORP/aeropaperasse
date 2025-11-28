@@ -60,7 +60,7 @@
             <flux:radio.group wire:model="role" label="Rôle" variant="segmented" size="sm" class="col-span-2">
                 <flux:radio value="client" label="Client" />
                 <flux:radio value="sclient" label="Sclient" />
-                @if($user->isAdmin())
+                @if($user->isSAdmin())
                 <flux:radio value="admin" label="Admin" />
                 <flux:radio value="sadmin" label="Sadmin" />
                 @endif

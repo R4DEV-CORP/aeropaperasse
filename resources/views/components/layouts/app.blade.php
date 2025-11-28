@@ -23,7 +23,9 @@
                 <flux:sidebar.collapse class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2" />
             </flux:sidebar.header>
             <flux:sidebar.nav>
+                @if(!auth()->user()->isClient())
                 <flux:sidebar.item icon="document-text" href="/activity-requests" wire:navigate>Demande d'activité</flux:sidebar.item>
+                @endif
                 <flux:sidebar.item icon="identification" href="/badge-requests" wire:navigate>Demande de badge</flux:sidebar.item>
                 <flux:sidebar.item icon="rectangle-stack" href="/badge-management" wire:navigate>Suivi des badges</flux:sidebar.item>
                 <flux:sidebar.item icon="hand-raised" href="/vehicle-pass" wire:navigate>Laissez-passer</flux:sidebar.item>
