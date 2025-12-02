@@ -26,7 +26,7 @@
                 <flux:text>{{ $badgeCount }}/{{ $client->badge_limit }}</flux:text>
             </div>
             <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
-                <div class="h-full bg-green-600 rounded-full" style="width: {{ $badgeCount / $client->badge_limit * 100 }}%"></div>
+                <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->badge_limit > 0 ? $badgeCount / $client->badge_limit * 100 : 0 }}%"></div>
             </div>
             <flux:text class="mt-2">Vous disposez de <span class="font-medium">{{ $badgeCount }} badges.</span> Il vous reste donc <span class="font-medium">{{ $client->badge_limit - $badgeCount }} demandes de badge disponibles.</span></flux:text>
         </div>

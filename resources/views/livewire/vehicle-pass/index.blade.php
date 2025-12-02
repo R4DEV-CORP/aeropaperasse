@@ -22,7 +22,7 @@
                 <flux:text>{{ $vehiclePassCount }}/{{ $client->vehicle_pass_limit }}</flux:text>
             </div>
             <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
-                <div class="h-full bg-green-600 rounded-full" style="width: {{ $vehiclePassCount / $client->vehicle_pass_limit * 100 }}%"></div>
+                <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->vehicle_pass_limit > 0 ? $vehiclePassCount / $client->vehicle_pass_limit * 100 : 0 }}%"></div>
             </div>
             <flux:text class="mt-2">Vous disposez de <span class="font-medium">{{ $vehiclePassCount }} laissez passer.</span> Il vous reste donc <span class="font-medium">{{ $client->vehicle_pass_limit - $vehiclePassCount }} demandes de laissez passer disponibles.</span></flux:text>
         </div>
