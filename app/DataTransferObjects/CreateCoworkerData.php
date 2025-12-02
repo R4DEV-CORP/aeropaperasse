@@ -47,6 +47,7 @@ class CreateCoworkerData
             password: $data['password'] ?? null,
             role: $data['role'] ?? 'client',
             created_by: $userId,
+            can_access_formation: (bool) ($data['can_access_formation'] ?? false),
         );
     }
 
