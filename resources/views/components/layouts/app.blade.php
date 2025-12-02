@@ -28,11 +28,15 @@
                 @endif
                 <flux:sidebar.item icon="identification" href="/badge-requests" wire:navigate>Demande de badge</flux:sidebar.item>
                 <flux:sidebar.item icon="rectangle-stack" href="/badge-management" wire:navigate>Suivi des badges</flux:sidebar.item>
+                @if(!auth()->user()->isClient())
                 <flux:sidebar.item icon="hand-raised" href="/vehicle-pass" wire:navigate>Laissez-passer</flux:sidebar.item>
+                @endif
+                @if(!auth()->user()->isClient())
                 <flux:sidebar.item icon="academic-cap" href="/trainings" wire:navigate>Formations</flux:sidebar.item>
+                @endif
                 <flux:sidebar.item icon="building-office" href="/clients" wire:navigate>Sociétés</flux:sidebar.item>
                 <flux:sidebar.item icon="users" href="/coworkers" wire:navigate>Collaborateurs & utilisateurs</flux:sidebar.item>
-                <flux:sidebar.item icon="chat-bubble-left-right" href="#" wire:navigate>Messagerie</flux:sidebar.item>
+                <!--<flux:sidebar.item icon="chat-bubble-left-right" href="#" wire:navigate>Messagerie</flux:sidebar.item>-->
             </flux:sidebar.nav>
             <flux:sidebar.spacer />
                 <div class="@min-[64px]/sidebar:block hidden bg-linear-to-t from-[#0d0b0a] to-[#272322] p-4 m-4 rounded-lg">

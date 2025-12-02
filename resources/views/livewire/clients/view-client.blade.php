@@ -92,7 +92,7 @@
                 <flux:text>{{ $client->getActiveBadgeCount() }}/{{ $client->badge_limit }}</flux:text>
             </div>
             <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
-                <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->getActiveBadgeCount() / $client->badge_limit * 100 }}%"></div>
+                <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->badge_limit > 0 ? $client->getActiveBadgeCount() / $client->badge_limit * 100 : 0 }}%"></div>
             </div>
             <flux:text class="mt-2">La société dispose de <span class="font-medium">{{ $client->getActiveBadgeCount() }} badges.</span> Il leur reste donc <span class="font-medium">{{ $client->badge_limit - $client->getActiveBadgeCount() }} demandes de badge disponibles.</span></flux:text>
         </div>
@@ -102,7 +102,7 @@
                 <flux:text>{{ $client->getActiveVehiclePassesCountAttribute() }}/{{ $client->vehicle_pass_limit }}</flux:text>
             </div>
             <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
-                <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->getActiveVehiclePassesCountAttribute() / $client->vehicle_pass_limit * 100 }}%"></div>
+                <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->vehicle_pass_limit > 0 ? $client->getActiveVehiclePassesCountAttribute() / $client->vehicle_pass_limit * 100 : 0 }}%"></div>
             </div>
             <flux:text class="mt-2">La société dispose de <span class="font-medium">{{ $client->getActiveVehiclePassesCountAttribute() }} laissez passer.</span> Il leur reste donc <span class="font-medium">{{ $client->vehicle_pass_limit - $client->getActiveVehiclePassesCountAttribute() }} demandes de laissez passer disponibles.</span></flux:text>
         </div>

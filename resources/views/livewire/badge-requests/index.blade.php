@@ -33,9 +33,11 @@
     @endif
     <div class="flex items-center gap-3 mt-4">
         <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher une demande..." />
-        <flux:modal.trigger name="new-badge-request">
-            <flux:button variant="primary" icon="plus">Nouvelle demande</flux:button>
-        </flux:modal.trigger>
+        @if(!auth()->user()->isClient())
+            <flux:modal.trigger name="new-badge-request">
+                <flux:button variant="primary" icon="plus">Nouvelle demande</flux:button>
+            </flux:modal.trigger>
+        @endif
     </div>
     <div class="mt-4 py-4 bg-white rounded-lg border border-zinc-200">
         <flux:heading size="lg" class="px-4">Demandes récentes</flux:heading>

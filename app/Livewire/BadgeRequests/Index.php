@@ -77,6 +77,13 @@ class Index extends Component
             });
         }
 
+        // Si l'utilisateur à le role client, il ne peut voir que les badges request associés à une activityRequest qu'il a créé
+        if (auth()->user()->isClient()) {
+            $query->whereHas('activityRequest', function ($q) {
+                $q->where('created_by', auth()->user()->id);
+            });
+        }
+
         return $query->orderBy('created_at', 'desc')->paginate(10, ['*'], 'page');
     }
 
@@ -89,6 +96,13 @@ class Index extends Component
         if (! auth()->user()->isAdmin()) {
             $query->whereHas('activityRequest', function ($q) {
                 $q->where('client_id', auth()->user()->client_id);
+            });
+        }
+
+        // Si l'utilisateur à le role client, il ne peut voir que les badges request associés à une activityRequest qu'il a créé
+        if (auth()->user()->isClient()) {
+            $query->whereHas('activityRequest', function ($q) {
+                $q->where('created_by', auth()->user()->id);
             });
         }
 
@@ -107,6 +121,13 @@ class Index extends Component
                 if (! auth()->user()->isAdmin()) {
                     $query->whereHas('activityRequest', function ($q) {
                         $q->where('client_id', auth()->user()->client_id);
+                    });
+                }
+
+                // Si l'utilisateur à le role client, il ne peut voir que les badges request associés à une activityRequest qu'il a créé
+                if (auth()->user()->isClient()) {
+                    $query->whereHas('activityRequest', function ($q) {
+                        $q->where('created_by', auth()->user()->id);
                     });
                 }
             });

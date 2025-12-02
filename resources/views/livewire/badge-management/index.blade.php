@@ -13,9 +13,11 @@
 
     <div class="flex items-center gap-3 mt-4">
         <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher par nom, prénom du collaborateur ou nom de l'entreprise" />
-        <flux:modal.trigger name="add-badge">
-            <flux:button variant="primary" icon="plus">Ajouter un badge</flux:button>
-        </flux:modal.trigger>
+        @if(!auth()->user()->isClient())
+            <flux:modal.trigger name="add-badge">
+                <flux:button variant="primary" icon="plus">Ajouter un badge</flux:button>
+            </flux:modal.trigger>
+        @endif
     </div>
 
     <div class="mt-4 py-4 bg-white rounded-lg border border-zinc-200">
@@ -82,14 +84,14 @@
                                 <flux:modal :name="'view-badge-'.$badge->id" class="min-w-4xl !max-w-6xl">
                                     <livewire:badge-management.view-badge :badge="$badge" wire:key="badge-modal-view-{{ $badge->id }}" />
                                 </flux:modal>
-                                @if($badge->status == 'active' || $badge->status == 'expired' || $badge->status == 'not_returned')
+                                @if(($badge->status == 'active' || $badge->status == 'expired' || $badge->status == 'not_returned') && !auth()->user()->isClient())
                                     <flux:modal.trigger :name="'return-badge-'.$badge->id">
                                         <flux:button variant="subtle" icon="inbox-arrow-down" icon:variant="outline" square="true" tooltip="Marquer comme restitué" class="!text-blue-500 hover:cursor-pointer"/>
                                     </flux:modal.trigger>
                                     <!-- Modal return badge -->
-                                    <flux:modal :name="'return-badge-'.$badge->id" class="min-w-4xl !max-w-6xl border" wire:key="badge-modal-return-{{ $badge->id }}">
-                                        <livewire:badge-management.return-badge-form :badge="$badge" wire:key="badge-modal-return-{{ $badge->id }}" />
-                                    </flux:modal>
+                                        <flux:modal :name="'return-badge-'.$badge->id" class="min-w-4xl !max-w-6xl border" wire:key="badge-modal-return-{{ $badge->id }}">
+                                            <livewire:badge-management.return-badge-form :badge="$badge" wire:key="badge-modal-return-{{ $badge->id }}" />
+                                        </flux:modal>
                                 @endif
                                 @if(auth()->user()->isAdmin())
                                     <flux:modal.trigger :name="'edit-badge-expiry-date-'.$badge->id">

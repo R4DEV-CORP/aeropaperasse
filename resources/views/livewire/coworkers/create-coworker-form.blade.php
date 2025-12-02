@@ -85,6 +85,8 @@
         </div>
         @endif
     </div>
+
+    @if(!auth()->user()->isClient())
     
     <div class="border border-gray-800/10 p-4 rounded-lg">
         <flux:heading size="lg" class="mb-4">Voulez-vous créer un compte utilisateur pour le collaborateur ?</flux:heading>
@@ -123,7 +125,7 @@
         </div>
         @endif
     </div>
-    
+    @endif
     <div class="flex justify-end space-x-4">
         <flux:button type="button" wire:click="$dispatch('close-modal', { name: 'new-coworker' })" variant="ghost">
             Annuler
