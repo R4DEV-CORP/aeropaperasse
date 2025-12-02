@@ -40,6 +40,26 @@ class DatabaseSeeder extends Seeder
                 'city' => 'Tremblay en Ffrance',
             ]);
 
+        $userSAdmin = User::factory()
+            ->for($clientAdmin)
+            ->create([
+                'name' => 'Corentin Sarda',
+                'email' => 'sadmin@r4web.fr',
+                'role' => 'sadmin',
+            ]);
+
+        $coworkerSAdmin = Coworker::factory()
+            ->for($clientAdmin)
+            ->for($userSAdmin)
+            ->create([
+                'firstname' => 'Corentin',
+                'lastname' => 'Sarda',
+                'email' => 'sadmin@r4web.fr',
+            ]);
+
+        $userSAdmin->coworker_id = $coworkerSAdmin->id;
+        $userSAdmin->save();
+
         $userAdmin = User::factory()
             ->for($clientAdmin)
             ->create([
@@ -72,6 +92,14 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Clément Richard',
                 'email' => 'sclient@r4web.fr',
             ]);
+        
+        $user2 = User::factory()
+            ->for($clients[0])
+            ->create([
+                'role' => 'client',
+                'name' => 'Alexis Putman',
+                'email' => 'client@r4web.fr',
+            ]);
 
         $coworker = Coworker::factory()
             ->for($user)
@@ -80,6 +108,15 @@ class DatabaseSeeder extends Seeder
                 'firstname' => 'Clément',
                 'lastname' => 'Richard',
                 'email' => 'sclient@r4web.fr',
+            ]);
+            
+        $coworker2 = Coworker::factory()
+            ->for($user2)
+            ->for($clients[0])
+            ->create([
+                'firstname' => 'Alexis',
+                'lastname' => 'Putman',
+                'email' => 'client@r4web.fr',
             ]);
 
         // Training

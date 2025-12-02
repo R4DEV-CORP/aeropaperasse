@@ -19,6 +19,16 @@ class Index extends Component
     {
         $query = Coworker::with(['client', 'user']);
 
+        // Retourne tous les coworkers qui ne sont pas sadmin
+        if (auth()->user()->isAdmin() && ! auth()->user()->isSAdmin()) {
+            $query->where(function ($q) {
+                $q->whereNull('user_id')
+                    ->orWhereHas('user', function ($userQuery) {
+                        $userQuery->where('role', '!=', 'sadmin');
+                    });
+            });
+        }
+
         // Filtrage par client si l'utilisateur n'est pas admin
         if (! auth()->user()->isAdmin()) {
             $query->where('client_id', auth()->user()->client_id);

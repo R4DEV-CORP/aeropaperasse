@@ -51,6 +51,7 @@
         @if($vehiclePass->certificate_of_registration)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Certificat d'immatriculation</flux:callout.heading>
+                @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
@@ -61,11 +62,13 @@
                         Télécharger
                         </flux:button>
                 </x-slot>
+                @endif
             </flux:callout>
         @endif
         @if($vehiclePass->company_stamp)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Tampon de l'entreprise</flux:callout.heading>
+                @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
@@ -76,6 +79,7 @@
                         Télécharger
                         </flux:button>
                 </x-slot>
+                @endif
             </flux:callout>
         @endif
     </div>    

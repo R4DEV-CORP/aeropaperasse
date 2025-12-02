@@ -28,6 +28,13 @@ class Index extends Component
             });
         }
 
+        // Si l'utilisateur à le role client, il ne peut voir que les badges associés à un badge request dont le coworker est associé à ce user
+        if (auth()->user()->isClient()) {
+            $query->whereHas('badgeRequest.coworker', function ($q) {
+                $q->where('user_id', auth()->user()->id);
+            });
+        }
+
         return $query->orderBy('created_at', 'desc')->paginate(10);
     }
 
@@ -51,6 +58,13 @@ class Index extends Component
         if (! auth()->user()->isAdmin()) {
             $query->whereHas('badgeRequest.activityRequest', function ($q) {
                 $q->where('client_id', auth()->user()->client_id);
+            });
+        }
+
+        // Si l'utilisateur à le role client, il ne peut voir que les badges associés à un badge request dont le coworker est associé à ce user
+        if (auth()->user()->isClient()) {
+            $query->whereHas('badgeRequest.coworker', function ($q) {
+                $q->where('user_id', auth()->user()->id);
             });
         }
 

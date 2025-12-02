@@ -96,6 +96,7 @@
         @if($badgeRequest->selfie_photo)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Photo de'identité</flux:callout.heading>
+                @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
@@ -106,12 +107,14 @@
                         Télécharger
                     </flux:button>
                 </x-slot>
+                @endif
             </flux:callout>
         @endif
         
         @if($badgeRequest->identification_card)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Carte d'identité</flux:callout.heading>
+                @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
@@ -122,12 +125,14 @@
                         Télécharger
                     </flux:button>
                 </x-slot>
+                @endif
             </flux:callout>
         @endif
         
         @if($badgeRequest->activity_authorization)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Autorisation d'activité</flux:callout.heading>
+                @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
@@ -138,12 +143,14 @@
                         Télécharger
                     </flux:button>
                 </x-slot>
+                @endif
             </flux:callout>
         @endif
         
         @if($badgeRequest->for_document)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Document FOR</flux:callout.heading>
+                @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
@@ -154,12 +161,14 @@
                         Télécharger
                     </flux:button>
                 </x-slot>
+                @endif
             </flux:callout>
         @endif
 
         @if($badgeRequest->formation_certificate_document)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Certificat de formation</flux:callout.heading>
+                @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
@@ -170,6 +179,7 @@
                         Télécharger
                     </flux:button>
                 </x-slot>
+                @endif
             </flux:callout>
         @else
             @if($badgeRequest->validate_training)
@@ -183,6 +193,7 @@
         @if($badgeRequest->invoice_document)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Facture</flux:callout.heading>
+                @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
@@ -193,29 +204,32 @@
                         Télécharger
                     </flux:button>
                 </x-slot>
+                @endif
             </flux:callout>
         @endif
         
-        @if($badgeRequest->selfie_photo ||  
-            $badgeRequest->identification_card || 
-            $badgeRequest->activity_authorization || 
-            $badgeRequest->for_document || 
-            $badgeRequest->formation_certificate_document || 
-            $badgeRequest->invoice_document)
-            <flux:button 
-                variant="primary" 
-                icon="document-arrow-down" 
-                class="w-full mt-2"
-                wire:click="downloadAllDocuments"
-                wire:loading.attr="disabled"
-            >
-                <span wire:loading.remove wire:target="downloadAllDocuments">Télécharger tous les documents</span>
-                <span wire:loading wire:target="downloadAllDocuments">Préparation du téléchargement...</span>
-            </flux:button>
-        @else
-            <flux:callout icon="information-circle" variant="secondary" class="mt-2">
-                <flux:callout.text>Aucun document disponible pour cette demande.</flux:callout.text>
-            </flux:callout>
+        @if(auth()->user()->isAdmin())
+            @if($badgeRequest->selfie_photo ||  
+                $badgeRequest->identification_card || 
+                $badgeRequest->activity_authorization || 
+                $badgeRequest->for_document || 
+                $badgeRequest->formation_certificate_document || 
+                $badgeRequest->invoice_document)
+                <flux:button 
+                    variant="primary" 
+                    icon="document-arrow-down" 
+                    class="w-full mt-2"
+                    wire:click="downloadAllDocuments"
+                    wire:loading.attr="disabled"
+                >
+                    <span wire:loading.remove wire:target="downloadAllDocuments">Télécharger tous les documents</span>
+                    <span wire:loading wire:target="downloadAllDocuments">Préparation du téléchargement...</span>
+                </flux:button>
+            @else
+                <flux:callout icon="information-circle" variant="secondary" class="mt-2">
+                    <flux:callout.text>Aucun document disponible pour cette demande.</flux:callout.text>
+                </flux:callout>
+            @endif
         @endif
     </div>
     <flux:separator class="my-4"/>

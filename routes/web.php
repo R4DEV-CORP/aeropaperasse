@@ -55,6 +55,9 @@ Route::get('/clients/{slug}', function ($slug) {
 */
 
 Route::get('/activity-requests', function () {
+    if(auth()->user()->isClient()) {
+        return redirect()->route('clients.view', ['slug' => auth()->user()->client->slug]);
+    }
     return view('activity-requests.index');
 })->middleware('auth');
 
@@ -87,10 +90,16 @@ Route::get('/coworkers', function () {
 */
 
 Route::get('/trainings', function () {
+    if(auth()->user()->isClient()) {
+        return redirect()->route('clients.view', ['slug' => auth()->user()->client->slug]);
+    }   
     return view('trainings.index');
 })->middleware('auth');
 
 Route::get('/trainings/client/{slug}', function ($slug) {
+    if(auth()->user()->isClient()) {
+        return redirect()->route('clients.view', ['slug' => auth()->user()->client->slug]);
+    }
     return view('trainings.client', ['slug' => $slug]);
 })->middleware('auth')->name('training.client');
 
@@ -100,5 +109,8 @@ Route::get('/trainings/client/{slug}', function ($slug) {
 */
 
 Route::get('/vehicle-pass', function () {
+    if(auth()->user()->isClient()) {
+        return redirect()->route('clients.view', ['slug' => auth()->user()->client->slug]);
+    }
     return view('vehicle-pass.index');
 })->middleware('auth');

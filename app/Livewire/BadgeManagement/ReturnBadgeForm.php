@@ -5,6 +5,7 @@ namespace App\Livewire\BadgeManagement;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Services\BadgeRequestDocumentService;
+use Flux\Flux;
 
 class ReturnBadgeForm extends Component
 {
@@ -45,7 +46,7 @@ class ReturnBadgeForm extends Component
      */
     public function closeModal(): void
     {
-        $this->resetForm();
+        $this->reset(['return_badge_document']);
         Flux::modal('return-badge-'.$this->badge->id)->close();
     }
 

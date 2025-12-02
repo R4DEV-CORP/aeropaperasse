@@ -8,7 +8,17 @@
     <flux:heading size="xl">{{ $client->company_name }}</flux:heading>
     <div class="flex items-end justify-between gap-2">
         <flux:text class="mt-2">Consultez et modifiez les informations de cette société.</flux:text>
-        <flux:button icon="arrow-down-tray" tooltip="Télécharger le bilan" class="hover:cursor-pointer" wire:click="downloadOverview">Télécharger le bilan</flux:button>
+        <div class="flex items-center gap-2">
+            @if(!auth()->user()->isClient())
+            <flux:modal.trigger name="edit-client">
+                <flux:button icon="pencil-square" tooltip="Modifier la société" class="hover:cursor-pointer">Modifier la société</flux:button>
+            </flux:modal.trigger>
+            <flux:modal :name="'edit-client'" class="min-w-4xl !max-w-6xl" wire:key="edit-client-modal">
+                <livewire:clients.edit-client-form :clientId="$client->id" />
+            </flux:modal>
+            @endif
+            <flux:button icon="arrow-down-tray" tooltip="Télécharger le bilan" class="hover:cursor-pointer" wire:click="downloadOverview">Télécharger le bilan</flux:button>
+        </div>
     </div>
     <div class="grid grid-cols-3 gap-2 border border-gray-800/10 p-4 rounded-lg bg-white mt-4">
         <flux:heading size="lg" class="col-span-3">Informations sur la société</flux:heading>
@@ -82,7 +92,7 @@
                 <flux:text>{{ $client->getActiveBadgeCount() }}/{{ $client->badge_limit }}</flux:text>
             </div>
             <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
-                <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->getActiveBadgeCount() / $client->badge_limit * 100 }}%"></div>
+                <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->badge_limit > 0 ? $client->getActiveBadgeCount() / $client->badge_limit * 100 : 0 }}%"></div>
             </div>
             <flux:text class="mt-2">La société dispose de <span class="font-medium">{{ $client->getActiveBadgeCount() }} badges.</span> Il leur reste donc <span class="font-medium">{{ $client->badge_limit - $client->getActiveBadgeCount() }} demandes de badge disponibles.</span></flux:text>
         </div>
@@ -92,7 +102,7 @@
                 <flux:text>{{ $client->getActiveVehiclePassesCountAttribute() }}/{{ $client->vehicle_pass_limit }}</flux:text>
             </div>
             <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
-                <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->getActiveVehiclePassesCountAttribute() / $client->vehicle_pass_limit * 100 }}%"></div>
+                <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->vehicle_pass_limit > 0 ? $client->getActiveVehiclePassesCountAttribute() / $client->vehicle_pass_limit * 100 : 0 }}%"></div>
             </div>
             <flux:text class="mt-2">La société dispose de <span class="font-medium">{{ $client->getActiveVehiclePassesCountAttribute() }} laissez passer.</span> Il leur reste donc <span class="font-medium">{{ $client->vehicle_pass_limit - $client->getActiveVehiclePassesCountAttribute() }} demandes de laissez passer disponibles.</span></flux:text>
         </div>

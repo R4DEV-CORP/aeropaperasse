@@ -96,6 +96,7 @@
         @if($activityRequest->aao_request_document)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Demande AAO</flux:callout.heading>
+                @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
@@ -106,12 +107,14 @@
                         Télécharger
                     </flux:button>
                 </x-slot>
+                @endif
             </flux:callout>
         @endif
         
         @if($activityRequest->kbis_document)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Extrait KBIS</flux:callout.heading>
+                @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
@@ -122,12 +125,14 @@
                         Télécharger
                     </flux:button>
                 </x-slot>
+                @endif
             </flux:callout>
         @endif
         
         @if($activityRequest->term_document)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Mandat</flux:callout.heading>
+                @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
@@ -138,12 +143,14 @@
                         Télécharger
                     </flux:button>
                 </x-slot>
+                @endif
             </flux:callout>
         @endif
         
         @if($activityRequest->safety_referent_document)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Référent sûreté</flux:callout.heading>
+                @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
@@ -154,12 +161,14 @@
                         Télécharger
                     </flux:button>
                 </x-slot>
+                @endif
             </flux:callout>
         @endif
         
         @if($activityRequest->cta_document)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>CTA</flux:callout.heading>
+                @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
                     <flux:button 
                         variant="ghost" 
@@ -170,28 +179,31 @@
                         Télécharger
                     </flux:button>
                 </x-slot>
+                @endif
             </flux:callout>
         @endif
         
-        @if($activityRequest->aao_request_document || 
-            $activityRequest->kbis_document || 
-            $activityRequest->term_document || 
-            $activityRequest->safety_referent_document || 
-            $activityRequest->cta_document)
-            <flux:button 
-                variant="primary" 
-                icon="document-arrow-down" 
-                class="w-full mt-2"
-                wire:click="downloadAllDocuments"
-                wire:loading.attr="disabled"
-            >
-                <span wire:loading.remove wire:target="downloadAllDocuments">Télécharger tous les documents</span>
-                <span wire:loading wire:target="downloadAllDocuments">Préparation du téléchargement...</span>
-            </flux:button>
-        @else
-            <flux:callout icon="information-circle" variant="secondary" class="mt-2">
-                <flux:callout.text>Aucun document disponible pour cette demande.</flux:callout.text>
-            </flux:callout>
+        @if(auth()->user()->isAdmin())
+            @if($activityRequest->aao_request_document || 
+                $activityRequest->kbis_document || 
+                $activityRequest->term_document || 
+                $activityRequest->safety_referent_document || 
+                $activityRequest->cta_document)
+                <flux:button 
+                    variant="primary" 
+                    icon="document-arrow-down" 
+                    class="w-full mt-2"
+                    wire:click="downloadAllDocuments"
+                    wire:loading.attr="disabled"
+                >
+                    <span wire:loading.remove wire:target="downloadAllDocuments">Télécharger tous les documents</span>
+                    <span wire:loading wire:target="downloadAllDocuments">Préparation du téléchargement...</span>
+                </flux:button>
+            @else
+                <flux:callout icon="information-circle" variant="secondary" class="mt-2">
+                    <flux:callout.text>Aucun document disponible pour cette demande.</flux:callout.text>
+                </flux:callout>
+            @endif
         @endif
     </div>
     <flux:separator class="my-4"/>

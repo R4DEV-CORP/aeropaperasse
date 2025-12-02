@@ -85,6 +85,8 @@
         </div>
         @endif
     </div>
+
+    @if(!auth()->user()->isClient())
     
     <div class="border border-gray-800/10 p-4 rounded-lg">
         <flux:heading size="lg" class="mb-4">Voulez-vous créer un compte utilisateur pour le collaborateur ?</flux:heading>
@@ -114,7 +116,7 @@
             <flux:radio.group wire:model="role" label="Rôle" variant="segmented" size="sm" class="col-span-2">
                 <flux:radio value="client" label="Client" />
                 <flux:radio value="sclient" label="Sclient" />
-                @if($user->isAdmin())
+                @if($user->isSAdmin())
                 <flux:radio value="admin" label="Admin" />
                 <flux:radio value="sadmin" label="Sadmin" />
                 @endif
@@ -123,7 +125,7 @@
         </div>
         @endif
     </div>
-    
+    @endif
     <div class="flex justify-end space-x-4">
         <flux:button type="button" wire:click="$dispatch('close-modal', { name: 'new-coworker' })" variant="ghost">
             Annuler
