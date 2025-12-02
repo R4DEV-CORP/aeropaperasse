@@ -8,6 +8,7 @@ use App\Models\Training;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Flux\Flux;
 
 class AddCoworkerToTrainingForm extends Component
 {
@@ -125,6 +126,20 @@ class AddCoworkerToTrainingForm extends Component
             DB::rollBack();
             $this->errorMessage = 'Une erreur est survenue lors de l\'attribution de la formation.';
         }
+    }
+
+    public function resetForm()
+    {
+        $this->selected_coworker_id = null;
+        $this->selected_training_id = null;
+        $this->start_date = null;
+        $this->validity_years = null;
+    }
+
+    public function closeModal()
+    {
+        $this->resetForm();
+        Flux::modal('add-coworker-to-formation-modal')->close();
     }
 
     public function render()

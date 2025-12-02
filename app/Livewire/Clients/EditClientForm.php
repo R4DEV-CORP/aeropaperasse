@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Validators\ClientValidator;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Flux\Flux;
 
 class EditClientForm extends Component
 {
@@ -282,7 +283,8 @@ class EditClientForm extends Component
      */
     public function cancelModal(): void
     {
-        $this->dispatch('close-modal', ['modal' => 'edit-client-'.$this->clientId]);
+        Flux::modal('edit-client-'.$this->clientId)->close();
+        Flux::modal('edit-client')->close();
     }
 
     public function render()

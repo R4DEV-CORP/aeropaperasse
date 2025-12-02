@@ -197,6 +197,12 @@ class CreateCoworkerForm extends Component
         $this->successMessage = '';
     }
 
+    public function closeModal()
+    {
+        $this->resetForm();
+        Flux::modal('new-coworker')->close();
+    }
+
     public function render()
     {
         return view('livewire.coworkers.create-coworker-form');

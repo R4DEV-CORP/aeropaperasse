@@ -233,7 +233,7 @@ class CreateVehiclePassForm extends Component
     public function closeModal(): void
     {
         $this->resetForm();
-        Flux::modal('new-vehicle-pass')->close();
+        Flux::modal('new-vehicle-pass-request')->close();
     }
 
     public function render()
