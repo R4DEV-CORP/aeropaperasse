@@ -69,7 +69,7 @@
         </div>
         
         <div class="content">
-            <p><strong>Bonjour {{ $nom }},</strong></p>
+            <p><strong>Bonjour {{ $name}},</strong></p>
             
             <p>Nous vous informons que votre demande de badge a été examinée par Rem Distribution et est désormais en attente de traitement par le service ADP.</p>
             

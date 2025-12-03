@@ -103,35 +103,21 @@
         </div>
         
         <div class="content">
-            <p><strong>Bonjour {{ $prenom }} {{ $nom }},</strong></p>
+            <p><strong>Bonjour {{ $name }},</strong></p>
             
-            <p>Nous confirmons que votre badge n°{{ $badge_number }} a été <span class="success">restitué avec succès</span> le {{ date('d/m/Y', strtotime($returned_at)) }}.</p>
+            <p>Nous confirmons que votre badge a été <span class="success">restitué avec succès</span> le {{ date('d/m/Y', strtotime($returned_at)) }}.</p>
             
             <div class="info-section">
                 <div class="section-title">Détails de la restitution</div>
                 <div class="info-box">
                     <div class="info-item">
-                        <span class="label">Numéro de badge :</span><br>
-                        <span class="value">{{ $badge_number }}</span>
-                    </div>
-                    <div class="info-item">
                         <span class="label">Titulaire :</span><br>
-                        <span class="value">{{ $prenom }} {{ $nom }}</span>
+                        <span class="value">{{ $coworker_firstname }} {{ $coworker_lastname }}</span>
                     </div>
                     <div class="info-item">
                         <span class="label">Date de restitution :</span><br>
                         <span class="value">{{ date('d/m/Y', strtotime($returned_at)) }}</span>
                     </div>
-                    @if($return_document)
-                    <div class="info-item">
-                        <span class="label">Document de restitution :</span><br>
-                        <span class="value">
-                            <a href="{{ Storage::url($return_document) }}" class="document-link" target="_blank">
-                                Voir le document
-                            </a>
-                        </span>
-                    </div>
-                    @endif
                 </div>
             </div>
             

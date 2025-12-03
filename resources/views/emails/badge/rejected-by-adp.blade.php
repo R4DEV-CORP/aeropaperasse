@@ -73,11 +73,11 @@
         </div>
         
         <div class="content">
-            <p><strong>Bonjour {{ $nom }},</strong></p>
+            <p><strong>Bonjour {{ $name }},</strong></p>
             
             <p>Nous vous informons que votre demande de badge a été examinée par le service ADP.</p>
             
-            <p>Votre demande a été <span class="rejected">refusée</span> par le service ADP. Pour plus d'informations, vous pouvez nous contacter en cliquant ici : <a href="/messages/create?badge_request_id={{ $badge_request_id }}">contacter le service</a>.</p>
+            <p>Votre demande a été <span class="rejected">refusée</span> par le service ADP.</p>
             
             <p>Nous vous tiendrons informé(e) de l'évolution de votre demande.</p>
             

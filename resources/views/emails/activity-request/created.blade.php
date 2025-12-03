@@ -124,15 +124,15 @@
                 <div class="info-box">
                     <div class="info-item">
                         <span class="label">Raison sociale :</span><br>
-                        <span class="value">{{ $raison_sociale }}</span>
+                        <span class="value">{{ $activity_request->client->company_name }}</span>
                     </div>
                     <div class="info-item">
                         <span class="label">Nom commercial :</span><br>
-                        <span class="value">{{ $nom_commercial }}</span>
+                        <span class="value">{{ $activity_request->client->trade_name }}</span>
                     </div>
                     <div class="info-item">
                         <span class="label">SIRET :</span><br>
-                        <span class="value">{{ $activityRequest->siret }}</span>
+                        <span class="value">{{ $activityRequest->client->siret_number }}</span>
                     </div>
                 </div>
             </div>
@@ -142,19 +142,19 @@
                 <div class="info-box">
                     <div class="info-item">
                         <span class="label">Nom complet :</span><br>
-                        <span class="value">{{ $responsable_prenom }} {{ $responsable_nom }}</span>
+                        <span class="value">{{ $activity_request->manager_firstname }} {{ $activity_request->manager_lastname }}</span>
                     </div>
                     <div class="info-item">
                         <span class="label">Fonction :</span><br>
-                        <span class="value">{{ $activityRequest->responsable_fonction }}</span>
+                        <span class="value">{{ $activity_request->manager_role }}</span>
                     </div>
                     <div class="info-item">
                         <span class="label">Email :</span><br>
-                        <span class="value">{{ $activityRequest->responsable_email }}</span>
+                        <span class="value">{{ $activity_request->manager_email }}</span>
                     </div>
                     <div class="info-item">
                         <span class="label">Téléphone :</span><br>
-                        <span class="value">{{ $activityRequest->responsable_telephone }}</span>
+                        <span class="value">{{ $activity_request->manager_phone }}</span>
                     </div>
                 </div>
             </div>
@@ -163,18 +163,11 @@
                 <div class="section-title">Documents fournis</div>
                 <div class="info-box">
                     <ul class="document-list">
-                        <li>Extrait K-bis</li>
-                        <li>Attestations clients</li>
-                        <li>Formulaire sûreté</li>
-                        @if($activityRequest->agrement_prefectoral_path)
-                            <li>Agrément préfectoral</li>
-                        @endif
-                        @if($activityRequest->contrat_iata_path)
-                            <li>Contrat IATA</li>
-                        @endif
-                        @if($activityRequest->cta_path)
-                            <li>CTA</li>
-                        @endif
+                        <li>Demande AAO</li>
+                        <li>KBIS</li>
+                        <li>Mandat</li>
+                        <li>Responsable de la sureté</li>
+                        <li>CTA</li>
                     </ul>
                 </div>
             </div>

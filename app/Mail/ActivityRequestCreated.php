@@ -23,10 +23,10 @@ class ActivityRequestCreated extends Mailable
         return $this->view('emails.activity-request.created')
             ->subject('Nouvelle demande d\'activité reçue')
             ->with([
-                'raison_sociale' => $this->activityRequest->raison_sociale,
-                'nom_commercial' => $this->activityRequest->nom_commercial,
-                'responsable_nom' => $this->activityRequest->responsable_nom,
-                'responsable_prenom' => $this->activityRequest->responsable_prenom,
+                'activity_request' => $this->activityRequest,
+                'company_name' => $this->activityRequest->client->company_name,
+                'trade_name' => $this->activityRequest->client->trade_name,
+                'siret_number' => $this->activityRequest->client->siret_number,
             ]);
     }
 }

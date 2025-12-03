@@ -112,7 +112,7 @@
         </div>
 
         <div class="content">
-            <p><strong>Bonjour {{ $nom }},</strong></p>
+            <p><strong>Bonjour {{ $name }},</strong></p>
 
             <p>Bonne nouvelle, votre badge d’accès (TCA) est prêt à être récupéré !</p>
 

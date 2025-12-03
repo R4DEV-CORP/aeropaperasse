@@ -8,6 +8,8 @@ use App\Models\Client;
 use Flux\Flux;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
+use App\Mail\BadgeCreated;
+use Illuminate\Support\Facades\Mail;
 
 class CreateBadgeForm extends Component
 {
@@ -122,6 +124,13 @@ class CreateBadgeForm extends Component
             $this->badgeRequests = collect();
 
             $this->dispatch('badge-created');
+
+            // Envoyer une notification par email
+            $email = $badge->badgeRequest->creator->email;
+            if ($badge->badgeRequest->activityRequest->client->notification_email) {
+                $email = $badge->badgeRequest->activityRequest->client->notification_email;
+            }
+            Mail::to($email)->send(new BadgeCreated($badge));
         } catch (\Exception $e) {
             Log::error('Erreur lors de la création du badge', [
                 'error' => $e->getMessage(),
