@@ -333,7 +333,6 @@ class CreateActivityRequestForm extends Component
             if ($result->isSuccessful()) {
                 $this->successMessage = $result->getMessage();
                 $this->dispatch('activity-request-created');
-                $this->resetForm();
                 $this->closeModal();
 
                 // Envoyer une notification par email
@@ -347,6 +346,8 @@ class CreateActivityRequestForm extends Component
             } else {
                 $this->errorMessage = $result->getMessage();
             }
+
+            $this->resetForm();
 
         } catch (\Exception $e) {
             $this->handleException($e, $isDraft, ! is_null($this->activityRequestId));
