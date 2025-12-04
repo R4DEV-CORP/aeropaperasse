@@ -11,11 +11,14 @@ class PasswordResetToken extends Model
 
     public $timestamps = false;
 
+    protected $primaryKey = 'email';
+
+    protected $keyType = 'string';
+
     protected $fillable = [
         'email',
         'token',
         'created_at',
-        'expires_at',
     ];
 
     protected $casts = [
