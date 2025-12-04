@@ -474,7 +474,6 @@ class CreateActivityRequestForm extends Component
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString(),
             'user_id' => $this->user->id,
-            'client_id' => $this->client->id,
             'is_draft' => $isDraft,
             'is_update' => $isUpdate,
         ]);
