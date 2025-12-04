@@ -18,9 +18,9 @@
             <div class="flex justify-center items-center bg-gradient-to-b from-sky-200 to-white backdrop-blur-sm p-8 rounded-lg shadow-md w-96">
                 <div class="w-80 max-w-80 space-y-6">
                     <img src="{{ asset('images/aeropaperasse-logo.png') }}" alt="Logo Aéropaperasse" class="w-64 mx-auto">
-                    <flux:heading class="text-center font-semibold" size="xl" accent="true">Connexion</flux:heading>
-                    <flux:text class="text-center text-gray-800">Connectez-vous avec votre email pour accéder à vos outils et ressources.</flux:text>
-                    <livewire:auth.login-form />
+                    <flux:heading class="text-center font-semibold" size="xl" accent="true">Mot de passe oublié</flux:heading>
+                    <flux:text class="text-center text-gray-800">Entrez votre email pour recevoir un lien de réinitialisation de mot de passe.</flux:text>
+                    <livewire:auth.forgot-password-form />
                 </div>
             </div>
         </div>

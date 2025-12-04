@@ -34,4 +34,13 @@
             Se connecter
         </flux:button>
     </form>
+
+    <flux:button 
+        wire:navigate href="/forgot-password"    
+        icon:trailing="arrow-right"
+        variant="ghost"
+        class="w-full text-blue-500 hover:text-blue-600 hover:cursor-pointer mt-4"
+    >
+        Mot de passe oublié ?
+    </flux:button> 
 </div>

@@ -32,6 +32,14 @@ Route::get('/change-password', function () {
     return view('auth.change-password');
 });
 
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+});
+
+Route::get('/reset-password', function () {
+    return view('auth.reset-password');
+});
+
 Route::get('/logout', function () {
     auth()->logout();
 

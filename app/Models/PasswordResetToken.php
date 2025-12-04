@@ -17,4 +17,8 @@ class PasswordResetToken extends Model
         'created_at',
         'expires_at',
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
 }
