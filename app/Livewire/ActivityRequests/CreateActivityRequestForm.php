@@ -331,12 +331,12 @@ class CreateActivityRequestForm extends Component
 
             // 6. Traiter le résultat
             if ($result->isSuccessful()) {
-                $this->successMessage = $result->getMessage();
-                $this->dispatch('activity-request-created');
-                $this->closeModal();
 
+                $this->successMessage = $result->getMessage();
+                
                 // Envoyer une notification par email
                 $email = $this->user->email;
+
                 if ($this->client->notification_email) {
                     $email = $this->client->notification_email;
                 }
@@ -347,7 +347,8 @@ class CreateActivityRequestForm extends Component
                 $this->errorMessage = $result->getMessage();
             }
 
-            $this->resetForm();
+            $this->dispatch('activity-request-created');
+            $this->closeModal();
 
         } catch (\Exception $e) {
             $this->handleException($e, $isDraft, ! is_null($this->activityRequestId));
