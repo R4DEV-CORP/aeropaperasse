@@ -333,7 +333,8 @@ class CreateActivityRequestForm extends Component
             if ($result->isSuccessful()) {
 
                 $this->successMessage = $result->getMessage();
-                
+                $this->closeModal();
+
                 // Envoyer une notification par email
                 $email = $this->user->email;
 
@@ -348,7 +349,7 @@ class CreateActivityRequestForm extends Component
             }
 
             $this->dispatch('activity-request-created');
-            $this->closeModal();
+            $this->resetForm();
 
         } catch (\Exception $e) {
             $this->handleException($e, $isDraft, ! is_null($this->activityRequestId));
@@ -561,7 +562,6 @@ class CreateActivityRequestForm extends Component
      */
     public function closeModal(): void
     {
-        $this->resetForm();
         Flux::modal('new-activity-request')->close();
     }
 
