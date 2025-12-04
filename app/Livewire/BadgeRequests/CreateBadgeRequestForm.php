@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Mail\BadgeRequest\BadgeRequestCreated;
+use Illuminate\Support\Facades\Mail;
 
 class CreateBadgeRequestForm extends Component
 {
@@ -342,6 +344,14 @@ class CreateBadgeRequestForm extends Component
                 $this->dispatch('badge-request-created');
                 $this->resetForm();
                 $this->closeModal();
+
+                // Envoyer une notification par email
+                $email = $this->user->email;
+                if ($this->client->notification_email) {
+                    $email = $this->client->notification_email;
+                }
+
+                Mail::to($email)->send(new BadgeRequestCreated($result->getBadgeRequest()));
             } else {
                 $this->errorMessage = $result->getMessage();
             }

@@ -23,9 +23,7 @@ class InProduction extends Mailable
         return $this->view('emails.badge.in-production')
             ->subject('Votre badge est en cours de fabrication')
             ->with([
-                'nom' => $this->badgeRequest->nom,
-                'prenom' => $this->badgeRequest->prenom,
-                'badge_request_id' => $this->badgeRequest->id,
+                'name' => $this->badgeRequest->creator->name,
             ]);
     }
 }

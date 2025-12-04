@@ -13,12 +13,12 @@ class RejectedByRem extends Mailable
 
     public $badgeRequest;
 
-    public $motifRejet;
+    public $rejectReason;
 
-    public function __construct(BadgeRequest $badgeRequest, string $motifRejet)
+    public function __construct(BadgeRequest $badgeRequest, string $rejectReason)
     {
         $this->badgeRequest = $badgeRequest;
-        $this->motifRejet = $motifRejet;
+        $this->rejectReason = $rejectReason;
     }
 
     public function build()
@@ -26,10 +26,8 @@ class RejectedByRem extends Mailable
         return $this->view('emails.badge.rejected-by-rem')
             ->subject('Mise à jour de votre demande de badge')
             ->with([
-                'nom' => $this->badgeRequest->nom,
-                'prenom' => $this->badgeRequest->prenom,
-                'badge_request_id' => $this->badgeRequest->id,
-                'motif_rejet' => $this->motifRejet,
+                'name' => $this->badgeRequest->activityRequest->creator->name,
+                'reject_reason' => $this->rejectReason,
             ]);
     }
 }

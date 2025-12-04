@@ -133,7 +133,7 @@
         </div>
 
         <div class="content">
-            <p><strong>Bonjour {{ $prenom }} {{ $nom }},</strong></p>
+            <p><strong>Bonjour {{ $name }},</strong></p>
 
             <p>Nous vous informons qu'un badge a été créé avec succès dans le système pour vous.</p>
 
@@ -141,12 +141,8 @@
                 <div class="section-title">Informations du badge</div>
                 <div class="info-box">
                     <div class="info-item">
-                        <span class="label">Numéro de badge :</span><br>
-                        <span class="value highlight">{{ $badge_number }}</span>
-                    </div>
-                    <div class="info-item">
                         <span class="label">Titulaire :</span><br>
-                        <span class="value">{{ $prenom }} {{ $nom }}</span>
+                        <span class="value">{{ $coworker_firstname }} {{ $coworker_lastname }}</span>
                     </div>
                     <div class="info-item">
                         <span class="label">Date d'expiration :</span><br>

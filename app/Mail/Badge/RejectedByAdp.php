@@ -13,9 +13,12 @@ class RejectedByAdp extends Mailable
 
     public $badgeRequest;
 
-    public function __construct(BadgeRequest $badgeRequest)
+    public $rejectReason;
+
+    public function __construct(BadgeRequest $badgeRequest, string $rejectReason)
     {
         $this->badgeRequest = $badgeRequest;
+        $this->rejectReason = $rejectReason;
     }
 
     public function build()
@@ -23,9 +26,8 @@ class RejectedByAdp extends Mailable
         return $this->view('emails.badge.rejected-by-adp')
             ->subject('Votre demande de badge a été rejetée par ADP')
             ->with([
-                'nom' => $this->badgeRequest->nom,
-                'prenom' => $this->badgeRequest->prenom,
-                'badge_request_id' => $this->badgeRequest->id,
+                'name' => $this->badgeRequest->creator->name,
+                'reject_reason' => $this->rejectReason,
             ]);
     }
 }

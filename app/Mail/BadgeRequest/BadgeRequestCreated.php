@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Mail\Badge;
+namespace App\Mail\BadgeRequest;
 
 use App\Models\BadgeRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ApprovedByAdp extends Mailable
+class BadgeRequestCreated extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -20,8 +20,8 @@ class ApprovedByAdp extends Mailable
 
     public function build()
     {
-        return $this->view('emails.badge.approved-by-adp')
-            ->subject('Votre demande de badge a été approuvée par ADP')
+        return $this->view('emails.badge-request.created')
+            ->subject('Nouvelle demande de badge reçue')
             ->with([
                 'name' => $this->badgeRequest->creator->name,
             ]);

@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Enregistrer les observers
-        Badge::observe(BadgeObserver::class);
+        //Badge::observe(BadgeObserver::class);
         // Désactivé temporairement pour le seeding
         // BadgeRequest::observe(BadgeRequestObserver::class);
         // BadgeRequest::observe(BadgeRequesterObserver::class);
