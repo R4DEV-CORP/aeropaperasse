@@ -23,9 +23,7 @@ class ApprovedByRem extends Mailable
         return $this->view('emails.badge.approved-by-rem')
             ->subject('Mise à jour de votre demande de badge')
             ->with([
-                'nom' => $this->badgeRequest->nom,
-                'prenom' => $this->badgeRequest->prenom,
-                'badge_request_id' => $this->badgeRequest->id,
+                'name' => $this->badgeRequest->creator->name,
             ]);
     }
 }

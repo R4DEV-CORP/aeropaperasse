@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ActivityRequestCreated;
 
 class CreateActivityRequestForm extends Component
 {
@@ -333,6 +335,15 @@ class CreateActivityRequestForm extends Component
                 $this->dispatch('activity-request-created');
                 $this->resetForm();
                 $this->closeModal();
+
+                // Envoyer une notification par email
+                $email = $this->user->email;
+                if ($this->client->notification_email) {
+                    $email = $this->client->notification_email;
+                }
+
+                Mail::to($email)->send(new ActivityRequestCreated($result->getActivityRequest()));
+
             } else {
                 $this->errorMessage = $result->getMessage();
             }

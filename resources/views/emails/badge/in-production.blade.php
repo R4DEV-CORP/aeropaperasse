@@ -73,7 +73,7 @@
         </div>
         
         <div class="content">
-            <p><strong>Bonjour {{ $nom }},</strong></p>
+            <p><strong>Bonjour {{ $name }},</strong></p>
             
             <p>Bonne nouvelle ! Votre demande de badge a été approuvée et est maintenant <span class="highlight">en cours de fabrication</span>.</p>
             

@@ -73,9 +73,9 @@
         </div>
         
         <div class="content">
-            <p><strong>Bonjour {{ $nom }},</strong></p>
+            <p><strong>Bonjour {{ $name }},</strong></p>
             
-            <p>Nous sommes au regret de vous informer que votre demande a été <span class="rejected">rejetée</span> par Rem Distribution pour le motif suivant : {{ $motif_rejet }}</p>
+            <p>Nous sommes au regret de vous informer que votre demande a été <span class="rejected">rejetée</span> par Rem Distribution pour le motif suivant : {{ $reject_reason }}</p>
             
             <p>Merci de bien vouloir mettre à jour votre demande.</p>
             

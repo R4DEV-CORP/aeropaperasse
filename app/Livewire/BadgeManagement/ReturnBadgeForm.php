@@ -6,6 +6,8 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Services\BadgeRequestDocumentService;
 use Flux\Flux;
+use App\Mail\BadgeReturned;
+use Illuminate\Support\Facades\Mail;
 
 class ReturnBadgeForm extends Component
 {
@@ -28,7 +30,7 @@ class ReturnBadgeForm extends Component
         }
 
         $badgeRequestDocumentService = new BadgeRequestDocumentService();
-        $badgeRequestDocumentService->storeDocuments([
+        $uploadedDocument = $badgeRequestDocumentService->storeDocuments([
             'return_badge_document' => $this->return_badge_document,
         ], $this->badge->badgeRequest->activityRequest->client, $this->badge->badgeRequest->id);
 
@@ -38,6 +40,14 @@ class ReturnBadgeForm extends Component
             'return_document' => $this->return_badge_document,
         ]);
         $this->closeModal();
+
+        // Envoyer une notification par email
+        $email = $this->badge->badgeRequest->creator->email;
+        if ($this->badge->badgeRequest->activityRequest->client->notification_email) {
+            $email = $this->badge->badgeRequest->activityRequest->client->notification_email;
+        }
+        
+        Mail::to($email)->send(new BadgeReturned($this->badge, $uploadedDocument['return_badge_document']));
     }
 
 

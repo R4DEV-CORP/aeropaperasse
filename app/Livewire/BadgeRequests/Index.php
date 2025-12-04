@@ -9,6 +9,13 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Badge\ApprovedByRem;
+use App\Mail\Badge\RejectedByRem;
+use App\Mail\Badge\ApprovedByAdp;
+use App\Mail\Badge\RejectedByAdp;
+use App\Mail\Badge\InProduction;
+use App\Mail\Badge\ReadyForPickup;
 
 class Index extends Component
 {
@@ -169,6 +176,14 @@ class Index extends Component
             'pending_adp_at' => now(),
         ]);
 
+        // Envoyer une notification par email
+        $email = $badgeRequest->creator->email;
+        if ($badgeRequest->activityRequest->client->notification_email) {
+            $email = $badgeRequest->activityRequest->client->notification_email;
+        }
+
+        Mail::to($email)->send(new ApprovedByRem($badgeRequest));
+
         // Afficher un message de succès
         session()->flash('message', 'Demande approuvée par REM et transmise à ADP.');
     }
@@ -189,6 +204,15 @@ class Index extends Component
             'rejected_rem_at' => now(),
             'reject_reason' => $this->rejectReason,
         ]);
+
+        // Envoyer une notification par email
+        $email = $badgeRequest->creator->email;
+        if ($badgeRequest->activityRequest->client->notification_email) {
+            $email = $badgeRequest->activityRequest->client->notification_email;
+        }
+
+        Mail::to($email)->send(new RejectedByRem($badgeRequest, $this->rejectReason));
+
         $this->reset('rejectReason');
 
         // Afficher un message de succès
@@ -231,6 +255,14 @@ class Index extends Component
             'approved_adp_at' => now(),
         ]);
 
+        // Envoyer une notification par email
+        $email = $badgeRequest->creator->email;
+        if ($badgeRequest->activityRequest->client->notification_email) {
+            $email = $badgeRequest->activityRequest->client->notification_email;
+        }
+
+        Mail::to($email)->send(new ApprovedByAdp($badgeRequest));
+
         // Afficher un message de succès
         session()->flash('message', 'Demande approuvée par ADP.');
     }
@@ -251,6 +283,15 @@ class Index extends Component
             'rejected_adp_at' => now(),
             'reject_reason' => $this->rejectReason,
         ]);
+
+        // Envoyer une notification par email
+        $email = $badgeRequest->creator->email;
+        if ($badgeRequest->activityRequest->client->notification_email) {
+            $email = $badgeRequest->activityRequest->client->notification_email;
+        }
+
+        Mail::to($email)->send(new RejectedByAdp($badgeRequest, $this->rejectReason));
+
         $this->reset('rejectReason');
 
         // Afficher un message de succès
@@ -293,6 +334,14 @@ class Index extends Component
             'pending_fabrication_at' => now(),
         ]);
 
+        // Envoyer une notification par email
+        $email = $badgeRequest->creator->email;
+        if ($badgeRequest->activityRequest->client->notification_email) {
+            $email = $badgeRequest->activityRequest->client->notification_email;
+        }
+
+        Mail::to($email)->send(new InProduction($badgeRequest));
+
         // Afficher un message de succès
         session()->flash('message', 'Demande passée en fabrication.');
     }
@@ -332,6 +381,14 @@ class Index extends Component
             'status' => 'ready_for_delivery',
             'ready_for_delivery_at' => now(),
         ]);
+
+        // Envoyer une notification par email
+        $email = $badgeRequest->creator->email;
+        if ($badgeRequest->activityRequest->client->notification_email) {
+            $email = $badgeRequest->activityRequest->client->notification_email;
+        }
+
+        Mail::to($email)->send(new ReadyForPickup($badgeRequest));
 
         // Afficher un message de succès
         session()->flash('message', 'Badge prêt à être remis.');
