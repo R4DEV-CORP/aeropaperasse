@@ -342,7 +342,6 @@ class CreateBadgeRequestForm extends Component
             if ($result->isSuccessful()) {
                 $this->successMessage = $result->getMessage();
                 $this->dispatch('badge-request-created');
-                $this->resetForm();
                 $this->closeModal();
 
                 // Envoyer une notification par email
@@ -355,6 +354,8 @@ class CreateBadgeRequestForm extends Component
             } else {
                 $this->errorMessage = $result->getMessage();
             }
+
+            $this->resetForm();
 
         } catch (\Exception $e) {
             $this->handleException($e, $isDraft, ! is_null($this->badgeRequestId));
@@ -518,7 +519,6 @@ class CreateBadgeRequestForm extends Component
      */
     public function closeModal(): void
     {
-        $this->resetForm();
         Flux::modal('new-badge-request')->close();
     }
 
