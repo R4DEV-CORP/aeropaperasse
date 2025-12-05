@@ -31,6 +31,7 @@ class ActivityRequestFormData
         public ?UploadedFile $term_document = null,
         public ?UploadedFile $safety_referent_document = null,
         public ?UploadedFile $cta_document = null,
+        public ?UploadedFile $security_referent_document = null,
 
         // Flags et métadonnées
         public bool $renewal = false,
@@ -66,6 +67,7 @@ class ActivityRequestFormData
             term_document: $data['term_document'] ?? null,
             safety_referent_document: $data['safety_referent_document'] ?? null,
             cta_document: $data['cta_document'] ?? null,
+            security_referent_document: $data['security_referent_document'] ?? null,
             renewal: $data['renewal'] ?? false,
             last_activity_request_id: $lastActivityRequestId,
         );
@@ -92,6 +94,7 @@ class ActivityRequestFormData
             'term_document' => $this->term_document,
             'safety_referent_document' => $this->safety_referent_document,
             'cta_document' => $this->cta_document,
+            'security_referent_document' => $this->security_referent_document,
             'renewal' => $this->renewal,
             'last_activity_request_id' => $this->last_activity_request_id,
         ];
@@ -114,7 +117,8 @@ class ActivityRequestFormData
             || ! is_null($this->kbis_document)
             || ! is_null($this->term_document)
             || ! is_null($this->safety_referent_document)
-            || ! is_null($this->cta_document);
+            || ! is_null($this->cta_document)
+            || ! is_null($this->security_referent_document);
     }
 
     /**
@@ -135,6 +139,9 @@ class ActivityRequestFormData
         }
         if ($this->safety_referent_document) {
             $documents['safety_referent_document'] = $this->safety_referent_document;
+        }
+        if ($this->security_referent_document) {
+            $documents['security_referent_document'] = $this->security_referent_document;
         }
         if ($this->cta_document) {
             $documents['cta_document'] = $this->cta_document;
@@ -176,6 +183,7 @@ class ActivityRequestFormData
             'hasExistingTerm' => ! empty($activityRequest->term_document),
             'hasExistingSafetyReferent' => ! empty($activityRequest->safety_referent_document),
             'hasExistingCta' => ! empty($activityRequest->cta_document),
+            'hasExistingSecurityReferent' => ! empty($activityRequest->security_referent_document),
         ];
     }
 }

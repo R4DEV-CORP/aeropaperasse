@@ -69,6 +69,8 @@ class CreateActivityRequestForm extends Component
 
     public $safety_referent_document;
 
+    public $security_referent_document;
+
     public $cta_document;
 
     // Indicateurs de documents existants (pour l'édition)
@@ -79,6 +81,8 @@ class CreateActivityRequestForm extends Component
     public bool $hasExistingTerm = false;
 
     public bool $hasExistingSafetyReferent = false;
+
+    public bool $hasExistingSecurityReferent = false;
 
     public bool $hasExistingCta = false;
 
@@ -165,6 +169,7 @@ class CreateActivityRequestForm extends Component
             $this->hasExistingKbis = $documentsFlags['hasExistingKbis'];
             $this->hasExistingTerm = $documentsFlags['hasExistingTerm'];
             $this->hasExistingSafetyReferent = $documentsFlags['hasExistingSafetyReferent'];
+            $this->hasExistingSecurityReferent = $documentsFlags['hasExistingSecurityReferent'];
             $this->hasExistingCta = $documentsFlags['hasExistingCta'];
 
         } catch (\Exception $e) {
@@ -376,6 +381,7 @@ class CreateActivityRequestForm extends Component
             'kbis_document' => $this->kbis_document,
             'term_document' => $this->term_document,
             'safety_referent_document' => $this->safety_referent_document,
+            'security_referent_document' => $this->security_referent_document,
             'cta_document' => $this->cta_document,
             'renewal' => $this->renewal,
             'last_activity_request_id' => $this->selectedPreviousActivityRequest,
@@ -442,6 +448,7 @@ class CreateActivityRequestForm extends Component
             'kbis_document' => $this->hasExistingKbis,
             'term_document' => $this->hasExistingTerm,
             'safety_referent_document' => $this->hasExistingSafetyReferent,
+            'security_referent_document' => $this->hasExistingSecurityReferent,
             'cta_document' => $this->hasExistingCta,
         ];
     }
@@ -522,6 +529,7 @@ class CreateActivityRequestForm extends Component
             'kbis_document',
             'term_document',
             'safety_referent_document',
+            'security_referent_document',
             'cta_document',
             'errorMessage',
             'renewal',

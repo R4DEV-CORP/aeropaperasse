@@ -135,6 +135,7 @@ class ActivityRequestDocumentService
             'kbis_document',
             'term_document',
             'safety_referent_document',
+            'security_referent_document',
             'cta_document',
         ];
 
@@ -197,6 +198,7 @@ class ActivityRequestDocumentService
             'kbis_document' => 'extrait-kbis',
             'term_document' => 'mandat',
             'safety_referent_document' => 'referent-surete',
+            'security_referent_document' => 'referent-securite',
             'cta_document' => 'cta',
         ];
 

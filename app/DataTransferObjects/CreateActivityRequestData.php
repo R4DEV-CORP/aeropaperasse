@@ -28,6 +28,7 @@ class CreateActivityRequestData
         public ?UploadedFile $term_document,
         public ?UploadedFile $safety_referent_document,
         public ?UploadedFile $cta_document,
+        public ?UploadedFile $security_referent_document,
 
         // Metadata
         public int $client_id,
@@ -63,6 +64,7 @@ class CreateActivityRequestData
             term_document: $data['term_document'] ?? null,
             safety_referent_document: $data['safety_referent_document'] ?? null,
             cta_document: $data['cta_document'] ?? null,
+            security_referent_document: $data['security_referent_document'] ?? null,
             client_id: $clientId,
             created_by: $userId,
             is_draft: $isDraft,
@@ -96,6 +98,7 @@ class CreateActivityRequestData
             term_document: $formData->term_document,
             safety_referent_document: $formData->safety_referent_document,
             cta_document: $formData->cta_document,
+            security_referent_document: $formData->security_referent_document,
             client_id: $clientId,
             created_by: $userId,
             is_draft: $isDraft,
@@ -159,6 +162,9 @@ class CreateActivityRequestData
         }
         if ($this->safety_referent_document) {
             $documents['safety_referent_document'] = $this->safety_referent_document;
+        }
+        if ($this->security_referent_document) {
+            $documents['security_referent_document'] = $this->security_referent_document;
         }
         if ($this->cta_document) {
             $documents['cta_document'] = $this->cta_document;
