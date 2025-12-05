@@ -98,14 +98,14 @@ Route::get('/coworkers', function () {
 */
 
 Route::get('/trainings', function () {
-    if(auth()->user()->isClient()) {
+    if(auth()->user()->isClient() && !auth()->user()->can_access_formation) {
         return redirect()->route('clients.view', ['slug' => auth()->user()->client->slug]);
     }   
     return view('trainings.index');
 })->middleware('auth');
 
 Route::get('/trainings/client/{slug}', function ($slug) {
-    if(auth()->user()->isClient()) {
+    if(auth()->user()->isClient() && !auth()->user()->can_access_formation) {
         return redirect()->route('clients.view', ['slug' => auth()->user()->client->slug]);
     }
     return view('trainings.client', ['slug' => $slug]);

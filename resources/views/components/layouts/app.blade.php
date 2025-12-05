@@ -31,7 +31,7 @@
                 @if(!auth()->user()->isClient())
                 <flux:sidebar.item icon="hand-raised" href="/vehicle-pass" wire:navigate>Laissez-passer</flux:sidebar.item>
                 @endif
-                @if(!auth()->user()->isClient())
+                @if(!auth()->user()->isClient() || auth()->user()->can_access_formation)
                 <flux:sidebar.item icon="academic-cap" href="/trainings" wire:navigate>Formations</flux:sidebar.item>
                 @endif
                 <flux:sidebar.item icon="building-office" href="/clients" wire:navigate>Sociétés</flux:sidebar.item>
