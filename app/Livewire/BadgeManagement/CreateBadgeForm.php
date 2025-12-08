@@ -2,14 +2,14 @@
 
 namespace App\Livewire\BadgeManagement;
 
+use App\Mail\BadgeCreated;
 use App\Models\Badge;
 use App\Models\BadgeRequest;
 use App\Models\Client;
 use Flux\Flux;
-use Livewire\Component;
 use Illuminate\Support\Facades\Log;
-use App\Mail\BadgeCreated;
 use Illuminate\Support\Facades\Mail;
+use Livewire\Component;
 
 class CreateBadgeForm extends Component
 {
@@ -30,7 +30,7 @@ class CreateBadgeForm extends Component
     public function mount()
     {
         $this->badgeRequests = collect(); // Initialiser avec une collection vide
-        if(auth()->user()->isAdmin()) {
+        if (auth()->user()->isAdmin()) {
             $this->loadClients();
         } else {
             $this->selected_client_id = auth()->user()->client->id;
@@ -90,20 +90,23 @@ class CreateBadgeForm extends Component
 
         $client = Client::find($this->selected_client_id);
 
-        if(!$client) {
+        if (! $client) {
             $this->errorMessage = 'Le client sélectionné n\'existe pas. Veuillez sélectionner un autre client.';
+
             return;
         }
 
-        if(!$client->canCreateBadge()) {
+        if (! $client->canCreateBadge()) {
             $this->errorMessage = 'Le client a atteint le nombre maximum de badges.';
+
             return;
         }
 
         $badge = Badge::where('badge_request_id', $this->selected_badge_request_id)->first();
 
-        if($badge) {
+        if ($badge) {
             $this->errorMessage = 'Un badge existe déjà pour cette demande. Veuillez sélectionner une autre demande.';
+
             return;
         }
 
@@ -114,8 +117,9 @@ class CreateBadgeForm extends Component
                 'expiry_date' => $this->expiry_date,
             ]);
 
-            if(!$badge) {
+            if (! $badge) {
                 $this->errorMessage = 'Une erreur est survenue lors de la création du badge. Veuillez réessayer.';
+
                 return;
             }
 

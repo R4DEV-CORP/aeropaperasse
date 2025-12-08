@@ -6,9 +6,9 @@ use App\Models\Client;
 use App\Models\Coworker;
 use App\Models\Training;
 use Carbon\Carbon;
+use Flux\Flux;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use Flux\Flux;
 
 class AddCoworkerToTrainingForm extends Component
 {

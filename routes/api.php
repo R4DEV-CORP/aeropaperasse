@@ -36,9 +36,9 @@ Route::get('/documents/{filename}', function ($filename) {
 });
 
 // Routes pour la réinitialisation de mot de passe
-//Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+// Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/check-reset-token', [AuthController::class, 'checkResetToken']);
-//Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+// Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 // Routes protégées
 Route::middleware('auth:sanctum')->group(function () {

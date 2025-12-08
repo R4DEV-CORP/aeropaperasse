@@ -2,14 +2,14 @@
 
 namespace App\Livewire\Coworkers;
 
+use App\Mail\UserCreated;
 use App\Models\Coworker;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Component;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\UserCreated;
 
 class MakeCoworkerAsUserForm extends Component
 {

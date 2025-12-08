@@ -6,16 +6,16 @@ use App\Actions\ActivityRequest\SaveActivityRequestAction;
 use App\DataTransferObjects\CreateActivityRequestData;
 use App\Forms\ActivityRequestFormData;
 use App\Forms\ActivityRequestFormValidator;
+use App\Mail\ActivityRequestCreated;
 use App\Models\ActivityRequest;
 use App\Models\Client;
 use App\Services\ActivityRequestRenewalService;
 use Flux\Flux;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ActivityRequestCreated;
 
 class CreateActivityRequestForm extends Component
 {
