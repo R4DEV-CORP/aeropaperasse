@@ -3,8 +3,8 @@
 namespace App\Livewire\Training;
 
 use App\Models\Client;
-use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Livewire\Component;
 
 class Index extends Component
 {
@@ -32,6 +32,7 @@ class Index extends Component
             return $client->coworkers->count();
         });
         $expiresSoonTrainingCount = DB::table('coworker_trainings')->where('expires_at', '<=', now()->addMonth(6))->where('expires_at', '>=', now())->count();
+
         return [
             'clientCount' => $clientCount,
             'coworkerCount' => $coworkerCount,

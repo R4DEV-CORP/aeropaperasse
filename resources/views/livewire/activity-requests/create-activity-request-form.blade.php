@@ -238,6 +238,18 @@
             </flux:field>
             <flux:field class="mt-2">
                 <flux:label>
+                    Référent sécurité
+                    @if(!$hasExistingSecurityReferent)
+                        <span class="text-red-500">*</span>
+                    @else
+                        <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
+                    @endif
+                </flux:label>
+                <flux:input wire:model="security_referent_document" type="file" icon="document-plus" name="security_referent_document" />
+                <flux:error name="security_referent_document" />
+            </flux:field>
+            <flux:field class="mt-2">
+                <flux:label>
                     CTA
                     @if(!$hasExistingCta)
                         <span class="text-red-500">*</span>

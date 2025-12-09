@@ -6,18 +6,18 @@ use App\Actions\BadgeRequest\SaveBadgeRequestAction;
 use App\DataTransferObjects\CreateBadgeRequestData;
 use App\Forms\BadgeRequestFormData;
 use App\Forms\BadgeRequestFormValidator;
+use App\Mail\BadgeRequest\BadgeRequestCreated;
 use App\Models\ActivityRequest;
 use App\Models\BadgeRequest;
 use App\Models\Client;
 use App\Models\Coworker;
 use Flux\Flux;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Mail\BadgeRequest\BadgeRequestCreated;
-use Illuminate\Support\Facades\Mail;
 
 class CreateBadgeRequestForm extends Component
 {
@@ -330,7 +330,7 @@ class CreateBadgeRequestForm extends Component
                 $isDraft
             );
 
-            // 4. Exécuter l'action 
+            // 4. Exécuter l'action
             $action = app(SaveBadgeRequestAction::class);
             $result = $action->execute(
                 $badgeRequestData,

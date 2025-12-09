@@ -31,6 +31,7 @@ class ActivityRequest extends Model
         'kbis_document', // KBIS
         'term_document', // Mandat
         'safety_referent_document', // Responsable de la sureté
+        'security_referent_document', // Responsable de la sécurité
         'cta_document', // CTA
         'status',
         'previous_status',

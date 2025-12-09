@@ -3,9 +3,9 @@
 namespace App\Livewire\Coworkers;
 
 use App\Models\Coworker;
+use Flux\Flux;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Flux\Flux;
 
 class Index extends Component
 {

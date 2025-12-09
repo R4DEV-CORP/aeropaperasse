@@ -4,9 +4,11 @@ namespace App\Livewire\Coworkers;
 
 use App\Actions\Coworker\CreateCoworkerAction;
 use App\DataTransferObjects\CreateCoworkerData;
+use App\Mail\UserCreated;
 use App\Models\Client;
 use App\Validators\CoworkerValidator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
 class CreateCoworkerForm extends Component
@@ -113,6 +115,10 @@ class CreateCoworkerForm extends Component
             $result = $action->execute($data);
 
             if ($result->isSuccessful()) {
+
+                if ($this->create_user) {
+                    Mail::to($this->email)->send(new UserCreated($result->user, $this->password));
+                }
                 $this->successMessage = $result->getMessage();
                 $this->resetForm();
 

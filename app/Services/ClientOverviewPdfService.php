@@ -41,12 +41,12 @@ class ClientOverviewPdfService
         $clientActivityRequests = $client->activityRequests;
         $activityRequests = [];
         $activityAirports = [
-            "CDG" => 0,
-            "ORY" => 0,
-            "LBG" => 0,
+            'CDG' => 0,
+            'ORY' => 0,
+            'LBG' => 0,
         ];
         foreach ($clientActivityRequests as $activityRequest) {
-            if($activityRequest->status !== 'approved') {
+            if ($activityRequest->status !== 'approved') {
                 $activityRequests[$activityRequest->id] = [
                     'description' => $activityRequest->description,
                 ];

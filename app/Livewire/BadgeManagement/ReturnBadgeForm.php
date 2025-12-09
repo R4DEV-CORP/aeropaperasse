@@ -2,12 +2,12 @@
 
 namespace App\Livewire\BadgeManagement;
 
-use Livewire\Component;
-use Livewire\WithFileUploads;
+use App\Mail\BadgeReturned;
 use App\Services\BadgeRequestDocumentService;
 use Flux\Flux;
-use App\Mail\BadgeReturned;
 use Illuminate\Support\Facades\Mail;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class ReturnBadgeForm extends Component
 {
@@ -24,12 +24,13 @@ class ReturnBadgeForm extends Component
 
     public function returnBadge()
     {
-        if(!$this->return_badge_document) {
+        if (! $this->return_badge_document) {
             $this->addError('return_badge_document', 'Le document de restitution est requis.');
+
             return;
         }
 
-        $badgeRequestDocumentService = new BadgeRequestDocumentService();
+        $badgeRequestDocumentService = new BadgeRequestDocumentService;
         $uploadedDocument = $badgeRequestDocumentService->storeDocuments([
             'return_badge_document' => $this->return_badge_document,
         ], $this->badge->badgeRequest->activityRequest->client, $this->badge->badgeRequest->id);
@@ -46,12 +47,11 @@ class ReturnBadgeForm extends Component
         if ($this->badge->badgeRequest->activityRequest->client->notification_email) {
             $email = $this->badge->badgeRequest->activityRequest->client->notification_email;
         }
-        
+
         Mail::to($email)->send(new BadgeReturned($this->badge, $uploadedDocument['return_badge_document']));
     }
 
-
-     /**
+    /**
      * Fermer la modal
      */
     public function closeModal(): void

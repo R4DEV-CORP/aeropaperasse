@@ -104,8 +104,9 @@ class CreateVehiclePassForm extends Component
                 return;
             }
 
-            if(!$this->client->canCreateVehiclePass()) {
+            if (! $this->client->canCreateVehiclePass()) {
                 $this->errorMessage = 'Le client a atteint le nombre maximum de laissez-passer véhicules.';
+
                 return;
             }
 

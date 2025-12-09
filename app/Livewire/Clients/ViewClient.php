@@ -3,8 +3,8 @@
 namespace App\Livewire\Clients;
 
 use App\Models\Client;
-use Livewire\Component;
 use App\Services\ClientOverviewPdfService;
+use Livewire\Component;
 
 class ViewClient extends Component
 {
@@ -20,23 +20,23 @@ class ViewClient extends Component
     public function downloadOverview()
     {
         $client = Client::where('slug', $this->slug)->first();
-        $pdfService = new ClientOverviewPdfService();
+        $pdfService = new ClientOverviewPdfService;
         $pdf = $pdfService->generateOverview($client->id);
         $this->client = $client;
-        
+
         // Générer le nom du fichier
         $filename = "Bilan_{$client->company_name}_".date('Y-m-d').'.pdf';
-        
+
         // Créer le dossier temp s'il n'existe pas
         $tempDir = storage_path('app/temp');
-        if (!file_exists($tempDir)) {
+        if (! file_exists($tempDir)) {
             mkdir($tempDir, 0755, true);
         }
-        
+
         // Sauvegarder temporairement le PDF
         $tempPath = $tempDir.'/'.uniqid().'_'.$filename;
         $pdf->save($tempPath);
-        
+
         // Télécharger le fichier et le supprimer après
         return response()->download($tempPath, $filename)->deleteFileAfterSend(true);
     }

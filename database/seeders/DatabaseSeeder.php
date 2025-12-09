@@ -92,7 +92,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Clément Richard',
                 'email' => 'sclient@r4web.fr',
             ]);
-        
+
         $user2 = User::factory()
             ->for($clients[0])
             ->create([
@@ -109,7 +109,7 @@ class DatabaseSeeder extends Seeder
                 'lastname' => 'Richard',
                 'email' => 'sclient@r4web.fr',
             ]);
-            
+
         $coworker2 = Coworker::factory()
             ->for($user2)
             ->for($clients[0])

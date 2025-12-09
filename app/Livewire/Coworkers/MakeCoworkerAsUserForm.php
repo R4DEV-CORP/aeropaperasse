@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Coworkers;
 
+use App\Mail\UserCreated;
 use App\Models\Coworker;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Component;
 
@@ -89,6 +91,8 @@ class MakeCoworkerAsUserForm extends Component
             $this->coworker->update([
                 'user_id' => $newUser->id,
             ]);
+
+            Mail::to($this->coworker->email)->send(new UserCreated($newUser, $this->password));
 
             $this->successMessage = 'Le compte utilisateur a été créé avec succès pour '.$this->coworker->firstname.' '.$this->coworker->lastname.'.';
 

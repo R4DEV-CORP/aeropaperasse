@@ -2,20 +2,20 @@
 
 namespace App\Livewire\BadgeRequests;
 
+use App\Mail\Badge\ApprovedByAdp;
+use App\Mail\Badge\ApprovedByRem;
+use App\Mail\Badge\InProduction;
+use App\Mail\Badge\ReadyForPickup;
+use App\Mail\Badge\RejectedByAdp;
+use App\Mail\Badge\RejectedByRem;
 use App\Models\Badge;
 use App\Models\BadgeRequest;
 use App\Services\BadgeRequestDocumentService;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\Badge\ApprovedByRem;
-use App\Mail\Badge\RejectedByRem;
-use App\Mail\Badge\ApprovedByAdp;
-use App\Mail\Badge\RejectedByAdp;
-use App\Mail\Badge\InProduction;
-use App\Mail\Badge\ReadyForPickup;
 
 class Index extends Component
 {

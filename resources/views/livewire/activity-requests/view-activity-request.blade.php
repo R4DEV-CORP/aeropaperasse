@@ -164,6 +164,24 @@
                 @endif
             </flux:callout>
         @endif
+
+        @if($activityRequest->security_referent_document)
+            <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
+                <flux:callout.heading>Référent sécurité</flux:callout.heading>
+                @if(auth()->user()->isAdmin())
+                <x-slot name="actions">
+                    <flux:button 
+                        variant="ghost" 
+                        icon="document-arrow-down"
+                        wire:click="downloadDocument('security_referent_document')"
+                        wire:loading.attr="disabled"
+                    >
+                        Télécharger
+                    </flux:button>
+                </x-slot>
+                @endif
+            </flux:callout>
+        @endif
         
         @if($activityRequest->cta_document)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">

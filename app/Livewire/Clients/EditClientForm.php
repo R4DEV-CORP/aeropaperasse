@@ -5,9 +5,9 @@ namespace App\Livewire\Clients;
 use App\Actions\Client\UpdateClientAction;
 use App\Models\Client;
 use App\Validators\ClientValidator;
+use Flux\Flux;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Flux\Flux;
 
 class EditClientForm extends Component
 {
