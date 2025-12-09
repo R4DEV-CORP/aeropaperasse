@@ -69,8 +69,7 @@
                     <option value="">Sélectionnez une demande d'activité...</option>
                     @foreach($activityRequests as $activityRequest)
                         <option value="{{ $activityRequest->id }}">
-                            {{ $activityRequest->description }} - {{ $activityRequest->created_at->format('d/m/Y') }} - 
-                            <span class="font-semibold">{{ ucfirst($activityRequest->status) }}</span>
+                            {{ $activityRequest->airport }} - {{ $activityRequest->created_at->format('d/m/Y') }} 
                         </option>
                     @endforeach
                 </select>
