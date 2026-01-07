@@ -11,6 +11,10 @@ class Client extends Model
     use HasFactory;
     use Searchable;
 
+    protected $casts = [
+        'is_airline_company' => 'boolean',
+    ];
+
     protected $fillable = [
         'company_name', // raison sociale
         'trade_name', // nom commercial
@@ -26,6 +30,7 @@ class Client extends Model
         'vehicle_pass_limit',
         'notification_email',
         'slug',
+        'is_airline_company',
     ];
 
     /**

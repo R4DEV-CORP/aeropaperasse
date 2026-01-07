@@ -16,6 +16,7 @@ class CreateClientData
         public string $city,
         public ?string $subcontractor_of,
         public string $slug,
+        public bool $is_airline_company,
 
         // Documents
         public UploadedFile $kbis_document,
@@ -47,6 +48,7 @@ class CreateClientData
             city: $data['city'],
             subcontractor_of: $data['subcontractor_of'] ?? null,
             slug: $data['slug'],
+            is_airline_company: $data['is_airline_company'],
             kbis_document: $data['kbis_document'],
             safety_document: $data['safety_document'],
             security_document: $data['security_document'],
@@ -137,6 +139,7 @@ class CreateClientData
             'city' => $this->city,
             'subcontractor_of' => $this->subcontractor_of,
             'slug' => $this->slug,
+            'is_airline_company' => $this->is_airline_company,
             'badge_limit' => $this->badge_limit,
             'vehicle_pass_limit' => $this->vehicle_pass_limit,
             'notification_email' => $this->notification_email,

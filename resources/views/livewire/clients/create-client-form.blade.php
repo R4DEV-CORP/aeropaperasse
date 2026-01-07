@@ -51,12 +51,19 @@
                 <flux:input wire:model="city" name="city" required />
                 <flux:error name="city" />
             </flux:field>  
-            <flux:field class="col-span-4">
+            <flux:field class="col-span-2">
                 <flux:label>Sous traitant de</flux:label>
                 <flux:description>Listez les entreprises pour laquelle ce client est sous traitant.</flux:description>
                 <flux:input wire:model="subcontractor_of" icon="building-office-2" name="subcontractor_of" />
                 <flux:error name="subcontractor_of" />
             </flux:field>
+            <div class="flex items-end col-span-2">
+                <flux:field variant="inline" class="mb-2">
+                    <flux:checkbox wire:model="is_airline_company" />
+                    <flux:label>Cette société est une société aérienne</flux:label>
+                    <flux:error name="is_airline_company" />
+                </flux:field>
+            </div>
         </div>
     </div>
 

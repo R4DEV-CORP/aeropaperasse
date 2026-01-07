@@ -83,6 +83,8 @@ class CreateClientForm extends Component
 
     public $slug;
 
+    public $is_airline_company;
+
     // Propriétés pour la gestion des messages
     public $successMessage = '';
 
@@ -170,6 +172,7 @@ class CreateClientForm extends Component
             'hr_contact_nom' => $this->hr_contact_nom,
             'hr_contact_email' => $this->hr_contact_email,
             'hr_contact_phone' => $this->hr_contact_phone,
+            'is_airline_company' => $this->is_airline_company,
         ];
     }
 
@@ -213,6 +216,7 @@ class CreateClientForm extends Component
             'hr_contact_email',
             'hr_contact_phone',
             'errorMessage',
+            'is_airline_company',
         ]);
     }
 

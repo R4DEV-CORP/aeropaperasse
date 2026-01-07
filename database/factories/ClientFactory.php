@@ -38,6 +38,7 @@ class ClientFactory extends Factory
             'vehicle_pass_limit' => fake()->numberBetween(0, 10),
             'notification_email' => $notificationEmail,
             'slug' => fake()->uuid(),
+            'is_airline_company' => fake()->boolean(),  
         ];
     }
 }
