@@ -97,6 +97,8 @@ class EditClientForm extends Component
 
     public $hasExistingSecurity = false;
 
+    public $is_airline_company = false;
+
     public function mount($clientId)
     {
         $this->clientId = $clientId;
@@ -124,6 +126,7 @@ class EditClientForm extends Component
         $this->badge_limit = $this->client->badge_limit;
         $this->vehicle_pass_limit = $this->client->vehicle_pass_limit;
         $this->notification_email = $this->client->notification_email;
+        $this->is_airline_company = $this->client->is_airline_company;
     }
 
     protected function loadContacts(): void
@@ -233,6 +236,7 @@ class EditClientForm extends Component
             'zip_code' => $this->zip_code,
             'city' => $this->city,
             'subcontractor_of' => $this->subcontractor_of,
+            'is_airline_company' => $this->is_airline_company,
             'kbis_document' => $this->kbis_document,
             'safety_document' => $this->safety_document,
             'security_document' => $this->security_document,
