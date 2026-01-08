@@ -59,6 +59,10 @@
                 <p class="text-gray-800 mt-2">Email de notification</p>
                 <flux:text>{{ is_null($client->notification_email) ? 'Aucune' : $client->notification_email }}</flux:text>
             </div>
+            <div>
+                <p class="text-gray-800 mt-2">Compagnie aérienne</p>
+                <flux:badge color="{{ $client->is_airline_company ? 'green' : 'red' }}" size="sm" class="mt-2">{{ $client->is_airline_company ? 'Oui' : 'Non' }}</flux:badge>
+            </div>
         </div>
     </div>
 

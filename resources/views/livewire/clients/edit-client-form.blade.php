@@ -60,7 +60,7 @@
             <div class="flex items-end col-span-2">
                 <flux:field variant="inline" class="mb-2">
                     <flux:checkbox wire:model="is_airline_company" />
-                    <flux:label>Cette société est une société aérienne</flux:label>
+                    <flux:label>Cette société est une compagnie aérienne</flux:label>
                     <flux:error name="is_airline_company" />
                 </flux:field>
             </div>
