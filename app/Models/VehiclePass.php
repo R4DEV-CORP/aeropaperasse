@@ -14,6 +14,7 @@ class VehiclePass extends Model
     protected $fillable = [
         'created_by',
         'client_id',
+        'activity_request_id',
         'status',
         'previous_status',
         'reject_reason',
@@ -38,5 +39,10 @@ class VehiclePass extends Model
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function activityRequest()
+    {
+        return $this->belongsTo(ActivityRequest::class);
     }
 }

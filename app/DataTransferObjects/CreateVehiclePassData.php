@@ -19,6 +19,7 @@ class CreateVehiclePassData
         // Metadata
         public int $client_id,
         public int $created_by,
+        public ?int $activity_request_id = null,
     ) {}
 
     /**
@@ -34,6 +35,7 @@ class CreateVehiclePassData
             company_stamp: $data['company_stamp'] ?? null,
             client_id: $clientId,
             created_by: $userId,
+            activity_request_id: $data['activity_request_id'] ?? null,
         );
     }
 
@@ -45,6 +47,7 @@ class CreateVehiclePassData
         $data = [
             'client_id' => $this->client_id,
             'created_by' => $this->created_by,
+            'activity_request_id' => $this->activity_request_id,
             'plate_number' => $this->plate_number,
             'car_brand' => $this->car_brand,
             'airport' => $this->airport,

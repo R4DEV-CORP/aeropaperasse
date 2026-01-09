@@ -23,10 +23,6 @@ class CreateClientData
         public UploadedFile $safety_document,
         public UploadedFile $security_document,
 
-        // Configuration des quotas
-        public int $badge_limit,
-        public int $vehicle_pass_limit,
-
         // Email de notification
         public ?string $notification_email,
 
@@ -52,8 +48,6 @@ class CreateClientData
             kbis_document: $data['kbis_document'],
             safety_document: $data['safety_document'],
             security_document: $data['security_document'],
-            badge_limit: (int) $data['badge_limit'],
-            vehicle_pass_limit: (int) $data['vehicle_pass_limit'],
             notification_email: $data['notification_email'] ?? null,
             contacts: self::extractContacts($data),
         );
@@ -140,8 +134,6 @@ class CreateClientData
             'subcontractor_of' => $this->subcontractor_of,
             'slug' => $this->slug,
             'is_airline_company' => $this->is_airline_company,
-            'badge_limit' => $this->badge_limit,
-            'vehicle_pass_limit' => $this->vehicle_pass_limit,
             'notification_email' => $this->notification_email,
         ];
     }

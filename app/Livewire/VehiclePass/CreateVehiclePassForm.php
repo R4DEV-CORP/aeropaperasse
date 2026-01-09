@@ -4,6 +4,7 @@ namespace App\Livewire\VehiclePass;
 
 use App\Actions\VehiclePass\SaveVehiclePassAction;
 use App\DataTransferObjects\CreateVehiclePassData;
+use App\Models\ActivityRequest;
 use App\Models\Client;
 use App\Validators\VehiclePassValidator;
 use Flux\Flux;
@@ -22,6 +23,12 @@ class CreateVehiclePassForm extends Component
     public $allClients; // Liste de tous les clients (pour les admins)
 
     public $selected_client_id; // ID du client sélectionné par l'admin
+
+    public $activityRequests; // Liste des demandes d'activités (approved ou pending)
+
+    public $selected_activity_request_id; // ID de la demande d'activité sélectionnée
+
+    public $activityRequest; // Demande d'activité sélectionnée (pour affichage)
 
     // Propriétés pour le formulaire
     public $plate_number;
@@ -50,10 +57,28 @@ class CreateVehiclePassForm extends Component
             // Par défaut, ne pas sélectionner de client
             $this->selected_client_id = null;
             $this->client = null;
+            $this->activityRequests = collect();
         } else {
             // Pour les utilisateurs normaux, utiliser leur client
             $this->client = $this->user->client;
             $this->selected_client_id = $this->client->id;
+            // Charger les demandes d'activités approved ou pending
+            $this->loadActivityRequests();
+        }
+    }
+
+    /**
+     * Charger les demandes d'activités approved ou pending du client
+     */
+    protected function loadActivityRequests(): void
+    {
+        if ($this->client) {
+            $this->activityRequests = ActivityRequest::where('client_id', $this->client->id)
+                ->whereIn('status', ['approved', 'pending'])
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } else {
+            $this->activityRequests = collect();
         }
     }
 
@@ -65,9 +90,29 @@ class CreateVehiclePassForm extends Component
         if ($value === '' || $value === null) {
             $this->selected_client_id = null;
             $this->client = null;
+            $this->activityRequests = collect();
+            $this->selected_activity_request_id = null;
         } else {
             $this->selected_client_id = (int) $value;
             $this->client = \App\Models\Client::find($this->selected_client_id);
+            // Charger les demandes d'activités du client sélectionné
+            $this->loadActivityRequests();
+            // Réinitialiser la sélection de la demande d'activité
+            $this->selected_activity_request_id = null;
+        }
+    }
+
+    /**
+     * Gérer le changement de la demande d'activité sélectionnée
+     */
+    public function updatedSelectedActivityRequestId($value)
+    {
+        if ($value === '' || $value === null) {
+            $this->selected_activity_request_id = null;
+            $this->activityRequest = null;
+        } else {
+            $this->selected_activity_request_id = (int) $value;
+            $this->activityRequest = ActivityRequest::find($this->selected_activity_request_id);
         }
     }
 
@@ -80,6 +125,7 @@ class CreateVehiclePassForm extends Component
             'plate_number',
             'car_brand',
             'airport',
+            'selected_activity_request_id',
         ]);
     }
 
@@ -104,8 +150,19 @@ class CreateVehiclePassForm extends Component
                 return;
             }
 
-            if (! $this->client->canCreateVehiclePass()) {
-                $this->errorMessage = 'Le client a atteint le nombre maximum de laissez-passer véhicules.';
+            // Vérifier qu'une demande d'activité est sélectionnée
+            if (! $this->selected_activity_request_id) {
+                $this->errorMessage = 'Veuillez sélectionner une demande d\'activité.';
+
+                return;
+            }
+
+            // Vérifier le quota de la demande d'activité
+            $activityRequest = ActivityRequest::findOrFail($this->selected_activity_request_id);
+
+            if (! $activityRequest->canCreateVehiclePass()) {
+                $remaining = $activityRequest->getRemainingVehiclePassQuota();
+                $this->errorMessage = "Le quota de laissez-passer véhicules pour cette demande d'activité est atteint. Il reste {$remaining} place(s) disponible(s).";
 
                 return;
             }
@@ -115,6 +172,7 @@ class CreateVehiclePassForm extends Component
                 'plate_number' => $this->plate_number,
                 'car_brand' => $this->car_brand,
                 'airport' => $this->airport,
+                'activity_request_id' => $this->selected_activity_request_id,
                 'certificate_of_registration' => $this->certificate_of_registration,
                 'company_stamp' => $this->company_stamp,
             ];
@@ -202,6 +260,7 @@ class CreateVehiclePassForm extends Component
             'airport',
             'certificate_of_registration',
             'company_stamp',
+            'selected_activity_request_id',
             'errorMessage',
         ]);
 
@@ -209,7 +268,10 @@ class CreateVehiclePassForm extends Component
         if ($this->user->isAdmin()) {
             $this->selected_client_id = null;
             $this->client = null;
+            $this->activityRequests = collect();
         }
+
+        $this->activityRequest = null;
     }
 
     /**

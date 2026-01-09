@@ -34,11 +34,9 @@ class ClientFactory extends Factory
             'kbis_document' => fake()->mimeType(),
             'safety_document' => fake()->mimeType(),
             'security_document' => fake()->mimeType(),
-            'badge_limit' => fake()->numberBetween(5, 15),
-            'vehicle_pass_limit' => fake()->numberBetween(0, 10),
             'notification_email' => $notificationEmail,
             'slug' => fake()->uuid(),
-            'is_airline_company' => fake()->boolean(),  
+            'is_airline_company' => fake()->boolean(),
         ];
     }
 }

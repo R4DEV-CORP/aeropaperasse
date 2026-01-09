@@ -184,11 +184,73 @@ class CreateBadgeRequestForm extends Component
             $this->selected_activity_request_id = null;
             $this->activityRequest = null;
             $this->coworkers = collect();
-        } else {
-            $this->selected_activity_request_id = (int) $value;
-            $this->activityRequest = ActivityRequest::find($this->selected_activity_request_id);
-            $this->loadCoworkers();
+
+            return;
         }
+
+        // S'assurer que le client est défini
+        if (! $this->client) {
+            $this->selected_activity_request_id = null;
+            $this->activityRequest = null;
+
+            return;
+        }
+
+        $activityRequestId = (int) $value;
+
+        // Réinitialiser d'abord pour éviter les problèmes de cache
+        $this->activityRequest = null;
+        $this->selected_activity_request_id = $activityRequestId;
+
+        // Recharger l'ActivityRequest avec ses relations et s'assurer qu'elle appartient bien au bon client
+        // Utiliser findOrFail pour garantir qu'on a bien l'ActivityRequest demandée
+        try {
+            $activityRequest = ActivityRequest::with('client')
+                ->where('id', $activityRequestId)
+                ->where('client_id', $this->client->id)
+                ->firstOrFail();
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            $this->errorMessage = 'La demande d\'activité sélectionnée n\'existe pas ou n\'appartient pas à ce client.';
+            $this->selected_activity_request_id = null;
+            $this->activityRequest = null;
+            $this->coworkers = collect();
+
+            return;
+        }
+
+        // Vérification de sécurité : s'assurer que l'ID correspond bien
+        if ($activityRequest->id !== $activityRequestId) {
+            Log::error('Incohérence détectée : ActivityRequest ID ne correspond pas', [
+                'requested_id' => $activityRequestId,
+                'found_id' => $activityRequest->id,
+            ]);
+            $this->errorMessage = 'Erreur lors du chargement de la demande d\'activité.';
+            $this->selected_activity_request_id = null;
+            $this->activityRequest = null;
+            $this->coworkers = collect();
+
+            return;
+        }
+
+        // Assigner l'ActivityRequest après toutes les vérifications
+        // Forcer le rechargement complet pour éviter les problèmes de cache
+        $this->activityRequest = ActivityRequest::with('client')
+            ->where('id', $activityRequestId)
+            ->where('client_id', $this->client->id)
+            ->firstOrFail();
+        
+        // Log pour le débogage (à retirer après vérification)
+        Log::debug('ActivityRequest chargée', [
+            'selected_id' => $this->selected_activity_request_id,
+            'activity_request_id' => $this->activityRequest->id,
+            'person_count' => $this->activityRequest->person_count,
+            'airport' => $this->activityRequest->airport,
+        ]);
+
+        $this->loadCoworkers();
+
+        // Effacer les erreurs si tout s'est bien passé
+        $this->errorMessage = '';
     }
 
     /**
@@ -300,6 +362,18 @@ class CreateBadgeRequestForm extends Component
                 $this->errorMessage = 'Veuillez sélectionner une demande d\'activité.';
 
                 return;
+            }
+
+            // Vérifier le quota de la demande d'activité (pour les demandes non-brouillons)
+            if (! $isDraft) {
+                $activityRequest = ActivityRequest::findOrFail($this->selected_activity_request_id);
+
+                if (! $activityRequest->canCreateBadgeRequest()) {
+                    $remaining = $activityRequest->getRemainingBadgeQuota();
+                    $this->errorMessage = "Le quota de badges pour cette demande d'activité est atteint. Il reste {$remaining} place(s) disponible(s).";
+
+                    return;
+                }
             }
 
             // 1. Créer le Form Object à partir des données du composant
@@ -520,6 +594,33 @@ class CreateBadgeRequestForm extends Component
     public function closeModal(): void
     {
         Flux::modal('new-badge-request')->close();
+    }
+
+    /**
+     * Computed property pour obtenir l'ActivityRequest actuellement sélectionnée
+     * Recharge toujours depuis la base de données pour garantir la cohérence
+     */
+    public function getSelectedActivityRequestProperty(): ?ActivityRequest
+    {
+        if (! $this->selected_activity_request_id || ! $this->client) {
+            return null;
+        }
+
+        // Toujours recharger depuis la base de données pour garantir la cohérence
+        // et éviter les problèmes de cache Livewire
+        $activityRequest = ActivityRequest::with('client')
+            ->where('id', $this->selected_activity_request_id)
+            ->where('client_id', $this->client->id)
+            ->first();
+
+        // Synchroniser la propriété avec la computed property
+        if ($activityRequest && $activityRequest->id === $this->selected_activity_request_id) {
+            $this->activityRequest = $activityRequest;
+        } else {
+            $this->activityRequest = null;
+        }
+
+        return $activityRequest;
     }
 
     public function render()

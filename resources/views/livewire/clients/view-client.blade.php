@@ -87,30 +87,7 @@
         @endforeach
     </div>
 
-    <!-- Quotas -->
-    <div class="grid grid-cols-2 gap-2 border border-gray-800/10 p-4 rounded-lg bg-white mt-4">
-        <flux:heading size="lg" class="col-span-2">Quotas</flux:heading>
-        <div class="p-4 bg-white rounded-lg border border-zinc-200">
-            <div class="flex justify-between">
-                <flux:heading size="lg">Quota de bagdes</flux:heading>
-                <flux:text>{{ $client->getActiveBadgeCount() }}/{{ $client->badge_limit }}</flux:text>
-            </div>
-            <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
-                <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->badge_limit > 0 ? $client->getActiveBadgeCount() / $client->badge_limit * 100 : 0 }}%"></div>
-            </div>
-            <flux:text class="mt-2">La société dispose de <span class="font-medium">{{ $client->getActiveBadgeCount() }} badges.</span> Il leur reste donc <span class="font-medium">{{ $client->badge_limit - $client->getActiveBadgeCount() }} demandes de badge disponibles.</span></flux:text>
-        </div>
-        <div class="p-4 bg-white rounded-lg border border-zinc-200">
-            <div class="flex justify-between">
-                <flux:heading size="lg">Quota de laissez passer</flux:heading>
-                <flux:text>{{ $client->getActiveVehiclePassesCountAttribute() }}/{{ $client->vehicle_pass_limit }}</flux:text>
-            </div>
-            <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
-                <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->vehicle_pass_limit > 0 ? $client->getActiveVehiclePassesCountAttribute() / $client->vehicle_pass_limit * 100 : 0 }}%"></div>
-            </div>
-            <flux:text class="mt-2">La société dispose de <span class="font-medium">{{ $client->getActiveVehiclePassesCountAttribute() }} laissez passer.</span> Il leur reste donc <span class="font-medium">{{ $client->vehicle_pass_limit - $client->getActiveVehiclePassesCountAttribute() }} demandes de laissez passer disponibles.</span></flux:text>
-        </div>
-    </div>
+    <!-- Note: Les quotas sont maintenant gérés au niveau de chaque demande d'activité -->
 
     <!-- Documents -->
     <div class="grid grid-cols-3 gap-2 border border-gray-800/10 p-4 rounded-lg bg-white mt-4">

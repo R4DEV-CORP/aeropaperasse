@@ -65,8 +65,6 @@ class ClientOverviewPdfService
             'zip_code' => $client->zip_code, // code postal
             'city' => $client->city, // ville
             'subcontractor_of' => $client->subcontractor_of, // sous traitant de
-            'badge_limit' => $client->badge_limit, // limite de badges
-            'vehicle_pass_limit' => $client->vehicle_pass_limit, // limite de véhicules
 
             // Contacts (sureté, hr et sécurité)
             'contacts' => $contacts,
@@ -77,8 +75,7 @@ class ClientOverviewPdfService
             'activity_airports' => $activityAirports, // aéroports concernés
 
             // Badges et laissez passer
-            'badge_count' => $client->active_badges_count, // nombre de badges actifs
-            'vehicle_pass_count' => $client->active_vehicle_passes_count, // nombre de véhicules actifs
+            // Note: Les quotas sont maintenant gérés au niveau de chaque ActivityRequest
         ];
     }
 }

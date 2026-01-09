@@ -67,9 +67,9 @@
                         {{ $badgeRequestId ? 'disabled' : '' }}
                         class="w-full px-3 py-2 border border-gray-300 rounded-md {{ $badgeRequestId ? 'bg-gray-100 cursor-not-allowed' : 'bg-white' }} shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">Sélectionnez une demande d'activité...</option>
-                    @foreach($activityRequests as $activityRequest)
-                        <option value="{{ $activityRequest->id }}">
-                            {{ $activityRequest->airport }} - {{ $activityRequest->created_at->format('d/m/Y') }} 
+                    @foreach($activityRequests as $activityRequestOption)
+                        <option value="{{ $activityRequestOption->id }}">
+                            {{ $activityRequestOption->airport }} - {{ $activityRequestOption->created_at->format('d/m/Y') }} ({{ $activityRequestOption->person_count }} personnes, {{ $activityRequestOption->vehicule_count }} véhicules)
                         </option>
                     @endforeach
                 </select>
@@ -81,8 +81,15 @@
         <flux:callout class="mt-4" variant="warning" icon="exclamation-triangle" heading="Aucune demande d'activité approuvée ou en attente n'est disponible pour ce client." />
     @endif
 
-    @if($selected_activity_request_id)
-    <div class="border border-gray-800/10 p-4 rounded-lg">
+    @if($selected_activity_request_id && $activityRequest && $activityRequest->id == $selected_activity_request_id)
+    <div class="border border-gray-800/10 p-4 rounded-lg" wire:key="activity-request-{{ $selected_activity_request_id }}">
+        <div class="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <flux:text class="font-medium">Quota disponible :</flux:text>
+            <flux:text>
+                {{ $activityRequest->getActiveBadgeRequestsCount() }}/{{ $activityRequest->person_count }} badges utilisés
+                ({{ $activityRequest->getRemainingBadgeQuota() }} place(s) restante(s))
+            </flux:text>
+        </div>
         <div class="grid grid-cols-2 gap-4 mt-2">
             <div class="mt-2">
                 <flux:heading size="lg">Informations sur la demande d'activité</flux:heading>
@@ -220,7 +227,11 @@
             <flux:callout icon="information-circle" color="blue" inline>
                 <flux:callout.heading>Veuillez cliquer ici pour télécharger le document à remplir et l'insérer dans le champ ci-dessous.</flux:callout.heading>
                 <x-slot name="actions">
-                    <flux:button icon="document-arrow-down" wire:click="downloadDocument('{{ $activityRequest->airport }}')">Télécharger le modèle</flux:button>
+                    @if($activityRequest && $activityRequest->id == $selected_activity_request_id)
+                        <flux:button icon="document-arrow-down" wire:click="downloadDocument('{{ $activityRequest->airport }}')">Télécharger le modèle</flux:button>
+                    @else
+                        <flux:button icon="document-arrow-down" wire:click="downloadDocument('ORY')">Télécharger le modèle</flux:button>
+                    @endif
                 </x-slot>
             </flux:callout>
             <flux:field>

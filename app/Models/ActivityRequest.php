@@ -74,6 +74,93 @@ class ActivityRequest extends Model
         return $this->hasMany(ActivityRequestAttachment::class);
     }
 
+    public function badgeRequests(): HasMany
+    {
+        return $this->hasMany(BadgeRequest::class);
+    }
+
+    public function vehiclePasses(): HasMany
+    {
+        return $this->hasMany(VehiclePass::class);
+    }
+
+    /**
+     * Vérifie si on peut créer une nouvelle demande de badge pour cette demande d'activité
+     */
+    public function canCreateBadgeRequest(): bool
+    {
+        $existingBadgeRequestsCount = $this->badgeRequests()
+            ->where('status', '!=', 'draft')
+            ->where('status', '!=', 'rejected_rem')
+            ->where('status', '!=', 'rejected_adp')
+            ->where('status', '!=', 'terminated')
+            ->count();
+
+        return $existingBadgeRequestsCount < $this->person_count;
+    }
+
+    /**
+     * Retourne le nombre de places restantes pour les badges
+     */
+    public function getRemainingBadgeQuota(): int
+    {
+        $existingCount = $this->badgeRequests()
+            ->where('status', '!=', 'draft')
+            ->where('status', '!=', 'rejected_rem')
+            ->where('status', '!=', 'rejected_adp')
+            ->where('status', '!=', 'terminated')
+            ->count();
+
+        return max(0, $this->person_count - $existingCount);
+    }
+
+    /**
+     * Retourne le nombre de demandes de badges actives pour cette demande d'activité
+     */
+    public function getActiveBadgeRequestsCount(): int
+    {
+        return $this->badgeRequests()
+            ->where('status', '!=', 'draft')
+            ->where('status', '!=', 'rejected_rem')
+            ->where('status', '!=', 'rejected_adp')
+            ->where('status', '!=', 'terminated')
+            ->count();
+    }
+
+    /**
+     * Vérifie si on peut créer un nouveau laissez-passer véhicule pour cette demande d'activité
+     */
+    public function canCreateVehiclePass(): bool
+    {
+        $existingVehiclePassesCount = $this->vehiclePasses()
+            ->where('status', '!=', 'rejected')
+            ->count();
+
+        return $existingVehiclePassesCount < $this->vehicule_count;
+    }
+
+    /**
+     * Retourne le nombre de places restantes pour les laissez-passer véhicules
+     */
+    public function getRemainingVehiclePassQuota(): int
+    {
+        $existingCount = $this->vehiclePasses()
+            ->where('status', '!=', 'rejected')
+            ->count();
+
+        return max(0, $this->vehicule_count - $existingCount);
+    }
+
+    /**
+     * Retourne le nombre de laissez-passer véhicules actifs pour cette demande d'activité
+     */
+    public function getActiveVehiclePassesCount(): int
+    {
+        return $this->vehiclePasses()
+            ->where('status', '!=', 'rejected')
+            ->count();
+    }
+
     /**
      * Récupère le document AAO Request (unique)
      */

@@ -198,43 +198,6 @@
     </div>
   </div>
 
-  {{-- Section 6: Quotas et statistiques --}}
-  <div class="section">
-    <h2 class="section-title">7. Quotas et statistiques</h2>
-
-    <h3 class="subsection-title">Badges</h3>
-    <div class="info-grid">
-    <div class="info-item">
-      <div class="info-label">Nombre de badges actifs</div>
-      <div class="info-value {{ empty($client['badge_count']) ? 'empty' : '' }}">
-      {{ $client['badge_count'] ?? 'Non renseigné' }}
-      </div>
-    </div>
-
-    <div class="info-item">
-      <div class="info-label">Nombre de badges autorisés (maximum)</div>
-      <div class="info-value {{ empty($client['badge_limit']) ? 'empty' : '' }}">
-      {{ $client['badge_limit'] ?? 'Non renseigné' }}
-      </div>
-    </div>
-    </div>
-
-    <h3 class="subsection-title">Véhicules</h3>
-    <div class="info-grid">
-    <div class="info-item">
-      <div class="info-label">Nombre de véhicules actifs</div>
-      <div class="info-value {{ empty($client['vehicle_pass_count']) ? 'empty' : '' }}">
-      {{ $client['vehicle_pass_count'] ?? 'Non renseigné' }}
-      </div>
-    </div>
-
-    <div class="info-item">
-      <div class="info-label">Nombre de véhicules autorisés (maximum)</div>
-      <div class="info-value {{ empty($client['vehicle_pass_limit']) ? 'empty' : '' }}">
-      {{ $client['vehicle_pass_limit'] ?? 'Non renseigné' }}
-      </div>
-    </div>
-    </div>
-  </div>
+  {{-- Note: Les quotas sont maintenant gérés au niveau de chaque demande d'activité --}}
 
 @endsection
