@@ -51,13 +51,27 @@ class ViewActivityRequest extends Component
 
     /**
      * Télécharger un document spécifique
+     * Pour les principals, on peut télécharger un fichier spécifique par son ID
      */
-    public function downloadDocument(string $documentType)
+    public function downloadDocument(string $documentType, ?int $attachmentId = null)
     {
-        $documentService = new ActivityRequestDocumentService;
-        $relativePath = $documentService->getDocumentPath($this->activityRequest, $documentType);
+        // Charger les attachments si pas déjà chargés
+        if (! $this->activityRequest->relationLoaded('attachments')) {
+            $this->activityRequest->load('attachments');
+        }
 
-        if (! $relativePath) {
+        $attachment = null;
+
+        // Si un ID est fourni (pour les principals multiples), utiliser cet ID
+        if ($attachmentId) {
+            $attachment = $this->activityRequest->attachments()->find($attachmentId);
+        } else {
+            // Sinon, utiliser le service pour récupérer le premier document du type
+            $documentService = new ActivityRequestDocumentService;
+            $attachment = $documentService->getAttachmentByType($this->activityRequest, $documentType);
+        }
+
+        if (! $attachment) {
             session()->flash('error', 'Document non disponible.');
 
             return;
@@ -66,17 +80,17 @@ class ViewActivityRequest extends Component
         $disk = Storage::disk('public');
 
         // Vérifier si le fichier existe
-        if (! $disk->exists($relativePath)) {
+        if (! $disk->exists($attachment->path)) {
             session()->flash('error', 'Le fichier n\'existe pas.');
 
             return;
         }
 
         // Obtenir le chemin absolu du fichier
-        $absolutePath = $disk->path($relativePath);
+        $absolutePath = $disk->path($attachment->path);
 
-        // Récupérer le nom original du fichier
-        $filename = basename($relativePath);
+        // Récupérer le nom du fichier
+        $filename = $attachment->name.'.'.pathinfo($attachment->path, PATHINFO_EXTENSION);
 
         return response()->download($absolutePath, $filename);
     }
@@ -102,6 +116,11 @@ class ViewActivityRequest extends Component
 
     public function render()
     {
+        // Charger les attachments avec eager loading pour éviter les N+1
+        if (! $this->activityRequest->relationLoaded('attachments')) {
+            $this->activityRequest->load('attachments');
+        }
+
         return view('livewire.activity-requests.view-activity-request');
     }
 }

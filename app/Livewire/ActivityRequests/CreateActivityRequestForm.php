@@ -65,7 +65,8 @@ class CreateActivityRequestForm extends Component
 
     public $kbis_document;
 
-    public $term_document;
+    // Mandats
+    public $principals;
 
     public $safety_referent_document;
 
@@ -78,7 +79,7 @@ class CreateActivityRequestForm extends Component
 
     public bool $hasExistingKbis = false;
 
-    public bool $hasExistingTerm = false;
+    public bool $hasExistingPrincipals = false;
 
     public bool $hasExistingSafetyReferent = false;
 
@@ -167,7 +168,7 @@ class CreateActivityRequestForm extends Component
             $documentsFlags = $formData->getExistingDocumentsFlags($activityRequest);
             $this->hasExistingAaoRequest = $documentsFlags['hasExistingAaoRequest'];
             $this->hasExistingKbis = $documentsFlags['hasExistingKbis'];
-            $this->hasExistingTerm = $documentsFlags['hasExistingTerm'];
+            $this->hasExistingPrincipals = $documentsFlags['hasExistingPrincipals'];
             $this->hasExistingSafetyReferent = $documentsFlags['hasExistingSafetyReferent'];
             $this->hasExistingSecurityReferent = $documentsFlags['hasExistingSecurityReferent'];
             $this->hasExistingCta = $documentsFlags['hasExistingCta'];
@@ -304,7 +305,8 @@ class CreateActivityRequestForm extends Component
                 $formData,
                 $isDraft,
                 $isUpdate,
-                $existingDocs
+                $existingDocs,
+                $this->client
             );
 
             if ($validator->fails()) {
@@ -379,7 +381,7 @@ class CreateActivityRequestForm extends Component
             'vehicule_count' => $this->vehicule_count,
             'aao_request_document' => $this->aao_request_document,
             'kbis_document' => $this->kbis_document,
-            'term_document' => $this->term_document,
+            'principals' => $this->principals,
             'safety_referent_document' => $this->safety_referent_document,
             'security_referent_document' => $this->security_referent_document,
             'cta_document' => $this->cta_document,
@@ -446,7 +448,7 @@ class CreateActivityRequestForm extends Component
         return [
             'aao_request_document' => $this->hasExistingAaoRequest,
             'kbis_document' => $this->hasExistingKbis,
-            'term_document' => $this->hasExistingTerm,
+            'principals' => $this->hasExistingPrincipals,
             'safety_referent_document' => $this->hasExistingSafetyReferent,
             'security_referent_document' => $this->hasExistingSecurityReferent,
             'cta_document' => $this->hasExistingCta,
@@ -527,7 +529,7 @@ class CreateActivityRequestForm extends Component
             'vehicule_count',
             'aao_request_document',
             'kbis_document',
-            'term_document',
+            'principals',
             'safety_referent_document',
             'security_referent_document',
             'cta_document',
@@ -536,7 +538,7 @@ class CreateActivityRequestForm extends Component
             'selectedPreviousActivityRequest',
             'hasExistingAaoRequest',
             'hasExistingKbis',
-            'hasExistingTerm',
+            'hasExistingPrincipals',
             'hasExistingSafetyReferent',
             'hasExistingCta',
         ]);

@@ -1,0 +1,16 @@
+{
+    "mcpServers": {
+      "laravel-boost": {
+        "command": "php",
+        "args": [
+          "artisan",
+          "mcp:start",
+          "laravel-boost"
+        ],
+        "cwd": "C:\\laragon\\www\\aeropaperasse",
+        "env": {
+          "PHP_INI_SCAN_DIR": ""
+        }
+      }
+    }
+}

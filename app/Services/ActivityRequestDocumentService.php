@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ActivityRequest;
+use App\Models\ActivityRequestAttachment;
 use App\Models\Client;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
@@ -12,19 +13,57 @@ use ZipArchive;
 class ActivityRequestDocumentService
 {
     /**
-     * Stock les documents de la demande d'activité dans le dossier du client
+     * Mapping des types de documents du formulaire vers les types de la base de données
      */
-    public function storeDocuments(array $documents, Client $client, int $activityRequestId): array
-    {
-        $storedDocuments = [];
+    private const DOCUMENT_TYPE_MAPPING = [
+        'aao_request_document' => ActivityRequestAttachment::TYPE_AAO_REQUEST,
+        'kbis_document' => ActivityRequestAttachment::TYPE_KBIS,
+        'principals' => ActivityRequestAttachment::TYPE_PRINCIPALS,
+        'safety_referent_document' => ActivityRequestAttachment::TYPE_SAFETY_REFERENT,
+        'security_referent_document' => ActivityRequestAttachment::TYPE_SECURITY_REFERENT,
+        'cta_document' => ActivityRequestAttachment::TYPE_CTA,
+    ];
 
+    /**
+     * Noms affichables pour chaque type de document
+     */
+    private const DOCUMENT_NAMES = [
+        ActivityRequestAttachment::TYPE_AAO_REQUEST => 'Demande AAO',
+        ActivityRequestAttachment::TYPE_KBIS => 'Extrait KBIS',
+        ActivityRequestAttachment::TYPE_PRINCIPALS => 'Donneurs d\'ordre',
+        ActivityRequestAttachment::TYPE_SAFETY_REFERENT => 'Référent sûreté',
+        ActivityRequestAttachment::TYPE_SECURITY_REFERENT => 'Référent sécurité',
+        ActivityRequestAttachment::TYPE_CTA => 'CTA',
+    ];
+
+    /**
+     * Stock les documents de la demande d'activité dans le dossier du client
+     * Crée les enregistrements ActivityRequestAttachment
+     */
+    public function storeDocuments(array $documents, Client $client, int $activityRequestId): void
+    {
         try {
             // Créer le nom du dossier client
             $clientFolderName = $this->generateClientFolderName($client->company_name);
 
             foreach ($documents as $documentType => $file) {
-                if ($file instanceof UploadedFile) {
-                    $storedDocuments[$documentType] = $this->storeDocument(
+                // Gérer les multiples fichiers (principals)
+                if (is_array($file)) {
+                    $index = 1;
+                    foreach ($file as $singleFile) {
+                        if ($singleFile instanceof UploadedFile) {
+                            $this->storeDocumentAsAttachment(
+                                $singleFile,
+                                $documentType,
+                                $clientFolderName,
+                                $activityRequestId,
+                                $index
+                            );
+                            $index++;
+                        }
+                    }
+                } elseif ($file instanceof UploadedFile) {
+                    $this->storeDocumentAsAttachment(
                         $file,
                         $documentType,
                         $clientFolderName,
@@ -37,28 +76,31 @@ class ActivityRequestDocumentService
             Log::error('Erreur lors du stockage des documents', [
                 'error' => $e->getMessage(),
                 'activity_request_id' => $activityRequestId,
-                'user_id' => $this->user->id,
-                'user_email' => $this->user->email,
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
             ]);
-
+            throw $e;
         }
-
-        return $storedDocuments;
     }
 
     /**
      * Stock UN document dans le dossier de la demande d'activité du client
+     * et crée l'enregistrement ActivityRequestAttachment
+     *
+     * @param  int|null  $index  Index pour les fichiers multiples (principals), null pour les fichiers uniques
      */
-    protected function storeDocument(
+    protected function storeDocumentAsAttachment(
         UploadedFile $file,
         string $documentType,
         string $clientFolderName,
-        int $activityRequestId
-    ): string {
-        // Générer un nom de fichier
-        $filename = $this->generateFilename($file, $documentType, $clientFolderName);
+        int $activityRequestId,
+        ?int $index = null
+    ): ActivityRequestAttachment {
+        // Convertir le type du formulaire vers le type de la base de données
+        $attachmentType = self::DOCUMENT_TYPE_MAPPING[$documentType] ?? $documentType;
+
+        // Générer un nom de fichier (avec index si multiple)
+        $filename = $this->generateFilename($file, $attachmentType, $clientFolderName, $index);
 
         // Définir le chemin de stockage : storage/public/clients/[nom-client]/documents/activity-requests/[id]/
         $path = "clients/{$clientFolderName}/documents/activity-requests/{$activityRequestId}";
@@ -70,7 +112,28 @@ class ActivityRequestDocumentService
             throw new \Exception("Erreur lors du stockage du document {$documentType}");
         }
 
-        return $storedPath;
+        // Générer le nom affichable (avec numéro si multiple)
+        $displayName = self::DOCUMENT_NAMES[$attachmentType] ?? $documentType;
+        if ($index !== null) {
+            $displayName .= " #{$index}";
+        }
+
+        // Créer l'enregistrement ActivityRequestAttachment
+        $attachment = ActivityRequestAttachment::create([
+            'activity_request_id' => $activityRequestId,
+            'type' => $attachmentType,
+            'path' => $storedPath,
+            'name' => $displayName,
+        ]);
+
+        Log::info('Document stocké et attachment créé', [
+            'activity_request_id' => $activityRequestId,
+            'type' => $attachmentType,
+            'path' => $storedPath,
+            'index' => $index,
+        ]);
+
+        return $attachment;
     }
 
     /**
@@ -97,30 +160,42 @@ class ActivityRequestDocumentService
     }
 
     /**
-     * Génère un nom de fichier : [type-document]-[nom-entreprise]-[timestamp].pdf
+     * Génère un nom de fichier : [type-document]-[nom-entreprise]-[timestamp]-[index]-[unique].[extension]
+     * Pour les fichiers multiples (principals), l'index est ajouté pour garantir l'unicité
+     * Un identifiant unique supplémentaire est ajouté pour éviter les collisions
      */
-    protected function generateFilename(UploadedFile $file, string $documentType, string $clientFolderName): string
+    protected function generateFilename(UploadedFile $file, string $documentType, string $clientFolderName, ?int $index = null): string
     {
         $timestamp = now()->timestamp;
+        $extension = $file->getClientOriginalExtension() ?: 'pdf';
 
-        // Format : [type-document]-[nom-entreprise]-[timestamp].pdf
-        return "{$documentType}-{$clientFolderName}-{$timestamp}.pdf";
+        // Ajouter un identifiant unique (microtime + random) pour garantir l'unicité absolue
+        $uniqueId = substr(str_replace('.', '', microtime(true)), -8).rand(1000, 9999);
+
+        // Format de base : [type-document]-[nom-entreprise]-[timestamp]-[unique]
+        $baseName = "{$documentType}-{$clientFolderName}-{$timestamp}-{$uniqueId}";
+
+        // Ajouter l'index si présent (pour les fichiers multiples - pour la lisibilité)
+        if ($index !== null) {
+            $baseName .= "-{$index}";
+        }
+
+        return "{$baseName}.{$extension}";
     }
 
     /**
      * Copie les documents d'une ancienne demande vers une nouvelle demande (pour le renouvellement)
+     * Crée les nouveaux enregistrements ActivityRequestAttachment
      */
-    public function copyDocumentsFromPreviousRequest(int $previousActivityRequestId, Client $client, int $newActivityRequestId): array
+    public function copyDocumentsFromPreviousRequest(int $previousActivityRequestId, Client $client, int $newActivityRequestId): void
     {
-        $copiedDocuments = [];
-
-        // Récupérer l'ancienne demande
-        $previousRequest = ActivityRequest::find($previousActivityRequestId);
+        // Récupérer l'ancienne demande avec ses attachments
+        $previousRequest = ActivityRequest::with('attachments')->find($previousActivityRequestId);
 
         if (! $previousRequest) {
             Log::warning('Service - Demande précédente non trouvée', ['previous_id' => $previousActivityRequestId]);
 
-            return $copiedDocuments;
+            return;
         }
 
         // Créer le nom du dossier client
@@ -129,60 +204,66 @@ class ActivityRequestDocumentService
         // Chemins source et destination
         $destinationBasePath = "clients/{$clientFolderName}/documents/activity-requests/{$newActivityRequestId}";
 
-        // Types de documents à copier
-        $documentTypes = [
-            'aao_request_document',
-            'kbis_document',
-            'term_document',
-            'safety_referent_document',
-            'security_referent_document',
-            'cta_document',
-        ];
-
         // Utiliser le disque public explicitement
         $disk = Storage::disk('public');
 
-        foreach ($documentTypes as $documentType) {
-            // Vérifier si le document existe dans l'ancienne demande
-            if (! empty($previousRequest->$documentType)) {
-                // Le chemin du fichier source (déjà stocké dans la BDD)
-                $oldFilePath = $previousRequest->$documentType;
-
-                // Générer un nouveau nom de fichier avec un nouveau timestamp
-                $timestamp = now()->timestamp;
-                $newFilename = "{$documentType}-{$clientFolderName}-{$timestamp}.pdf";
-
-                $destinationPath = "{$destinationBasePath}/{$newFilename}";
-
-                // Copier le fichier s'il existe
-                if ($disk->exists($oldFilePath)) {
-                    // Créer le répertoire de destination s'il n'existe pas
-                    if (! $disk->exists($destinationBasePath)) {
-                        $disk->makeDirectory($destinationBasePath);
-                        Log::info('Service - Répertoire créé', ['path' => $destinationBasePath]);
-                    }
-
-                    // Copier le fichier
-                    $disk->copy($oldFilePath, $destinationPath);
-
-                    // Enregistrer le nouveau chemin
-                    $copiedDocuments[$documentType] = $destinationPath;
-                    Log::info('Service - Document copié avec succès', [
-                        'type' => $documentType,
-                        'destination' => $destinationPath,
-                    ]);
-                } else {
-                    Log::warning('Service - Fichier source non trouvé', [
-                        'type' => $documentType,
-                        'path' => $oldFilePath,
-                    ]);
-                }
-            } else {
-                Log::info('Service - Pas de document dans ancienne demande', ['type' => $documentType]);
-            }
+        // Créer le répertoire de destination s'il n'existe pas
+        if (! $disk->exists($destinationBasePath)) {
+            $disk->makeDirectory($destinationBasePath);
+            Log::info('Service - Répertoire créé', ['path' => $destinationBasePath]);
         }
 
-        return $copiedDocuments;
+        // Compter les principals pour gérer l'index lors de la copie
+        $principalsCount = 0;
+        $timestamp = now()->timestamp;
+
+        // Copier tous les attachments de l'ancienne demande
+        foreach ($previousRequest->attachments as $attachment) {
+            $oldFilePath = $attachment->path;
+
+            // Vérifier si le fichier existe
+            if (! $disk->exists($oldFilePath)) {
+                Log::warning('Service - Fichier source non trouvé', [
+                    'attachment_id' => $attachment->id,
+                    'path' => $oldFilePath,
+                ]);
+
+                continue;
+            }
+
+            // Pour les principals multiples, incrémenter le compteur et utiliser l'index
+            $index = null;
+            if ($attachment->type === ActivityRequestAttachment::TYPE_PRINCIPALS) {
+                $principalsCount++;
+                $index = $principalsCount;
+            }
+
+            // Générer un nouveau nom de fichier
+            $extension = pathinfo($oldFilePath, PATHINFO_EXTENSION) ?: 'pdf';
+            $baseName = "{$attachment->type}-{$clientFolderName}-{$timestamp}";
+            if ($index !== null) {
+                $baseName .= "-{$index}";
+            }
+            $newFilename = "{$baseName}.{$extension}";
+            $destinationPath = "{$destinationBasePath}/{$newFilename}";
+
+            // Copier le fichier
+            $disk->copy($oldFilePath, $destinationPath);
+
+            // Créer le nouvel enregistrement ActivityRequestAttachment
+            ActivityRequestAttachment::create([
+                'activity_request_id' => $newActivityRequestId,
+                'type' => $attachment->type,
+                'path' => $destinationPath,
+                'name' => $attachment->name, // Conserver le nom original (qui peut déjà contenir #1, #2, etc.)
+            ]);
+
+            Log::info('Service - Document copié avec succès', [
+                'type' => $attachment->type,
+                'destination' => $destinationPath,
+                'index' => $index,
+            ]);
+        }
     }
 
     /**
@@ -192,15 +273,8 @@ class ActivityRequestDocumentService
      */
     public function createDocumentsZip(ActivityRequest $activityRequest): ?string
     {
-        // Types de documents à inclure dans le ZIP
-        $documentTypes = [
-            'aao_request_document' => 'demande-aao',
-            'kbis_document' => 'extrait-kbis',
-            'term_document' => 'mandat',
-            'safety_referent_document' => 'referent-surete',
-            'security_referent_document' => 'referent-securite',
-            'cta_document' => 'cta',
-        ];
+        // Charger les attachments avec eager loading
+        $activityRequest->load('attachments');
 
         // Créer un nom de fichier pour le ZIP
         $zipFileName = 'demande-activite-'.$activityRequest->id.'-'.now()->timestamp.'.zip';
@@ -222,12 +296,33 @@ class ActivityRequestDocumentService
         $disk = Storage::disk('public');
         $filesAdded = false;
 
+        // Mapping des types vers les noms de fichiers dans le ZIP
+        $friendlyNames = [
+            ActivityRequestAttachment::TYPE_AAO_REQUEST => 'demande-aao',
+            ActivityRequestAttachment::TYPE_KBIS => 'extrait-kbis',
+            ActivityRequestAttachment::TYPE_PRINCIPALS => 'donneurs-ordre',
+            ActivityRequestAttachment::TYPE_SAFETY_REFERENT => 'referent-surete',
+            ActivityRequestAttachment::TYPE_SECURITY_REFERENT => 'referent-securite',
+            ActivityRequestAttachment::TYPE_CTA => 'cta',
+        ];
+
         // Ajouter chaque document au ZIP s'il existe
-        foreach ($documentTypes as $field => $friendlyName) {
-            if (! empty($activityRequest->$field) && $disk->exists($activityRequest->$field)) {
-                $filePath = $disk->path($activityRequest->$field);
+        foreach ($activityRequest->attachments as $attachment) {
+            if ($disk->exists($attachment->path)) {
+                $filePath = $disk->path($attachment->path);
                 $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-                $zipEntryName = $friendlyName.'.'.$extension;
+                $baseName = $friendlyNames[$attachment->type] ?? $attachment->type;
+
+                // Pour les principals multiples, ajouter un numéro
+                if ($attachment->type === ActivityRequestAttachment::TYPE_PRINCIPALS) {
+                    $principalsCount = $activityRequest->attachments
+                        ->where('type', ActivityRequestAttachment::TYPE_PRINCIPALS)
+                        ->where('id', '<=', $attachment->id)
+                        ->count();
+                    $zipEntryName = "{$baseName}-{$principalsCount}.{$extension}";
+                } else {
+                    $zipEntryName = "{$baseName}.{$extension}";
+                }
 
                 $zip->addFile($filePath, $zipEntryName);
                 $filesAdded = true;
@@ -252,8 +347,32 @@ class ActivityRequestDocumentService
         return $zipPath;
     }
 
+    /**
+     * Récupère le chemin d'un document par son type
+     * Pour les types uniques, retourne le premier attachment trouvé
+     * Pour les principals (multiples), retourne le premier (ou tous via getPrincipalsDocuments())
+     */
     public function getDocumentPath(ActivityRequest $activityRequest, string $documentType): ?string
     {
-        return $activityRequest->$documentType;
+        // Convertir le type du formulaire vers le type de la base de données
+        $attachmentType = self::DOCUMENT_TYPE_MAPPING[$documentType] ?? $documentType;
+
+        $attachment = $activityRequest->attachments()
+            ->ofType($attachmentType)
+            ->first();
+
+        return $attachment?->path;
+    }
+
+    /**
+     * Récupère un attachment par son type
+     */
+    public function getAttachmentByType(ActivityRequest $activityRequest, string $documentType): ?ActivityRequestAttachment
+    {
+        $attachmentType = self::DOCUMENT_TYPE_MAPPING[$documentType] ?? $documentType;
+
+        return $activityRequest->attachments()
+            ->ofType($attachmentType)
+            ->first();
     }
 }

@@ -183,7 +183,7 @@
     <div class="border border-gray-800/10 p-4 rounded-lg">
         <flux:heading size="lg">Documents</flux:heading>
 
-            @if($activityRequestId && ($hasExistingAaoRequest || $hasExistingKbis || $hasExistingTerm || $hasExistingSafetyReferent || $hasExistingCta))
+            @if($activityRequestId && ($hasExistingAaoRequest || $hasExistingKbis || $hasExistingPrincipals || $hasExistingSafetyReferent || $hasExistingSecurityReferent || $hasExistingCta))
                 <flux:callout class="mt-4" icon="information-circle" color="blue">
                     <flux:callout.heading>Des documents existent déjà pour ce brouillon. Vous pouvez les remplacer en téléchargeant de nouveaux fichiers, sinon les documents existants seront conservés.</flux:callout.heading>
                 </flux:callout>
@@ -214,15 +214,19 @@
             </flux:field>
             <flux:field class="mt-2">
                 <flux:label>
-                    Mandat
-                    @if(!$hasExistingTerm)
+                    Donneurs d'ordre
+                    @if(!$hasExistingPrincipals)
                         <span class="text-red-500">*</span>
                     @else
-                        <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
+                        <span class="text-green-600 text-sm ml-2">(Document(s) existant(s) ✓)</span>
                     @endif
                 </flux:label>
-                <flux:input wire:model="term_document" type="file" icon="document-plus" name="term_document" />
-                <flux:error name="term_document" />
+                <flux:input wire:model="principals" type="file" icon="document-plus" name="principals" multiple />
+                <flux:text class="text-sm text-gray-500 mt-1">Vous pouvez sélectionner plusieurs fichiers</flux:text>
+                <flux:error name="principals" />
+                @error('principals.*')
+                    <flux:text class="text-sm text-red-600 mt-1">{{ $message }}</flux:text>
+                @enderror
             </flux:field>
             <flux:field class="mt-2">
                 <flux:label>
@@ -248,18 +252,21 @@
                 <flux:input wire:model="security_referent_document" type="file" icon="document-plus" name="security_referent_document" />
                 <flux:error name="security_referent_document" />
             </flux:field>
-            <flux:field class="mt-2">
-                <flux:label>
-                    CTA
-                    @if(!$hasExistingCta)
-                        <span class="text-red-500">*</span>
-                    @else
-                        <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
-                    @endif
-                </flux:label>
-                <flux:input wire:model="cta_document" type="file" icon="document-plus" name="cta_document" />
-                <flux:error name="cta_document" />
-            </flux:field>
+            @if($client && $client->is_airline_company)
+                <flux:field class="mt-2">
+                    <flux:label>
+                        CTA
+                        @if(!$hasExistingCta)
+                            <span class="text-red-500">*</span>
+                        @else
+                            <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
+                        @endif
+                    </flux:label>
+                    <flux:input wire:model="cta_document" type="file" icon="document-plus" name="cta_document" />
+                    <flux:text class="text-sm text-gray-500 mt-1">Requis pour les compagnies aériennes</flux:text>
+                    <flux:error name="cta_document" />
+                </flux:field>
+            @endif
     </div>
     @endif
 

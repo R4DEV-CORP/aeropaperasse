@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 
 class ActivityRequest extends Model
@@ -66,5 +67,90 @@ class ActivityRequest extends Model
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(ActivityRequestAttachment::class);
+    }
+
+    /**
+     * Récupère le document AAO Request (unique)
+     */
+    public function getAaoRequestDocument(): ?ActivityRequestAttachment
+    {
+        return $this->attachments()
+            ->ofType(ActivityRequestAttachment::TYPE_AAO_REQUEST)
+            ->first();
+    }
+
+    /**
+     * Récupère le document KBIS (unique)
+     */
+    public function getKbisDocument(): ?ActivityRequestAttachment
+    {
+        return $this->attachments()
+            ->ofType(ActivityRequestAttachment::TYPE_KBIS)
+            ->first();
+    }
+
+    /**
+     * Récupère tous les documents Principals (peut être multiple)
+     */
+    public function getPrincipalsDocuments(): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->attachments()
+            ->ofType(ActivityRequestAttachment::TYPE_PRINCIPALS)
+            ->get();
+    }
+
+    /**
+     * Récupère le document Safety Referent (unique)
+     */
+    public function getSafetyReferentDocument(): ?ActivityRequestAttachment
+    {
+        return $this->attachments()
+            ->ofType(ActivityRequestAttachment::TYPE_SAFETY_REFERENT)
+            ->first();
+    }
+
+    /**
+     * Récupère le document Security Referent (unique)
+     */
+    public function getSecurityReferentDocument(): ?ActivityRequestAttachment
+    {
+        return $this->attachments()
+            ->ofType(ActivityRequestAttachment::TYPE_SECURITY_REFERENT)
+            ->first();
+    }
+
+    /**
+     * Récupère le document CTA (unique)
+     */
+    public function getCtaDocument(): ?ActivityRequestAttachment
+    {
+        return $this->attachments()
+            ->ofType(ActivityRequestAttachment::TYPE_CTA)
+            ->first();
+    }
+
+    /**
+     * Vérifie si un document d'un type donné existe
+     */
+    public function hasDocument(string $type): bool
+    {
+        return $this->attachments()
+            ->ofType($type)
+            ->exists();
+    }
+
+    /**
+     * Récupère un document par son type (pour les types uniques)
+     */
+    public function getDocumentByType(string $type): ?ActivityRequestAttachment
+    {
+        return $this->attachments()
+            ->ofType($type)
+            ->first();
     }
 }
