@@ -83,13 +83,13 @@
 
     @if($selected_activity_request_id && $activityRequest && $activityRequest->id == $selected_activity_request_id)
     <div class="border border-gray-800/10 p-4 rounded-lg" wire:key="activity-request-{{ $selected_activity_request_id }}">
-        <div class="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <flux:text class="font-medium">Quota disponible :</flux:text>
-            <flux:text>
+        <flux:callout class="mb-4" icon="information-circle" color="blue">
+            <flux:callout.heading>Quota disponible :</flux:callout.heading>
+            <flux:callout.text>
                 {{ $activityRequest->getActiveBadgeRequestsCount() }}/{{ $activityRequest->person_count }} badges utilisés
                 ({{ $activityRequest->getRemainingBadgeQuota() }} place(s) restante(s))
-            </flux:text>
-        </div>
+            </flux:callout.text>
+        </flux:callout>
         <div class="grid grid-cols-2 gap-4 mt-2">
             <div class="mt-2">
                 <flux:heading size="lg">Informations sur la demande d'activité</flux:heading>
