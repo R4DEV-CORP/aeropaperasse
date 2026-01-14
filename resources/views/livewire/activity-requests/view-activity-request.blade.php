@@ -107,14 +107,26 @@
                 <flux:callout.heading>Demande AAO</flux:callout.heading>
                 @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
-                    <flux:button 
-                        variant="ghost" 
-                        icon="document-arrow-down"
-                        wire:click="downloadDocument('aao_request_document')"
-                        wire:loading.attr="disabled"
-                    >
-                        Télécharger
-                    </flux:button>
+                    <div class="flex gap-2">
+                        @if($this->canViewDocument('aao_request_document'))
+                            <flux:button 
+                                variant="ghost" 
+                                icon="eye"
+                                wire:click="viewDocument('aao_request_document')"
+                                wire:loading.attr="disabled"
+                            >
+                                Voir
+                            </flux:button>
+                        @endif
+                        <flux:button 
+                            variant="ghost" 
+                            icon="document-arrow-down"
+                            wire:click="downloadDocument('aao_request_document')"
+                            wire:loading.attr="disabled"
+                        >
+                            Télécharger
+                        </flux:button>
+                    </div>
                 </x-slot>
                 @endif
             </flux:callout>
@@ -125,14 +137,26 @@
                 <flux:callout.heading>Extrait KBIS</flux:callout.heading>
                 @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
-                    <flux:button 
-                        variant="ghost" 
-                        icon="document-arrow-down"
-                        wire:click="downloadDocument('kbis_document')"
-                        wire:loading.attr="disabled"
-                    >
-                        Télécharger
-                    </flux:button>
+                    <div class="flex gap-2">
+                        @if($this->canViewDocument('kbis_document'))
+                            <flux:button 
+                                variant="ghost" 
+                                icon="eye"
+                                wire:click="viewDocument('kbis_document')"
+                                wire:loading.attr="disabled"
+                            >
+                                Voir
+                            </flux:button>
+                        @endif
+                        <flux:button 
+                            variant="ghost" 
+                            icon="document-arrow-down"
+                            wire:click="downloadDocument('kbis_document')"
+                            wire:loading.attr="disabled"
+                        >
+                            Télécharger
+                        </flux:button>
+                    </div>
                 </x-slot>
                 @endif
             </flux:callout>
@@ -144,14 +168,26 @@
                     <flux:callout.heading>Donneurs d'ordre {{ $principals->count() > 1 ? '#' . $loop->iteration : '' }}</flux:callout.heading>
                     @if(auth()->user()->isAdmin())
                     <x-slot name="actions">
-                        <flux:button 
-                            variant="ghost" 
-                            icon="document-arrow-down"
-                            wire:click="downloadDocument('principals', {{ $principal->id }})"
-                            wire:loading.attr="disabled"
-                        >
-                            Télécharger
-                        </flux:button>
+                        <div class="flex gap-2">
+                            @if($this->canViewDocument('principals', $principal->id))
+                                <flux:button 
+                                    variant="ghost" 
+                                    icon="eye"
+                                    wire:click="viewDocument('principals', {{ $principal->id }})"
+                                    wire:loading.attr="disabled"
+                                >
+                                    Voir
+                                </flux:button>
+                            @endif
+                            <flux:button 
+                                variant="ghost" 
+                                icon="document-arrow-down"
+                                wire:click="downloadDocument('principals', {{ $principal->id }})"
+                                wire:loading.attr="disabled"
+                            >
+                                Télécharger
+                            </flux:button>
+                        </div>
                     </x-slot>
                     @endif
                 </flux:callout>
@@ -163,14 +199,26 @@
                 <flux:callout.heading>Référent sûreté</flux:callout.heading>
                 @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
-                    <flux:button 
-                        variant="ghost" 
-                        icon="document-arrow-down"
-                        wire:click="downloadDocument('safety_referent_document')"
-                        wire:loading.attr="disabled"
-                    >
-                        Télécharger
-                    </flux:button>
+                    <div class="flex gap-2">
+                        @if($this->canViewDocument('safety_referent_document'))
+                            <flux:button 
+                                variant="ghost" 
+                                icon="eye"
+                                wire:click="viewDocument('safety_referent_document')"
+                                wire:loading.attr="disabled"
+                            >
+                                Voir
+                            </flux:button>
+                        @endif
+                        <flux:button 
+                            variant="ghost" 
+                            icon="document-arrow-down"
+                            wire:click="downloadDocument('safety_referent_document')"
+                            wire:loading.attr="disabled"
+                        >
+                            Télécharger
+                        </flux:button>
+                    </div>
                 </x-slot>
                 @endif
             </flux:callout>
@@ -181,14 +229,26 @@
                 <flux:callout.heading>Référent sécurité</flux:callout.heading>
                 @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
-                    <flux:button 
-                        variant="ghost" 
-                        icon="document-arrow-down"
-                        wire:click="downloadDocument('security_referent_document')"
-                        wire:loading.attr="disabled"
-                    >
-                        Télécharger
-                    </flux:button>
+                    <div class="flex gap-2">
+                        @if($this->canViewDocument('security_referent_document'))
+                            <flux:button 
+                                variant="ghost" 
+                                icon="eye"
+                                wire:click="viewDocument('security_referent_document')"
+                                wire:loading.attr="disabled"
+                            >
+                                Voir
+                            </flux:button>
+                        @endif
+                        <flux:button 
+                            variant="ghost" 
+                            icon="document-arrow-down"
+                            wire:click="downloadDocument('security_referent_document')"
+                            wire:loading.attr="disabled"
+                        >
+                            Télécharger
+                        </flux:button>
+                    </div>
                 </x-slot>
                 @endif
             </flux:callout>
@@ -199,14 +259,26 @@
                 <flux:callout.heading>CTA</flux:callout.heading>
                 @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
-                    <flux:button 
-                        variant="ghost" 
-                        icon="document-arrow-down"
-                        wire:click="downloadDocument('cta_document')"
-                        wire:loading.attr="disabled"
-                    >
-                        Télécharger
-                    </flux:button>
+                    <div class="flex gap-2">
+                        @if($this->canViewDocument('cta_document'))
+                            <flux:button 
+                                variant="ghost" 
+                                icon="eye"
+                                wire:click="viewDocument('cta_document')"
+                                wire:loading.attr="disabled"
+                            >
+                                Voir
+                            </flux:button>
+                        @endif
+                        <flux:button 
+                            variant="ghost" 
+                            icon="document-arrow-down"
+                            wire:click="downloadDocument('cta_document')"
+                            wire:loading.attr="disabled"
+                        >
+                            Télécharger
+                        </flux:button>
+                    </div>
                 </x-slot>
                 @endif
             </flux:callout>

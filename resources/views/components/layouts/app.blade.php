@@ -62,5 +62,14 @@
             {{ $slot }}
         </flux:main>
         @fluxScripts
+        <script>
+            document.addEventListener('livewire:init', () => {
+                Livewire.on('open-document', (event) => {
+                    if (event.url) {
+                        window.open(event.url, '_blank');
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

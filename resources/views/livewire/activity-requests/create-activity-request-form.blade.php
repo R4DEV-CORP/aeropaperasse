@@ -193,11 +193,24 @@
                     Demande AAO
                     @if(!$hasExistingAaoRequest)
                         <span class="text-red-500">*</span>
-                    @else
-                        <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
                     @endif
                 </flux:label>
                 <flux:input wire:model="aao_request_document" type="file" icon="document-plus" name="aao_request_document" />
+                @if($aao_request_document_name)
+                    <div class="mt-2 flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-md">
+                        <flux:icon.check-circle class="size-5 text-green-600" />
+                        <flux:text class="text-sm text-green-800">
+                            Nouveau fichier sélectionné : <strong>{{ $aao_request_document_name }}</strong>
+                        </flux:text>
+                    </div>
+                @elseif($hasExistingAaoRequest && $existing_aao_request_document_name)
+                    <div class="mt-2 flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+                        <flux:icon.check-circle class="size-5 text-blue-600" />
+                        <flux:text class="text-sm text-blue-800">
+                            Document existant : <strong>{{ $existing_aao_request_document_name }}</strong>
+                        </flux:text>
+                    </div>
+                @endif
                 <flux:error name="aao_request_document" />
             </flux:field>
             <flux:field class="mt-2">
@@ -205,11 +218,24 @@
                     Extrait KBIS
                     @if(!$hasExistingKbis)
                         <span class="text-red-500">*</span>
-                    @else
-                        <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
                     @endif
                 </flux:label>
                 <flux:input wire:model="kbis_document" type="file" icon="document-plus" name="kbis_document" />
+                @if($kbis_document_name)
+                    <div class="mt-2 flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-md">
+                        <flux:icon.check-circle class="size-5 text-green-600" />
+                        <flux:text class="text-sm text-green-800">
+                            Nouveau fichier sélectionné : <strong>{{ $kbis_document_name }}</strong>
+                        </flux:text>
+                    </div>
+                @elseif($hasExistingKbis && $existing_kbis_document_name)
+                    <div class="mt-2 flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+                        <flux:icon.check-circle class="size-5 text-blue-600" />
+                        <flux:text class="text-sm text-blue-800">
+                            Document existant : <strong>{{ $existing_kbis_document_name }}</strong>
+                        </flux:text>
+                    </div>
+                @endif
                 <flux:error name="kbis_document" />
             </flux:field>
             <flux:field class="mt-2">
@@ -217,12 +243,43 @@
                     Donneurs d'ordre
                     @if(!$hasExistingPrincipals)
                         <span class="text-red-500">*</span>
-                    @else
-                        <span class="text-green-600 text-sm ml-2">(Document(s) existant(s) ✓)</span>
                     @endif
                 </flux:label>
                 <flux:input wire:model="principals" type="file" icon="document-plus" name="principals" multiple />
                 <flux:text class="text-sm text-gray-500 mt-1">Vous pouvez sélectionner plusieurs fichiers</flux:text>
+                @if(count($principals_names) > 0)
+                    <div class="mt-2 p-2 bg-green-50 border border-green-200 rounded-md">
+                        <div class="flex items-center gap-2 mb-2">
+                            <flux:icon.check-circle class="size-5 text-green-600" />
+                            <flux:text class="text-sm text-green-800 font-medium">
+                                {{ count($principals_names) }} nouveau(x) fichier(s) sélectionné(s) :
+                            </flux:text>
+                        </div>
+                        <ul class="list-disc list-inside ml-7 space-y-1">
+                            @foreach($principals_names as $fileName)
+                                <li class="text-sm text-green-800">
+                                    <strong>{{ $fileName }}</strong>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @elseif($hasExistingPrincipals && count($existing_principals_names) > 0)
+                    <div class="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+                        <div class="flex items-center gap-2 mb-2">
+                            <flux:icon.check-circle class="size-5 text-blue-600" />
+                            <flux:text class="text-sm text-blue-800 font-medium">
+                                {{ count($existing_principals_names) }} document(s) existant(s) :
+                            </flux:text>
+                        </div>
+                        <ul class="list-disc list-inside ml-7 space-y-1">
+                            @foreach($existing_principals_names as $fileName)
+                                <li class="text-sm text-blue-800">
+                                    <strong>{{ $fileName }}</strong>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <flux:error name="principals" />
                 @error('principals.*')
                     <flux:text class="text-sm text-red-600 mt-1">{{ $message }}</flux:text>
@@ -233,11 +290,24 @@
                     Référent sureté
                     @if(!$hasExistingSafetyReferent)
                         <span class="text-red-500">*</span>
-                    @else
-                        <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
                     @endif
                 </flux:label>
                 <flux:input wire:model="safety_referent_document" type="file" icon="document-plus" name="safety_referent_document" />
+                @if($safety_referent_document_name)
+                    <div class="mt-2 flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-md">
+                        <flux:icon.check-circle class="size-5 text-green-600" />
+                        <flux:text class="text-sm text-green-800">
+                            Nouveau fichier sélectionné : <strong>{{ $safety_referent_document_name }}</strong>
+                        </flux:text>
+                    </div>
+                @elseif($hasExistingSafetyReferent && $existing_safety_referent_document_name)
+                    <div class="mt-2 flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+                        <flux:icon.check-circle class="size-5 text-blue-600" />
+                        <flux:text class="text-sm text-blue-800">
+                            Document existant : <strong>{{ $existing_safety_referent_document_name }}</strong>
+                        </flux:text>
+                    </div>
+                @endif
                 <flux:error name="safety_referent_document" />
             </flux:field>
             <flux:field class="mt-2">
@@ -245,11 +315,24 @@
                     Référent sécurité
                     @if(!$hasExistingSecurityReferent)
                         <span class="text-red-500">*</span>
-                    @else
-                        <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
                     @endif
                 </flux:label>
                 <flux:input wire:model="security_referent_document" type="file" icon="document-plus" name="security_referent_document" />
+                @if($security_referent_document_name)
+                    <div class="mt-2 flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-md">
+                        <flux:icon.check-circle class="size-5 text-green-600" />
+                        <flux:text class="text-sm text-green-800">
+                            Nouveau fichier sélectionné : <strong>{{ $security_referent_document_name }}</strong>
+                        </flux:text>
+                    </div>
+                @elseif($hasExistingSecurityReferent && $existing_security_referent_document_name)
+                    <div class="mt-2 flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+                        <flux:icon.check-circle class="size-5 text-blue-600" />
+                        <flux:text class="text-sm text-blue-800">
+                            Document existant : <strong>{{ $existing_security_referent_document_name }}</strong>
+                        </flux:text>
+                    </div>
+                @endif
                 <flux:error name="security_referent_document" />
             </flux:field>
             @if($client && $client->is_airline_company)
@@ -258,12 +341,25 @@
                         CTA
                         @if(!$hasExistingCta)
                             <span class="text-red-500">*</span>
-                        @else
-                            <span class="text-green-600 text-sm ml-2">(Document existant ✓)</span>
                         @endif
                     </flux:label>
                     <flux:input wire:model="cta_document" type="file" icon="document-plus" name="cta_document" />
                     <flux:text class="text-sm text-gray-500 mt-1">Requis pour les compagnies aériennes</flux:text>
+                    @if($cta_document_name)
+                        <div class="mt-2 flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-md">
+                            <flux:icon.check-circle class="size-5 text-green-600" />
+                            <flux:text class="text-sm text-green-800">
+                                Nouveau fichier sélectionné : <strong>{{ $cta_document_name }}</strong>
+                            </flux:text>
+                        </div>
+                    @elseif($hasExistingCta && $existing_cta_document_name)
+                        <div class="mt-2 flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+                            <flux:icon.check-circle class="size-5 text-blue-600" />
+                            <flux:text class="text-sm text-blue-800">
+                                Document existant : <strong>{{ $existing_cta_document_name }}</strong>
+                            </flux:text>
+                        </div>
+                    @endif
                     <flux:error name="cta_document" />
                 </flux:field>
             @endif

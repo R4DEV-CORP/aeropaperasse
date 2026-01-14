@@ -96,6 +96,88 @@ class ViewActivityRequest extends Component
     }
 
     /**
+     * Ouvrir un document dans le navigateur
+     * Pour les principals, on peut ouvrir un fichier spécifique par son ID
+     */
+    public function viewDocument(string $documentType, ?int $attachmentId = null)
+    {
+        // Charger les attachments si pas déjà chargés
+        if (! $this->activityRequest->relationLoaded('attachments')) {
+            $this->activityRequest->load('attachments');
+        }
+
+        $attachment = null;
+
+        // Si un ID est fourni (pour les principals multiples), utiliser cet ID
+        if ($attachmentId) {
+            $attachment = $this->activityRequest->attachments()->find($attachmentId);
+        } else {
+            // Sinon, utiliser le service pour récupérer le premier document du type
+            $documentService = new ActivityRequestDocumentService;
+            $attachment = $documentService->getAttachmentByType($this->activityRequest, $documentType);
+        }
+
+        if (! $attachment) {
+            session()->flash('error', 'Document non disponible.');
+
+            return;
+        }
+
+        $disk = Storage::disk('public');
+
+        // Vérifier si le fichier existe
+        if (! $disk->exists($attachment->path)) {
+            session()->flash('error', 'Le fichier n\'existe pas.');
+
+            return;
+        }
+
+        // Vérifier si le fichier peut être visualisé (PDF, PNG, JPEG)
+        $extension = strtolower(pathinfo($attachment->path, PATHINFO_EXTENSION));
+        if (! in_array($extension, ['pdf', 'png', 'jpg', 'jpeg'])) {
+            session()->flash('error', 'Ce type de fichier ne peut pas être visualisé dans le navigateur.');
+
+            return;
+        }
+
+        // Obtenir l'URL publique du fichier
+        $url = $disk->url($attachment->path);
+
+        // Retourner l'URL pour l'ouvrir dans un nouvel onglet via JavaScript
+        $this->dispatch('open-document', url: $url);
+    }
+
+    /**
+     * Vérifier si un document peut être visualisé dans le navigateur
+     */
+    public function canViewDocument(string $documentType, ?int $attachmentId = null): bool
+    {
+        // Charger les attachments si pas déjà chargés
+        if (! $this->activityRequest->relationLoaded('attachments')) {
+            $this->activityRequest->load('attachments');
+        }
+
+        $attachment = null;
+
+        // Si un ID est fourni (pour les principals multiples), utiliser cet ID
+        if ($attachmentId) {
+            $attachment = $this->activityRequest->attachments()->find($attachmentId);
+        } else {
+            // Sinon, utiliser le service pour récupérer le premier document du type
+            $documentService = new ActivityRequestDocumentService;
+            $attachment = $documentService->getAttachmentByType($this->activityRequest, $documentType);
+        }
+
+        if (! $attachment) {
+            return false;
+        }
+
+        $extension = strtolower(pathinfo($attachment->path, PATHINFO_EXTENSION));
+
+        return in_array($extension, ['pdf', 'png', 'jpg', 'jpeg']);
+    }
+
+    /**
      * Télécharger tous les documents dans un ZIP
      */
     public function downloadAllDocuments()

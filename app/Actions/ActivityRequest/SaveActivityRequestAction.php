@@ -141,7 +141,8 @@ class SaveActivityRequestAction
         $this->documentService->storeDocuments(
             $data->getDocuments(),
             $client,
-            $activityRequest->id
+            $activityRequest->id,
+            $activityRequest // Passer l'ActivityRequest pour permettre la suppression des anciens documents
         );
     }
 

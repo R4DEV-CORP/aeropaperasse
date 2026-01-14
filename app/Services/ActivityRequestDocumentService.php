@@ -39,14 +39,37 @@ class ActivityRequestDocumentService
     /**
      * Stock les documents de la demande d'activité dans le dossier du client
      * Crée les enregistrements ActivityRequestAttachment
+     * Si un ActivityRequest est fourni et que de nouveaux fichiers "principals" sont uploadés,
+     * supprime les anciens documents "principals" avant d'ajouter les nouveaux
      */
-    public function storeDocuments(array $documents, Client $client, int $activityRequestId): void
+    public function storeDocuments(array $documents, Client $client, int $activityRequestId, ?ActivityRequest $activityRequest = null): void
     {
         try {
             // Créer le nom du dossier client
             $clientFolderName = $this->generateClientFolderName($client->company_name);
 
             foreach ($documents as $documentType => $file) {
+                // Pour les "principals" (donneurs d'ordre), vérifier s'il y a de nouveaux fichiers valides
+                $hasValidPrincipalsFiles = false;
+                if ($documentType === 'principals' && ! empty($file)) {
+                    if (is_array($file)) {
+                        // Vérifier qu'il y a au moins un fichier valide dans le tableau
+                        foreach ($file as $singleFile) {
+                            if ($singleFile instanceof UploadedFile) {
+                                $hasValidPrincipalsFiles = true;
+                                break;
+                            }
+                        }
+                    } elseif ($file instanceof UploadedFile) {
+                        $hasValidPrincipalsFiles = true;
+                    }
+
+                    // Supprimer les anciens documents seulement si de nouveaux fichiers valides sont présents
+                    if ($hasValidPrincipalsFiles && $activityRequest) {
+                        $this->deleteExistingPrincipalsDocuments($activityRequest);
+                    }
+                }
+
                 // Gérer les multiples fichiers (principals)
                 if (is_array($file)) {
                     $index = 1;
@@ -374,5 +397,50 @@ class ActivityRequestDocumentService
         return $activityRequest->attachments()
             ->ofType($attachmentType)
             ->first();
+    }
+
+    /**
+     * Supprime les anciens documents "principals" (donneurs d'ordre) d'une demande d'activité
+     * Supprime à la fois les fichiers physiques et les enregistrements en base de données
+     */
+    protected function deleteExistingPrincipalsDocuments(ActivityRequest $activityRequest): void
+    {
+        // Charger les attachments si pas déjà chargés
+        if (! $activityRequest->relationLoaded('attachments')) {
+            $activityRequest->load('attachments');
+        }
+
+        // Récupérer tous les attachments de type "principals"
+        $principalsAttachments = $activityRequest->attachments()
+            ->where('type', ActivityRequestAttachment::TYPE_PRINCIPALS)
+            ->get();
+
+        if ($principalsAttachments->isEmpty()) {
+            return;
+        }
+
+        $disk = Storage::disk('public');
+        $deletedCount = 0;
+
+        // Supprimer chaque fichier et son enregistrement
+        foreach ($principalsAttachments as $attachment) {
+            // Supprimer le fichier physique s'il existe
+            if ($disk->exists($attachment->path)) {
+                $disk->delete($attachment->path);
+                Log::info('Service - Fichier principal supprimé', [
+                    'attachment_id' => $attachment->id,
+                    'path' => $attachment->path,
+                ]);
+            }
+
+            // Supprimer l'enregistrement en base de données
+            $attachment->delete();
+            $deletedCount++;
+        }
+
+        Log::info('Service - Anciens documents principals supprimés', [
+            'activity_request_id' => $activityRequest->id,
+            'deleted_count' => $deletedCount,
+        ]);
     }
 }

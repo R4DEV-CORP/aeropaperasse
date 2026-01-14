@@ -82,6 +82,61 @@ class ViewBadgeRequest extends Component
     }
 
     /**
+     * Ouvrir un document dans le navigateur
+     */
+    public function viewDocument(string $documentType)
+    {
+        $documentService = new BadgeRequestDocumentService;
+        $relativePath = $documentService->getDocumentPath($this->badgeRequest, $documentType);
+
+        if (! $relativePath) {
+            session()->flash('error', 'Document non disponible.');
+
+            return;
+        }
+
+        $disk = Storage::disk('public');
+
+        // Vérifier si le fichier existe
+        if (! $disk->exists($relativePath)) {
+            session()->flash('error', 'Le fichier n\'existe pas.');
+
+            return;
+        }
+
+        // Vérifier si le fichier peut être visualisé (PDF, PNG, JPEG)
+        $extension = strtolower(pathinfo($relativePath, PATHINFO_EXTENSION));
+        if (! in_array($extension, ['pdf', 'png', 'jpg', 'jpeg'])) {
+            session()->flash('error', 'Ce type de fichier ne peut pas être visualisé dans le navigateur.');
+
+            return;
+        }
+
+        // Obtenir l'URL publique du fichier
+        $url = $disk->url($relativePath);
+
+        // Retourner l'URL pour l'ouvrir dans un nouvel onglet via JavaScript
+        $this->dispatch('open-document', url: $url);
+    }
+
+    /**
+     * Vérifier si un document peut être visualisé dans le navigateur
+     */
+    public function canViewDocument(string $documentType): bool
+    {
+        $documentService = new BadgeRequestDocumentService;
+        $relativePath = $documentService->getDocumentPath($this->badgeRequest, $documentType);
+
+        if (! $relativePath) {
+            return false;
+        }
+
+        $extension = strtolower(pathinfo($relativePath, PATHINFO_EXTENSION));
+
+        return in_array($extension, ['pdf', 'png', 'jpg', 'jpeg']);
+    }
+
+    /**
      * Télécharger tous les documents dans un ZIP
      */
     public function downloadAllDocuments()
