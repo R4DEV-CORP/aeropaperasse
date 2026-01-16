@@ -10,7 +10,7 @@
         <x-badge-info-card title="Rejetté REM" value="{{ $statistics['rejected_rem'] }}" bg-color="red-200" />
         <x-badge-info-card title="Rejetté ADP" value="{{ $statistics['rejected_adp'] }}" bg-color="red-200" />
         <x-badge-info-card title="Prêt à être Remis" value="{{ $statistics['ready_for_delivery'] }}" bg-color="blue-200" />
-        <x-badge-info-card title="Demandes totales" value="{{ $statistics['total'] }}" bg-color="violet-200" />
+        <x-badge-info-card title="Remis" value="{{ $statistics['delivered'] }}" bg-color="emerald-200" />
     </div>
     @if(auth()->user()->isAdmin())
         <flux:callout icon="information-circle" color="blue" inline class="mt-4">
@@ -88,6 +88,9 @@
                                 @case('ready_for_delivery')
                                     <flux:badge icon="check-badge" color="blue" size="sm">Prêt à être Remis</flux:badge>
                                     @break
+                                @case('delivered')
+                                    <flux:badge icon="check-circle" color="emerald" size="sm">Remis</flux:badge>
+                                    @break
                                 @case('terminated')
                                     <flux:badge icon="check-circle" color="violet" size="sm">Terminé</flux:badge>
                                     @break
@@ -159,6 +162,33 @@
                                     @if($badgeRequest->status == 'pending_fabrication')
                                         <flux:button variant="subtle" icon="arrow-left-circle" icon:variant="outline" square="true" tooltip="Retour en approuvé ADP" wire:click="backToApprovedAdp({{ $badgeRequest->id }})" class="!text-amber-500 hover:cursor-pointer"/>
                                         <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Passer à remettre" wire:click="toDelivery({{ $badgeRequest->id }})" class="!text-green-500 hover:cursor-pointer"/>
+                                    @endif
+                                    @if($badgeRequest->status == 'ready_for_delivery')
+                                        <flux:modal.trigger :name="'deliver-badge-request-'.$badgeRequest->id">
+                                            <flux:button variant="subtle" icon="check-circle" icon:variant="outline" square="true" tooltip="Marquer comme remis" class="!text-emerald-500 hover:cursor-pointer"/>
+                                        </flux:modal.trigger>
+                                        <flux:modal :name="'deliver-badge-request-'.$badgeRequest->id" class="min-w-4xl !max-w-6xl space-y-4">
+                                            <flux:heading size="lg">Marquer le badge comme remis</flux:heading>
+                                            <form wire:submit="deliver({{ $badgeRequest->id }})">
+                                                <flux:field>
+                                                    <flux:label>Photo du badge remis *</flux:label>
+                                                    <flux:input type="file" wire:model="deliveryPhoto" accept="image/jpeg,image/png,image/jpg" />
+                                                    @error('deliveryPhoto')
+                                                        <flux:error>{{ $message }}</flux:error>
+                                                    @enderror
+                                                    @if($deliveryPhoto)
+                                                        <flux:text class="mt-1 text-sm text-gray-600">Fichier sélectionné : {{ $deliveryPhoto->getClientOriginalName() }}</flux:text>
+                                                    @endif
+                                                </flux:field>
+                                                <div class="flex items-center justify-end mt-4 gap-2">
+                                                    <flux:button variant="ghost" wire:click="closeDeliverModal" type="button">Annuler</flux:button>
+                                                    <flux:button variant="primary" icon="check-circle" type="submit" wire:loading.attr="disabled">
+                                                        <span wire:loading.remove wire:target="deliver">Confirmer la remise</span>
+                                                        <span wire:loading wire:target="deliver">Traitement...</span>
+                                                    </flux:button>
+                                                </div>
+                                            </form>
+                                        </flux:modal>
                                     @endif
                                 @endif
                                 @if(auth()->user()->isAdmin())

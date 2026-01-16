@@ -238,7 +238,7 @@ class CreateBadgeRequestForm extends Component
             ->where('id', $activityRequestId)
             ->where('client_id', $this->client->id)
             ->firstOrFail();
-        
+
         // Log pour le débogage (à retirer après vérification)
         Log::debug('ActivityRequest chargée', [
             'selected_id' => $this->selected_activity_request_id,
@@ -379,8 +379,22 @@ class CreateBadgeRequestForm extends Component
             // 1. Créer le Form Object à partir des données du composant
             $formData = $this->createFormData();
 
-            // 2. Valider les données selon le contexte
+            // Vérifier qu'il n'existe pas déjà une demande de badge pour ce collaborateur
+            // (uniquement pour les nouvelles créations, pas pour les brouillons ni les mises à jour)
             $isUpdate = ! is_null($this->badgeRequestId);
+            if (! $isDraft && ! $isUpdate && $formData->coworker_id) {
+                $existingBadgeRequest = BadgeRequest::where('coworker_id', $formData->coworker_id)
+                    ->whereNotIn('status', ['rejected_rem', 'rejected_adp'])
+                    ->first();
+
+                if ($existingBadgeRequest) {
+                    $this->errorMessage = 'Il existe déjà une demande de badge en cours pour ce collaborateur.';
+
+                    return;
+                }
+            }
+
+            // 2. Valider les données selon le contexte
             $existingDocs = $this->getExistingDocumentsArray();
 
             $validator = BadgeRequestFormValidator::validate(

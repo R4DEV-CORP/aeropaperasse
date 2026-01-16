@@ -2,6 +2,7 @@
 
 namespace App\Livewire\BadgeRequests;
 
+use App\Actions\BadgeRequest\DeliverBadgeRequestAction;
 use App\Mail\Badge\ApprovedByAdp;
 use App\Mail\Badge\ApprovedByRem;
 use App\Mail\Badge\InProduction;
@@ -10,16 +11,18 @@ use App\Mail\Badge\RejectedByAdp;
 use App\Mail\Badge\RejectedByRem;
 use App\Models\Badge;
 use App\Models\BadgeRequest;
+use App\Services\BadgeMailService;
 use App\Services\BadgeRequestDocumentService;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithoutUrlPagination, WithPagination;
+    use WithFileUploads, WithoutUrlPagination, WithPagination;
 
     public string $search = '';
 
@@ -28,6 +31,10 @@ class Index extends Component
     public $client;
 
     public string $rejectReason = '';
+
+    public $deliveryPhoto;
+
+    public ?int $badgeRequestIdForDelivery = null;
 
     public function mount()
     {
@@ -69,6 +76,7 @@ class Index extends Component
             'rejected_adp' => (clone $query)->where('status', 'rejected_adp')->count(),
             'pending_fabrication' => (clone $query)->where('status', 'pending_fabrication')->count(),
             'ready_for_delivery' => (clone $query)->where('status', 'ready_for_delivery')->count(),
+            'delivered' => (clone $query)->where('status', 'delivered')->count(),
         ];
     }
 
@@ -392,6 +400,77 @@ class Index extends Component
 
         // Afficher un message de succès
         session()->flash('message', 'Badge prêt à être remis.');
+    }
+
+    /**
+     * Marquer un badge comme remis (admin seulement)
+     */
+    public function deliver(int $badgeRequestId)
+    {
+        // Vérifier que l'utilisateur est admin
+        if (! auth()->user()->isAdmin()) {
+            session()->flash('error', 'Vous n\'êtes pas autorisé à effectuer cette action.');
+
+            return;
+        }
+
+        // Valider la photo
+        $this->validate([
+            'deliveryPhoto' => 'required|image|mimes:jpeg,png,jpg|max:5120',
+        ], [
+            'deliveryPhoto.required' => 'La photo du badge remis est obligatoire',
+            'deliveryPhoto.image' => 'Le fichier doit être une image',
+            'deliveryPhoto.mimes' => 'La photo doit être au format JPEG, PNG ou JPG',
+            'deliveryPhoto.max' => 'La photo ne doit pas dépasser 5MB',
+        ]);
+
+        try {
+            $badgeRequest = BadgeRequest::findOrFail($badgeRequestId);
+
+            // Vérifier les permissions avec la policy
+            if (! auth()->user()->can('deliver', $badgeRequest)) {
+                session()->flash('error', 'Vous n\'êtes pas autorisé à marquer ce badge comme remis.');
+
+                return;
+            }
+
+            // Récupérer le client
+            $client = $badgeRequest->activityRequest->client;
+
+            // Exécuter l'action
+            $action = app(DeliverBadgeRequestAction::class);
+            $result = $action->execute($badgeRequest, $this->deliveryPhoto, $client);
+
+            if ($result->isSuccessful()) {
+                // Envoyer la notification email
+                $badgeMailService = app(BadgeMailService::class);
+                $badgeMailService->sendBadgeRequestStatusMail($result->getBadgeRequest(), 'ready_for_delivery');
+
+                session()->flash('message', 'Badge marqué comme remis avec succès.');
+                $this->reset('deliveryPhoto', 'badgeRequestIdForDelivery');
+            } else {
+                session()->flash('error', $result->getMessage());
+            }
+        } catch (\Exception $e) {
+            session()->flash('error', 'Erreur lors de la remise du badge : '.$e->getMessage());
+        }
+    }
+
+    /**
+     * Ouvrir la modale de remise
+     */
+    public function openDeliverModal(int $badgeRequestId)
+    {
+        $this->badgeRequestIdForDelivery = $badgeRequestId;
+        $this->deliveryPhoto = null;
+    }
+
+    /**
+     * Fermer la modale de remise
+     */
+    public function closeDeliverModal()
+    {
+        $this->reset('deliveryPhoto', 'badgeRequestIdForDelivery');
     }
 
     /**

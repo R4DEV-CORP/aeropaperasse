@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\Badge\ApprovedByAdp;
 use App\Mail\Badge\ApprovedByRem;
+use App\Mail\Badge\Delivered;
 use App\Mail\Badge\InProduction;
 use App\Mail\Badge\ReadyForPickup;
 use App\Mail\Badge\RejectedByAdp;
@@ -51,6 +52,10 @@ class BadgeMailService
 
             case 'ready_for_delivery':
                 Mail::to($recipientEmail)->send(new ReadyForPickup($badgeRequest));
+                break;
+
+            case 'delivered':
+                Mail::to($recipientEmail)->send(new Delivered($badgeRequest));
                 break;
         }
     }

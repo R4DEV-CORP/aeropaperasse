@@ -33,6 +33,14 @@
                 @case('ready_for_delivery')
                     <flux:badge icon="check-badge" color="blue">Prêt à être Remis</flux:badge>
                     @break
+                @case('delivered')
+                    <div class="flex items-center gap-2">
+                        <flux:badge icon="check-circle" color="emerald">Remis</flux:badge>
+                        @if($badgeRequest->delivered_at)
+                            <flux:text>Le {{ $badgeRequest->delivered_at->format('d/m/Y à H:i') }}</flux:text>
+                        @endif
+                    </div>
+                    @break
             @endswitch
         </flux:callout.text>
     </flux:callout>
@@ -270,6 +278,41 @@
                             variant="ghost" 
                             icon="document-arrow-down"
                             wire:click="downloadDocument('invoice_document')"
+                            wire:loading.attr="disabled"
+                        >
+                            Télécharger
+                        </flux:button>
+                    </div>
+                </x-slot>
+                @endif
+            </flux:callout>
+        @endif
+
+        @if($badgeRequest->delivery_photo)
+            <flux:callout icon="camera" variant="secondary" inline class="mt-2">
+                <flux:callout.heading>Photo de remise du badge</flux:callout.heading>
+                <flux:callout.text>
+                    @if($badgeRequest->delivered_at)
+                        Badge remis le {{ $badgeRequest->delivered_at->format('d/m/Y à H:i') }}
+                    @endif
+                </flux:callout.text>
+                @if(auth()->user()->isAdmin())
+                <x-slot name="actions">
+                    <div class="flex gap-2">
+                        @if($this->canViewDocument('delivery_photo'))
+                            <flux:button 
+                                variant="ghost" 
+                                icon="eye"
+                                wire:click="viewDocument('delivery_photo')"
+                                wire:loading.attr="disabled"
+                            >
+                                Voir
+                            </flux:button>
+                        @endif
+                        <flux:button 
+                            variant="ghost" 
+                            icon="document-arrow-down"
+                            wire:click="downloadDocument('delivery_photo')"
                             wire:loading.attr="disabled"
                         >
                             Télécharger

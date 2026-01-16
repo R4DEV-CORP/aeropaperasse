@@ -25,6 +25,7 @@ class BadgeRequest extends Model
         'rejected_adp_at',
         'pending_fabrication_at',
         'ready_for_delivery_at',
+        'delivered_at',
         'terminated_at',
         'selfie_photo',
         'identification_card',
@@ -32,6 +33,7 @@ class BadgeRequest extends Model
         'for_document',
         'formation_certificate_document',
         'invoice_document',
+        'delivery_photo',
         'application_authorization',
         'validate_training',
     ];
@@ -49,6 +51,7 @@ class BadgeRequest extends Model
         'rejected_adp_at' => 'datetime',
         'pending_fabrication_at' => 'datetime',
         'ready_for_delivery_at' => 'datetime',
+        'delivered_at' => 'datetime',
         'terminated_at' => 'datetime',
     ];
 
@@ -104,5 +107,21 @@ class BadgeRequest extends Model
     public function comments()
     {
         return $this->hasMany(BadgeComment::class);
+    }
+
+    /**
+     * Vérifie si la demande de badge peut être remise
+     */
+    public function canBeDelivered(): bool
+    {
+        return $this->status === 'ready_for_delivery';
+    }
+
+    /**
+     * Vérifie si la demande de badge a déjà été remise
+     */
+    public function isDelivered(): bool
+    {
+        return $this->status === 'delivered';
     }
 }

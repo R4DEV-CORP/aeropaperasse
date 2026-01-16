@@ -106,7 +106,27 @@ class ViewBadgeRequest extends Component
 
         // Vérifier si le fichier peut être visualisé (PDF, PNG, JPEG)
         $extension = strtolower(pathinfo($relativePath, PATHINFO_EXTENSION));
-        if (! in_array($extension, ['pdf', 'png', 'jpg', 'jpeg'])) {
+        $viewableExtensions = ['pdf', 'png', 'jpg', 'jpeg'];
+
+        $canView = in_array($extension, $viewableExtensions);
+
+        // Vérifier aussi le type MIME si l'extension ne suffit pas
+        if (! $canView) {
+            try {
+                $mimeType = $disk->mimeType($relativePath);
+                $viewableMimeTypes = [
+                    'application/pdf',
+                    'image/png',
+                    'image/jpeg',
+                    'image/jpg',
+                ];
+                $canView = in_array($mimeType, $viewableMimeTypes);
+            } catch (\Exception $e) {
+                // Si on ne peut pas déterminer le type MIME, on se base uniquement sur l'extension
+            }
+        }
+
+        if (! $canView) {
             session()->flash('error', 'Ce type de fichier ne peut pas être visualisé dans le navigateur.');
 
             return;
@@ -131,9 +151,38 @@ class ViewBadgeRequest extends Component
             return false;
         }
 
+        $disk = Storage::disk('public');
+
+        // Vérifier si le fichier existe
+        if (! $disk->exists($relativePath)) {
+            return false;
+        }
+
+        // Vérifier l'extension
         $extension = strtolower(pathinfo($relativePath, PATHINFO_EXTENSION));
 
-        return in_array($extension, ['pdf', 'png', 'jpg', 'jpeg']);
+        // Types de fichiers visualisables dans le navigateur
+        $viewableExtensions = ['pdf', 'png', 'jpg', 'jpeg'];
+
+        if (in_array($extension, $viewableExtensions)) {
+            return true;
+        }
+
+        // Vérifier aussi le type MIME si possible
+        try {
+            $mimeType = $disk->mimeType($relativePath);
+            $viewableMimeTypes = [
+                'application/pdf',
+                'image/png',
+                'image/jpeg',
+                'image/jpg',
+            ];
+
+            return in_array($mimeType, $viewableMimeTypes);
+        } catch (\Exception $e) {
+            // Si on ne peut pas déterminer le type MIME, on se base uniquement sur l'extension
+            return false;
+        }
     }
 
     /**
