@@ -3,7 +3,9 @@
 use App\Models\ActivityRequest;
 use App\Models\ActivityRequestAttachment;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 return new class extends Migration
@@ -37,83 +39,116 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Log::info('Début de la migration des documents de activity_requests vers activity_request_attachments');
+        Log::info('=== DÉBUT DE LA MIGRATION DES DOCUMENTS ===');
+        Log::info('Migration des documents de activity_requests vers activity_request_attachments');
+
+        // Vérifier que la table activity_request_attachments existe
+        if (! Schema::hasTable('activity_request_attachments')) {
+            Log::error('La table activity_request_attachments n\'existe pas. Veuillez exécuter la migration de création d\'abord.');
+            throw new \RuntimeException('La table activity_request_attachments n\'existe pas.');
+        }
+
+        // Vérifier que la table activity_requests existe et contient les colonnes attendues
+        if (! Schema::hasTable('activity_requests')) {
+            Log::error('La table activity_requests n\'existe pas.');
+            throw new \RuntimeException('La table activity_requests n\'existe pas.');
+        }
 
         $disk = Storage::disk('public');
         $migratedCount = 0;
+        $skippedCount = 0;
         $errorCount = 0;
+        $missingFileCount = 0;
 
-        // Récupérer toutes les demandes d'activité
-        $activityRequests = ActivityRequest::all();
+        // Utiliser des chunks pour éviter les problèmes de mémoire avec de grandes quantités de données
+        ActivityRequest::chunk(100, function ($activityRequests) use ($disk, &$migratedCount, &$skippedCount, &$errorCount, &$missingFileCount) {
+            foreach ($activityRequests as $activityRequest) {
+                foreach (self::DOCUMENT_MAPPING as $columnName => $documentType) {
+                    // Vérifier que la colonne existe dans la table
+                    if (! Schema::hasColumn('activity_requests', $columnName)) {
+                        Log::debug("Colonne {$columnName} n'existe pas, ignorée", [
+                            'activity_request_id' => $activityRequest->id,
+                        ]);
 
-        foreach ($activityRequests as $activityRequest) {
-            foreach (self::DOCUMENT_MAPPING as $columnName => $documentType) {
-                $documentPath = $activityRequest->$columnName;
+                        continue;
+                    }
 
-                // Ignorer si le document n'existe pas
-                if (empty($documentPath)) {
-                    continue;
-                }
+                    $documentPath = $activityRequest->$columnName;
 
-                // Vérifier si le fichier existe physiquement
-                if (! $disk->exists($documentPath)) {
-                    Log::warning('Fichier non trouvé lors de la migration', [
-                        'activity_request_id' => $activityRequest->id,
-                        'column' => $columnName,
-                        'path' => $documentPath,
-                    ]);
-                    $errorCount++;
+                    // Ignorer si le document n'existe pas
+                    if (empty($documentPath)) {
+                        continue;
+                    }
 
-                    continue;
-                }
+                    // Vérifier si l'attachment n'existe pas déjà (idempotence)
+                    $existingAttachment = ActivityRequestAttachment::where('activity_request_id', $activityRequest->id)
+                        ->where('type', $documentType)
+                        ->where('path', $documentPath)
+                        ->first();
 
-                // Vérifier si l'attachment n'existe pas déjà
-                $existingAttachment = ActivityRequestAttachment::where('activity_request_id', $activityRequest->id)
-                    ->where('type', $documentType)
-                    ->where('path', $documentPath)
-                    ->first();
+                    if ($existingAttachment) {
+                        $skippedCount++;
 
-                if ($existingAttachment) {
-                    Log::info('Attachment déjà existant, ignoré', [
-                        'activity_request_id' => $activityRequest->id,
-                        'type' => $documentType,
-                    ]);
+                        continue;
+                    }
 
-                    continue;
-                }
+                    // Vérifier si le fichier existe physiquement
+                    if (! $disk->exists($documentPath)) {
+                        Log::warning('Fichier non trouvé lors de la migration', [
+                            'activity_request_id' => $activityRequest->id,
+                            'column' => $columnName,
+                            'path' => $documentPath,
+                        ]);
+                        $missingFileCount++;
+                        // On continue quand même pour créer l'enregistrement même si le fichier est manquant
+                        // Cela permet de préserver la référence au document
+                    }
 
-                // Créer l'attachment
-                try {
-                    ActivityRequestAttachment::create([
-                        'activity_request_id' => $activityRequest->id,
-                        'type' => $documentType,
-                        'path' => $documentPath,
-                        'name' => self::DOCUMENT_NAMES[$documentType],
-                    ]);
+                    // Créer l'attachment dans une transaction
+                    try {
+                        DB::transaction(function () use ($activityRequest, $documentType, $documentPath, &$migratedCount) {
+                            ActivityRequestAttachment::create([
+                                'activity_request_id' => $activityRequest->id,
+                                'type' => $documentType,
+                                'path' => $documentPath,
+                                'name' => self::DOCUMENT_NAMES[$documentType],
+                            ]);
 
-                    $migratedCount++;
-                    Log::debug('Document migré avec succès', [
-                        'activity_request_id' => $activityRequest->id,
-                        'type' => $documentType,
-                        'path' => $documentPath,
-                    ]);
-                } catch (\Exception $e) {
-                    Log::error('Erreur lors de la création de l\'attachment', [
-                        'activity_request_id' => $activityRequest->id,
-                        'type' => $documentType,
-                        'path' => $documentPath,
-                        'error' => $e->getMessage(),
-                    ]);
-                    $errorCount++;
+                            $migratedCount++;
+                        });
+                    } catch (\Exception $e) {
+                        Log::error('Erreur lors de la création de l\'attachment', [
+                            'activity_request_id' => $activityRequest->id,
+                            'type' => $documentType,
+                            'path' => $documentPath,
+                            'error' => $e->getMessage(),
+                            'trace' => $e->getTraceAsString(),
+                        ]);
+                        $errorCount++;
+                    }
                 }
             }
-        }
+        });
 
-        Log::info('Fin de la migration des documents', [
+        $summary = [
             'total_migrated' => $migratedCount,
+            'total_skipped' => $skippedCount,
             'total_errors' => $errorCount,
-            'total_requests' => $activityRequests->count(),
-        ]);
+            'missing_files' => $missingFileCount,
+        ];
+
+        Log::info('=== FIN DE LA MIGRATION DES DOCUMENTS ===', $summary);
+
+        // Afficher un résumé dans la console si possible
+        if (app()->runningInConsole()) {
+            echo "\n";
+            echo "=== RÉSUMÉ DE LA MIGRATION ===\n";
+            echo "Documents migrés : {$migratedCount}\n";
+            echo "Documents ignorés (déjà existants) : {$skippedCount}\n";
+            echo "Erreurs : {$errorCount}\n";
+            echo "Fichiers manquants : {$missingFileCount}\n";
+            echo "\n";
+        }
     }
 
     /**
@@ -121,12 +156,21 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Log::info('Début de la suppression des attachments migrés');
+        Log::info('=== DÉBUT DE LA SUPPRESSION DES ATTACHMENTS ===');
 
-        // Supprimer tous les attachments créés par cette migration
-        // Note: Cette opération est irréversible si les colonnes ont été supprimées
-        ActivityRequestAttachment::truncate();
+        // ATTENTION : Cette opération supprime TOUS les attachments
+        // Si les colonnes de documents ont déjà été supprimées de activity_requests,
+        // cette opération est irréversible et les données seront perdues.
+        $count = ActivityRequestAttachment::count();
 
-        Log::info('Suppression des attachments terminée');
+        if ($count > 0) {
+            Log::warning("Suppression de {$count} attachments. Cette opération peut être irréversible.");
+            ActivityRequestAttachment::truncate();
+            Log::info("{$count} attachments supprimés.");
+        } else {
+            Log::info('Aucun attachment à supprimer.');
+        }
+
+        Log::info('=== FIN DE LA SUPPRESSION DES ATTACHMENTS ===');
     }
 };
