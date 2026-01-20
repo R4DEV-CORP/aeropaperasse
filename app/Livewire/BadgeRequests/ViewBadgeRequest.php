@@ -3,6 +3,7 @@
 namespace App\Livewire\BadgeRequests;
 
 use App\Models\BadgeComment;
+use App\Models\BadgeRequest;
 use App\Services\BadgeRequestDocumentService;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -202,6 +203,51 @@ class ViewBadgeRequest extends Component
         $zipFileName = 'demande-badge-'.$this->badgeRequest->id.'-'.now()->timestamp.'.zip';
 
         return response()->download($zipPath, $zipFileName)->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Rouvrir une demande de badge refusée (super admin seulement)
+     */
+    public function reopenRequest()
+    {
+        // Vérifier que l'utilisateur est un super administrateur
+        if (! auth()->user()->isSAdmin()) {
+            session()->flash('error', 'Vous n\'êtes pas autorisé à effectuer cette action.');
+
+            return;
+        }
+
+        try {
+            // Recharger la demande pour avoir les dernières données
+            $badgeRequest = BadgeRequest::findOrFail($this->badgeRequest->id);
+
+            // Vérifier que la demande est dans un statut refusé
+            if (! in_array($badgeRequest->status, ['rejected_rem', 'rejected_adp'])) {
+                session()->flash('error', 'Cette demande ne peut pas être rouverte. Seules les demandes refusées peuvent être rouvertes.');
+
+                return;
+            }
+
+            // Sauvegarder le statut précédent si nécessaire (pour l'historique)
+            $badgeRequest->previous_status = $badgeRequest->status;
+
+            // Changer le statut vers draft
+            $badgeRequest->update([
+                'status' => 'draft',
+                'draft_at' => now(),
+            ]);
+
+            // Recharger la demande mise à jour
+            $this->badgeRequest = $badgeRequest->fresh();
+
+            // Dispatcher un événement pour rafraîchir la liste dans Index
+            $this->dispatch('badge-request-reopened', badgeRequestId: $badgeRequest->id);
+
+            // Afficher un message de succès
+            session()->flash('message', 'Demande rouverte avec succès. Elle est maintenant en statut brouillon et peut être modifiée.');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Erreur lors de la réouverture de la demande : '.$e->getMessage());
+        }
     }
 
     public function render()

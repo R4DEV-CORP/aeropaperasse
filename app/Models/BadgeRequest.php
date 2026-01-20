@@ -16,6 +16,7 @@ class BadgeRequest extends Model
         'activity_request_id',
         'coworker_id',
         'status',
+        'previous_status',
         'reject_reason',
         'draft_at',
         'pending_rem_at',

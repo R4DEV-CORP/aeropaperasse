@@ -6,6 +6,9 @@
         <flux:callout.heading>Statut</flux:callout.heading>
         <flux:callout.text>
             @switch($badgeRequest->status)
+                @case('draft')
+                    <flux:badge icon="pencil-square" color="gray">Brouillon</flux:badge>
+                    @break
                 @case('pending_rem')    
                     <flux:badge icon="clock" color="yellow">En attente REM</flux:badge>
                     @break
@@ -43,6 +46,20 @@
                     @break
             @endswitch
         </flux:callout.text>
+        @if(auth()->user()->isSAdmin() && in_array($badgeRequest->status, ['rejected_rem', 'rejected_adp']))
+            <x-slot name="actions">
+                <flux:button 
+                    variant="primary" 
+                    icon="arrow-path"
+                    wire:click="reopenRequest"
+                    wire:confirm="Êtes-vous sûr de vouloir rouvrir cette demande ? Elle repassera en statut brouillon."
+                    wire:loading.attr="disabled"
+                >
+                    <span wire:loading.remove wire:target="reopenRequest">Rouvrir la demande</span>
+                    <span wire:loading wire:target="reopenRequest">Traitement...</span>
+                </flux:button>
+            </x-slot>
+        @endif
     </flux:callout>
     <div class="grid grid-cols-2 gap-2 border border-gray-800/10 p-4 rounded-lg">
         <div>

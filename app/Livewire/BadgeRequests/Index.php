@@ -160,6 +160,16 @@ class Index extends Component
     }
 
     /**
+     * Écoute l'événement 'badge-request-reopened' et recharge la liste des demandes de badge
+     */
+    #[On('badge-request-reopened')]
+    public function refreshBadgeRequestsAfterReopen()
+    {
+        // Force le re-rendu du composant pour mettre à jour la liste
+        $this->render();
+    }
+
+    /**
      * Ouvrir la modale en mode édition pour un brouillon
      */
     public function editDraft(int $badgeRequestId)
@@ -493,6 +503,44 @@ class Index extends Component
 
         // Retourner le téléchargement du fichier ZIP
         return response()->download($zipPath, $zipFileName)->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Rouvrir une demande de badge refusée (super admin seulement)
+     */
+    public function reopenRequest(int $badgeRequestId)
+    {
+        // Vérifier que l'utilisateur est un super administrateur
+        if (! auth()->user()->isSAdmin()) {
+            session()->flash('error', 'Vous n\'êtes pas autorisé à effectuer cette action.');
+
+            return;
+        }
+
+        try {
+            $badgeRequest = BadgeRequest::findOrFail($badgeRequestId);
+
+            // Vérifier que la demande est dans un statut refusé
+            if (! in_array($badgeRequest->status, ['rejected_rem', 'rejected_adp'])) {
+                session()->flash('error', 'Cette demande ne peut pas être rouverte. Seules les demandes refusées peuvent être rouvertes.');
+
+                return;
+            }
+
+            // Sauvegarder le statut précédent si nécessaire (pour l'historique)
+            $badgeRequest->previous_status = $badgeRequest->status;
+
+            // Changer le statut vers draft
+            $badgeRequest->update([
+                'status' => 'draft',
+                'draft_at' => now(),
+            ]);
+
+            // Afficher un message de succès
+            session()->flash('message', 'Demande rouverte avec succès. Elle est maintenant en statut brouillon et peut être modifiée.');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Erreur lors de la réouverture de la demande : '.$e->getMessage());
+        }
     }
 
     public function render()

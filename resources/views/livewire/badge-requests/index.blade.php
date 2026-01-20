@@ -7,19 +7,11 @@
         <x-badge-info-card title="En attente ADP" value="{{ $statistics['pending_adp'] }}" bg-color="amber-200" />
         <x-badge-info-card title="Approuvé ADP" value="{{ $statistics['approved_adp'] }}" bg-color="green-200" />
         <x-badge-info-card title="En fabrication" value="{{ $statistics['pending_fabrication'] }}" bg-color="lime-200" />
-        <x-badge-info-card title="Rejetté REM" value="{{ $statistics['rejected_rem'] }}" bg-color="red-200" />
+        <x-badge-info-card title="Dossier incomplet" value="{{ $statistics['rejected_rem'] }}" bg-color="red-200" />
         <x-badge-info-card title="Rejetté ADP" value="{{ $statistics['rejected_adp'] }}" bg-color="red-200" />
         <x-badge-info-card title="Prêt à être Remis" value="{{ $statistics['ready_for_delivery'] }}" bg-color="blue-200" />
         <x-badge-info-card title="Remis" value="{{ $statistics['delivered'] }}" bg-color="emerald-200" />
     </div>
-    @if(auth()->user()->isAdmin())
-        <flux:callout icon="information-circle" color="blue" inline class="mt-4">
-            <flux:callout.heading>Vous êtes administrateur. Pour voir le quota de badge d'une société, rendez vous sur la page société.</flux:callout.heading>
-            <x-slot name="actions">
-                <flux:button href="/clients" icon:trailing="arrow-top-right-on-square">Sociétés</flux:button>
-            </x-slot>
-        </flux:callout>
-    @endif
     <div class="flex items-center gap-3 mt-4">
         <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher une demande..." />
         @if(!auth()->user()->isClient())
@@ -71,7 +63,7 @@
                                     <flux:badge icon="clock" color="yellow" size="sm">En attente REM</flux:badge>
                                     @break
                                 @case('rejected_rem')
-                                    <flux:badge icon="x-circle" color="red" size="sm">Rejeté REM</flux:badge>
+                                    <flux:badge icon="x-circle" color="red" size="sm">Dossier incomplet</flux:badge>
                                     @break
                                 @case('pending_adp')
                                     <flux:badge icon="clock" color="amber" size="sm">En attente ADP</flux:badge>
@@ -189,6 +181,11 @@
                                                 </div>
                                             </form>
                                         </flux:modal>
+                                    @endif
+                                    @if(auth()->user()->isSAdmin())
+                                        @if(in_array($badgeRequest->status, ['rejected_rem', 'rejected_adp']))
+                                            <flux:button variant="subtle" icon="arrow-path" icon:variant="outline" square="true" tooltip="Rouvrir la demande" wire:click="reopenRequest({{ $badgeRequest->id }})" wire:confirm="Êtes-vous sûr de vouloir rouvrir cette demande ? Elle repassera en statut brouillon." class="!text-blue-500 hover:cursor-pointer"/>
+                                        @endif
                                     @endif
                                 @endif
                                 @if(auth()->user()->isAdmin())
