@@ -26,6 +26,10 @@ class Index extends Component
 
     public string $search = '';
 
+    public ?string $selectedAirport = null;
+
+    public ?string $selectedStatus = null;
+
     public $badgeCount = 0;
 
     public $client;
@@ -53,6 +57,42 @@ class Index extends Component
      */
     public function updatedSearch()
     {
+        $this->resetPage('page');
+    }
+
+    /**
+     * Réinitialiser la pagination lors d'un changement de filtre
+     */
+    public function updatedSelectedAirport()
+    {
+        $this->resetPage('page');
+    }
+
+    /**
+     * Réinitialiser la pagination lors d'un changement de filtre
+     */
+    public function updatedSelectedStatus()
+    {
+        $this->resetPage('page');
+    }
+
+    /**
+     * Filtrer par statut (appelé depuis les cartes)
+     */
+    public function filterByStatus(?string $status): void
+    {
+        $this->selectedStatus = $status === $this->selectedStatus ? null : $status;
+        $this->resetPage('page');
+    }
+
+    /**
+     * Réinitialiser tous les filtres
+     */
+    public function resetFilters(): void
+    {
+        $this->selectedAirport = null;
+        $this->selectedStatus = null;
+        $this->search = '';
         $this->resetPage('page');
     }
 
@@ -97,6 +137,18 @@ class Index extends Component
             $query->whereHas('activityRequest', function ($q) {
                 $q->where('created_by', auth()->user()->id);
             });
+        }
+
+        // Filtrer par aéroport
+        if ($this->selectedAirport) {
+            $query->whereHas('activityRequest', function ($q) {
+                $q->where('airport', $this->selectedAirport);
+            });
+        }
+
+        // Filtrer par statut
+        if ($this->selectedStatus) {
+            $query->where('status', $this->selectedStatus);
         }
 
         return $query->orderBy('created_at', 'desc')->paginate(10, ['*'], 'page');
@@ -144,6 +196,18 @@ class Index extends Component
                     $query->whereHas('activityRequest', function ($q) {
                         $q->where('created_by', auth()->user()->id);
                     });
+                }
+
+                // Filtrer par aéroport
+                if ($this->selectedAirport) {
+                    $query->whereHas('activityRequest', function ($q) {
+                        $q->where('airport', $this->selectedAirport);
+                    });
+                }
+
+                // Filtrer par statut
+                if ($this->selectedStatus) {
+                    $query->where('badge_requests.status', $this->selectedStatus);
                 }
             });
     }
