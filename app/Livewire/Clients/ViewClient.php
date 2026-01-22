@@ -10,11 +10,15 @@ class ViewClient extends Component
 {
     public string $slug;
 
+    public $client;
+
     public function mount(string $slug): void
     {
         $this->slug = $slug;
 
-        $this->client = Client::where('slug', $slug)->first();
+        $this->client = Client::where('slug', $slug)
+            ->with(['coworkers.user', 'users'])
+            ->first();
     }
 
     public function downloadOverview()
