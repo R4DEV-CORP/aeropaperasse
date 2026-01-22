@@ -86,6 +86,53 @@
         @endif
     </div>
 
+    @if($selected_client_id)
+    <div class="border border-gray-800/10 p-4 rounded-lg">
+        <flux:heading size="lg" class="mb-4">Attribuer des formations (optionnel)</flux:heading>
+        <flux:text class="mb-4">Vous pouvez attribuer aucune, une ou plusieurs formations au collaborateur.</flux:text>
+        
+        @if(count($trainings) > 0)
+            <div class="space-y-4">
+                @foreach($trainings as $training)
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <flux:field variant="inline">
+                            <flux:checkbox 
+                                wire:model.live="selected_trainings.{{ $training->id }}.selected" 
+                                wire:key="training-{{ $training->id }}" />
+                            <flux:label>{{ $training->title }}</flux:label>
+                        </flux:field>
+                        
+                        @if(isset($selected_trainings[$training->id]['selected']) && $selected_trainings[$training->id]['selected'])
+                            <div class="mt-4 grid grid-cols-2 gap-4">
+                                <flux:field>
+                                    <flux:label>Date de début<span class="text-red-500">*</span></flux:label>
+                                    <flux:input 
+                                        wire:model="selected_trainings.{{ $training->id }}.start_date" 
+                                        type="date" 
+                                        name="selected_trainings.{{ $training->id }}.start_date" />
+                                    <flux:error name="selected_trainings.{{ $training->id }}.start_date" />
+                                </flux:field>
+                                <flux:field>
+                                    <flux:label>Durée de validité<span class="text-red-500">*</span></flux:label>
+                                    <flux:radio.group wire:model="selected_trainings.{{ $training->id }}.validity_years" label="">
+                                        <div class="flex gap-4">
+                                            <flux:radio value="3" label="3 ans" />
+                                            <flux:radio value="5" label="5 ans" />
+                                        </div>
+                                    </flux:radio.group>
+                                    <flux:error name="selected_trainings.{{ $training->id }}.validity_years" />
+                                </flux:field>
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <flux:text class="text-gray-500">Aucune formation disponible.</flux:text>
+        @endif
+    </div>
+    @endif
+
     @if(!auth()->user()->isClient())
     
     <div class="border border-gray-800/10 p-4 rounded-lg">
