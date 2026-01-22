@@ -2,9 +2,12 @@
 
 namespace App\Livewire\BadgeRequests;
 
+use App\Mail\BadgeCommentCreated;
 use App\Models\BadgeComment;
 use App\Models\BadgeRequest;
 use App\Services\BadgeRequestDocumentService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
@@ -38,11 +41,18 @@ class ViewBadgeRequest extends Component
             'comment.max' => 'Le commentaire ne peut pas dépasser 1000 caractères.',
         ]);
 
-        BadgeComment::create([
+        $comment = BadgeComment::create([
             'content' => $this->comment,
             'user_id' => auth()->id(),
             'badge_request_id' => $this->badgeRequest->id,
         ]);
+
+        // Recharger la demande pour avoir les relations à jour
+        $this->badgeRequest->refresh();
+        $this->badgeRequest->load('creator');
+
+        // Envoyer un email au créateur de la demande si ce n'est pas lui qui a commenté
+        $this->sendCommentNotification($comment);
 
         $this->comment = '';
         $this->loadComments();
@@ -247,6 +257,35 @@ class ViewBadgeRequest extends Component
             session()->flash('message', 'Demande rouverte avec succès. Elle est maintenant en statut brouillon et peut être modifiée.');
         } catch (\Exception $e) {
             session()->flash('error', 'Erreur lors de la réouverture de la demande : '.$e->getMessage());
+        }
+    }
+
+    /**
+     * Envoie une notification par email au créateur de la demande de badge
+     * si ce n'est pas lui qui a ajouté le commentaire
+     */
+    private function sendCommentNotification(BadgeComment $comment): void
+    {
+        try {
+            $currentUserId = auth()->id();
+            $creator = $this->badgeRequest->creator;
+
+            // Ne pas envoyer d'email si :
+            // - Le créateur n'existe pas
+            // - Le créateur est la même personne que l'auteur du commentaire
+            // - Le créateur n'a pas d'email
+            if (! $creator || $creator->id === $currentUserId || ! $creator->email) {
+                return;
+            }
+
+            Mail::to($creator->email)->send(new BadgeCommentCreated($this->badgeRequest, $comment));
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de l\'envoi de l\'email de notification de commentaire:', [
+                'badge_request_id' => $this->badgeRequest->id,
+                'comment_id' => $comment->id,
+                'error' => $e->getMessage(),
+            ]);
+            // Ne pas faire échouer la création du commentaire si l'email ne fonctionne pas
         }
     }
 

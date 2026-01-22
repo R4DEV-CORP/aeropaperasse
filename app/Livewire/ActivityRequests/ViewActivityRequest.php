@@ -2,8 +2,11 @@
 
 namespace App\Livewire\ActivityRequests;
 
+use App\Mail\ActivityCommentCreated;
 use App\Models\ActivityComment;
 use App\Services\ActivityRequestDocumentService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
@@ -37,11 +40,18 @@ class ViewActivityRequest extends Component
             'comment.max' => 'Le commentaire ne peut pas dépasser 1000 caractères.',
         ]);
 
-        ActivityComment::create([
+        $comment = ActivityComment::create([
             'content' => $this->comment,
             'user_id' => auth()->id(),
             'activity_request_id' => $this->activityRequest->id,
         ]);
+
+        // Recharger la demande pour avoir les relations à jour
+        $this->activityRequest->refresh();
+        $this->activityRequest->load('creator');
+
+        // Envoyer un email au créateur de la demande si ce n'est pas lui qui a commenté
+        $this->sendCommentNotification($comment);
 
         $this->comment = '';
         $this->loadComments();
@@ -194,6 +204,35 @@ class ViewActivityRequest extends Component
         $zipFileName = 'demande-activite-'.$this->activityRequest->id.'-'.now()->timestamp.'.zip';
 
         return response()->download($zipPath, $zipFileName)->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Envoie une notification par email au créateur de la demande d'activité
+     * si ce n'est pas lui qui a ajouté le commentaire
+     */
+    private function sendCommentNotification(ActivityComment $comment): void
+    {
+        try {
+            $currentUserId = auth()->id();
+            $creator = $this->activityRequest->creator;
+
+            // Ne pas envoyer d'email si :
+            // - Le créateur n'existe pas
+            // - Le créateur est la même personne que l'auteur du commentaire
+            // - Le créateur n'a pas d'email
+            if (! $creator || $creator->id === $currentUserId || ! $creator->email) {
+                return;
+            }
+
+            Mail::to($creator->email)->send(new ActivityCommentCreated($this->activityRequest, $comment));
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de l\'envoi de l\'email de notification de commentaire:', [
+                'activity_request_id' => $this->activityRequest->id,
+                'comment_id' => $comment->id,
+                'error' => $e->getMessage(),
+            ]);
+            // Ne pas faire échouer la création du commentaire si l'email ne fonctionne pas
+        }
     }
 
     public function render()
