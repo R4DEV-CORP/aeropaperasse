@@ -148,12 +148,14 @@
         <flux:heading size="lg" class="mb-4">Informations sur l'activité</flux:heading>
         
         <!-- Sélection de l'aéroport -->
-        <flux:radio.group wire:model="airport" label="Aéroport">
-            <flux:radio value="CDG" label="Roissy Charles de Gaulle" />
-            <flux:radio value="ORY" label="Paris Orly" />
-            <flux:radio value="LBG" label="Le Bourget" />
-        </flux:radio.group>
-        <flux:error name="airport" />
+        <div class="grid grid-cols-2">
+            <flux:radio.group wire:model="airport" label="Aéroport">
+                <flux:radio value="CDG" label="Roissy Charles de Gaulle" />
+                <flux:radio value="ORY" label="Paris Orly" />
+                <flux:radio value="LBG" label="Le Bourget" />
+            </flux:radio.group>
+            <flux:error name="airport" />
+        </div>
         
         <div class="grid grid-cols-2 gap-4 mt-4">
             <flux:field>

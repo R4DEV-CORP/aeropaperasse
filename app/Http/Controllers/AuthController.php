@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\PasswordResetMail;
 use App\Mail\TwoFactorCodeMail;
+use App\Models\Coworker;
 use App\Models\PasswordResetToken;
 use App\Models\TwoFactorCode;
 use App\Models\User;
@@ -20,7 +21,7 @@ class AuthController extends Controller
         $validated = $request->validate([
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:users,email|unique:coworkers,email',
             'phone' => 'required|string|max:255',
             'password' => 'required|string|min:8',
             'role' => 'nullable|string|in:sclient,sadmin,client,admin', // Facultatif : rôle spécifique

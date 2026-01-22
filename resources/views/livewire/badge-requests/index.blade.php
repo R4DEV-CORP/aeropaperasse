@@ -3,23 +3,91 @@
         <flux:callout variant="success" icon="check-circle" heading="{{ session('message') }}" />
     @endif
     <div class="grid grid-cols-4 gap-4 mt-4">
-        <x-badge-info-card title="En attente REM" value="{{ $statistics['pending_rem'] }}" bg-color="yellow-200" />
-        <x-badge-info-card title="En attente ADP" value="{{ $statistics['pending_adp'] }}" bg-color="amber-200" />
-        <x-badge-info-card title="Approuvé ADP" value="{{ $statistics['approved_adp'] }}" bg-color="green-200" />
-        <x-badge-info-card title="En fabrication" value="{{ $statistics['pending_fabrication'] }}" bg-color="lime-200" />
-        <x-badge-info-card title="Dossier incomplet" value="{{ $statistics['rejected_rem'] }}" bg-color="red-200" />
-        <x-badge-info-card title="Rejetté ADP" value="{{ $statistics['rejected_adp'] }}" bg-color="red-200" />
-        <x-badge-info-card title="Prêt à être Remis" value="{{ $statistics['ready_for_delivery'] }}" bg-color="blue-200" />
-        <x-badge-info-card title="Remis" value="{{ $statistics['delivered'] }}" bg-color="emerald-200" />
+        <div wire:click="filterByStatus('pending_rem')" class="cursor-pointer transition-transform hover:scale-101 {{ $selectedStatus === 'pending_rem' ? 'ring-2 ring-yellow-500 rounded-lg' : '' }}">
+            <x-badge-info-card title="En attente REM" value="{{ $statistics['pending_rem'] }}" bg-color="yellow-200" />
+        </div>
+        <div wire:click="filterByStatus('pending_adp')" class="cursor-pointer transition-transform hover:scale-101 {{ $selectedStatus === 'pending_adp' ? 'ring-2 ring-amber-500 rounded-lg' : '' }}">
+            <x-badge-info-card title="En attente ADP" value="{{ $statistics['pending_adp'] }}" bg-color="amber-200" />
+        </div>
+        <div wire:click="filterByStatus('approved_adp')" class="cursor-pointer transition-transform hover:scale-101 {{ $selectedStatus === 'approved_adp' ? 'ring-2 ring-green-500 rounded-lg' : '' }}">
+            <x-badge-info-card title="Approuvé ADP" value="{{ $statistics['approved_adp'] }}" bg-color="green-200" />
+        </div>
+        <div wire:click="filterByStatus('pending_fabrication')" class="cursor-pointer transition-transform hover:scale-101 {{ $selectedStatus === 'pending_fabrication' ? 'ring-2 ring-lime-500 rounded-lg' : '' }}">
+            <x-badge-info-card title="En fabrication" value="{{ $statistics['pending_fabrication'] }}" bg-color="lime-200" />
+        </div>
+        <div wire:click="filterByStatus('rejected_rem')" class="cursor-pointer transition-transform hover:scale-101 {{ $selectedStatus === 'rejected_rem' ? 'ring-2 ring-red-500 rounded-lg' : '' }}">
+            <x-badge-info-card title="Dossier incomplet" value="{{ $statistics['rejected_rem'] }}" bg-color="red-200" />
+        </div>
+        <div wire:click="filterByStatus('rejected_adp')" class="cursor-pointer transition-transform hover:scale-101 {{ $selectedStatus === 'rejected_adp' ? 'ring-2 ring-red-500 rounded-lg' : '' }}">
+            <x-badge-info-card title="Rejetté ADP" value="{{ $statistics['rejected_adp'] }}" bg-color="red-200" />
+        </div>
+        <div wire:click="filterByStatus('ready_for_delivery')" class="cursor-pointer transition-transform hover:scale-101 {{ $selectedStatus === 'ready_for_delivery' ? 'ring-2 ring-blue-500 rounded-lg' : '' }}">
+            <x-badge-info-card title="Prêt à être Remis" value="{{ $statistics['ready_for_delivery'] }}" bg-color="blue-200" />
+        </div>
+        <div wire:click="filterByStatus('delivered')" class="cursor-pointer transition-transform hover:scale-101 {{ $selectedStatus === 'delivered' ? 'ring-2 ring-emerald-500 rounded-lg' : '' }}">
+            <x-badge-info-card title="Remis" value="{{ $statistics['delivered'] }}" bg-color="emerald-200" />
+        </div>
     </div>
-    <div class="flex items-center gap-3 mt-4">
-        <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher une demande..." />
+    <div class="flex items-center gap-3 mt-4 flex-wrap">
+        <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher une demande..." class="flex-1 min-w-[200px]" />
+        <select wire:model.live="selectedAirport" 
+                class="min-w-[180px] px-3 py-2 border border-gray-300 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <option value="">Tous les aéroports</option>
+            <option value="CDG">CDG</option>
+            <option value="ORY">ORY</option>
+            <option value="LBG">LBG</option>
+        </select>
+        @if($selectedAirport || $selectedStatus || $search)
+            <flux:button variant="ghost" icon="x-mark" wire:click="resetFilters">Réinitialiser</flux:button>
+        @endif
         @if(!auth()->user()->isClient())
             <flux:modal.trigger name="new-badge-request">
                 <flux:button variant="primary" icon="plus">Nouvelle demande</flux:button>
             </flux:modal.trigger>
         @endif
     </div>
+    @if($selectedAirport || $selectedStatus)
+        <div class="mt-2 flex items-center gap-2 flex-wrap">
+            <flux:text class="text-sm text-gray-600">Filtres actifs :</flux:text>
+            @if($selectedStatus)
+                <flux:badge color="blue" size="sm" class="cursor-pointer" wire:click="$set('selectedStatus', null)">
+                    @switch($selectedStatus)
+                        @case('pending_rem')
+                            En attente REM
+                            @break
+                        @case('pending_adp')
+                            En attente ADP
+                            @break
+                        @case('approved_adp')
+                            Approuvé ADP
+                            @break
+                        @case('pending_fabrication')
+                            En fabrication
+                            @break
+                        @case('rejected_rem')
+                            Dossier incomplet
+                            @break
+                        @case('rejected_adp')
+                            Rejetté ADP
+                            @break
+                        @case('ready_for_delivery')
+                            Prêt à être Remis
+                            @break
+                        @case('delivered')
+                            Remis
+                            @break
+                    @endswitch
+                    <span class="ml-1">×</span>
+                </flux:badge>
+            @endif
+            @if($selectedAirport)
+                <flux:badge color="cyan" size="sm" class="cursor-pointer" wire:click="$set('selectedAirport', null)">
+                    {{ $selectedAirport }}
+                    <span class="ml-1">×</span>
+                </flux:badge>
+            @endif
+        </div>
+    @endif
     <div class="mt-4 py-4 bg-white rounded-lg border border-zinc-200">
         <flux:heading size="lg" class="px-4">Demandes récentes</flux:heading>
         <!-- Indicateur de chargement -->

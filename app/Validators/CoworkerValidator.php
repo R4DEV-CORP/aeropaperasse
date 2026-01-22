@@ -15,7 +15,7 @@ class CoworkerValidator
             // Informations du collaborateur (obligatoires)
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email',
+            'email' => 'required|email|max:255|unique:users,email|unique:coworkers,email',
             'phone' => 'required|string|max:255',
             'client_id' => 'required|integer|exists:clients,id',
 
@@ -50,7 +50,7 @@ class CoworkerValidator
             'email.required' => 'L\'email est obligatoire',
             'email.email' => 'L\'email doit être une adresse email valide',
             'email.max' => 'L\'email ne doit pas dépasser 255 caractères',
-            'email.unique' => 'Cette adresse email est déjà utilisée',
+            'email.unique' => 'Cette adresse email est déjà utilisée par un autre collaborateur',
 
             'phone.required' => 'Le téléphone est obligatoire',
             'phone.string' => 'Le téléphone doit être une chaîne de caractères',
@@ -144,7 +144,7 @@ class CoworkerValidator
         $rules = [
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'email' => 'required|email|max:255|unique:coworkers,email',
             'phone' => 'required|string|max:255',
             'client_id' => 'required|integer|exists:clients,id',
             'can_access_formation' => 'nullable|boolean',
