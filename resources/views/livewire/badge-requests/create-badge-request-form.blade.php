@@ -143,17 +143,22 @@
     </div>
     @endif
 
-    @if($selected_activity_request_id && $activityRequest && $activityRequest->id == $selected_activity_request_id && $coworkers && $coworkers->count() > 0 )
+    @if($selected_activity_request_id && $activityRequest && $activityRequest->id == $selected_activity_request_id)
     <div class="border border-gray-800/10 p-4 rounded-lg">
         <flux:heading size="lg">Informations sur le collaborateur</flux:heading>
-        <flux:callout class="mt-4" icon="information-circle" color="blue" inline>
-            <flux:callout.heading>Vous pouvez créer un collaborateur en cliquant sur le bouton à coté.</flux:callout.heading>
-            <x-slot name="actions">
-                <flux:button icon:trailing="arrow-top-right-on-square" href="/coworkers">Créer un collaborateur</flux:button>
-            </x-slot>
-        </flux:callout>
-        <flux:field class="mt-4">
-            <flux:label>Selectionnez un collaborateurs<span class="text-red-500">*</span></flux:label>
+        
+        @if($coworkers && $coworkers->count() > 0)
+        <div class="mt-4">
+            <div class="flex items-center justify-between mb-2">
+                <flux:label>Selectionnez un collaborateur<span class="text-red-500">*</span></flux:label>
+                <flux:button 
+                    wire:click="toggleCreateCoworkerForm" 
+                    variant="ghost" 
+                    size="sm"
+                    icon="{{ $showCreateCoworkerForm ? 'minus' : 'plus' }}">
+                    {{ $showCreateCoworkerForm ? 'Annuler' : 'Créer un nouveau collaborateur' }}
+                </flux:button>
+            </div>
             <select wire:model.live="selected_coworker_id" 
                     class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="">Sélectionnez un collaborateur...</option>
@@ -163,9 +168,50 @@
                     </option>
                 @endforeach
             </select>
-            <flux:description>Sélectionnez un collaborateur.</flux:description>
+            <flux:description>Sélectionnez un collaborateur existant ou créez-en un nouveau.</flux:description>
             <flux:error name="selected_coworker_id" />
-        </flux:field>
+        </div>
+        @else
+        <flux:callout class="mt-4" icon="information-circle" color="blue">
+            <flux:callout.heading>Aucun collaborateur disponible pour ce client.</flux:callout.heading>
+            <flux:callout.text>Créez un nouveau collaborateur pour continuer.</flux:callout.text>
+        </flux:callout>
+        @endif
+
+        @if($showCreateCoworkerForm || ($coworkers && $coworkers->count() === 0))
+        <div class="mt-6 border border-blue-200 rounded-lg p-4 bg-blue-50">
+            <flux:heading size="md" class="mb-4">Nouveau collaborateur</flux:heading>
+            <div class="grid grid-cols-2 gap-4">
+                <flux:field>
+                    <flux:label>Prénom<span class="text-red-500">*</span></flux:label>
+                    <flux:input wire:model="new_coworker_firstname" icon="user" name="new_coworker_firstname" />
+                    <flux:error name="new_coworker_firstname" />
+                </flux:field>
+                <flux:field>
+                    <flux:label>Nom<span class="text-red-500">*</span></flux:label>
+                    <flux:input wire:model="new_coworker_lastname" icon="user" name="new_coworker_lastname" />
+                    <flux:error name="new_coworker_lastname" />
+                </flux:field>
+                <flux:field>
+                    <flux:label>Email<span class="text-red-500">*</span></flux:label>
+                    <flux:input wire:model="new_coworker_email" icon="at-symbol" name="new_coworker_email" type="email" />
+                    <flux:error name="new_coworker_email" />
+                </flux:field>
+                <flux:field>
+                    <flux:label>Téléphone<span class="text-red-500">*</span></flux:label>
+                    <flux:input wire:model="new_coworker_phone" icon="phone" name="new_coworker_phone" />
+                    <flux:error name="new_coworker_phone" />
+                </flux:field>
+            </div>
+            <div class="flex justify-end gap-2 mt-4">
+                @if($coworkers && $coworkers->count() > 0)
+                <flux:button wire:click="toggleCreateCoworkerForm" variant="ghost">Annuler</flux:button>
+                @endif
+                <flux:button wire:click="createNewCoworker" variant="primary">Créer le collaborateur</flux:button>
+            </div>
+        </div>
+        @endif
+
         <flux:field variant="inline" class="mt-4">
             <flux:checkbox wire:model="application_authorization" />
             <flux:label>Est-ce une demande d'habilitation ?<span class="ml-1 text-sm">(Si oui, cochez la case)</span></flux:label>
@@ -174,7 +220,7 @@
     </div>
     @endif
 
-    @if($selected_coworker_id && $coworkers && $coworkers->count() > 0)
+    @if($selected_coworker_id)
     <div class="border border-gray-800/10 p-4 rounded-lg">
         <flux:heading size="lg">Documents</flux:heading>
 
@@ -288,14 +334,6 @@
     </div>
     @endif
 
-    @if($coworkers && $coworkers->count() === 0 && $selected_activity_request_id)
-    <flux:callout class="mt-4" icon="exclamation-triangle" color="warning" inline>
-        <flux:callout.heading>Aucun collaborateur n'est disponible.</flux:callout.heading>
-        <x-slot name="actions">
-            <flux:button href="/coworkers">Créer un collaborateur</flux:button>
-        </x-slot>
-    </flux:callout>
-    @endif
 
     <!-- Actions -->
     <div class="flex gap-2 mt-4">

@@ -3,7 +3,9 @@
 namespace App\Livewire\BadgeRequests;
 
 use App\Actions\BadgeRequest\SaveBadgeRequestAction;
+use App\Actions\Coworker\CreateCoworkerAction;
 use App\DataTransferObjects\CreateBadgeRequestData;
+use App\DataTransferObjects\CreateCoworkerData;
 use App\Forms\BadgeRequestFormData;
 use App\Forms\BadgeRequestFormValidator;
 use App\Mail\BadgeRequest\BadgeRequestCreated;
@@ -11,6 +13,7 @@ use App\Models\ActivityRequest;
 use App\Models\BadgeRequest;
 use App\Models\Client;
 use App\Models\Coworker;
+use App\Validators\CoworkerValidator;
 use Flux\Flux;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -79,6 +82,17 @@ class CreateBadgeRequestForm extends Component
     public bool $hasExistingFormationCertificate = false;
 
     public bool $hasExistingInvoice = false;
+
+    // Propriétés pour la création rapide d'un collaborateur
+    public bool $showCreateCoworkerForm = false;
+
+    public $new_coworker_firstname;
+
+    public $new_coworker_lastname;
+
+    public $new_coworker_email;
+
+    public $new_coworker_phone;
 
     public function mount(?int $badgeRequestId = null)
     {
@@ -573,6 +587,11 @@ class CreateBadgeRequestForm extends Component
             'hasExistingForDocument',
             'hasExistingFormationCertificate',
             'hasExistingInvoice',
+            'showCreateCoworkerForm',
+            'new_coworker_firstname',
+            'new_coworker_lastname',
+            'new_coworker_email',
+            'new_coworker_phone',
         ]);
 
         // Réinitialiser la sélection de client pour les admins
@@ -608,6 +627,110 @@ class CreateBadgeRequestForm extends Component
     public function closeModal(): void
     {
         Flux::modal('new-badge-request')->close();
+    }
+
+    /**
+     * Afficher/masquer le formulaire de création de collaborateur
+     */
+    public function toggleCreateCoworkerForm(): void
+    {
+        $this->showCreateCoworkerForm = ! $this->showCreateCoworkerForm;
+        if (! $this->showCreateCoworkerForm) {
+            $this->resetNewCoworkerForm();
+        }
+    }
+
+    /**
+     * Créer un nouveau collaborateur rapidement
+     */
+    public function createNewCoworker(): void
+    {
+        $this->clearErrorMessage();
+
+        // Vérifier qu'un client est sélectionné
+        if (! $this->client) {
+            $this->errorMessage = 'Veuillez d\'abord sélectionner un client.';
+
+            return;
+        }
+
+        // Validation
+        $validationData = [
+            'firstname' => $this->new_coworker_firstname,
+            'lastname' => $this->new_coworker_lastname,
+            'email' => $this->new_coworker_email,
+            'phone' => $this->new_coworker_phone,
+            'client_id' => $this->client->id,
+            'has_leave' => false,
+            'departure_date' => null,
+            'create_user' => false,
+        ];
+
+        $validator = CoworkerValidator::validateCoworkerOnly($validationData);
+
+        if ($validator->fails()) {
+            $this->errorMessage = $validator->errors()->first();
+            foreach ($validator->errors()->messages() as $field => $messages) {
+                $this->addError("new_coworker_{$field}", $messages[0]);
+            }
+
+            return;
+        }
+
+        try {
+            // Créer le DTO
+            $data = CreateCoworkerData::fromArray(
+                array_merge($validationData, ['created_by' => $this->user->id]),
+                $this->user->id
+            );
+
+            // Exécuter l'action
+            $action = new CreateCoworkerAction;
+            $result = $action->execute($data);
+
+            if ($result->isSuccessful()) {
+                // Recharger la liste des collaborateurs
+                $this->loadCoworkers();
+
+                // Sélectionner automatiquement le nouveau collaborateur
+                $this->selected_coworker_id = $result->coworker->id;
+
+                // Réinitialiser le formulaire de création
+                $this->resetNewCoworkerForm();
+                $this->showCreateCoworkerForm = false;
+
+                // Effacer les erreurs
+                $this->clearErrorMessage();
+            } else {
+                $this->errorMessage = $result->getMessage();
+            }
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la création rapide du collaborateur', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => $this->user->id,
+                'client_id' => $this->client->id,
+            ]);
+
+            $this->errorMessage = 'Une erreur est survenue lors de la création du collaborateur.';
+        }
+    }
+
+    /**
+     * Réinitialiser le formulaire de création de collaborateur
+     */
+    protected function resetNewCoworkerForm(): void
+    {
+        $this->new_coworker_firstname = '';
+        $this->new_coworker_lastname = '';
+        $this->new_coworker_email = '';
+        $this->new_coworker_phone = '';
+        $this->resetErrorBag([
+            'new_coworker_firstname',
+            'new_coworker_lastname',
+            'new_coworker_email',
+            'new_coworker_phone',
+        ]);
     }
 
     /**
