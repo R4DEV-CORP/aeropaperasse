@@ -143,7 +143,7 @@
     </div>
     @endif
 
-    @if($coworkers && $coworkers->count() > 0 )
+    @if($selected_activity_request_id && $activityRequest && $activityRequest->id == $selected_activity_request_id && $coworkers && $coworkers->count() > 0 )
     <div class="border border-gray-800/10 p-4 rounded-lg">
         <flux:heading size="lg">Informations sur le collaborateur</flux:heading>
         <flux:callout class="mt-4" icon="information-circle" color="blue" inline>
@@ -172,6 +172,9 @@
             <flux:error name="application_authorization" />
         </flux:field>
     </div>
+    @endif
+
+    @if($selected_coworker_id && $coworkers && $coworkers->count() > 0)
     <div class="border border-gray-800/10 p-4 rounded-lg">
         <flux:heading size="lg">Documents</flux:heading>
 
@@ -283,7 +286,9 @@
             </flux:field>
         </div>
     </div>
-    @elseif($coworkers && $coworkers->count() === 0 && $selected_activity_request_id)
+    @endif
+
+    @if($coworkers && $coworkers->count() === 0 && $selected_activity_request_id)
     <flux:callout class="mt-4" icon="exclamation-triangle" color="warning" inline>
         <flux:callout.heading>Aucun collaborateur n'est disponible.</flux:callout.heading>
         <x-slot name="actions">
