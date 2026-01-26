@@ -53,14 +53,26 @@
                 <flux:callout.heading>Certificat d'immatriculation</flux:callout.heading>
                 @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
-                    <flux:button 
-                        variant="ghost" 
-                        icon="document-arrow-down"
-                        wire:click="downloadDocument('certificate_of_registration')"
-                        wire:loading.attr="disabled"
-                    >
-                        Télécharger
+                    <div class="flex gap-2">
+                        @if($this->canViewDocument('certificate_of_registration'))
+                            <flux:button 
+                                variant="ghost" 
+                                icon="eye"
+                                wire:click="viewDocument('certificate_of_registration')"
+                                wire:loading.attr="disabled"
+                            >
+                                Voir
+                            </flux:button>
+                        @endif
+                        <flux:button 
+                            variant="ghost" 
+                            icon="document-arrow-down"
+                            wire:click="downloadDocument('certificate_of_registration')"
+                            wire:loading.attr="disabled"
+                        >
+                            Télécharger
                         </flux:button>
+                    </div>
                 </x-slot>
                 @endif
             </flux:callout>
@@ -70,14 +82,26 @@
                 <flux:callout.heading>Tampon de l'entreprise</flux:callout.heading>
                 @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
-                    <flux:button 
-                        variant="ghost" 
-                        icon="document-arrow-down"
-                        wire:click="downloadDocument('company_stamp')"
-                        wire:loading.attr="disabled"
-                    >
-                        Télécharger
+                    <div class="flex gap-2">
+                        @if($this->canViewDocument('company_stamp'))
+                            <flux:button 
+                                variant="ghost" 
+                                icon="eye"
+                                wire:click="viewDocument('company_stamp')"
+                                wire:loading.attr="disabled"
+                            >
+                                Voir
+                            </flux:button>
+                        @endif
+                        <flux:button 
+                            variant="ghost" 
+                            icon="document-arrow-down"
+                            wire:click="downloadDocument('company_stamp')"
+                            wire:loading.attr="disabled"
+                        >
+                            Télécharger
                         </flux:button>
+                    </div>
                 </x-slot>
                 @endif
             </flux:callout>

@@ -93,120 +93,199 @@
             </flux:callout>
         @endif
         
-        @if($activityRequest->aao_request_document)
+        @php
+            $aaoRequest = $activityRequest->getAaoRequestDocument();
+            $kbis = $activityRequest->getKbisDocument();
+            $principals = $activityRequest->getPrincipalsDocuments();
+            $safetyReferent = $activityRequest->getSafetyReferentDocument();
+            $securityReferent = $activityRequest->getSecurityReferentDocument();
+            $cta = $activityRequest->getCtaDocument();
+        @endphp
+
+        @if($aaoRequest)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Demande AAO</flux:callout.heading>
                 @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
-                    <flux:button 
-                        variant="ghost" 
-                        icon="document-arrow-down"
-                        wire:click="downloadDocument('aao_request_document')"
-                        wire:loading.attr="disabled"
-                    >
-                        Télécharger
-                    </flux:button>
+                    <div class="flex gap-2">
+                        @if($this->canViewDocument('aao_request_document'))
+                            <flux:button 
+                                variant="ghost" 
+                                icon="eye"
+                                wire:click="viewDocument('aao_request_document')"
+                                wire:loading.attr="disabled"
+                            >
+                                Voir
+                            </flux:button>
+                        @endif
+                        <flux:button 
+                            variant="ghost" 
+                            icon="document-arrow-down"
+                            wire:click="downloadDocument('aao_request_document')"
+                            wire:loading.attr="disabled"
+                        >
+                            Télécharger
+                        </flux:button>
+                    </div>
                 </x-slot>
                 @endif
             </flux:callout>
         @endif
         
-        @if($activityRequest->kbis_document)
+        @if($kbis)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Extrait KBIS</flux:callout.heading>
                 @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
-                    <flux:button 
-                        variant="ghost" 
-                        icon="document-arrow-down"
-                        wire:click="downloadDocument('kbis_document')"
-                        wire:loading.attr="disabled"
-                    >
-                        Télécharger
-                    </flux:button>
+                    <div class="flex gap-2">
+                        @if($this->canViewDocument('kbis_document'))
+                            <flux:button 
+                                variant="ghost" 
+                                icon="eye"
+                                wire:click="viewDocument('kbis_document')"
+                                wire:loading.attr="disabled"
+                            >
+                                Voir
+                            </flux:button>
+                        @endif
+                        <flux:button 
+                            variant="ghost" 
+                            icon="document-arrow-down"
+                            wire:click="downloadDocument('kbis_document')"
+                            wire:loading.attr="disabled"
+                        >
+                            Télécharger
+                        </flux:button>
+                    </div>
                 </x-slot>
                 @endif
             </flux:callout>
         @endif
         
-        @if($activityRequest->term_document)
-            <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
-                <flux:callout.heading>Mandat</flux:callout.heading>
-                @if(auth()->user()->isAdmin())
-                <x-slot name="actions">
-                    <flux:button 
-                        variant="ghost" 
-                        icon="document-arrow-down"
-                        wire:click="downloadDocument('term_document')"
-                        wire:loading.attr="disabled"
-                    >
-                        Télécharger
-                    </flux:button>
-                </x-slot>
-                @endif
-            </flux:callout>
+        @if($principals->isNotEmpty())
+            @foreach($principals as $principal)
+                <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
+                    <flux:callout.heading>Donneurs d'ordre {{ $principals->count() > 1 ? '#' . $loop->iteration : '' }}</flux:callout.heading>
+                    @if(auth()->user()->isAdmin())
+                    <x-slot name="actions">
+                        <div class="flex gap-2">
+                            @if($this->canViewDocument('principals', $principal->id))
+                                <flux:button 
+                                    variant="ghost" 
+                                    icon="eye"
+                                    wire:click="viewDocument('principals', {{ $principal->id }})"
+                                    wire:loading.attr="disabled"
+                                >
+                                    Voir
+                                </flux:button>
+                            @endif
+                            <flux:button 
+                                variant="ghost" 
+                                icon="document-arrow-down"
+                                wire:click="downloadDocument('principals', {{ $principal->id }})"
+                                wire:loading.attr="disabled"
+                            >
+                                Télécharger
+                            </flux:button>
+                        </div>
+                    </x-slot>
+                    @endif
+                </flux:callout>
+            @endforeach
         @endif
         
-        @if($activityRequest->safety_referent_document)
+        @if($safetyReferent)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Référent sûreté</flux:callout.heading>
                 @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
-                    <flux:button 
-                        variant="ghost" 
-                        icon="document-arrow-down"
-                        wire:click="downloadDocument('safety_referent_document')"
-                        wire:loading.attr="disabled"
-                    >
-                        Télécharger
-                    </flux:button>
+                    <div class="flex gap-2">
+                        @if($this->canViewDocument('safety_referent_document'))
+                            <flux:button 
+                                variant="ghost" 
+                                icon="eye"
+                                wire:click="viewDocument('safety_referent_document')"
+                                wire:loading.attr="disabled"
+                            >
+                                Voir
+                            </flux:button>
+                        @endif
+                        <flux:button 
+                            variant="ghost" 
+                            icon="document-arrow-down"
+                            wire:click="downloadDocument('safety_referent_document')"
+                            wire:loading.attr="disabled"
+                        >
+                            Télécharger
+                        </flux:button>
+                    </div>
                 </x-slot>
                 @endif
             </flux:callout>
         @endif
 
-        @if($activityRequest->security_referent_document)
+        @if($securityReferent)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>Référent sécurité</flux:callout.heading>
                 @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
-                    <flux:button 
-                        variant="ghost" 
-                        icon="document-arrow-down"
-                        wire:click="downloadDocument('security_referent_document')"
-                        wire:loading.attr="disabled"
-                    >
-                        Télécharger
-                    </flux:button>
+                    <div class="flex gap-2">
+                        @if($this->canViewDocument('security_referent_document'))
+                            <flux:button 
+                                variant="ghost" 
+                                icon="eye"
+                                wire:click="viewDocument('security_referent_document')"
+                                wire:loading.attr="disabled"
+                            >
+                                Voir
+                            </flux:button>
+                        @endif
+                        <flux:button 
+                            variant="ghost" 
+                            icon="document-arrow-down"
+                            wire:click="downloadDocument('security_referent_document')"
+                            wire:loading.attr="disabled"
+                        >
+                            Télécharger
+                        </flux:button>
+                    </div>
                 </x-slot>
                 @endif
             </flux:callout>
         @endif
         
-        @if($activityRequest->cta_document)
+        @if($cta)
             <flux:callout icon="document-text" variant="secondary" inline class="mt-2">
                 <flux:callout.heading>CTA</flux:callout.heading>
                 @if(auth()->user()->isAdmin())
                 <x-slot name="actions">
-                    <flux:button 
-                        variant="ghost" 
-                        icon="document-arrow-down"
-                        wire:click="downloadDocument('cta_document')"
-                        wire:loading.attr="disabled"
-                    >
-                        Télécharger
-                    </flux:button>
+                    <div class="flex gap-2">
+                        @if($this->canViewDocument('cta_document'))
+                            <flux:button 
+                                variant="ghost" 
+                                icon="eye"
+                                wire:click="viewDocument('cta_document')"
+                                wire:loading.attr="disabled"
+                            >
+                                Voir
+                            </flux:button>
+                        @endif
+                        <flux:button 
+                            variant="ghost" 
+                            icon="document-arrow-down"
+                            wire:click="downloadDocument('cta_document')"
+                            wire:loading.attr="disabled"
+                        >
+                            Télécharger
+                        </flux:button>
+                    </div>
                 </x-slot>
                 @endif
             </flux:callout>
         @endif
         
         @if(auth()->user()->isAdmin())
-            @if($activityRequest->aao_request_document || 
-                $activityRequest->kbis_document || 
-                $activityRequest->term_document || 
-                $activityRequest->safety_referent_document || 
-                $activityRequest->cta_document)
+            @if($activityRequest->attachments->isNotEmpty())
                 <flux:button 
                     variant="primary" 
                     icon="document-arrow-down" 

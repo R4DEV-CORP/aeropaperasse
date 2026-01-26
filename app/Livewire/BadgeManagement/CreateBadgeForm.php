@@ -96,12 +96,6 @@ class CreateBadgeForm extends Component
             return;
         }
 
-        if (! $client->canCreateBadge()) {
-            $this->errorMessage = 'Le client a atteint le nombre maximum de badges.';
-
-            return;
-        }
-
         $badge = Badge::where('badge_request_id', $this->selected_badge_request_id)->first();
 
         if ($badge) {

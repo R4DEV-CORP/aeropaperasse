@@ -51,12 +51,19 @@
                 <flux:input wire:model="city" name="city" required />
                 <flux:error name="city" />
             </flux:field>  
-            <flux:field class="col-span-4">
+            <flux:field class="col-span-2">
                 <flux:label>Sous traitant de</flux:label>
                 <flux:description>Listez les entreprises pour laquelle ce client est sous traitant.</flux:description>
                 <flux:input wire:model="subcontractor_of" icon="building-office-2" name="subcontractor_of" />
                 <flux:error name="subcontractor_of" />
             </flux:field>
+            <div class="flex items-end col-span-2">
+                <flux:field variant="inline" class="mb-2">
+                    <flux:checkbox wire:model="is_airline_company" />
+                    <flux:label>Cette société est une compagnie aérienne</flux:label>
+                    <flux:error name="is_airline_company" />
+                </flux:field>
+            </div>
         </div>
     </div>
 
@@ -235,16 +242,6 @@
                 <flux:input type="email" icon="at-symbol" wire:model="notification_email" name="notification_email" />
                 <flux:description>Si renseigné, c'est à cet email que seront envoyées les notifications pour toutes les demandes de cette société. Sinon, ce sera à celui du demandeur.</flux:description>
                 <flux:error name="notification_email" />
-            </flux:field>
-            <flux:field>
-                <flux:label>Quota de badges</flux:label>
-                <flux:input type="number" icon:trailing="identification" wire:model="badge_limit" name="badge_limit" min="1" max="1000" required />
-                <flux:error name="badge_limit" />
-            </flux:field>
-            <flux:field>
-                <flux:label>Quota de véhicules</flux:label>
-                <flux:input type="number" icon:trailing="truck" wire:model="vehicle_pass_limit" name="vehicle_pass_limit" min="0" max="1000" required />
-                <flux:error name="vehicle_pass_limit" />
             </flux:field>
         </div>
     </div>

@@ -11,6 +11,10 @@ class Client extends Model
     use HasFactory;
     use Searchable;
 
+    protected $casts = [
+        'is_airline_company' => 'boolean',
+    ];
+
     protected $fillable = [
         'company_name', // raison sociale
         'trade_name', // nom commercial
@@ -22,10 +26,9 @@ class Client extends Model
         'kbis_document',
         'safety_document',
         'security_document',
-        'badge_limit',
-        'vehicle_pass_limit',
         'notification_email',
         'slug',
+        'is_airline_company',
     ];
 
     /**
@@ -41,8 +44,6 @@ class Client extends Model
             'siret_number' => $this->siret_number,
         ];
     }
-
-    protected $appends = ['active_badges_count', 'active_vehicle_passes_count'];
 
     public function users()
     {
@@ -72,34 +73,6 @@ class Client extends Model
     public function vehiclePasses()
     {
         return $this->hasMany(VehiclePass::class);
-    }
-
-    public function getActiveBadgesCountAttribute(): int
-    {
-        return $this->badgeRequests()
-            ->where('badge_requests.status', 'ready_for_delivery')
-            ->count();
-    }
-
-    public function getActiveVehiclePassesCountAttribute(): int
-    {
-        return $this->vehiclePasses()
-            ->where('status', 'approved')
-            ->count();
-    }
-
-    public function canCreateBadge(): bool
-    {
-        return $this->active_badges_count < $this->badge_limit;
-    }
-
-    public function canCreateVehiclePass(): bool
-    {
-        if ($this->vehicle_pass_limit == 0) {
-            return false;
-        }
-
-        return $this->active_vehicle_passes_count < $this->vehicle_pass_limit;
     }
 
     public function contacts()

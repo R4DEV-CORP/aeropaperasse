@@ -207,4 +207,35 @@ class BadgeRequestValidator
 
         return Validator::make($data, $rules, self::getMessages());
     }
+
+    /**
+     * Règles de validation pour la remise d'un badge
+     */
+    public static function getDeliverRules(): array
+    {
+        return [
+            'delivery_photo' => 'required|image|mimes:jpeg,png,jpg|max:5120',
+        ];
+    }
+
+    /**
+     * Messages d'erreur pour la validation de remise
+     */
+    public static function getDeliverMessages(): array
+    {
+        return [
+            'delivery_photo.required' => 'La photo du badge remis est obligatoire',
+            'delivery_photo.image' => 'Le fichier doit être une image',
+            'delivery_photo.mimes' => 'La photo doit être au format JPEG, PNG ou JPG',
+            'delivery_photo.max' => 'La photo ne doit pas dépasser 5MB',
+        ];
+    }
+
+    /**
+     * Validation pour la remise d'un badge
+     */
+    public static function validateDeliver(array $data): \Illuminate\Validation\Validator
+    {
+        return Validator::make($data, self::getDeliverRules(), self::getDeliverMessages());
+    }
 }

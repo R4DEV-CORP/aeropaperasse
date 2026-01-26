@@ -26,4 +26,27 @@ class BadgeRequestPolicy
     {
         return $user->isAdmin(); // Seul l'admin peut mettre à jour le statut
     }
+
+    /**
+     * Détermine si l'utilisateur peut marquer un badge comme remis
+     */
+    public function deliver(User $user, BadgeRequest $badgeRequest): bool
+    {
+        // Seuls les admins peuvent marquer un badge comme remis
+        if (! $user->isAdmin()) {
+            return false;
+        }
+
+        // Le badge doit être en statut "ready_for_delivery"
+        if (! $badgeRequest->canBeDelivered()) {
+            return false;
+        }
+
+        // Le badge ne doit pas déjà être remis
+        if ($badgeRequest->isDelivered()) {
+            return false;
+        }
+
+        return true;
+    }
 }

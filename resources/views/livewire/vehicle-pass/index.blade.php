@@ -15,17 +15,6 @@
                 <flux:button href="/clients" icon:trailing="arrow-top-right-on-square">Sociétés</flux:button>
             </x-slot>
         </flux:callout>
-    @else
-        <div class="mt-4 p-4 bg-white rounded-lg border border-zinc-200">
-            <div class="flex justify-between">
-                <flux:heading size="lg">Quota de laissez passer</flux:heading>
-                <flux:text>{{ $vehiclePassCount }}/{{ $client->vehicle_pass_limit }}</flux:text>
-            </div>
-            <div class="bg-slate-200 h-3 rounded-full w-full mt-4">
-                <div class="h-full bg-green-600 rounded-full" style="width: {{ $client->vehicle_pass_limit > 0 ? $vehiclePassCount / $client->vehicle_pass_limit * 100 : 0 }}%"></div>
-            </div>
-            <flux:text class="mt-2">Vous disposez de <span class="font-medium">{{ $vehiclePassCount }} laissez passer.</span> Il vous reste donc <span class="font-medium">{{ $client->vehicle_pass_limit - $vehiclePassCount }} demandes de laissez passer disponibles.</span></flux:text>
-        </div>
     @endif
     <div class="flex items-center gap-3 mt-4">
         <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher une demande..." />

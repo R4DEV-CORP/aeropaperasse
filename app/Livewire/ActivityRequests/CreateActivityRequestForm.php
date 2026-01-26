@@ -65,7 +65,8 @@ class CreateActivityRequestForm extends Component
 
     public $kbis_document;
 
-    public $term_document;
+    // Mandats
+    public $principals;
 
     public $safety_referent_document;
 
@@ -73,18 +74,44 @@ class CreateActivityRequestForm extends Component
 
     public $cta_document;
 
+    // Noms des fichiers sélectionnés (pour l'affichage)
+    public $aao_request_document_name = null;
+
+    public $kbis_document_name = null;
+
+    public $principals_names = [];
+
+    public $safety_referent_document_name = null;
+
+    public $security_referent_document_name = null;
+
+    public $cta_document_name = null;
+
     // Indicateurs de documents existants (pour l'édition)
     public bool $hasExistingAaoRequest = false;
 
     public bool $hasExistingKbis = false;
 
-    public bool $hasExistingTerm = false;
+    public bool $hasExistingPrincipals = false;
 
     public bool $hasExistingSafetyReferent = false;
 
     public bool $hasExistingSecurityReferent = false;
 
     public bool $hasExistingCta = false;
+
+    // Noms des documents existants (pour l'affichage lors de l'édition)
+    public $existing_aao_request_document_name = null;
+
+    public $existing_kbis_document_name = null;
+
+    public $existing_principals_names = [];
+
+    public $existing_safety_referent_document_name = null;
+
+    public $existing_security_referent_document_name = null;
+
+    public $existing_cta_document_name = null;
 
     // Propriétés pour la gestion des messages
     public $successMessage = '';
@@ -167,10 +194,13 @@ class CreateActivityRequestForm extends Component
             $documentsFlags = $formData->getExistingDocumentsFlags($activityRequest);
             $this->hasExistingAaoRequest = $documentsFlags['hasExistingAaoRequest'];
             $this->hasExistingKbis = $documentsFlags['hasExistingKbis'];
-            $this->hasExistingTerm = $documentsFlags['hasExistingTerm'];
+            $this->hasExistingPrincipals = $documentsFlags['hasExistingPrincipals'];
             $this->hasExistingSafetyReferent = $documentsFlags['hasExistingSafetyReferent'];
             $this->hasExistingSecurityReferent = $documentsFlags['hasExistingSecurityReferent'];
             $this->hasExistingCta = $documentsFlags['hasExistingCta'];
+
+            // Charger les noms des documents existants pour l'affichage
+            $this->loadExistingDocumentNames($activityRequest);
 
         } catch (\Exception $e) {
             Log::error('Erreur lors du chargement du brouillon', [
@@ -184,6 +214,36 @@ class CreateActivityRequestForm extends Component
 
             $this->errorMessage = 'Erreur lors du chargement du brouillon.';
         }
+    }
+
+    /**
+     * Charger les noms des documents existants depuis les attachments
+     */
+    protected function loadExistingDocumentNames(ActivityRequest $activityRequest): void
+    {
+        // Charger les attachments si pas déjà chargés
+        if (! $activityRequest->relationLoaded('attachments')) {
+            $activityRequest->load('attachments');
+        }
+
+        // Récupérer les noms des documents existants
+        $aaoAttachment = $activityRequest->getAaoRequestDocument();
+        $this->existing_aao_request_document_name = $aaoAttachment ? $aaoAttachment->name : null;
+
+        $kbisAttachment = $activityRequest->getKbisDocument();
+        $this->existing_kbis_document_name = $kbisAttachment ? $kbisAttachment->name : null;
+
+        $principalsAttachments = $activityRequest->getPrincipalsDocuments();
+        $this->existing_principals_names = $principalsAttachments->map(fn ($attachment) => $attachment->name)->toArray();
+
+        $safetyReferentAttachment = $activityRequest->getSafetyReferentDocument();
+        $this->existing_safety_referent_document_name = $safetyReferentAttachment ? $safetyReferentAttachment->name : null;
+
+        $securityReferentAttachment = $activityRequest->getSecurityReferentDocument();
+        $this->existing_security_referent_document_name = $securityReferentAttachment ? $securityReferentAttachment->name : null;
+
+        $ctaAttachment = $activityRequest->getCtaDocument();
+        $this->existing_cta_document_name = $ctaAttachment ? $ctaAttachment->name : null;
     }
 
     /**
@@ -241,6 +301,97 @@ class CreateActivityRequestForm extends Component
             $this->selectedPreviousActivityRequest = null;
         } else {
             $this->selectedPreviousActivityRequest = (int) $value;
+        }
+    }
+
+    /**
+     * Capturer le nom du fichier AAO request quand il est sélectionné
+     */
+    public function updatedAaoRequestDocument($value)
+    {
+        if ($value) {
+            $this->aao_request_document_name = $value->getClientOriginalName();
+        } else {
+            $this->aao_request_document_name = null;
+        }
+    }
+
+    /**
+     * Capturer le nom du fichier KBIS quand il est sélectionné
+     */
+    public function updatedKbisDocument($value)
+    {
+        if ($value) {
+            $this->kbis_document_name = $value->getClientOriginalName();
+        } else {
+            $this->kbis_document_name = null;
+        }
+    }
+
+    /**
+     * Capturer les noms des fichiers Principals quand ils sont sélectionnés
+     */
+    public function updatedPrincipals($value)
+    {
+        $this->principals_names = [];
+
+        if ($value) {
+            // Gérer le cas d'un tableau de fichiers
+            if (is_array($value)) {
+                foreach ($value as $file) {
+                    if (is_object($file) && method_exists($file, 'getClientOriginalName')) {
+                        $this->principals_names[] = $file->getClientOriginalName();
+                    }
+                }
+            }
+            // Gérer le cas d'une collection
+            elseif (is_iterable($value)) {
+                foreach ($value as $file) {
+                    if (is_object($file) && method_exists($file, 'getClientOriginalName')) {
+                        $this->principals_names[] = $file->getClientOriginalName();
+                    }
+                }
+            }
+            // Gérer le cas d'un seul fichier (ne devrait pas arriver avec multiple, mais par sécurité)
+            elseif (is_object($value) && method_exists($value, 'getClientOriginalName')) {
+                $this->principals_names[] = $value->getClientOriginalName();
+            }
+        }
+    }
+
+    /**
+     * Capturer le nom du fichier Safety Referent quand il est sélectionné
+     */
+    public function updatedSafetyReferentDocument($value)
+    {
+        if ($value) {
+            $this->safety_referent_document_name = $value->getClientOriginalName();
+        } else {
+            $this->safety_referent_document_name = null;
+        }
+    }
+
+    /**
+     * Capturer le nom du fichier Security Referent quand il est sélectionné
+     */
+    public function updatedSecurityReferentDocument($value)
+    {
+        if ($value) {
+            $this->security_referent_document_name = $value->getClientOriginalName();
+        } else {
+            $this->security_referent_document_name = null;
+        }
+    }
+
+    /**
+     * Capturer le nom du fichier CTA quand il est sélectionné
+     */
+    public function updatedCtaDocument($value)
+    {
+        if ($value) {
+            $this->cta_document_name = $value->getClientOriginalName();
+        } else {
+            $this->cta_document_name = null;
         }
     }
 
@@ -304,7 +455,8 @@ class CreateActivityRequestForm extends Component
                 $formData,
                 $isDraft,
                 $isUpdate,
-                $existingDocs
+                $existingDocs,
+                $this->client
             );
 
             if ($validator->fails()) {
@@ -379,7 +531,7 @@ class CreateActivityRequestForm extends Component
             'vehicule_count' => $this->vehicule_count,
             'aao_request_document' => $this->aao_request_document,
             'kbis_document' => $this->kbis_document,
-            'term_document' => $this->term_document,
+            'principals' => $this->principals,
             'safety_referent_document' => $this->safety_referent_document,
             'security_referent_document' => $this->security_referent_document,
             'cta_document' => $this->cta_document,
@@ -446,7 +598,7 @@ class CreateActivityRequestForm extends Component
         return [
             'aao_request_document' => $this->hasExistingAaoRequest,
             'kbis_document' => $this->hasExistingKbis,
-            'term_document' => $this->hasExistingTerm,
+            'principals' => $this->hasExistingPrincipals,
             'safety_referent_document' => $this->hasExistingSafetyReferent,
             'security_referent_document' => $this->hasExistingSecurityReferent,
             'cta_document' => $this->hasExistingCta,
@@ -527,16 +679,28 @@ class CreateActivityRequestForm extends Component
             'vehicule_count',
             'aao_request_document',
             'kbis_document',
-            'term_document',
+            'principals',
             'safety_referent_document',
             'security_referent_document',
             'cta_document',
+            'aao_request_document_name',
+            'kbis_document_name',
+            'principals_names',
+            'safety_referent_document_name',
+            'security_referent_document_name',
+            'cta_document_name',
+            'existing_aao_request_document_name',
+            'existing_kbis_document_name',
+            'existing_principals_names',
+            'existing_safety_referent_document_name',
+            'existing_security_referent_document_name',
+            'existing_cta_document_name',
             'errorMessage',
             'renewal',
             'selectedPreviousActivityRequest',
             'hasExistingAaoRequest',
             'hasExistingKbis',
-            'hasExistingTerm',
+            'hasExistingPrincipals',
             'hasExistingSafetyReferent',
             'hasExistingCta',
         ]);

@@ -13,12 +13,7 @@ class ClientController extends Controller
     public function all()
     {
         try {
-            $clients = Client::all()->map(function ($client) {
-                // Forcer le calcul ET l'ajout des attributs à la réponse JSON
-                $client->append(['active_badges_count', 'active_vehicle_passes_count']);
-
-                return $client;
-            });
+            $clients = Client::all();
 
             return response()->json($clients);
         } catch (\Exception $e) {
@@ -71,9 +66,6 @@ class ClientController extends Controller
             'hr_contact_name' => 'required|string|max:255',
             'hr_contact_email' => 'required|email|max:255',
             'hr_contact_phone' => 'required|string|max:255',
-
-            'badge_limit' => 'required|integer|min:1|max:1000',
-            'vehicle_pass_limit' => 'required|integer|min:0|max:1000',
         ]);
 
         try {
@@ -137,9 +129,6 @@ class ClientController extends Controller
             'hr_contact_name' => 'required|string|max:255',
             'hr_contact_email' => 'required|email|max:255',
             'hr_contact_phone' => 'required|string|max:255',
-
-            'badge_limit' => 'required|integer|min:1|max:1000',
-            'vehicle_pass_limit' => 'required|integer|min:0|max:1000',
         ]);
 
         try {
@@ -261,36 +250,6 @@ class ClientController extends Controller
         ]);
     }
 
-    public function getQuotaInfo(Client $client)
-    {
-        try {
-            $badgeInfo = [
-                'used' => $client->active_badges_count,
-                'total' => $client->badge_limit,
-                'remaining' => max(0, $client->badge_limit - $client->active_badges_count),
-                'percentage' => $client->badge_limit > 0 ? round(($client->active_badges_count / $client->badge_limit) * 100, 1) : 0,
-                'can_create' => $client->canCreateBadge(),
-            ];
-
-            $vehiclePassInfo = [
-                'used' => $client->active_vehicle_passes_count,
-                'total' => $client->vehicle_pass_limit,
-                'remaining' => max(0, $client->vehicle_pass_limit - $client->active_vehicle_passes_count),
-                'percentage' => $client->vehicle_pass_limit > 0 ? round(($client->active_vehicle_passes_count / $client->vehicle_pass_limit) * 100, 1) : 0,
-                'can_create' => $client->canCreateVehiclePass(),
-            ];
-
-            return response()->json([
-                'badge_quota' => $badgeInfo,
-                'vehicle_pass_quota' => $vehiclePassInfo,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erreur lors de la récupération des quotas',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
 
     public function show($id)
     {
@@ -319,8 +278,6 @@ class ClientController extends Controller
                 // Infos de base
                 'id' => $client->id,
                 'name' => $client->name,
-                'badge_limit' => $client->badge_limit,
-                'vehicle_pass_limit' => $client->vehicle_pass_limit,
 
                 // Informations société (priorité Client)
                 'raison_sociale' => $client->raison_sociale ?: ($activityRequest ? $activityRequest->raison_sociale : $client->name),

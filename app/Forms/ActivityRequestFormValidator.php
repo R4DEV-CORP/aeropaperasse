@@ -17,12 +17,14 @@ class ActivityRequestFormValidator
      * @param  bool  $isDraft  Si c'est un brouillon
      * @param  bool  $isUpdate  Si c'est une mise à jour
      * @param  array  $existingDocuments  Documents existants (pour mise à jour)
+     * @param  \App\Models\Client|null  $client  Client pour la validation conditionnelle du CTA
      */
     public static function validate(
         ActivityRequestFormData $formData,
         bool $isDraft = false,
         bool $isUpdate = false,
-        array $existingDocuments = []
+        array $existingDocuments = [],
+        ?\App\Models\Client $client = null
     ): Validator {
         $data = $formData->toArray();
 
@@ -32,19 +34,22 @@ class ActivityRequestFormValidator
             return ActivityRequestValidator::validateUpdate(
                 $data,
                 $formData->isRenewal(),
-                $existingDocuments
+                $existingDocuments,
+                $client
             );
         } elseif ($isDraft) {
             // Enregistrement en brouillon (création ou mise à jour)
             return ActivityRequestValidator::validateDraft(
                 $data,
-                $formData->isRenewal()
+                $formData->isRenewal(),
+                $client
             );
         } else {
             // Création complète (nouvelle demande)
             return ActivityRequestValidator::validateComplete(
                 $data,
-                $formData->isRenewal()
+                $formData->isRenewal(),
+                $client
             );
         }
     }

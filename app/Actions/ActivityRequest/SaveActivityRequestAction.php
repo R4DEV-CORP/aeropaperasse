@@ -123,16 +123,11 @@ class SaveActivityRequestAction
         Client $client,
         ActivityRequest $activityRequest
     ): void {
-
-        $copiedDocuments = $this->documentService->copyDocumentsFromPreviousRequest(
+        $this->documentService->copyDocumentsFromPreviousRequest(
             $data->last_activity_request_id,
             $client,
             $activityRequest->id
         );
-
-        if (! empty($copiedDocuments)) {
-            $activityRequest->update($copiedDocuments);
-        }
     }
 
     /**
@@ -143,13 +138,12 @@ class SaveActivityRequestAction
         Client $client,
         ActivityRequest $activityRequest
     ): void {
-        $storedDocuments = $this->documentService->storeDocuments(
+        $this->documentService->storeDocuments(
             $data->getDocuments(),
             $client,
-            $activityRequest->id
+            $activityRequest->id,
+            $activityRequest // Passer l'ActivityRequest pour permettre la suppression des anciens documents
         );
-
-        $activityRequest->update($storedDocuments);
     }
 
     /**

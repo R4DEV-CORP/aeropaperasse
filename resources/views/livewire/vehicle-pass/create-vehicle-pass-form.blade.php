@@ -44,7 +44,40 @@
         </div>
     @endif
 
-    @if($selected_client_id)
+    @if($client)
+        <!-- Sélection de la demande d'activité -->
+        <div class="border border-gray-800/10 p-4 rounded-lg">
+            <flux:heading size="lg" class="mb-4">Demande d'activité</flux:heading>
+            <flux:field>
+                <flux:label>Demande d'activité<span class="text-red-500">*</span></flux:label>
+                <select wire:model.live="selected_activity_request_id" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        required>
+                    <option value="">Sélectionnez une demande d'activité...</option>
+                    @foreach($activityRequests as $activityRequestOption)
+                        <option value="{{ $activityRequestOption->id }}">
+                            {{ $activityRequestOption->description }} 
+                            ({{ $activityRequestOption->airport }} - 
+                            {{ $activityRequestOption->person_count }} personnes, 
+                            {{ $activityRequestOption->vehicule_count }} véhicules)
+                        </option>
+                    @endforeach
+                </select>
+                <flux:error name="selected_activity_request_id" />
+            </flux:field>
+            @if($activityRequest)
+                <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <flux:text class="font-medium">Quota disponible :</flux:text>
+                    <flux:text>
+                        {{ $activityRequest->getActiveVehiclePassesCount() }}/{{ $activityRequest->vehicule_count }} laissez-passer véhicules utilisés
+                        ({{ $activityRequest->getRemainingVehiclePassQuota() }} place(s) restante(s))
+                    </flux:text>
+                </div>
+            @endif
+        </div>
+    @endif
+
+    @if($client && $selected_activity_request_id)
         <!-- informations sur le véhicule -->
         <div class="border border-gray-800/10 p-4 rounded-lg">
             <flux:heading size="lg" class="mb-4">Informations sur le véhicule</flux:heading>

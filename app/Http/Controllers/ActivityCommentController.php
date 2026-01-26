@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ActivityCommentCreated;
 use App\Models\ActivityComment;
+use App\Models\ActivityRequest;
 use App\Models\ReplyActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ActivityCommentController extends Controller
 {
@@ -34,12 +37,18 @@ class ActivityCommentController extends Controller
                 'activity_request_id' => 'required|exists:activity_requests,id',
             ]);
 
+            // Récupérer la demande d'activité
+            $activityRequest = ActivityRequest::findOrFail($validated['activity_request_id']);
+
             // Création du commentaire
             $comment = ActivityComment::create([
                 'content' => $validated['content'],
                 'activity_request_id' => $validated['activity_request_id'],
                 'user_id' => auth()->id(),
             ]);
+
+            // Envoyer un email au créateur de la demande si ce n'est pas lui qui a commenté
+            $this->sendCommentNotification($activityRequest, $comment);
 
             // Charger les relations et retourner
             return response()->json(
@@ -157,5 +166,34 @@ class ActivityCommentController extends Controller
         $reply->delete();
 
         return response()->json(['message' => 'Reply deleted']);
+    }
+
+    /**
+     * Envoie une notification par email au créateur de la demande d'activité
+     * si ce n'est pas lui qui a ajouté le commentaire
+     */
+    private function sendCommentNotification(ActivityRequest $activityRequest, ActivityComment $comment): void
+    {
+        try {
+            $currentUserId = auth()->id();
+            $creator = $activityRequest->creator;
+
+            // Ne pas envoyer d'email si :
+            // - Le créateur n'existe pas
+            // - Le créateur est la même personne que l'auteur du commentaire
+            // - Le créateur n'a pas d'email
+            if (! $creator || $creator->id === $currentUserId || ! $creator->email) {
+                return;
+            }
+
+            Mail::to($creator->email)->send(new ActivityCommentCreated($activityRequest, $comment));
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de l\'envoi de l\'email de notification de commentaire:', [
+                'activity_request_id' => $activityRequest->id,
+                'comment_id' => $comment->id,
+                'error' => $e->getMessage(),
+            ]);
+            // Ne pas faire échouer la création du commentaire si l'email ne fonctionne pas
+        }
     }
 }

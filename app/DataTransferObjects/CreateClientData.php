@@ -16,15 +16,12 @@ class CreateClientData
         public string $city,
         public ?string $subcontractor_of,
         public string $slug,
+        public bool $is_airline_company,
 
         // Documents
         public UploadedFile $kbis_document,
         public UploadedFile $safety_document,
         public UploadedFile $security_document,
-
-        // Configuration des quotas
-        public int $badge_limit,
-        public int $vehicle_pass_limit,
 
         // Email de notification
         public ?string $notification_email,
@@ -47,11 +44,10 @@ class CreateClientData
             city: $data['city'],
             subcontractor_of: $data['subcontractor_of'] ?? null,
             slug: $data['slug'],
+            is_airline_company: $data['is_airline_company'],
             kbis_document: $data['kbis_document'],
             safety_document: $data['safety_document'],
             security_document: $data['security_document'],
-            badge_limit: (int) $data['badge_limit'],
-            vehicle_pass_limit: (int) $data['vehicle_pass_limit'],
             notification_email: $data['notification_email'] ?? null,
             contacts: self::extractContacts($data),
         );
@@ -137,8 +133,7 @@ class CreateClientData
             'city' => $this->city,
             'subcontractor_of' => $this->subcontractor_of,
             'slug' => $this->slug,
-            'badge_limit' => $this->badge_limit,
-            'vehicle_pass_limit' => $this->vehicle_pass_limit,
+            'is_airline_company' => $this->is_airline_company,
             'notification_email' => $this->notification_email,
         ];
     }

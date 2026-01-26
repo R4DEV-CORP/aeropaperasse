@@ -26,9 +26,6 @@ class ClientValidator
             'safety_document' => 'required|file|mimes:pdf|max:8192',
             'security_document' => 'required|file|mimes:pdf|max:8192',
 
-            // Configuration des quotas
-            'badge_limit' => 'required|integer|min:1|max:1000',
-            'vehicle_pass_limit' => 'required|integer|min:0|max:1000',
 
             // Email de notification (optionnel)
             'notification_email' => 'nullable|email|max:255',
@@ -84,9 +81,6 @@ class ClientValidator
             'safety_document.required' => 'Le document de sécurité est obligatoire, doit être un fichier PDF et ne pas dépasser 8MB',
             'security_document.required' => 'Le document de sûreté est obligatoire, doit être un fichier PDF et ne pas dépasser 8MB',
 
-            // Quotas
-            'badge_limit.required' => 'La limite de badges est obligatoire et doit être un nombre entre 1 et 1000',
-            'vehicle_pass_limit.required' => 'La limite de laissez-passer véhicules est obligatoire et doit être un nombre entre 0 et 1000',
 
             // Email de notification
             'notification_email.email' => 'L\'email de notification doit être une adresse email valide et ne pas dépasser 255 caractères',

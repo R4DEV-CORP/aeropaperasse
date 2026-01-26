@@ -29,9 +29,8 @@ class UpdateClientAction
                     'zip_code' => $formData['zip_code'],
                     'city' => $formData['city'],
                     'subcontractor_of' => $formData['subcontractor_of'],
-                    'badge_limit' => $formData['badge_limit'],
-                    'vehicle_pass_limit' => $formData['vehicle_pass_limit'],
                     'notification_email' => $formData['notification_email'],
+                    'is_airline_company' => $formData['is_airline_company'],    
                 ];
 
                 // 2. Gérer les documents s'ils sont fournis

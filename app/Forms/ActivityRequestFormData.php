@@ -28,7 +28,7 @@ class ActivityRequestFormData
         // Documents
         public ?UploadedFile $aao_request_document = null,
         public ?UploadedFile $kbis_document = null,
-        public ?UploadedFile $term_document = null,
+        public array $principals = [], // Renommé de term_document, peut être multiple
         public ?UploadedFile $safety_referent_document = null,
         public ?UploadedFile $cta_document = null,
         public ?UploadedFile $security_referent_document = null,
@@ -64,7 +64,7 @@ class ActivityRequestFormData
             vehicule_count: isset($data['vehicule_count']) ? (int) $data['vehicule_count'] : null,
             aao_request_document: $data['aao_request_document'] ?? null,
             kbis_document: $data['kbis_document'] ?? null,
-            term_document: $data['term_document'] ?? null,
+            principals: self::normalizePrincipals($data['principals'] ?? $data['term_document'] ?? []),
             safety_referent_document: $data['safety_referent_document'] ?? null,
             cta_document: $data['cta_document'] ?? null,
             security_referent_document: $data['security_referent_document'] ?? null,
@@ -91,7 +91,7 @@ class ActivityRequestFormData
             'vehicule_count' => $this->vehicule_count,
             'aao_request_document' => $this->aao_request_document,
             'kbis_document' => $this->kbis_document,
-            'term_document' => $this->term_document,
+            'principals' => $this->principals,
             'safety_referent_document' => $this->safety_referent_document,
             'cta_document' => $this->cta_document,
             'security_referent_document' => $this->security_referent_document,
@@ -115,7 +115,7 @@ class ActivityRequestFormData
     {
         return ! is_null($this->aao_request_document)
             || ! is_null($this->kbis_document)
-            || ! is_null($this->term_document)
+            || ! empty($this->principals)
             || ! is_null($this->safety_referent_document)
             || ! is_null($this->cta_document)
             || ! is_null($this->security_referent_document);
@@ -134,8 +134,8 @@ class ActivityRequestFormData
         if ($this->kbis_document) {
             $documents['kbis_document'] = $this->kbis_document;
         }
-        if ($this->term_document) {
-            $documents['term_document'] = $this->term_document;
+        if (! empty($this->principals)) {
+            $documents['principals'] = $this->principals;
         }
         if ($this->safety_referent_document) {
             $documents['safety_referent_document'] = $this->safety_referent_document;
@@ -174,16 +174,44 @@ class ActivityRequestFormData
 
     /**
      * Retourne les indicateurs de présence de documents existants
+     * Utilise maintenant les attachments au lieu des colonnes directes
      */
     public function getExistingDocumentsFlags(\App\Models\ActivityRequest $activityRequest): array
     {
+        // Charger les attachments si pas déjà chargés
+        if (! $activityRequest->relationLoaded('attachments')) {
+            $activityRequest->load('attachments');
+        }
+
         return [
-            'hasExistingAaoRequest' => ! empty($activityRequest->aao_request_document),
-            'hasExistingKbis' => ! empty($activityRequest->kbis_document),
-            'hasExistingTerm' => ! empty($activityRequest->term_document),
-            'hasExistingSafetyReferent' => ! empty($activityRequest->safety_referent_document),
-            'hasExistingCta' => ! empty($activityRequest->cta_document),
-            'hasExistingSecurityReferent' => ! empty($activityRequest->security_referent_document),
+            'hasExistingAaoRequest' => $activityRequest->hasDocument(\App\Models\ActivityRequestAttachment::TYPE_AAO_REQUEST),
+            'hasExistingKbis' => $activityRequest->hasDocument(\App\Models\ActivityRequestAttachment::TYPE_KBIS),
+            'hasExistingPrincipals' => $activityRequest->hasDocument(\App\Models\ActivityRequestAttachment::TYPE_PRINCIPALS),
+            'hasExistingSafetyReferent' => $activityRequest->hasDocument(\App\Models\ActivityRequestAttachment::TYPE_SAFETY_REFERENT),
+            'hasExistingCta' => $activityRequest->hasDocument(\App\Models\ActivityRequestAttachment::TYPE_CTA),
+            'hasExistingSecurityReferent' => $activityRequest->hasDocument(\App\Models\ActivityRequestAttachment::TYPE_SECURITY_REFERENT),
         ];
+    }
+
+    /**
+     * Normalise les principals (peut être un fichier unique ou un array)
+     */
+    private static function normalizePrincipals($principals): array
+    {
+        if (empty($principals)) {
+            return [];
+        }
+
+        // Si c'est un seul fichier, le convertir en array
+        if ($principals instanceof UploadedFile) {
+            return [$principals];
+        }
+
+        // Si c'est déjà un array, le retourner tel quel
+        if (is_array($principals)) {
+            return array_filter($principals, fn ($file) => $file instanceof UploadedFile);
+        }
+
+        return [];
     }
 }

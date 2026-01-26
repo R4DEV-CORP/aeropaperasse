@@ -25,7 +25,7 @@ class CreateActivityRequestData
         // Documents (optionnels pour le brouillon)
         public ?UploadedFile $aao_request_document,
         public ?UploadedFile $kbis_document,
-        public ?UploadedFile $term_document,
+        public array $principals, // Renommé de term_document, peut être multiple
         public ?UploadedFile $safety_referent_document,
         public ?UploadedFile $cta_document,
         public ?UploadedFile $security_referent_document,
@@ -61,7 +61,7 @@ class CreateActivityRequestData
             vehicule_count: isset($data['vehicule_count']) ? (int) $data['vehicule_count'] : null,
             aao_request_document: $data['aao_request_document'] ?? null,
             kbis_document: $data['kbis_document'] ?? null,
-            term_document: $data['term_document'] ?? null,
+            principals: $data['principals'] ?? $data['term_document'] ?? [],
             safety_referent_document: $data['safety_referent_document'] ?? null,
             cta_document: $data['cta_document'] ?? null,
             security_referent_document: $data['security_referent_document'] ?? null,
@@ -95,7 +95,7 @@ class CreateActivityRequestData
             vehicule_count: $formData->vehicule_count,
             aao_request_document: $formData->aao_request_document,
             kbis_document: $formData->kbis_document,
-            term_document: $formData->term_document,
+            principals: $formData->principals,
             safety_referent_document: $formData->safety_referent_document,
             cta_document: $formData->cta_document,
             security_referent_document: $formData->security_referent_document,
@@ -157,8 +157,8 @@ class CreateActivityRequestData
         if ($this->kbis_document) {
             $documents['kbis_document'] = $this->kbis_document;
         }
-        if ($this->term_document) {
-            $documents['term_document'] = $this->term_document;
+        if (! empty($this->principals)) {
+            $documents['principals'] = $this->principals;
         }
         if ($this->safety_referent_document) {
             $documents['safety_referent_document'] = $this->safety_referent_document;

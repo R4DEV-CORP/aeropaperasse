@@ -3,7 +3,9 @@
 namespace App\Livewire\BadgeRequests;
 
 use App\Actions\BadgeRequest\SaveBadgeRequestAction;
+use App\Actions\Coworker\CreateCoworkerAction;
 use App\DataTransferObjects\CreateBadgeRequestData;
+use App\DataTransferObjects\CreateCoworkerData;
 use App\Forms\BadgeRequestFormData;
 use App\Forms\BadgeRequestFormValidator;
 use App\Mail\BadgeRequest\BadgeRequestCreated;
@@ -11,6 +13,7 @@ use App\Models\ActivityRequest;
 use App\Models\BadgeRequest;
 use App\Models\Client;
 use App\Models\Coworker;
+use App\Validators\CoworkerValidator;
 use Flux\Flux;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -79,6 +82,17 @@ class CreateBadgeRequestForm extends Component
     public bool $hasExistingFormationCertificate = false;
 
     public bool $hasExistingInvoice = false;
+
+    // Propriétés pour la création rapide d'un collaborateur
+    public bool $showCreateCoworkerForm = false;
+
+    public $new_coworker_firstname;
+
+    public $new_coworker_lastname;
+
+    public $new_coworker_email;
+
+    public $new_coworker_phone;
 
     public function mount(?int $badgeRequestId = null)
     {
@@ -184,11 +198,73 @@ class CreateBadgeRequestForm extends Component
             $this->selected_activity_request_id = null;
             $this->activityRequest = null;
             $this->coworkers = collect();
-        } else {
-            $this->selected_activity_request_id = (int) $value;
-            $this->activityRequest = ActivityRequest::find($this->selected_activity_request_id);
-            $this->loadCoworkers();
+
+            return;
         }
+
+        // S'assurer que le client est défini
+        if (! $this->client) {
+            $this->selected_activity_request_id = null;
+            $this->activityRequest = null;
+
+            return;
+        }
+
+        $activityRequestId = (int) $value;
+
+        // Réinitialiser d'abord pour éviter les problèmes de cache
+        $this->activityRequest = null;
+        $this->selected_activity_request_id = $activityRequestId;
+
+        // Recharger l'ActivityRequest avec ses relations et s'assurer qu'elle appartient bien au bon client
+        // Utiliser findOrFail pour garantir qu'on a bien l'ActivityRequest demandée
+        try {
+            $activityRequest = ActivityRequest::with('client')
+                ->where('id', $activityRequestId)
+                ->where('client_id', $this->client->id)
+                ->firstOrFail();
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            $this->errorMessage = 'La demande d\'activité sélectionnée n\'existe pas ou n\'appartient pas à ce client.';
+            $this->selected_activity_request_id = null;
+            $this->activityRequest = null;
+            $this->coworkers = collect();
+
+            return;
+        }
+
+        // Vérification de sécurité : s'assurer que l'ID correspond bien
+        if ($activityRequest->id !== $activityRequestId) {
+            Log::error('Incohérence détectée : ActivityRequest ID ne correspond pas', [
+                'requested_id' => $activityRequestId,
+                'found_id' => $activityRequest->id,
+            ]);
+            $this->errorMessage = 'Erreur lors du chargement de la demande d\'activité.';
+            $this->selected_activity_request_id = null;
+            $this->activityRequest = null;
+            $this->coworkers = collect();
+
+            return;
+        }
+
+        // Assigner l'ActivityRequest après toutes les vérifications
+        // Forcer le rechargement complet pour éviter les problèmes de cache
+        $this->activityRequest = ActivityRequest::with('client')
+            ->where('id', $activityRequestId)
+            ->where('client_id', $this->client->id)
+            ->firstOrFail();
+
+        // Log pour le débogage (à retirer après vérification)
+        Log::debug('ActivityRequest chargée', [
+            'selected_id' => $this->selected_activity_request_id,
+            'activity_request_id' => $this->activityRequest->id,
+            'person_count' => $this->activityRequest->person_count,
+            'airport' => $this->activityRequest->airport,
+        ]);
+
+        $this->loadCoworkers();
+
+        // Effacer les erreurs si tout s'est bien passé
+        $this->errorMessage = '';
     }
 
     /**
@@ -302,11 +378,37 @@ class CreateBadgeRequestForm extends Component
                 return;
             }
 
+            // Vérifier le quota de la demande d'activité (pour les demandes non-brouillons)
+            if (! $isDraft) {
+                $activityRequest = ActivityRequest::findOrFail($this->selected_activity_request_id);
+
+                if (! $activityRequest->canCreateBadgeRequest()) {
+                    $remaining = $activityRequest->getRemainingBadgeQuota();
+                    $this->errorMessage = "Le quota de badges pour cette demande d'activité est atteint. Il reste {$remaining} place(s) disponible(s).";
+
+                    return;
+                }
+            }
+
             // 1. Créer le Form Object à partir des données du composant
             $formData = $this->createFormData();
 
-            // 2. Valider les données selon le contexte
+            // Vérifier qu'il n'existe pas déjà une demande de badge pour ce collaborateur
+            // (uniquement pour les nouvelles créations, pas pour les brouillons ni les mises à jour)
             $isUpdate = ! is_null($this->badgeRequestId);
+            if (! $isDraft && ! $isUpdate && $formData->coworker_id) {
+                $existingBadgeRequest = BadgeRequest::where('coworker_id', $formData->coworker_id)
+                    ->whereNotIn('status', ['rejected_rem', 'rejected_adp'])
+                    ->first();
+
+                if ($existingBadgeRequest) {
+                    $this->errorMessage = 'Il existe déjà une demande de badge en cours pour ce collaborateur.';
+
+                    return;
+                }
+            }
+
+            // 2. Valider les données selon le contexte
             $existingDocs = $this->getExistingDocumentsArray();
 
             $validator = BadgeRequestFormValidator::validate(
@@ -485,6 +587,11 @@ class CreateBadgeRequestForm extends Component
             'hasExistingForDocument',
             'hasExistingFormationCertificate',
             'hasExistingInvoice',
+            'showCreateCoworkerForm',
+            'new_coworker_firstname',
+            'new_coworker_lastname',
+            'new_coworker_email',
+            'new_coworker_phone',
         ]);
 
         // Réinitialiser la sélection de client pour les admins
@@ -520,6 +627,137 @@ class CreateBadgeRequestForm extends Component
     public function closeModal(): void
     {
         Flux::modal('new-badge-request')->close();
+    }
+
+    /**
+     * Afficher/masquer le formulaire de création de collaborateur
+     */
+    public function toggleCreateCoworkerForm(): void
+    {
+        $this->showCreateCoworkerForm = ! $this->showCreateCoworkerForm;
+        if (! $this->showCreateCoworkerForm) {
+            $this->resetNewCoworkerForm();
+        }
+    }
+
+    /**
+     * Créer un nouveau collaborateur rapidement
+     */
+    public function createNewCoworker(): void
+    {
+        $this->clearErrorMessage();
+
+        // Vérifier qu'un client est sélectionné
+        if (! $this->client) {
+            $this->errorMessage = 'Veuillez d\'abord sélectionner un client.';
+
+            return;
+        }
+
+        // Validation
+        $validationData = [
+            'firstname' => $this->new_coworker_firstname,
+            'lastname' => $this->new_coworker_lastname,
+            'email' => $this->new_coworker_email,
+            'phone' => $this->new_coworker_phone,
+            'client_id' => $this->client->id,
+            'has_leave' => false,
+            'departure_date' => null,
+            'create_user' => false,
+        ];
+
+        $validator = CoworkerValidator::validateCoworkerOnly($validationData);
+
+        if ($validator->fails()) {
+            $this->errorMessage = $validator->errors()->first();
+            foreach ($validator->errors()->messages() as $field => $messages) {
+                $this->addError("new_coworker_{$field}", $messages[0]);
+            }
+
+            return;
+        }
+
+        try {
+            // Créer le DTO
+            $data = CreateCoworkerData::fromArray(
+                array_merge($validationData, ['created_by' => $this->user->id]),
+                $this->user->id
+            );
+
+            // Exécuter l'action
+            $action = new CreateCoworkerAction;
+            $result = $action->execute($data);
+
+            if ($result->isSuccessful()) {
+                // Recharger la liste des collaborateurs
+                $this->loadCoworkers();
+
+                // Sélectionner automatiquement le nouveau collaborateur
+                $this->selected_coworker_id = $result->coworker->id;
+
+                // Réinitialiser le formulaire de création
+                $this->resetNewCoworkerForm();
+                $this->showCreateCoworkerForm = false;
+
+                // Effacer les erreurs
+                $this->clearErrorMessage();
+            } else {
+                $this->errorMessage = $result->getMessage();
+            }
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la création rapide du collaborateur', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => $this->user->id,
+                'client_id' => $this->client->id,
+            ]);
+
+            $this->errorMessage = 'Une erreur est survenue lors de la création du collaborateur.';
+        }
+    }
+
+    /**
+     * Réinitialiser le formulaire de création de collaborateur
+     */
+    protected function resetNewCoworkerForm(): void
+    {
+        $this->new_coworker_firstname = '';
+        $this->new_coworker_lastname = '';
+        $this->new_coworker_email = '';
+        $this->new_coworker_phone = '';
+        $this->resetErrorBag([
+            'new_coworker_firstname',
+            'new_coworker_lastname',
+            'new_coworker_email',
+            'new_coworker_phone',
+        ]);
+    }
+
+    /**
+     * Computed property pour obtenir l'ActivityRequest actuellement sélectionnée
+     * Recharge toujours depuis la base de données pour garantir la cohérence
+     */
+    public function getSelectedActivityRequestProperty(): ?ActivityRequest
+    {
+        if (! $this->selected_activity_request_id || ! $this->client) {
+            return null;
+        }
+
+        // Toujours recharger depuis la base de données pour garantir la cohérence
+        // et éviter les problèmes de cache Livewire
+        $activityRequest = ActivityRequest::with('client')
+            ->where('id', $this->selected_activity_request_id)
+            ->where('client_id', $this->client->id)
+            ->first();
+
+        // Synchroniser la propriété avec la computed property
+        if ($activityRequest && $activityRequest->id === $this->selected_activity_request_id) {
+            $this->activityRequest = $activityRequest;
+        } else {
+            $this->activityRequest = null;
+        }
+
+        return $activityRequest;
     }
 
     public function render()
