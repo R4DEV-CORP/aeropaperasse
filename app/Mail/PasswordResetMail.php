@@ -22,10 +22,12 @@ class PasswordResetMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Réinitialisation de votre mot de passe')
-            ->view('emails.password-reset')
+        return $this->subject("Réinitialisation de votre mot de passe")
+            ->view("emails.password-reset")
             ->with([
-                'resetUrl' => env('APP_URL')."/reset-password?token={$this->token}&email={$this->email}",
+                "resetUrl" =>
+                    config("app.url") .
+                    "/reset-password?token={$this->token}&email={$this->email}",
             ]);
     }
 }
