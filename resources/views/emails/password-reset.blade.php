@@ -100,7 +100,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="https://app.aeropaperasse.fr/images/aeropaperasse-logo-white.png" alt="Logo" class="logo">
+            <img src="{{ asset('/images/aeropaperasse-logo-white.png') }}" alt="Logo" class="logo">
             <h1>Réinitialisation de mot de passe</h1>
         </div>
 
