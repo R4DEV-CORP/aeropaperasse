@@ -4,24 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Coworker extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'client_id',
-        'user_id',
-        'firstname',
-        'lastname',
-        'email',
-        'phone',
-        'has_leave',
-        'departure_date',
+        "client_id",
+        "user_id",
+        "firstname",
+        "lastname",
+        "email",
+        "phone",
+        "has_leave",
+        "departure_date",
     ];
 
     protected $casts = [
-        'departure_date' => 'date',
+        "departure_date" => "date",
     ];
 
     public function client()
@@ -39,9 +40,18 @@ class Coworker extends Model
         return $this->hasMany(BadgeRequest::class);
     }
 
+    public function coworkerTrainings(): HasMany
+    {
+        return $this->hasMany(CoworkerTraining::class);
+    }
+
     public function trainings()
     {
-        return $this->belongsToMany(Training::class, 'coworker_trainings')
-            ->withPivot(['id', 'started_at', 'expires_at', 'certificate_path']);
+        return $this->belongsToMany(Training::class, "coworker_trainings")->withPivot([
+            "id",
+            "started_at",
+            "expires_at",
+            "certificate_path",
+        ]);
     }
 }
