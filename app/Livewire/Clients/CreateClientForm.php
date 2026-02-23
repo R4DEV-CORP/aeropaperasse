@@ -79,12 +79,12 @@ class CreateClientForm extends Component
 
     public $slug;
 
-    public $is_airline_company;
+    public $is_airline_company = false;
 
     // Propriétés pour la gestion des messages
-    public $successMessage = '';
+    public $successMessage = "";
 
-    public $errorMessage = '';
+    public $errorMessage = "";
 
     public function createClient()
     {
@@ -93,13 +93,13 @@ class CreateClientForm extends Component
             $formData = $this->getFormData();
 
             $this->slug = uuid_create();
-            $formData['slug'] = $this->slug;
+            $formData["slug"] = $this->slug;
 
             // 2. Valider les données
             $validator = ClientValidator::validate($formData);
 
             if ($validator->fails()) {
-                $this->errorMessage = 'Erreurs de validation détectées.';
+                $this->errorMessage = "Erreurs de validation détectées.";
                 foreach ($validator->errors()->messages() as $field => $messages) {
                     $this->addError($field, $messages[0]);
                 }
@@ -116,16 +116,15 @@ class CreateClientForm extends Component
 
             if ($result->isSuccessful()) {
                 $this->successMessage = $result->getMessage();
-                $this->dispatch('client-created');
+                $this->dispatch("client-created");
                 $this->resetForm();
                 $this->cancelModal();
             } else {
                 $this->errorMessage = $result->getMessage();
             }
-
         } catch (\Exception $e) {
             // Gérer les erreurs inattendues
-            $this->errorMessage = 'Une erreur inattendue s\'est produite : '.$e->getMessage();
+            $this->errorMessage = 'Une erreur inattendue s\'est produite : ' . $e->getMessage();
         }
     }
 
@@ -135,38 +134,38 @@ class CreateClientForm extends Component
     protected function getFormData(): array
     {
         return [
-            'company_name' => $this->company_name,
-            'trade_name' => $this->trade_name,
-            'siret_number' => $this->siret_number,
-            'address' => $this->address,
-            'zip_code' => $this->zip_code,
-            'city' => $this->city,
-            'subcontractor_of' => $this->subcontractor_of,
-            'kbis_document' => $this->kbis_document,
-            'safety_document' => $this->safety_document,
-            'security_document' => $this->security_document,
-            'notification_email' => $this->notification_email,
-            'safety_referent_1_prenom' => $this->safety_referent_1_prenom,
-            'safety_referent_1_nom' => $this->safety_referent_1_nom,
-            'safety_referent_1_email' => $this->safety_referent_1_email,
-            'safety_referent_1_phone' => $this->safety_referent_1_phone,
-            'safety_referent_2_prenom' => $this->safety_referent_2_prenom,
-            'safety_referent_2_nom' => $this->safety_referent_2_nom,
-            'safety_referent_2_email' => $this->safety_referent_2_email,
-            'safety_referent_2_phone' => $this->safety_referent_2_phone,
-            'safety_referent_3_prenom' => $this->safety_referent_3_prenom,
-            'safety_referent_3_nom' => $this->safety_referent_3_nom,
-            'safety_referent_3_email' => $this->safety_referent_3_email,
-            'safety_referent_3_phone' => $this->safety_referent_3_phone,
-            'security_correspondent_prenom' => $this->security_correspondent_prenom,
-            'security_correspondent_nom' => $this->security_correspondent_nom,
-            'security_correspondent_email' => $this->security_correspondent_email,
-            'security_correspondent_phone' => $this->security_correspondent_phone,
-            'hr_contact_prenom' => $this->hr_contact_prenom,
-            'hr_contact_nom' => $this->hr_contact_nom,
-            'hr_contact_email' => $this->hr_contact_email,
-            'hr_contact_phone' => $this->hr_contact_phone,
-            'is_airline_company' => $this->is_airline_company,
+            "company_name" => $this->company_name,
+            "trade_name" => $this->trade_name,
+            "siret_number" => $this->siret_number,
+            "address" => $this->address,
+            "zip_code" => $this->zip_code,
+            "city" => $this->city,
+            "subcontractor_of" => $this->subcontractor_of,
+            "kbis_document" => $this->kbis_document,
+            "safety_document" => $this->safety_document,
+            "security_document" => $this->security_document,
+            "notification_email" => $this->notification_email,
+            "safety_referent_1_prenom" => $this->safety_referent_1_prenom,
+            "safety_referent_1_nom" => $this->safety_referent_1_nom,
+            "safety_referent_1_email" => $this->safety_referent_1_email,
+            "safety_referent_1_phone" => $this->safety_referent_1_phone,
+            "safety_referent_2_prenom" => $this->safety_referent_2_prenom,
+            "safety_referent_2_nom" => $this->safety_referent_2_nom,
+            "safety_referent_2_email" => $this->safety_referent_2_email,
+            "safety_referent_2_phone" => $this->safety_referent_2_phone,
+            "safety_referent_3_prenom" => $this->safety_referent_3_prenom,
+            "safety_referent_3_nom" => $this->safety_referent_3_nom,
+            "safety_referent_3_email" => $this->safety_referent_3_email,
+            "safety_referent_3_phone" => $this->safety_referent_3_phone,
+            "security_correspondent_prenom" => $this->security_correspondent_prenom,
+            "security_correspondent_nom" => $this->security_correspondent_nom,
+            "security_correspondent_email" => $this->security_correspondent_email,
+            "security_correspondent_phone" => $this->security_correspondent_phone,
+            "hr_contact_prenom" => $this->hr_contact_prenom,
+            "hr_contact_nom" => $this->hr_contact_nom,
+            "hr_contact_email" => $this->hr_contact_email,
+            "hr_contact_phone" => $this->hr_contact_phone,
+            "is_airline_company" => $this->is_airline_company,
         ];
     }
 
@@ -176,39 +175,39 @@ class CreateClientForm extends Component
     public function resetForm(): void
     {
         $this->reset([
-            'company_name',
-            'trade_name',
-            'siret_number',
-            'address',
-            'zip_code',
-            'city',
-            'subcontractor_of',
-            'kbis_document',
-            'safety_document',
-            'security_document',
-            'notification_email',
-            'safety_referent_1_prenom',
-            'safety_referent_1_nom',
-            'safety_referent_1_email',
-            'safety_referent_1_phone',
-            'safety_referent_2_prenom',
-            'safety_referent_2_nom',
-            'safety_referent_2_email',
-            'safety_referent_2_phone',
-            'safety_referent_3_prenom',
-            'safety_referent_3_nom',
-            'safety_referent_3_email',
-            'safety_referent_3_phone',
-            'security_correspondent_prenom',
-            'security_correspondent_nom',
-            'security_correspondent_email',
-            'security_correspondent_phone',
-            'hr_contact_prenom',
-            'hr_contact_nom',
-            'hr_contact_email',
-            'hr_contact_phone',
-            'errorMessage',
-            'is_airline_company',
+            "company_name",
+            "trade_name",
+            "siret_number",
+            "address",
+            "zip_code",
+            "city",
+            "subcontractor_of",
+            "kbis_document",
+            "safety_document",
+            "security_document",
+            "notification_email",
+            "safety_referent_1_prenom",
+            "safety_referent_1_nom",
+            "safety_referent_1_email",
+            "safety_referent_1_phone",
+            "safety_referent_2_prenom",
+            "safety_referent_2_nom",
+            "safety_referent_2_email",
+            "safety_referent_2_phone",
+            "safety_referent_3_prenom",
+            "safety_referent_3_nom",
+            "safety_referent_3_email",
+            "safety_referent_3_phone",
+            "security_correspondent_prenom",
+            "security_correspondent_nom",
+            "security_correspondent_email",
+            "security_correspondent_phone",
+            "hr_contact_prenom",
+            "hr_contact_nom",
+            "hr_contact_email",
+            "hr_contact_phone",
+            "errorMessage",
+            "is_airline_company",
         ]);
     }
 
@@ -217,7 +216,7 @@ class CreateClientForm extends Component
      */
     public function clearSuccessMessage(): void
     {
-        $this->successMessage = '';
+        $this->successMessage = "";
     }
 
     /**
@@ -225,7 +224,7 @@ class CreateClientForm extends Component
      */
     public function clearErrorMessage(): void
     {
-        $this->errorMessage = '';
+        $this->errorMessage = "";
     }
 
     /**
@@ -234,11 +233,11 @@ class CreateClientForm extends Component
     public function cancelModal(): void
     {
         $this->resetForm();
-        Flux::modal('new-client')->close();
+        Flux::modal("new-client")->close();
     }
 
     public function render()
     {
-        return view('livewire.clients.create-client-form');
+        return view("livewire.clients.create-client-form");
     }
 }
