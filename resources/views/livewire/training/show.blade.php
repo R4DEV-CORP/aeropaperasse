@@ -2,11 +2,11 @@
     @if($successMessage)
         <flux:callout variant="success" icon="check-circle" heading="{{ $successMessage }}" />
     @endif
-    
+
     @if($errorMessage)
         <flux:callout variant="error" icon="x-circle" heading="{{ $errorMessage }}" />
     @endif
-    
+
     <div class="grid grid-cols-1 gap-4 mt-4">
         <x-badge-info-card title="Arrivent à expiration (6 mois)" value="{{ $soonExpiringTrainings->count() }}" bg-color="yellow-200" />
     </div>
@@ -47,7 +47,7 @@
                             <p class="text-gray-800 font-medium">{{ $coworker->email }}</p>
                             <flux:text>{{ $coworker->phone }}</flux:text>
                         </td>
-                        <td class="px-3 py-2">0</td>
+                        <td class="px-3 py-2">{{ $coworker->getActiveTrainings() }}</td>
                         <td class="px-3 py-2">
                             <div class="flex items-center">
                                 <flux:button icon="eye" icon:variant="outline" variant="subtle" square="true" tooltip="Voir" class="hover:cursor-pointer"/>
@@ -104,14 +104,14 @@
                                     @endif
                                     <flux:modal :name="'upload-certificate-modal-'.$training->id" wire:key="modal-{{ $training->id }}" class="min-w-4xl !max-w-6xl">
                                         <flux:heading size="lg">Déposer le certificat</flux:heading>
-                                        
+
                                         <form wire:submit="uploadCertificate({{ $training->id }})">
                                             <flux:field>
                                                 <flux:label>Certificat de formation</flux:label>
                                                 <flux:input type="file" wire:model="certificate" accept=".pdf,.jpg,.jpeg,.png" />
                                                 <flux:description>Formats acceptés : PDF, JPG, JPEG, PNG (max 10MB)</flux:description>
                                             </flux:field>
-                                            
+
                                             <div class="flex justify-end gap-3 mt-6">
                                                 <flux:button type="button" variant="ghost" wire:click="$dispatch('close-modal', 'upload-certificate-modal')">
                                                     Annuler
