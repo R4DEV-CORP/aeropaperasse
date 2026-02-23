@@ -14,7 +14,7 @@
     <div class="mt-4 py-4 bg-white rounded-lg border border-zinc-200 relative">
         <flux:heading size="lg" class="px-4">Sociétés</flux:heading>
         <!-- Indicateur de chargement -->
-        <div wire:loading wire:target="search" 
+        <div wire:loading wire:target="search"
              class="absolute top-[450px] left-1/2 transform -translate-x-1/2 bg-white/80 flex items-center justify-center z-10 rounded-xl px-4 py-2 shadow-lg">
             <div class="flex items-center gap-2 text-slate-600">
                 <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -44,7 +44,7 @@
                         <td class="px-3 py-2">
                             <a href="/coworkers"><flux:badge as="button" variant="pill" icon="user" class="hover:cursor-pointer">{{ $client->coworkers->count() }}</flux:badge></a>
                         </td>
-                        <td class="px-3 py-2">0</td>
+                        <td class="px-3 py-2">{{ $client->getActiveTrainingCount() }}</td>
                         <td class="px-3 py-2">
                             <div class="flex items-center">
                                 <flux:button href="/trainings/client/{{ $client->slug }}" wire:navigate icon="eye" icon:variant="outline" variant="subtle" square="true" tooltip="Voir" color="blue" class="hover:cursor-pointer"/>
