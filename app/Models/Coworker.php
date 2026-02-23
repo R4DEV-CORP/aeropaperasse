@@ -45,6 +45,18 @@ class Coworker extends Model
         return $this->hasMany(CoworkerTraining::class);
     }
 
+    public function getActiveTrainings(): int
+    {
+        $activeTrainings = 0;
+        foreach ($this->coworkerTrainings as $training) {
+            if ($training->started_at < now() && $training->expires_at > now()) {
+                $activeTrainings++;
+            }
+        }
+
+        return $activeTrainings;
+    }
+
     public function trainings()
     {
         return $this->belongsToMany(Training::class, "coworker_trainings")->withPivot([
