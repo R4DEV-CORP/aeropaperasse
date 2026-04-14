@@ -84,8 +84,10 @@
                     <flux:error name="start_date" />
                 </flux:field>
                 <flux:radio.group wire:model="validity_years" label="Durée de la formation">
+                    <flux:radio value="2" label="2 ans" />
                     <flux:radio value="3" label="3 ans" />
                     <flux:radio value="5" label="5 ans" />
+                    <flux:radio value="lifetime" label="À vie" />
                 </flux:radio.group>
             </div>
         @endif

@@ -228,9 +228,11 @@ class CreateCoworkerForm extends Component
                     continue;
                 }
 
-                // Calculer la date d'expiration
+                // Calculer la date d'expiration (null = à vie)
                 $startDate = Carbon::parse($trainingData['start_date']);
-                $expiresAt = $startDate->copy()->addYears($trainingData['validity_years']);
+                $expiresAt = $trainingData['validity_years'] === 'lifetime'
+                    ? null
+                    : $startDate->copy()->addYears($trainingData['validity_years']);
 
                 // Créer l'enregistrement dans coworker_trainings
                 DB::table('coworker_trainings')->insert([

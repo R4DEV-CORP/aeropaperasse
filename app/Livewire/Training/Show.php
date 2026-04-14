@@ -112,7 +112,10 @@ class Show extends Component
                 'coworkers.lastname as coworker_lastname',
                 'trainings.title as training_title'
             )
-            ->where('coworker_trainings.expires_at', '>=', now())
+            ->where(function ($query) {
+                $query->whereNull('coworker_trainings.expires_at')
+                    ->orWhere('coworker_trainings.expires_at', '>=', now());
+            })
             ->whereIn('coworker_trainings.coworker_id', $this->coworkers->pluck('id'))
             ->get();
 
@@ -125,6 +128,7 @@ class Show extends Component
                 'coworkers.lastname as coworker_lastname',
                 'trainings.title as training_title'
             )
+            ->whereNotNull('coworker_trainings.expires_at')
             ->where('coworker_trainings.expires_at', '<=', now()->addMonth(6))
             ->where('coworker_trainings.expires_at', '>=', now())
             ->whereIn('coworker_trainings.coworker_id', $this->coworkers->pluck('id'))
@@ -139,6 +143,7 @@ class Show extends Component
                 'coworkers.lastname as coworker_lastname',
                 'trainings.title as training_title'
             )
+            ->whereNotNull('coworker_trainings.expires_at')
             ->where('coworker_trainings.expires_at', '<', now())
             ->whereIn('coworker_trainings.coworker_id', $this->coworkers->pluck('id'))
             ->get();

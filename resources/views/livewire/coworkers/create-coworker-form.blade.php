@@ -116,8 +116,10 @@
                                     <flux:label>Durée de validité<span class="text-red-500">*</span></flux:label>
                                     <flux:radio.group wire:model="selected_trainings.{{ $training->id }}.validity_years" label="">
                                         <div class="flex gap-4">
+                                            <flux:radio value="2" label="2 ans" />
                                             <flux:radio value="3" label="3 ans" />
                                             <flux:radio value="5" label="5 ans" />
+                                            <flux:radio value="lifetime" label="À vie" />
                                         </div>
                                     </flux:radio.group>
                                     <flux:error name="selected_trainings.{{ $training->id }}.validity_years" />

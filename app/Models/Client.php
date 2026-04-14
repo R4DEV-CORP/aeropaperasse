@@ -12,23 +12,23 @@ class Client extends Model
     use Searchable;
 
     protected $casts = [
-        "is_airline_company" => "boolean",
+        'is_airline_company' => 'boolean',
     ];
 
     protected $fillable = [
-        "company_name", // raison sociale
-        "trade_name", // nom commercial
-        "siret_number",
-        "address",
-        "zip_code",
-        "city",
-        "subcontractor_of", // Sous traitant de quelles entreprises
-        "kbis_document",
-        "safety_document",
-        "security_document",
-        "notification_email",
-        "slug",
-        "is_airline_company",
+        'company_name', // raison sociale
+        'trade_name', // nom commercial
+        'siret_number',
+        'address',
+        'zip_code',
+        'city',
+        'subcontractor_of', // Sous traitant de quelles entreprises
+        'kbis_document',
+        'safety_document',
+        'security_document',
+        'notification_email',
+        'slug',
+        'is_airline_company',
     ];
 
     /**
@@ -39,9 +39,9 @@ class Client extends Model
     public function toSearchableArray(): array
     {
         return [
-            "company_name" => $this->company_name,
-            "trade_name" => $this->trade_name,
-            "siret_number" => $this->siret_number,
+            'company_name' => $this->company_name,
+            'trade_name' => $this->trade_name,
+            'siret_number' => $this->siret_number,
         ];
     }
 
@@ -68,10 +68,10 @@ class Client extends Model
     public function trainings()
     {
         return $this->belongsToMany(Training::class, Coworker::class)->withPivot([
-            "started_at",
-            "expires_at",
-            "certificate_path",
-            "validity_years",
+            'started_at',
+            'expires_at',
+            'certificate_path',
+            'validity_years',
         ]);
     }
 
@@ -92,9 +92,9 @@ class Client extends Model
 
     public function getActiveBadgeCount(): int
     {
-        return Badge::where("status", "!=", "returned")
-            ->whereHas("badgeRequest.activityRequest", function ($query) {
-                $query->where("client_id", $this->id);
+        return Badge::where('status', '!=', 'returned')
+            ->whereHas('badgeRequest.activityRequest', function ($query) {
+                $query->where('client_id', $this->id);
             })
             ->count();
     }
@@ -104,7 +104,7 @@ class Client extends Model
         $activeTrainings = 0;
         foreach ($this->coworkers as $coworker) {
             foreach ($coworker->coworkerTrainings as $training) {
-                if ($training->started_at < now() && $training->expires_at > now()) {
+                if ($training->started_at < now() && ($training->expires_at === null || $training->expires_at > now())) {
                     $activeTrainings++;
                 }
             }

@@ -11,18 +11,18 @@ class Coworker extends Model
     use HasFactory;
 
     protected $fillable = [
-        "client_id",
-        "user_id",
-        "firstname",
-        "lastname",
-        "email",
-        "phone",
-        "has_leave",
-        "departure_date",
+        'client_id',
+        'user_id',
+        'firstname',
+        'lastname',
+        'email',
+        'phone',
+        'has_leave',
+        'departure_date',
     ];
 
     protected $casts = [
-        "departure_date" => "date",
+        'departure_date' => 'date',
     ];
 
     public function client()
@@ -49,7 +49,7 @@ class Coworker extends Model
     {
         $activeTrainings = 0;
         foreach ($this->coworkerTrainings as $training) {
-            if ($training->started_at < now() && $training->expires_at > now()) {
+            if ($training->started_at < now() && ($training->expires_at === null || $training->expires_at > now())) {
                 $activeTrainings++;
             }
         }
@@ -59,11 +59,11 @@ class Coworker extends Model
 
     public function trainings()
     {
-        return $this->belongsToMany(Training::class, "coworker_trainings")->withPivot([
-            "id",
-            "started_at",
-            "expires_at",
-            "certificate_path",
+        return $this->belongsToMany(Training::class, 'coworker_trainings')->withPivot([
+            'id',
+            'started_at',
+            'expires_at',
+            'certificate_path',
         ]);
     }
 }

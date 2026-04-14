@@ -51,6 +51,7 @@ class NotifyTrainingExpiry extends Command
             $expiryDate = Carbon::now()->addDays($days)->toDateString();
 
             $userTrainings = UserTraining::with(['user'])
+                ->whereNotNull('expires_at')
                 ->whereDate('expires_at', $expiryDate)
                 ->get();
 

@@ -86,13 +86,13 @@
                                 <p>{{ $training->training_title }}</p>
                             </td>
                             <td class="px-3 py-2">
-                                <p>{{ \Carbon\Carbon::parse($training->started_at)->diffInYears(\Carbon\Carbon::parse($training->expires_at)) }} ans</p>
+                                <p>{{ $training->expires_at ? \Carbon\Carbon::parse($training->started_at)->diffInYears(\Carbon\Carbon::parse($training->expires_at)).' ans' : 'À vie' }}</p>
                             </td>
                             <td class="px-3 py-2">
                                 <p>{{ \Carbon\Carbon::parse($training->started_at)->format('d/m/Y') }}</p>
                             </td>
                             <td class="px-3 py-2">
-                                <p>{{ \Carbon\Carbon::parse($training->expires_at)->format('d/m/Y') }}</p>
+                                <p>{{ $training->expires_at ? \Carbon\Carbon::parse($training->expires_at)->format('d/m/Y') : 'À vie' }}</p>
                             </td>
                             <td>
                                 <div class="flex items-center">
@@ -160,13 +160,13 @@
                                 <p>{{ $training->training_title }}</p>
                             </td>
                             <td class="px-3 py-2">
-                                <p>{{ \Carbon\Carbon::parse($training->started_at)->diffInYears(\Carbon\Carbon::parse($training->expires_at)) }} ans</p>
+                                <p>{{ $training->expires_at ? \Carbon\Carbon::parse($training->started_at)->diffInYears(\Carbon\Carbon::parse($training->expires_at)).' ans' : 'À vie' }}</p>
                             </td>
                             <td class="px-3 py-2">
                                 <p>{{ \Carbon\Carbon::parse($training->started_at)->format('d/m/Y') }}</p>
                             </td>
                             <td class="px-3 py-2">
-                                <p>{{ \Carbon\Carbon::parse($training->expires_at)->format('d/m/Y') }}</p>
+                                <p>{{ $training->expires_at ? \Carbon\Carbon::parse($training->expires_at)->format('d/m/Y') : 'À vie' }}</p>
                             </td>
                             <td>
                                 <div class="flex items-center">
@@ -212,13 +212,13 @@
                                 <p>{{ $training->training_title }}</p>
                             </td>
                             <td class="px-3 py-2">
-                                <p>{{ \Carbon\Carbon::parse($training->started_at)->diffInYears(\Carbon\Carbon::parse($training->expires_at)) }} ans</p>
+                                <p>{{ $training->expires_at ? \Carbon\Carbon::parse($training->started_at)->diffInYears(\Carbon\Carbon::parse($training->expires_at)).' ans' : 'À vie' }}</p>
                             </td>
                             <td class="px-3 py-2">
                                 <p>{{ \Carbon\Carbon::parse($training->started_at)->format('d/m/Y') }}</p>
                             </td>
                             <td class="px-3 py-2">
-                                <p>{{ \Carbon\Carbon::parse($training->expires_at)->format('d/m/Y') }}</p>
+                                <p>{{ $training->expires_at ? \Carbon\Carbon::parse($training->expires_at)->format('d/m/Y') : 'À vie' }}</p>
                             </td>
                             <td>
                                 <div class="flex items-center">
