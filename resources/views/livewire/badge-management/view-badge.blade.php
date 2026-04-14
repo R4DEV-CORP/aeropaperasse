@@ -26,25 +26,28 @@
     <div class="grid grid-cols-4 gap-2 border border-gray-800/10 p-4 rounded-lg">
         <div class="col-span-4 flex justify-between">
             <flux:heading size="lg">Bénéficiaire</flux:heading>
-            <flux:button href="/badge-requests" wire:navigate icon:trailing="arrow-top-right-on-square">Voir la demande de badge</flux:button>
+            @if($badge->badge_request_id)
+                <flux:button href="/badge-requests" wire:navigate icon:trailing="arrow-top-right-on-square">Voir la demande de badge</flux:button>
+            @endif
         </div>
         <div>
             <p class="text-gray-800 font-medium mt-2">Nom</p>
-            <flux:text>{{ $badge->badgeRequest->coworker->lastname }}</flux:text>
+            <flux:text>{{ $badge->getEffectiveCoworker()?->lastname }}</flux:text>
         </div>
         <div>
             <p class="text-gray-800 font-medium mt-2">Prénom</p>
-            <flux:text>{{ $badge->badgeRequest->coworker->firstname}}</flux:text>
+            <flux:text>{{ $badge->getEffectiveCoworker()?->firstname }}</flux:text>
         </div>
         <div>
             <p class="text-gray-800 font-medium mt-2">Email</p>
-            <flux:text>{{ $badge->badgeRequest->coworker->email}}</flux:text>
+            <flux:text>{{ $badge->getEffectiveCoworker()?->email }}</flux:text>
         </div>
         <div>
             <p class="text-gray-800 font-medium mt-2">Téléphone</p>
-            <flux:text>{{ $badge->badgeRequest->coworker->phone }}</flux:text>
+            <flux:text>{{ $badge->getEffectiveCoworker()?->phone }}</flux:text>
         </div>
     </div>
+    @if($badge->badge_request_id)
     <div class="grid grid-cols-4 gap-2 border border-gray-800/10 p-4 rounded-lg">
         <div class="col-span-4 flex justify-between">
             <flux:heading size="lg">Activité</flux:heading>
@@ -73,4 +76,5 @@
             <flux:text>{{ $badge->badgeRequest->activityRequest->description }}</flux:text>
         </div>
     </div>
+    @endif
 </div>

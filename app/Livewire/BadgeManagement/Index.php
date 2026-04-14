@@ -17,67 +17,78 @@ class Index extends Component
         'badge-expiry-date-updated' => 'refreshBadges',
     ];
 
-    private function loadBadges()
+    private function baseQuery()
     {
-        $query = Badge::with(['badgeRequest.coworker', 'badgeRequest.activityRequest.client']);
+        $query = Badge::with([
+            'client',
+            'coworker',
+            'badgeRequest.coworker',
+            'badgeRequest.activityRequest.client',
+        ]);
 
-        // Si l'utilisateur n'est pas admin, filtrer par client_id de l'ActivityRequest liée
+        // Si l'utilisateur n'est pas admin, filtrer par son client (badges liés ou standalone)
         if (! auth()->user()->isAdmin()) {
-            $query->whereHas('badgeRequest.activityRequest', function ($q) {
-                $q->where('client_id', auth()->user()->client_id);
+            $query->where(function ($q) {
+                $q->whereHas('badgeRequest.activityRequest', function ($s) {
+                    $s->where('client_id', auth()->user()->client_id);
+                })->orWhere('client_id', auth()->user()->client_id);
             });
         }
 
-        // Si l'utilisateur à le role client, il ne peut voir que les badges associés à un badge request dont le coworker est associé à ce user
+        // Si l'utilisateur a le rôle client, il ne voit que les badges associés à son compte coworker
         if (auth()->user()->isClient()) {
-            $query->whereHas('badgeRequest.coworker', function ($q) {
-                $q->where('user_id', auth()->user()->id);
+            $query->where(function ($q) {
+                $q->whereHas('badgeRequest.coworker', function ($s) {
+                    $s->where('user_id', auth()->user()->id);
+                })->orWhereHas('coworker', function ($s) {
+                    $s->where('user_id', auth()->user()->id);
+                });
             });
         }
 
-        return $query->orderBy('created_at', 'desc')->paginate(10);
+        return $query;
     }
 
-    public function refreshBadges()
+    private function loadBadges()
     {
-        // Force le re-rendu du composant pour mettre à jour la liste
+        return $this->baseQuery()->orderBy('created_at', 'desc')->paginate(10);
+    }
+
+    public function refreshBadges(): void
+    {
         $this->search = '';
         $this->render();
     }
 
-    public function updatedSearch()
+    public function updatedSearch(): void
     {
         $this->resetPage();
     }
 
     public function buildScoutQuery()
     {
-        $query = Badge::with(['badgeRequest.coworker', 'badgeRequest.activityRequest.client']);
+        $query = $this->baseQuery();
 
-        // Si l'utilisateur n'est pas admin, filtrer par client_id de l'ActivityRequest liée
-        if (! auth()->user()->isAdmin()) {
-            $query->whereHas('badgeRequest.activityRequest', function ($q) {
-                $q->where('client_id', auth()->user()->client_id);
-            });
-        }
-
-        // Si l'utilisateur à le role client, il ne peut voir que les badges associés à un badge request dont le coworker est associé à ce user
-        if (auth()->user()->isClient()) {
-            $query->whereHas('badgeRequest.coworker', function ($q) {
-                $q->where('user_id', auth()->user()->id);
-            });
-        }
-
-        // Recherche manuelle sur les champs souhaités
         if (! empty($this->search)) {
             $searchTerm = $this->search;
             $query->where(function ($q) use ($searchTerm) {
-                $q->whereHas('badgeRequest.coworker', function ($subQuery) use ($searchTerm) {
-                    $subQuery->where('firstname', 'like', "%{$searchTerm}%")
+                // Recherche via la relation directe coworker (badges standalone)
+                $q->whereHas('coworker', function ($s) use ($searchTerm) {
+                    $s->where('firstname', 'like', "%{$searchTerm}%")
                         ->orWhere('lastname', 'like', "%{$searchTerm}%");
                 })
-                    ->orWhereHas('badgeRequest.activityRequest.client', function ($subQuery) use ($searchTerm) {
-                        $subQuery->where('company_name', 'like', "%{$searchTerm}%");
+                // Recherche via badgeRequest.coworker (badges liés)
+                    ->orWhereHas('badgeRequest.coworker', function ($s) use ($searchTerm) {
+                        $s->where('firstname', 'like', "%{$searchTerm}%")
+                            ->orWhere('lastname', 'like', "%{$searchTerm}%");
+                    })
+                // Recherche via la relation directe client (badges standalone)
+                    ->orWhereHas('client', function ($s) use ($searchTerm) {
+                        $s->where('company_name', 'like', "%{$searchTerm}%");
+                    })
+                // Recherche via badgeRequest.activityRequest.client (badges liés)
+                    ->orWhereHas('badgeRequest.activityRequest.client', function ($s) use ($searchTerm) {
+                        $s->where('company_name', 'like', "%{$searchTerm}%");
                     });
             });
         }
@@ -88,19 +99,16 @@ class Index extends Component
     /**
      * Vérifie et met à jour le statut des badges expirés
      */
-    private function checkAndUpdateExpiredBadges()
+    private function checkAndUpdateExpiredBadges(): void
     {
         $today = now()->toDateString();
 
-        // Trouver tous les badges actifs dont la date d'expiration est dépassée
         $expiredBadges = Badge::where('status', 'active')
             ->where('expiry_date', '<', $today)
             ->get();
 
         foreach ($expiredBadges as $badge) {
-            // Sauvegarder l'ancien statut
             $badge->previous_status = $badge->status;
-            // Changer le statut à expiré
             $badge->status = 'expired';
             $badge->save();
 
@@ -115,12 +123,11 @@ class Index extends Component
     /**
      * Marque un badge comme retourné
      */
-    public function returnBadge($badgeId)
+    public function returnBadge($badgeId): void
     {
         try {
             $badge = Badge::findOrFail($badgeId);
 
-            // Sauvegarder l'ancien statut
             $badge->previous_status = $badge->status;
             $badge->status = 'returned';
             $badge->returned_at = now();
@@ -138,15 +145,14 @@ class Index extends Component
     /**
      * Marque un badge comme non retourné
      */
-    public function notReturnedBadge($badgeId)
+    public function notReturnedBadge($badgeId): void
     {
         try {
             $badge = Badge::findOrFail($badgeId);
 
-            // Sauvegarder l'ancien statut
             $badge->previous_status = $badge->status;
             $badge->status = 'not_returned';
-            $badge->returned_at = null; // Réinitialiser la date de retour
+            $badge->returned_at = null;
             $badge->save();
 
             \Log::info("Badge {$badgeId} marqué comme non retourné par l'utilisateur ".auth()->id());
@@ -160,7 +166,6 @@ class Index extends Component
 
     public function render()
     {
-        // Vérifier et mettre à jour les badges expirés avant d'afficher la liste
         $this->checkAndUpdateExpiredBadges();
 
         if (! empty($this->search)) {
