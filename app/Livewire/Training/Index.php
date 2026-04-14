@@ -31,7 +31,7 @@ class Index extends Component
         $coworkerCount = $this->clients->sum(function ($client) {
             return $client->coworkers->count();
         });
-        $expiresSoonTrainingCount = DB::table('coworker_trainings')->where('expires_at', '<=', now()->addMonth(6))->where('expires_at', '>=', now())->count();
+        $expiresSoonTrainingCount = DB::table('coworker_trainings')->whereNotNull('expires_at')->where('expires_at', '<=', now()->addMonth(6))->where('expires_at', '>=', now())->count();
 
         return [
             'clientCount' => $clientCount,

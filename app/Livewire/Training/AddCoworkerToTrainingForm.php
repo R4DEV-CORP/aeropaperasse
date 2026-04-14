@@ -72,7 +72,7 @@ class AddCoworkerToTrainingForm extends Component
             'selected_coworker_id' => 'required|exists:coworkers,id',
             'selected_training_id' => 'required|exists:trainings,id',
             'start_date' => 'required|date',
-            'validity_years' => 'required|in:3,5',
+            'validity_years' => 'required|in:2,3,5,lifetime',
         ], [
             'selected_coworker_id.required' => 'Veuillez sélectionner un collaborateur.',
             'selected_coworker_id.exists' => 'Le collaborateur sélectionné n\'existe pas.',
@@ -81,7 +81,7 @@ class AddCoworkerToTrainingForm extends Component
             'start_date.required' => 'Veuillez saisir une date de début.',
             'start_date.date' => 'La date de début doit être une date valide.',
             'validity_years.required' => 'Veuillez sélectionner une durée de validité.',
-            'validity_years.in' => 'La durée de validité doit être de 3 ou 5 ans.',
+            'validity_years.in' => 'La durée de validité doit être de 2, 3, 5 ans ou à vie.',
         ]);
 
         try {
@@ -99,9 +99,11 @@ class AddCoworkerToTrainingForm extends Component
                 return;
             }
 
-            // Calculer la date d'expiration
+            // Calculer la date d'expiration (null = à vie)
             $startDate = Carbon::parse($this->start_date);
-            $expiresAt = $startDate->copy()->addYears($this->validity_years);
+            $expiresAt = $this->validity_years === 'lifetime'
+                ? null
+                : $startDate->copy()->addYears($this->validity_years);
 
             // Créer l'enregistrement dans coworker_trainings
             DB::table('coworker_trainings')->insert([

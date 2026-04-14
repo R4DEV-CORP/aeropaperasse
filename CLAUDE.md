@@ -1,6 +1,7 @@
----
-alwaysApply: true
----
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 <laravel-boost-guidelines>
 === foundation rules ===
 
@@ -11,14 +12,14 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 ## Foundational Context
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
-- php - 8.3.26
+- php - 8.3.30
 - laravel/framework (LARAVEL) - v10
+- laravel/mcp (MCP) - v0
 - laravel/prompts (PROMPTS) - v0
 - laravel/sanctum (SANCTUM) - v3
 - laravel/scout (SCOUT) - v10
 - livewire/flux (FLUXUI_FREE) - v2
 - livewire/livewire (LIVEWIRE) - v3
-- laravel/mcp (MCP) - v0
 - laravel/pint (PINT) - v1
 - laravel/sail (SAIL) - v1
 - phpunit/phpunit (PHPUNIT) - v10
@@ -173,6 +174,17 @@ protected function isAccessible(User $user, ?string $path = null): bool
     - Console commands and schedule registration is in `app/Console/Kernel.php`
     - Rate limits likely exist in `RouteServiceProvider` or `app/Http/Kernel.php`
 - When using Eloquent model casts, you must use `protected $casts = [];` and not the `casts()` method. The `casts()` method isn't available on models in Laravel 10.
+
+
+=== mcp/core rules ===
+
+## Laravel MCP
+
+- MCP (Model Context Protocol) is very new. You must use the `search-docs` tool to get documentation for how to write and test Laravel MCP servers, tools, resources, and prompts effectively.
+- MCP servers need to be registered with a route or handle in `routes/ai.php`. Typically, they will be registered using `Mcp::web()` to register a HTTP streaming MCP server.
+- Servers are very testable - use the `search-docs` tool to find testing instructions.
+- Do not run `mcp:start`. This command hangs waiting for JSON RPC MCP requests.
+- Some MCP clients use Node, which has its own certificate store. If a user tries to connect to their web MCP server locally using https://, it could fail due to this reason. They will need to switch to http:// during local development.
 
 
 === fluxui-free/core rules ===
@@ -374,3 +386,80 @@ document.addEventListener('livewire:init', function () {
 | decoration-slice | box-decoration-slice |
 | decoration-clone | box-decoration-clone |
 </laravel-boost-guidelines>
+
+---
+
+## Application Overview
+
+**Aéropaperasse** is an airport security management platform. It handles administrative requests (activity authorizations, badge requests, vehicle passes) for airport clients (companies), with document generation (PDFs), email notifications, and a training catalog.
+
+## User Roles
+
+The `User` model has a `role` field with these values:
+- `sadmin` / `admin` — internal staff with full access
+- `sclient` — client supervisor (can manage their company's users)
+- `client` — regular client user (limited to their own company's data)
+
+Role checks use helper methods: `isAdmin()`, `isSAdmin()`, `isClient()`, `isSClient()`. API routes are protected by `RoleMiddleware` via `role:admin,sadmin` etc.
+
+Clients with `can_access_formation = false` are redirected away from training routes.
+
+## Architecture
+
+This application is a **Laravel + Livewire monolith**. It started as a REST API but has been migrated to server-rendered Livewire pages. The API layer (`routes/api.php` + `app/Http/Controllers/`) is legacy and largely unused — prefer Livewire for all new features.
+
+- **Livewire layer** (`routes/web.php`) — The primary layer. Web routes return Blade views that embed Livewire components. New features should be built here.
+- **API layer** (`routes/api.php`) — Legacy. Do not add new API routes or controllers unless explicitly asked.
+
+### Key Directories
+
+| Directory | Purpose |
+|---|---|
+| `app/Actions/` | Single-responsibility action classes (e.g. `SaveActivityRequestAction`) — prefer these for complex business logic |
+| `app/Services/` | Document generation (PDF via `spatie/laravel-pdf`), email, certificate services |
+| `app/DataTransferObjects/` | DTOs for passing validated data to actions (e.g. `CreateActivityRequestData`) |
+| `app/Forms/` | Form data classes and validators used by Livewire (e.g. `ActivityRequestFormData`, `ActivityRequestFormValidator`) |
+| `app/Livewire/` | Livewire components organized by feature domain |
+| `app/Observers/` | Eloquent model observers |
+| `app/Validators/` | Custom validator classes |
+
+### Domain Features
+
+- **ActivityRequests** — Airport activity authorization requests with status workflow (draft → pending → approved/rejected) and document upload (KBIS, CTA, AAO, etc.)
+- **BadgeRequests** — Badge/access card requests with similar draft/submit/approve workflow
+- **VehiclePasses** — Vehicle access pass requests
+- **Clients** — Company management with overview PDF export
+- **Coworkers** — Employee management linked to clients
+- **Training** — Training catalog with user assignment, certificate upload/download; uses Laravel Scout for search
+- **Discussions** — Internal messaging/discussion system (partially commented out)
+- **Badges** — Physical badge inventory management
+
+### Document Services
+
+Services in `app/Services/` ending in `DocumentService` handle PDF generation using `spatie/laravel-pdf`. Files are stored in `storage/app/public/`. Email services use `resend/resend-laravel`.
+
+### Request Lifecycle (Livewire)
+
+1. Livewire component method → validates input (inline or via `app/Forms/` validators)
+2. Creates a DTO (`CreateXxxData`) and calls an Action from `app/Actions/`
+3. Action wraps in a DB transaction, calls Services for documents/emails
+4. Action returns a Result object (e.g. `ActivityRequestResult`) with success/failure state
+
+## Common Commands
+
+```bash
+# Run all tests
+php artisan test
+
+# Run a single test by name
+php artisan test --filter=testName
+
+# Run tests in a specific file
+php artisan test tests/Feature/ExampleTest.php
+
+# Fix code style
+vendor/bin/pint --dirty
+
+# Rebuild frontend assets
+npm run build
+```
