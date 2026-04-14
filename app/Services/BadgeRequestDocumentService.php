@@ -166,4 +166,23 @@ class BadgeRequestDocumentService
     {
         return $badgeRequest->$documentType;
     }
+
+    /**
+     * Stocke le document de restitution d'un badge standalone (sans badge_request_id).
+     * Chemin : clients/{client-name}/documents/badges/{badge_id}/
+     */
+    public function storeBadgeReturnDocument(UploadedFile $file, Client $client, int $badgeId): string
+    {
+        $clientFolderName = $this->generateClientFolderName($client->company_name);
+        $filename = $this->generateFilename($file, 'return_badge_document', $clientFolderName);
+        $path = "clients/{$clientFolderName}/documents/badges/{$badgeId}";
+
+        $storedPath = $file->storeAs($path, $filename, 'public');
+
+        if (! $storedPath) {
+            throw new \Exception('Erreur lors du stockage du document de restitution');
+        }
+
+        return $storedPath;
+    }
 }

@@ -22,11 +22,11 @@ class BadgeMailService
     /**
      * Envoie un email en fonction du changement de statut d'une demande de badge
      */
-    public function sendBadgeRequestStatusMail(BadgeRequest $badgeRequest, ?string $previousStatus = null)
+    public function sendBadgeRequestStatusMail(BadgeRequest $badgeRequest, ?string $previousStatus = null): void
     {
-        $recipientEmail = $this->getRecipientEmail($badgeRequest);
+        $recipientEmail = $this->getRecipientEmailFromBadgeRequest($badgeRequest);
         if (! $recipientEmail) {
-            return; // Ne pas envoyer d'email si l'adresse n'est pas disponible
+            return;
         }
 
         switch ($badgeRequest->status) {
@@ -63,10 +63,9 @@ class BadgeMailService
     /**
      * Envoie un email lors de la création d'un badge
      */
-    public function sendBadgeCreatedMail(Badge $badge)
+    public function sendBadgeCreatedMail(Badge $badge): void
     {
-        $badgeRequest = $badge->badgeRequest;
-        $recipientEmail = $this->getRecipientEmail($badgeRequest);
+        $recipientEmail = $badge->getRecipientEmail();
 
         if (! $recipientEmail) {
             return;
@@ -78,10 +77,9 @@ class BadgeMailService
     /**
      * Envoie un email lors d'un changement de statut d'un badge
      */
-    public function sendBadgeStatusUpdatedMail(Badge $badge, string $previousStatus)
+    public function sendBadgeStatusUpdatedMail(Badge $badge, string $previousStatus): void
     {
-        $badgeRequest = $badge->badgeRequest;
-        $recipientEmail = $this->getRecipientEmail($badgeRequest);
+        $recipientEmail = $badge->getRecipientEmail();
 
         if (! $recipientEmail) {
             return;
@@ -102,23 +100,21 @@ class BadgeMailService
                 break;
 
             default:
-                // Pour tout autre changement de statut, utiliser l'email générique
                 Mail::to($recipientEmail)->send(new BadgeStatusUpdated($badge, $previousStatus));
                 break;
         }
     }
 
     /**
-     * Détermine l'email destinataire selon la priorité : client notification_email > demandeur email
+     * Détermine l'email destinataire depuis une BadgeRequest.
+     * Priorité : notification_email client > email créateur.
      */
-    private function getRecipientEmail($badgeRequest)
+    private function getRecipientEmailFromBadgeRequest(BadgeRequest $badgeRequest): ?string
     {
-        // Priorité 1 : Email de notification par défaut
         if ($badgeRequest->activityRequest->client && ! empty($badgeRequest->activityRequest->client->notification_email)) {
             return $badgeRequest->activityRequest->client->notification_email;
         }
 
-        // Priorité 2 : Sinon, email du demandeur
         return $badgeRequest->creator->email;
     }
 }

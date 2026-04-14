@@ -17,12 +17,12 @@ class ReturnBadgeForm extends Component
 
     public $return_badge_document;
 
-    public function mount($badge)
+    public function mount($badge): void
     {
         $this->badge = $badge;
     }
 
-    public function returnBadge()
+    public function returnBadge(): void
     {
         if (! $this->return_badge_document) {
             $this->addError('return_badge_document', 'Le document de restitution est requis.');
@@ -30,30 +30,38 @@ class ReturnBadgeForm extends Component
             return;
         }
 
-        $badgeRequestDocumentService = new BadgeRequestDocumentService;
-        $uploadedDocument = $badgeRequestDocumentService->storeDocuments([
-            'return_badge_document' => $this->return_badge_document,
-        ], $this->badge->badgeRequest->activityRequest->client, $this->badge->badgeRequest->id);
+        $client = $this->badge->getEffectiveClient();
+        $service = new BadgeRequestDocumentService;
+
+        if ($this->badge->badge_request_id) {
+            $uploadedDocuments = $service->storeDocuments(
+                ['return_badge_document' => $this->return_badge_document],
+                $client,
+                $this->badge->badge_request_id
+            );
+            $returnDocumentPath = $uploadedDocuments['return_badge_document'];
+        } else {
+            $returnDocumentPath = $service->storeBadgeReturnDocument(
+                $this->return_badge_document,
+                $client,
+                $this->badge->id
+            );
+        }
 
         $this->badge->update([
             'status' => 'returned',
             'returned_at' => now(),
-            'return_document' => $this->return_badge_document,
+            'return_document' => $returnDocumentPath,
         ]);
+
         $this->closeModal();
 
-        // Envoyer une notification par email
-        $email = $this->badge->badgeRequest->creator->email;
-        if ($this->badge->badgeRequest->activityRequest->client->notification_email) {
-            $email = $this->badge->badgeRequest->activityRequest->client->notification_email;
+        $email = $this->badge->getRecipientEmail();
+        if ($email) {
+            Mail::to($email)->send(new BadgeReturned($this->badge, $returnDocumentPath));
         }
-
-        Mail::to($email)->send(new BadgeReturned($this->badge, $uploadedDocument['return_badge_document']));
     }
 
-    /**
-     * Fermer la modal
-     */
     public function closeModal(): void
     {
         $this->reset(['return_badge_document']);

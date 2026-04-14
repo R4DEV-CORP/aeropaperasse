@@ -14,9 +14,17 @@
     <div class="flex items-center gap-3 mt-4">
         <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher par nom, prénom du collaborateur ou nom de l'entreprise" />
         @if(!auth()->user()->isClient())
-            <flux:modal.trigger name="add-badge">
-                <flux:button variant="primary" icon="plus">Ajouter un badge</flux:button>
-            </flux:modal.trigger>
+            <flux:dropdown>
+                <flux:button variant="primary" icon="plus" icon:trailing="chevron-down">Ajouter un badge</flux:button>
+                <flux:menu>
+                    <flux:modal.trigger name="add-badge">
+                        <flux:menu.item icon="document-text">Lier à une demande de badge</flux:menu.item>
+                    </flux:modal.trigger>
+                    <flux:modal.trigger name="add-standalone-badge">
+                        <flux:menu.item icon="plus-circle">Créer indépendamment</flux:menu.item>
+                    </flux:modal.trigger>
+                </flux:menu>
+            </flux:dropdown>
         @endif
     </div>
 
@@ -50,12 +58,12 @@
                     @foreach($badges as $badge)
                     <tr wire:loading.remove wire:target="search,refreshBadges" wire:key="badge-{{ $badge->id }}">
                         <td class="px-3 py-2">
-                            <p class="text-gray-800 font-medium">{{ $badge->badgeRequest->coworker->firstname }} {{ $badge->badgeRequest->coworker->lastname }}</p>
-                            <flux:text>{{ $badge->badgeRequest->activityRequest->client->company_name }}</flux:text>
+                            <p class="text-gray-800 font-medium">{{ $badge->getEffectiveCoworker()?->firstname }} {{ $badge->getEffectiveCoworker()?->lastname }}</p>
+                            <flux:text>{{ $badge->getEffectiveClient()?->company_name }}</flux:text>
                         </td>
                         <td class="px-3 py-2">
-                            <p class="text-gray-800 font-medium">{{ $badge->badgeRequest->coworker->email }}</p>
-                            <flux:text>{{ $badge->badgeRequest->coworker->phone }}</flux:text>
+                            <p class="text-gray-800 font-medium">{{ $badge->getEffectiveCoworker()?->email }}</p>
+                            <flux:text>{{ $badge->getEffectiveCoworker()?->phone }}</flux:text>
                         </td>
                         <td class="px-3 py-2">
                             @switch($badge->status)
@@ -145,9 +153,14 @@
         @endif
     </div>
 
-     <!-- Modal création de badge -->
-     <flux:modal :dismissible="false" name="add-badge" class="min-w-4xl !max-w-6xl border">
+    <!-- Modal création de badge lié à une demande -->
+    <flux:modal :dismissible="false" name="add-badge" class="min-w-4xl !max-w-6xl border">
         <livewire:badge-management.create-badge-form />
+    </flux:modal>
+
+    <!-- Modal création de badge indépendant -->
+    <flux:modal :dismissible="false" name="add-standalone-badge" class="min-w-4xl !max-w-6xl border">
+        <livewire:badge-management.create-standalone-badge-form />
     </flux:modal>
 </div>
 
