@@ -5,6 +5,9 @@
     <flux:callout icon="information-circle" variant="secondary">
         <flux:callout.heading>Statut</flux:callout.heading>
         <flux:callout.text>
+            @if($badge->badge_number)
+                <span class="font-medium text-gray-700">N° {{ $badge->badge_number }}</span> &mdash;
+            @endif
             @switch($badge->status)
                 @case('active')
                     <flux:badge icon="check-circle" color="green">Actif</flux:badge>

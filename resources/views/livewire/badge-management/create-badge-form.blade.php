@@ -73,6 +73,10 @@
             @endif
         </flux:field>
         <flux:field class="mt-4">
+            <flux:label>Numéro de badge</flux:label>
+            <flux:input wire:model.live="badge_number" placeholder="Ex : 123456" />
+        </flux:field>
+        <flux:field class="mt-4">
             <flux:label>Date d'expiration<span class="text-red-500">*</span></flux:label>
             <flux:input wire:model.live="expiry_date" type="date" />
         </flux:field>

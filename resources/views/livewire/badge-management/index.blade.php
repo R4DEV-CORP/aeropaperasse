@@ -45,6 +45,7 @@
             <table class="min-w-full divide-y divide-slate-800/10">
                 <thead class="bg-gray-50">
                     <tr>
+                        <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">N° BADGE</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DETENTEUR</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">CONTACT</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">STATUT</th>
@@ -57,6 +58,13 @@
                     @if($badges->count() > 0)
                     @foreach($badges as $badge)
                     <tr wire:loading.remove wire:target="search,refreshBadges" wire:key="badge-{{ $badge->id }}">
+                        <td class="px-3 py-2">
+                            @if($badge->badge_number)
+                                <flux:badge color="zinc" size="sm">{{ $badge->badge_number }}</flux:badge>
+                            @else
+                                <flux:text class="text-gray-400">—</flux:text>
+                            @endif
+                        </td>
                         <td class="px-3 py-2">
                             <p class="text-gray-800 font-medium">{{ $badge->getEffectiveCoworker()?->firstname }} {{ $badge->getEffectiveCoworker()?->lastname }}</p>
                             <flux:text>{{ $badge->getEffectiveClient()?->company_name }}</flux:text>
@@ -119,7 +127,7 @@
                     @endforeach
                     @else
                     <tr>
-                        <td class="px-3 py-2" colspan="6">
+                        <td class="px-3 py-2" colspan="7">
                             @if(!empty($search))
                                 <flux:text class="text-gray-500">Aucun badge trouvé pour "{{ $search }}"</flux:text>
                             @else
@@ -131,7 +139,7 @@
                     
                     <!-- Indicateur de chargement -->
                     <tr wire:loading wire:target="search,refreshBadges">
-                        <td class="px-3 py-2" colspan="6">
+                        <td class="px-3 py-2" colspan="7">
                             <div class="flex items-center justify-center py-4">
                                 <svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

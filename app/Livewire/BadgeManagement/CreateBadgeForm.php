@@ -23,6 +23,8 @@ class CreateBadgeForm extends Component
 
     public $expiry_date;
 
+    public $badge_number;
+
     public $errorMessage;
 
     public $successMessage;
@@ -72,6 +74,7 @@ class CreateBadgeForm extends Component
         'selected_client_id' => 'required|exists:clients,id',
         'selected_badge_request_id' => 'required|exists:badge_requests,id',
         'expiry_date' => 'required|date|after:today',
+        'badge_number' => 'nullable|string|max:255',
     ];
 
     protected $messages = [
@@ -109,6 +112,7 @@ class CreateBadgeForm extends Component
                 'badge_request_id' => $this->selected_badge_request_id,
                 'status' => 'active',
                 'expiry_date' => $this->expiry_date,
+                'badge_number' => $this->badge_number ?: null,
             ]);
 
             if (! $badge) {
@@ -118,7 +122,7 @@ class CreateBadgeForm extends Component
             }
 
             $this->successMessage = 'Badge créé avec succès !';
-            $this->reset(['selected_client_id', 'selected_badge_request_id', 'expiry_date', 'errorMessage']);
+            $this->reset(['selected_client_id', 'selected_badge_request_id', 'expiry_date', 'badge_number', 'errorMessage']);
             $this->badgeRequests = collect();
 
             $this->dispatch('badge-created');
@@ -152,6 +156,7 @@ class CreateBadgeForm extends Component
             'selected_client_id',
             'selected_badge_request_id',
             'expiry_date',
+            'badge_number',
         ]);
 
         // Réinitialiser la sélection de client pour les admins
