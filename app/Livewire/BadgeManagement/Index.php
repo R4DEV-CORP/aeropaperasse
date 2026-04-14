@@ -15,6 +15,7 @@ class Index extends Component
     protected $listeners = [
         'badge-created' => 'refreshBadges',
         'badge-expiry-date-updated' => 'refreshBadges',
+        'badge-number-updated' => 'refreshBadges',
     ];
 
     private function baseQuery()
