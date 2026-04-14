@@ -17,6 +17,8 @@ class CreateStandaloneBadgeForm extends Component
 
     public ?string $expiry_date = null;
 
+    public ?string $badge_number = null;
+
     public Collection $clients;
 
     public Collection $coworkers;
@@ -29,6 +31,7 @@ class CreateStandaloneBadgeForm extends Component
         'selected_client_id' => 'required|exists:clients,id',
         'selected_coworker_id' => 'required|exists:coworkers,id',
         'expiry_date' => 'required|date|after:today',
+        'badge_number' => 'nullable|string|max:255',
     ];
 
     protected array $messages = [
@@ -67,10 +70,11 @@ class CreateStandaloneBadgeForm extends Component
             'badge_request_id' => null,
             'status' => 'active',
             'expiry_date' => $this->expiry_date,
+            'badge_number' => $this->badge_number ?: null,
         ]);
 
         $this->successMessage = 'Badge créé avec succès !';
-        $this->reset(['selected_client_id', 'selected_coworker_id', 'expiry_date', 'errorMessage']);
+        $this->reset(['selected_client_id', 'selected_coworker_id', 'expiry_date', 'badge_number', 'errorMessage']);
         $this->coworkers = collect();
 
         $this->dispatch('badge-created');
@@ -79,7 +83,7 @@ class CreateStandaloneBadgeForm extends Component
 
     public function closeModal(): void
     {
-        $this->reset(['selected_client_id', 'selected_coworker_id', 'expiry_date', 'errorMessage', 'successMessage']);
+        $this->reset(['selected_client_id', 'selected_coworker_id', 'expiry_date', 'badge_number', 'errorMessage', 'successMessage']);
         $this->coworkers = collect();
         Flux::modal('add-standalone-badge')->close();
     }
