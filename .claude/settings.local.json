@@ -3,7 +3,11 @@
     "allow": [
       "Bash(php artisan:*)",
       "Bash(vendor/bin/pint:*)",
-      "Bash(php:*)"
+      "Bash(php:*)",
+      "Bash(python3 -c ':*)",
+      "Bash(python -c ':*)",
+      "Bash(where libreoffice:*)",
+      "Bash(where soffice:*)"
     ]
   }
 }

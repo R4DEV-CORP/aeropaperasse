@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Badge;
 use App\Models\Client;
 use App\Models\Coworker;
 use App\Models\CoworkerTraining;
@@ -80,6 +81,50 @@ class ImportEqiomBetonsCoworkers extends Command
         ['lastname' => 'LOREDAN', 'firstname' => 'PIERROT', 'email' => 'jocelyn.cloatre@eqiom.com'],
         ['lastname' => 'VANG', 'firstname' => 'YEU', 'email' => 'jocelyn.cloatre@eqiom.com'],
         ['lastname' => 'ALLANO', 'firstname' => 'JEAN PIERRE', 'email' => 'jocelyn.cloatre@eqiom.com'],
+    ];
+
+    /**
+     * @var array<int, array{lastname: string, firstname: string, badge_number: string, expiry_date: string}>
+     */
+    private array $badges = [
+        // CDG
+        ['lastname' => 'HAIDARA',                  'firstname' => 'IBRAHIMA',           'badge_number' => '111200399278', 'expiry_date' => '2027-08-05'],
+        ['lastname' => 'SALLA',                    'firstname' => 'ENCA MALIQUE',       'badge_number' => '111200399312', 'expiry_date' => '2027-12-31'],
+        ['lastname' => 'RAMOS MIRANDA',            'firstname' => 'CLAUDINO',           'badge_number' => '111200399084', 'expiry_date' => '2027-07-16'],
+        ['lastname' => 'DA SILVA MOREIRA BARRETO', 'firstname' => 'JOAO',               'badge_number' => '111200399085', 'expiry_date' => '2027-07-08'],
+        ['lastname' => 'ZERROUK',                  'firstname' => 'MOHAMED',            'badge_number' => '111200399094', 'expiry_date' => '2027-12-31'],
+        ['lastname' => 'CHEMMAM',                  'firstname' => 'KAMEL',              'badge_number' => '111200399086', 'expiry_date' => '2027-07-03'],
+        ['lastname' => 'BOUGHANEM',                'firstname' => 'ABDELATIF',          'badge_number' => '111200399087', 'expiry_date' => '2027-07-02'],
+        ['lastname' => 'SANOGO',                   'firstname' => 'ADAMA',              'badge_number' => '111200399076', 'expiry_date' => '2027-07-02'],
+        ['lastname' => 'DIABY',                    'firstname' => 'IBRAHIMA',           'badge_number' => '111200399093', 'expiry_date' => '2027-12-31'],
+        ['lastname' => 'FOFANA',                   'firstname' => 'OUMAR',              'badge_number' => '111200399077', 'expiry_date' => '2027-07-05'],
+        ['lastname' => 'GIACALONE',                'firstname' => 'MAXIME',             'badge_number' => '111200399023', 'expiry_date' => '2027-07-02'],
+        ['lastname' => 'SOUEIDAN',                 'firstname' => 'ALI',                'badge_number' => '111200399270', 'expiry_date' => '2027-12-31'],
+        ['lastname' => 'PELLISCHEK',               'firstname' => 'HERVE',              'badge_number' => '111200398888', 'expiry_date' => '2027-06-27'],
+        ['lastname' => 'VANCENBROCK',              'firstname' => 'KEVIN',              'badge_number' => '111200399043', 'expiry_date' => '2026-12-12'],
+        ['lastname' => 'YANG',                     'firstname' => 'THIERRY',            'badge_number' => '111200398782', 'expiry_date' => '2026-11-29'],
+        ['lastname' => 'PLUTA',                    'firstname' => 'KRYSTIAN RYSZARD',   'badge_number' => '111200398780', 'expiry_date' => '2027-12-31'],
+        ['lastname' => 'DUCTEIL',                  'firstname' => 'JEAN PIERRE',        'badge_number' => '111200398781', 'expiry_date' => '2026-11-29'],
+        ['lastname' => 'AFONSO LOPES',             'firstname' => 'ANTONIO',            'badge_number' => '111200398794', 'expiry_date' => '2027-12-31'],
+        ['lastname' => 'SOUVANNAVONG',             'firstname' => 'SOURIGNA',           'badge_number' => '111200398773', 'expiry_date' => '2027-02-26'],
+        ['lastname' => 'EVRAY',                    'firstname' => 'KEVIN',              'badge_number' => '111200398769', 'expiry_date' => '2027-07-01'],
+        ['lastname' => 'EVRAY',                    'firstname' => 'DIMITRI',            'badge_number' => '111200398770', 'expiry_date' => '2027-03-27'],
+        ['lastname' => 'VANCENBROCK',              'firstname' => 'BRYAN',              'badge_number' => '111200398234', 'expiry_date' => '2026-12-31'],
+        ['lastname' => 'CORNIL',                   'firstname' => 'BAPTISTE',           'badge_number' => '111200397265', 'expiry_date' => '2026-12-31'],
+        // Orly
+        ['lastname' => 'NIANG',                    'firstname' => 'MAME IBRAHIMA LAYE', 'badge_number' => '101200413402', 'expiry_date' => '2027-12-31'],
+        ['lastname' => 'VANG',                     'firstname' => 'SOU',                'badge_number' => '101200412872', 'expiry_date' => '2027-06-30'],
+        ['lastname' => 'MOUA',                     'firstname' => 'THONG',              'badge_number' => '101200412875', 'expiry_date' => '2027-06-30'],
+        ['lastname' => 'VANG',                     'firstname' => 'DAVID',              'badge_number' => '101200412876', 'expiry_date' => '2027-06-30'],
+        ['lastname' => 'LOREDAN',                  'firstname' => 'PIERROT',            'badge_number' => '101200412122', 'expiry_date' => '2027-04-16'],
+        ['lastname' => 'VANG',                     'firstname' => 'YEU',                'badge_number' => '101200412108', 'expiry_date' => '2027-04-16'],
+        ['lastname' => 'ALLANO',                   'firstname' => 'JEAN PIERRE',        'badge_number' => '101200411994', 'expiry_date' => '2027-02-26'],
+        // Le Bourget
+        ['lastname' => 'PELLISCHEK',               'firstname' => 'HERVE',              'badge_number' => '121200066028', 'expiry_date' => '2026-12-31'],
+        ['lastname' => 'SEMEDO BRITO',             'firstname' => 'AMILTON',            'badge_number' => '121200066025', 'expiry_date' => '2026-12-31'],
+        ['lastname' => 'PLUTA',                    'firstname' => 'KRYSTIAN RYSZARD',   'badge_number' => '121200066026', 'expiry_date' => '2026-12-31'],
+        ['lastname' => 'SOUVANNAVONG',             'firstname' => 'SOURIGNA',           'badge_number' => '121200066029', 'expiry_date' => '2026-12-31'],
+        ['lastname' => 'DUCTEIL',                  'firstname' => 'JEAN PIERRE',        'badge_number' => '121200066027', 'expiry_date' => '2026-11-29'],
     ];
 
     /**
@@ -209,6 +254,9 @@ class ImportEqiomBetonsCoworkers extends Command
         // --- Formations ---
         $this->importFormations($client, $isDryRun);
 
+        // --- Badges ---
+        $this->importBadges($client, $isDryRun);
+
         return self::SUCCESS;
     }
 
@@ -317,6 +365,72 @@ class ImportEqiomBetonsCoworkers extends Command
             'Permis T' => $startedAt->copy()->addYears(2),
             default => null,
         };
+    }
+
+    private function importBadges(Client $client, bool $isDryRun): void
+    {
+        $this->info('');
+        $this->info('=== Badges ===');
+
+        $created = 0;
+        $skipped = 0;
+
+        foreach ($this->badges as $entry) {
+            if ($isDryRun) {
+                // Si le client n'existe pas encore en base, on ne peut pas résoudre les coworkers
+                if (! $client->id) {
+                    $this->line("  [à créer]  {$entry['lastname']} {$entry['firstname']} — badge {$entry['badge_number']} (expire {$entry['expiry_date']})");
+                    $created++;
+                } else {
+                    $exists = Badge::where('badge_number', $entry['badge_number'])->exists();
+
+                    if ($exists) {
+                        $this->line("  [existant] {$entry['lastname']} {$entry['firstname']} — badge {$entry['badge_number']}");
+                        $skipped++;
+                    } else {
+                        $this->line("  [à créer]  {$entry['lastname']} {$entry['firstname']} — badge {$entry['badge_number']} (expire {$entry['expiry_date']})");
+                        $created++;
+                    }
+                }
+
+                continue;
+            }
+
+            $coworker = Coworker::where('client_id', $client->id)
+                ->where('lastname', $entry['lastname'])
+                ->where('firstname', $entry['firstname'])
+                ->first();
+
+            if (! $coworker) {
+                $this->warn("  [ignoré]   {$entry['lastname']} {$entry['firstname']} — collaborateur introuvable.");
+
+                continue;
+            }
+
+            $badge = Badge::firstOrCreate(
+                ['badge_number' => $entry['badge_number']],
+                [
+                    'client_id' => $client->id,
+                    'coworker_id' => $coworker->id,
+                    'status' => 'active',
+                    'expiry_date' => Carbon::parse($entry['expiry_date']),
+                ]
+            );
+
+            if ($badge->wasRecentlyCreated) {
+                $this->info("  [créé]     {$entry['lastname']} {$entry['firstname']} — badge {$entry['badge_number']}");
+                $created++;
+            } else {
+                $this->line("  [existant] {$entry['lastname']} {$entry['firstname']} — badge {$entry['badge_number']}");
+                $skipped++;
+            }
+        }
+
+        $this->info('');
+        $this->info('=== Résumé badges ===');
+        $this->info("  Badges créés    : {$created}");
+        $this->line("  Badges existants : {$skipped}");
+        $this->info('');
     }
 
     /**
