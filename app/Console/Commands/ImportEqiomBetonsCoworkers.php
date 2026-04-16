@@ -179,11 +179,11 @@ class ImportEqiomBetonsCoworkers extends Command
         $this->info('');
         $this->info('=== Client ===');
 
-        $existingClient = Client::where('company_name', 'EQIOM BETONS')->first();
+        $existingClient = Client::where('company_name', 'EQIOM')->first();
 
         if ($isDryRun) {
             if ($existingClient) {
-                $this->line("  [existant] Client \"EQIOM BETONS\" (id: {$existingClient->id})");
+                $this->line("  [existant] Client \"EQIOM\" (id: {$existingClient->id})");
             } else {
                 $this->line('  [à créer]  Client "EQIOM"');
             }
@@ -192,9 +192,9 @@ class ImportEqiomBetonsCoworkers extends Command
             [$client, $clientCreated] = $this->firstOrCreateClient();
 
             if ($clientCreated) {
-                $this->info("  [créé]     Client \"EQIOM BETONS\" (id: {$client->id})");
+                $this->info("  [créé]     Client \"EQIOM\" (id: {$client->id})");
             } else {
-                $this->line("  [existant] Client \"EQIOM BETONS\" (id: {$client->id})");
+                $this->line("  [existant] Client \"EQIOM\" (id: {$client->id})");
             }
         }
 
