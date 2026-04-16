@@ -89,6 +89,8 @@ class CreateBadgeForm extends Component
 
     public function createBadge()
     {
+        abort_unless(auth()->user()->isAdmin(), 403);
+
         $this->validate();
 
         $client = Client::find($this->selected_client_id);

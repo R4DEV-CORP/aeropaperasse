@@ -50,10 +50,71 @@
                         <td class="px-3 py-2">{{ $coworker->getActiveTrainings() }}</td>
                         <td class="px-3 py-2">
                             <div class="flex items-center">
-                                <flux:button icon="eye" icon:variant="outline" variant="subtle" square="true" tooltip="Voir" class="hover:cursor-pointer"/>
+                                <flux:modal.trigger :name="'view-coworker-trainings-'.$coworker->id">
+                                    <flux:button icon="eye" icon:variant="outline" variant="subtle" square="true" tooltip="Voir" class="hover:cursor-pointer"/>
+                                </flux:modal.trigger>
                             </div>
                         </td>
                     </tr>
+                    <flux:modal :name="'view-coworker-trainings-'.$coworker->id" wire:key="modal-coworker-{{ $coworker->id }}" class="min-w-2xl !max-w-4xl">
+                        <flux:heading size="lg">{{ $coworker->firstname }} {{ $coworker->lastname }}</flux:heading>
+                        <flux:text class="mt-1">Formations assignées</flux:text>
+                        <div class="mt-4 space-y-3">
+                            @forelse($coworker->trainings as $training)
+                                @php
+                                    $expiresAt = $training->pivot->expires_at ? \Carbon\Carbon::parse($training->pivot->expires_at) : null;
+                                    $startedAt = \Carbon\Carbon::parse($training->pivot->started_at);
+                                    if ($expiresAt === null) {
+                                        $status = 'active';
+                                    } elseif ($expiresAt->isPast()) {
+                                        $status = 'expired';
+                                    } elseif ($expiresAt->lessThanOrEqualTo(now()->addMonths(6))) {
+                                        $status = 'expiring';
+                                    } else {
+                                        $status = 'active';
+                                    }
+                                @endphp
+                                <div class="flex items-center justify-between gap-4 py-2 border-b border-zinc-100 last:border-0">
+                                    <div class="flex-1">
+                                        <p class="font-medium text-gray-800 text-sm">{{ $training->title }}</p>
+                                        <p class="text-xs text-gray-500 mt-0.5">
+                                            Début : {{ $startedAt->format('d/m/Y') }}
+                                            @if($expiresAt) · Expiration : {{ $expiresAt->format('d/m/Y') }}
+                                            @else · Durée : À vie
+                                            @endif
+                                        </p>
+                                    </div>
+                                    <div class="flex items-center gap-2 shrink-0">
+                                        @if($status === 'active')
+                                            <flux:badge color="green" size="sm">Actif</flux:badge>
+                                        @elseif($status === 'expiring')
+                                            <flux:badge color="yellow" size="sm">Expire bientôt</flux:badge>
+                                        @else
+                                            <flux:badge color="red" size="sm">Expiré</flux:badge>
+                                        @endif
+                                        @if($training->pivot->certificate_path)
+                                            <flux:button
+                                                icon="arrow-down-tray"
+                                                icon:variant="outline"
+                                                variant="subtle"
+                                                square="true"
+                                                tooltip="Télécharger le certificat"
+                                                class="!text-blue-500 hover:cursor-pointer"
+                                                wire:click="downloadCertificate({{ $training->pivot->id }})"
+                                            />
+                                        @endif
+                                    </div>
+                                </div>
+                            @empty
+                                <flux:text>Aucune formation assignée à ce collaborateur.</flux:text>
+                            @endforelse
+                        </div>
+                        <div class="flex justify-end mt-6">
+                            <flux:modal.close>
+                                <flux:button variant="ghost">Fermer</flux:button>
+                            </flux:modal.close>
+                        </div>
+                    </flux:modal>
                     @endforeach
                 </tbody>
             </table>
@@ -170,7 +231,9 @@
                             </td>
                             <td>
                                 <div class="flex items-center">
-                                    <flux:button icon="arrow-up-tray" icon:variant="outline" variant="subtle" square="true" tooltip="Déposer le certificat" class="!text-green-500 hover:cursor-pointer"/>
+                                    <flux:modal.trigger :name="'upload-certificate-modal-'.$training->id" wire:key="trigger-expiring-{{ $training->id }}">
+                                        <flux:button icon="arrow-up-tray" icon:variant="outline" variant="subtle" square="true" tooltip="Déposer le certificat" class="!text-green-500 hover:cursor-pointer"/>
+                                    </flux:modal.trigger>
                                     @if($training->certificate_path)
                                         <flux:button icon="arrow-down-tray" icon:variant="outline" variant="subtle" square="true" tooltip="Télécharger le certificat" class="!text-blue-500 hover:cursor-pointer" wire:click="downloadCertificate({{ $training->id }})"/>
                                     @endif
@@ -222,10 +285,32 @@
                             </td>
                             <td>
                                 <div class="flex items-center">
-                                    <flux:button icon="arrow-up-tray" icon:variant="outline" variant="subtle" square="true" tooltip="Déposer le certificat" class="!text-green-500 hover:cursor-pointer"/>
+                                    <flux:modal.trigger :name="'upload-certificate-modal-'.$training->id" wire:key="trigger-expired-{{ $training->id }}">
+                                        <flux:button icon="arrow-up-tray" icon:variant="outline" variant="subtle" square="true" tooltip="Déposer le certificat" class="!text-green-500 hover:cursor-pointer"/>
+                                    </flux:modal.trigger>
                                     @if($training->certificate_path)
                                         <flux:button icon="arrow-down-tray" icon:variant="outline" variant="subtle" square="true" tooltip="Télécharger le certificat" class="!text-blue-500 hover:cursor-pointer" wire:click="downloadCertificate({{ $training->id }})"/>
                                     @endif
+                                    <flux:modal :name="'upload-certificate-modal-'.$training->id" wire:key="modal-expired-{{ $training->id }}" class="min-w-4xl !max-w-6xl">
+                                        <flux:heading size="lg">Déposer le certificat</flux:heading>
+
+                                        <form wire:submit="uploadCertificate({{ $training->id }})">
+                                            <flux:field>
+                                                <flux:label>Certificat de formation</flux:label>
+                                                <flux:input type="file" wire:model="certificate" accept=".pdf,.jpg,.jpeg,.png" />
+                                                <flux:description>Formats acceptés : PDF, JPG, JPEG, PNG (max 10MB)</flux:description>
+                                            </flux:field>
+
+                                            <div class="flex justify-end gap-3 mt-6">
+                                                <flux:button type="button" variant="ghost" wire:click="$dispatch('close-modal', 'upload-certificate-modal')">
+                                                    Annuler
+                                                </flux:button>
+                                                <flux:button type="submit" variant="primary">
+                                                    Déposer le certificat
+                                                </flux:button>
+                                            </div>
+                                        </form>
+                                    </flux:modal>
                                 </div>
                             </td>
                         </tr>
