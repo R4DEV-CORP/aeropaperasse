@@ -13,7 +13,7 @@
 
     <div class="flex items-center gap-3 mt-4">
         <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher par nom, prénom du collaborateur ou nom de l'entreprise" />
-        @if(!auth()->user()->isClient())
+        @if(auth()->user()->isAdmin())
             <flux:dropdown>
                 <flux:button variant="primary" icon="plus" icon:trailing="chevron-down">Ajouter un badge</flux:button>
                 <flux:menu>

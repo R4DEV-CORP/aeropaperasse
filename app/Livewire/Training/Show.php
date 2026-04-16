@@ -34,7 +34,7 @@ class Show extends Component
     {
         $this->slug = $slug;
         $this->client = Client::where('slug', $slug)->first();
-        $this->coworkers = $this->client->coworkers;
+        $this->coworkers = $this->client->coworkers()->with('trainings')->get();
 
         $this->loadTrainings();
     }

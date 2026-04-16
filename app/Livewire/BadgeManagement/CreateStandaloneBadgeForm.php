@@ -62,6 +62,8 @@ class CreateStandaloneBadgeForm extends Component
 
     public function createBadge(): void
     {
+        abort_unless(auth()->user()->isAdmin(), 403);
+
         $this->validate();
 
         $badge = Badge::create([
