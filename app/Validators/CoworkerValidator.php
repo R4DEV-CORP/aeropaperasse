@@ -15,8 +15,8 @@ class CoworkerValidator
             // Informations du collaborateur (obligatoires)
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email|unique:coworkers,email',
-            'phone' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255|unique:coworkers,email',
+            'phone' => 'nullable|string|max:255',
             'client_id' => 'required|integer|exists:clients,id',
 
             // Options du collaborateur
@@ -47,12 +47,11 @@ class CoworkerValidator
             'lastname.string' => 'Le nom doit être une chaîne de caractères',
             'lastname.max' => 'Le nom ne doit pas dépasser 255 caractères',
 
-            'email.required' => 'L\'email est obligatoire',
+            'email.required' => 'L\'email est obligatoire pour créer un compte utilisateur',
             'email.email' => 'L\'email doit être une adresse email valide',
             'email.max' => 'L\'email ne doit pas dépasser 255 caractères',
-            'email.unique' => 'Cette adresse email est déjà utilisée par un autre collaborateur',
+            'email.unique' => 'Cette adresse email est déjà utilisée',
 
-            'phone.required' => 'Le téléphone est obligatoire',
             'phone.string' => 'Le téléphone doit être une chaîne de caractères',
             'phone.max' => 'Le téléphone ne doit pas dépasser 255 caractères',
 
@@ -89,11 +88,12 @@ class CoworkerValidator
     {
         $rules = self::getCompleteRules();
 
-        // Gestion conditionnelle des champs utilisateur
         $createUser = $data['create_user'] ?? false;
 
-        if (! $createUser) {
-            // Si create_user = false, les champs password ne sont pas obligatoires
+        if ($createUser) {
+            // Un email est requis pour créer un compte ; unique uniquement dans users (pas coworkers)
+            $rules['email'] = 'required|email|max:255|unique:users,email';
+        } else {
             $rules['password'] = 'nullable|string|min:8|confirmed';
             $rules['password_confirmation'] = 'nullable|string|min:8';
         }
@@ -103,7 +103,6 @@ class CoworkerValidator
 
     /**
      * Validation conditionnelle pour les données de création d'utilisateur
-     * Cette méthode peut être utilisée pour valider seulement les champs utilisateur
      */
     public static function validateUserCreation(array $data): \Illuminate\Validation\Validator
     {
@@ -144,8 +143,8 @@ class CoworkerValidator
         $rules = [
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:coworkers,email',
-            'phone' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255|unique:coworkers,email',
+            'phone' => 'nullable|string|max:255',
             'client_id' => 'required|integer|exists:clients,id',
             'can_access_formation' => 'nullable|boolean',
             'has_leave' => 'nullable|boolean',
@@ -163,8 +162,8 @@ class CoworkerValidator
         $rules = [
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:coworkers,email,'.$coworkerId,
-            'phone' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255|unique:coworkers,email,'.$coworkerId,
+            'phone' => 'nullable|string|max:255',
             'can_access_formation' => 'nullable|boolean',
             'role' => 'nullable|string|in:sclient,sadmin,client,admin',
         ];
@@ -178,12 +177,10 @@ class CoworkerValidator
             'lastname.string' => 'Le nom doit être une chaîne de caractères',
             'lastname.max' => 'Le nom ne doit pas dépasser 255 caractères',
 
-            'email.required' => 'L\'email est obligatoire',
             'email.email' => 'L\'email doit être une adresse email valide',
             'email.max' => 'L\'email ne doit pas dépasser 255 caractères',
             'email.unique' => 'Cette adresse email est déjà utilisée par un autre collaborateur',
 
-            'phone.required' => 'Le téléphone est obligatoire',
             'phone.string' => 'Le téléphone doit être une chaîne de caractères',
             'phone.max' => 'Le téléphone ne doit pas dépasser 255 caractères',
 

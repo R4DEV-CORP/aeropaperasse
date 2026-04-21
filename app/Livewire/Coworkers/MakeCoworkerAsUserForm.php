@@ -25,6 +25,8 @@ class MakeCoworkerAsUserForm extends Component
     public $successMessage;
 
     // Données du formulaire
+    public $email;
+
     public $password;
 
     public $password_confirmation;
@@ -51,6 +53,9 @@ class MakeCoworkerAsUserForm extends Component
             return;
         }
 
+        // Pré-remplir l'email si le coworker en a un
+        $this->email = $this->coworker->email;
+
         // Réinitialiser les messages
         $this->clearMessages();
     }
@@ -63,11 +68,15 @@ class MakeCoworkerAsUserForm extends Component
         try {
             // Validation
             $this->validate([
+                'email' => 'required|email|max:255|unique:users,email',
                 'password' => ['required', 'confirmed', Password::defaults()],
                 'password_confirmation' => 'required',
                 'can_access_formation' => 'boolean',
                 'role' => 'required|in:admin,sadmin,sclient,client',
             ], [
+                'email.required' => 'L\'email est requis.',
+                'email.email' => 'L\'email doit être une adresse email valide.',
+                'email.unique' => 'Cette adresse email est déjà utilisée par un autre compte.',
                 'password.required' => 'Le mot de passe est requis.',
                 'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
                 'password_confirmation.required' => 'La confirmation du mot de passe est requise.',
@@ -78,7 +87,7 @@ class MakeCoworkerAsUserForm extends Component
             // Créer l'utilisateur
             $newUser = User::create([
                 'name' => $this->coworker->firstname.' '.$this->coworker->lastname,
-                'email' => $this->coworker->email,
+                'email' => $this->email,
                 'password' => Hash::make($this->password),
                 'role' => $this->role,
                 'client_id' => $this->coworker->client_id,
@@ -92,7 +101,7 @@ class MakeCoworkerAsUserForm extends Component
                 'user_id' => $newUser->id,
             ]);
 
-            Mail::to($this->coworker->email)->send(new UserCreated($newUser, $this->password));
+            Mail::to($this->email)->send(new UserCreated($newUser, $this->password));
 
             $this->successMessage = 'Le compte utilisateur a été créé avec succès pour '.$this->coworker->firstname.' '.$this->coworker->lastname.'.';
 

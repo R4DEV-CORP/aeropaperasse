@@ -59,13 +59,13 @@
                 <flux:error name="lastname" />
             </flux:field>
             <flux:field>
-                <flux:label>Email<span class="text-red-500">*</span></flux:label>
-                <flux:input wire:model="email" icon="at-symbol" name="email" required />
+                <flux:label>Email</flux:label>
+                <flux:input wire:model="email" icon="at-symbol" name="email" />
                 <flux:error name="email" />
             </flux:field>
             <flux:field>
-                <flux:label>Téléphone<span class="text-red-500">*</span></flux:label>
-                <flux:input wire:model="phone" icon="phone" name="phone" required />
+                <flux:label>Téléphone</flux:label>
+                <flux:input wire:model="phone" icon="phone" name="phone" />
                 <flux:error name="phone" />
             </flux:field>
             <flux:field variant="inline">

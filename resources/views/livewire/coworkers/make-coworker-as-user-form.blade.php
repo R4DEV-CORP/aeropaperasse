@@ -35,11 +35,11 @@
             </flux:field>
             <flux:field>
                 <flux:label>Email</flux:label>
-                <flux:input value="{{ $coworker->email }}" disabled />
+                <flux:input value="{{ $coworker->email ?? '—' }}" disabled />
             </flux:field>
             <flux:field>
                 <flux:label>Téléphone</flux:label>
-                <flux:input value="{{ $coworker->phone }}" disabled />
+                <flux:input value="{{ $coworker->phone ?? '—' }}" disabled />
             </flux:field>
         </div>
     </div>
@@ -47,6 +47,11 @@
     <div class="border border-gray-800/10 p-4 rounded-lg">
         <flux:heading size="lg" class="mb-4">Paramètres du compte utilisateur</flux:heading>
         <div class="space-y-4">
+            <flux:field>
+                <flux:label>Email du compte<span class="text-red-500">*</span></flux:label>
+                <flux:input wire:model="email" type="email" icon="at-symbol" name="email" required />
+                <flux:error name="email" />
+            </flux:field>
             <flux:field>
                 <flux:label>Mot de passe<span class="text-red-500">*</span></flux:label>
                 <flux:input wire:model="password" type="password" icon="key" name="password" required />

@@ -7,7 +7,9 @@
       "Bash(python3 -c ':*)",
       "Bash(python -c ':*)",
       "Bash(where libreoffice:*)",
-      "Bash(where soffice:*)"
+      "Bash(where soffice:*)",
+      "Bash(xargs grep *)",
+      "Bash(git stash *)"
     ]
   }
 }

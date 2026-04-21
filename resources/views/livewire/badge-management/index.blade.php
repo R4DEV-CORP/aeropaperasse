@@ -4,11 +4,11 @@
     @endif
 
     <div class="grid grid-cols-5 gap-4 mt-4">
-        <x-badge-info-card title="Total" value="{{ $badges->count() }}" bg-color="violet-200" />
-        <x-badge-info-card title="Actifs" value="{{ $badges->where('status', 'active')->count() }}" bg-color="green-200" />
-        <x-badge-info-card title="Expirés" value="{{ $badges->where('status', 'expired')->count() }}" bg-color="red-200" />
-        <x-badge-info-card title="Restitués" value="{{ $badges->where('status', 'returned')->count() }}" bg-color="blue-200" />
-        <x-badge-info-card title="Non Restitués" value="{{ $badges->where('status', 'not_returned')->count() }}" bg-color="yellow-200" />
+        <x-badge-info-card title="Total" value="{{ $stats['total'] }}" bg-color="violet-200" />
+        <x-badge-info-card title="Actifs" value="{{ $stats['active'] }}" bg-color="green-200" />
+        <x-badge-info-card title="Expirés" value="{{ $stats['expired'] }}" bg-color="red-200" />
+        <x-badge-info-card title="Restitués" value="{{ $stats['returned'] }}" bg-color="blue-200" />
+        <x-badge-info-card title="Non Restitués" value="{{ $stats['not_returned'] }}" bg-color="yellow-200" />
     </div>
 
     <div class="flex items-center gap-3 mt-4">

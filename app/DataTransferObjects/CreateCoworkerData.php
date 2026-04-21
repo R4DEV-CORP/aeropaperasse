@@ -10,8 +10,8 @@ class CreateCoworkerData
         // Informations du collaborateur
         public string $firstname,
         public string $lastname,
-        public string $email,
-        public string $phone,
+        public ?string $email,
+        public ?string $phone,
         public int $client_id,
 
         // Options du collaborateur
@@ -98,7 +98,7 @@ class CreateCoworkerData
      */
     public function shouldCreateUser(): bool
     {
-        return $this->create_user && ! empty($this->password);
+        return $this->create_user && ! empty($this->password) && ! empty($this->email);
     }
 
     /**
