@@ -165,6 +165,22 @@ class Index extends Component
         }
     }
 
+    private function loadStats(): array
+    {
+        $counts = $this->baseQuery()
+            ->selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
+        return [
+            'total' => $counts->sum(),
+            'active' => $counts->get('active', 0),
+            'expired' => $counts->get('expired', 0),
+            'returned' => $counts->get('returned', 0),
+            'not_returned' => $counts->get('not_returned', 0),
+        ];
+    }
+
     public function render()
     {
         $this->checkAndUpdateExpiredBadges();
@@ -177,6 +193,7 @@ class Index extends Component
 
         return view('livewire.badge-management.index', [
             'badges' => $badges,
+            'stats' => $this->loadStats(),
         ]);
     }
 }
