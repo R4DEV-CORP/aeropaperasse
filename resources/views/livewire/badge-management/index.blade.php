@@ -146,9 +146,9 @@
                                 @endif
                                 @if(auth()->user()->isAdmin())
                                     <flux:modal.trigger :name="'edit-badge-number-'.$badge->id">
-                                        <flux:button variant="subtle" icon="pencil" icon:variant="outline" square="true" tooltip="Modifier le numéro de badge" class="!text-blue-500 hover:cursor-pointer"/>
+                                        <flux:button variant="subtle" icon="pencil" icon:variant="outline" square="true" tooltip="Modifier" class="!text-blue-500 hover:cursor-pointer"/>
                                     </flux:modal.trigger>
-                                    <!-- Modal edition badge_number -->
+                                    <!-- Modal edition badge -->
                                     <flux:modal :name="'edit-badge-number-'.$badge->id" class="min-w-4xl !max-w-6xl border">
                                         <livewire:badge-management.edit-badge-number-form :badge="$badge" wire:key="badge-modal-edit-number-{{ $badge->id }}" />
                                     </flux:modal>

@@ -2,12 +2,9 @@
     <div class="border-b border-gray-800/10 pb-4">
         <flux:heading size="xl">Détails du badge</flux:heading>
     </div>
-    <flux:callout icon="information-circle" variant="secondary">
-        <flux:callout.heading>Statut</flux:callout.heading>
-        <flux:callout.text>
-            @if($badge->badge_number)
-                <span class="font-medium text-gray-700">N° {{ $badge->badge_number }}</span> &mdash;
-            @endif
+    <div class="border border-gray-800/10 rounded-lg p-4">
+        <div class="flex items-center justify-between">
+            <flux:heading size="lg">Statut</flux:heading>
             @switch($badge->status)
                 @case('active')
                     <flux:badge icon="check-circle" color="green">Actif</flux:badge>
@@ -22,9 +19,36 @@
                     <flux:badge icon="x-circle" color="yellow">Non Restitué</flux:badge>
                     @break
             @endswitch
-            <span>Expire le {{ $badge->expiry_date->format('d/m/Y')}}</span>
-        </flux:callout.text>
-    </flux:callout>
+        </div>
+        <div class="grid grid-cols-3 gap-3 mt-4">
+            <div class="rounded-md bg-gray-50 px-4 py-3">
+                <flux:subheading size="sm">N° de badge</flux:subheading>
+                <flux:heading size="lg" class="tabular-nums">{{ $badge->badge_number ?: '—' }}</flux:heading>
+            </div>
+            <div class="rounded-md bg-gray-50 px-4 py-3">
+                <flux:subheading size="sm">Aéroport</flux:subheading>
+                <div class="mt-2">
+                    @switch($badge->airport)
+                        @case('CDG')
+                            <flux:badge color="cyan">CDG</flux:badge>
+                            @break
+                        @case('ORY')
+                            <flux:badge color="violet">ORY</flux:badge>
+                            @break
+                        @case('LBG')
+                            <flux:badge color="lime">LBG</flux:badge>
+                            @break
+                        @default
+                            <flux:text variant="subtle">—</flux:text>
+                    @endswitch
+                </div>
+            </div>
+            <div class="rounded-md bg-gray-50 px-4 py-3">
+                <flux:subheading size="sm">Expiration</flux:subheading>
+                <flux:heading size="lg" class="tabular-nums">{{ $badge->expiry_date->format('d/m/Y') }}</flux:heading>
+            </div>
+        </div>
+    </div>
 
     <div class="grid grid-cols-4 gap-2 border border-gray-800/10 p-4 rounded-lg">
         <div class="col-span-4 flex justify-between">
@@ -62,7 +86,7 @@
         </div>
         <div>
             <p class="text-gray-800 font-medium mt-2">Aéroport</p>
-            @switch($badge->badgeRequest->activityRequest->airport)
+            @switch($badge->airport)
                 @case('CDG')
                     <flux:badge color="cyan" size="sm">CDG</flux:badge>
                     @break

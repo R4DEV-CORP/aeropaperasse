@@ -9,7 +9,8 @@
       "Bash(where libreoffice:*)",
       "Bash(where soffice:*)",
       "Bash(xargs grep *)",
-      "Bash(git stash *)"
+      "Bash(git stash *)",
+      "WebFetch(domain:fluxui.dev)"
     ]
   }
 }

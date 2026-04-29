@@ -11,26 +11,34 @@ class EditBadgeNumberForm extends Component
 
     public ?string $badgeNumber = null;
 
+    public ?string $airport = null;
+
     public ?string $errorMessage = null;
 
     public ?string $successMessage = null;
 
     protected array $rules = [
         'badgeNumber' => 'nullable|string|max:255',
+        'airport' => 'required|in:ORY,CDG,LBG',
     ];
 
     protected array $messages = [
         'badgeNumber.max' => 'Le numéro de badge ne peut pas dépasser 255 caractères.',
+        'airport.required' => 'Veuillez sélectionner un aéroport.',
+        'airport.in' => 'L\'aéroport sélectionné n\'est pas valide.',
     ];
 
     public function mount($badge): void
     {
         $this->badge = $badge;
         $this->badgeNumber = $badge->badge_number;
+        $this->airport = $badge->airport;
     }
 
-    public function editBadgeNumber(): void
+    public function editBadge(): void
     {
+        abort_unless(auth()->user()->isAdmin(), 403);
+
         $this->errorMessage = null;
         $this->successMessage = null;
 
@@ -38,15 +46,16 @@ class EditBadgeNumberForm extends Component
 
         try {
             $this->badge->badge_number = $this->badgeNumber ?: null;
+            $this->badge->airport = $this->airport;
             $this->badge->save();
 
-            $this->successMessage = 'Le numéro de badge a été modifié avec succès.';
+            $this->successMessage = 'Le badge a été modifié avec succès.';
             $this->dispatch('badge-number-updated', $this->badge->id);
             $this->dispatch('close-modal', name: 'edit-badge-number-'.$this->badge->id);
 
         } catch (\Exception $e) {
-            \Log::error("Erreur lors de la modification du numéro du badge {$this->badge->id}: ".$e->getMessage());
-            $this->errorMessage = 'Une erreur est survenue lors de la modification du numéro de badge.';
+            \Log::error("Erreur lors de la modification du badge {$this->badge->id}: ".$e->getMessage());
+            $this->errorMessage = 'Une erreur est survenue lors de la modification du badge.';
         }
     }
 
@@ -58,7 +67,7 @@ class EditBadgeNumberForm extends Component
 
     public function resetForm(): void
     {
-        $this->reset(['errorMessage', 'successMessage', 'badgeNumber']);
+        $this->reset(['errorMessage', 'successMessage', 'badgeNumber', 'airport']);
     }
 
     public function render()
