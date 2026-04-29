@@ -15,6 +15,7 @@ class Badge extends Model
         'badge_request_id',
         'client_id',
         'coworker_id',
+        'airport',
         'badge_number',
         'status',
         'previous_status',

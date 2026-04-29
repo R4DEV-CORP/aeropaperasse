@@ -35,6 +35,7 @@ class CreateStandaloneBadgeTest extends TestCase
             ->test(CreateStandaloneBadgeForm::class)
             ->set('selected_client_id', $client->id)
             ->set('selected_coworker_id', $coworker->id)
+            ->set('airport', 'CDG')
             ->set('expiry_date', now()->addYear()->toDateString())
             ->call('createBadge')
             ->assertDispatched('badge-created');
@@ -44,28 +45,46 @@ class CreateStandaloneBadgeTest extends TestCase
         $this->assertNull($badge->badge_request_id);
         $this->assertEquals($client->id, $badge->client_id);
         $this->assertEquals($coworker->id, $badge->coworker_id);
+        $this->assertEquals('CDG', $badge->airport);
         $this->assertEquals('active', $badge->status);
     }
 
-    public function test_non_admin_cannot_access_standalone_badge_form(): void
+    public function test_standalone_badge_requires_airport(): void
+    {
+        $admin = $this->makeAdmin();
+        $client = Client::factory()->create();
+        $coworker = Coworker::factory()->create(['client_id' => $client->id]);
+
+        Livewire::actingAs($admin)
+            ->test(CreateStandaloneBadgeForm::class)
+            ->set('selected_client_id', $client->id)
+            ->set('selected_coworker_id', $coworker->id)
+            ->set('airport', null)
+            ->set('expiry_date', now()->addYear()->toDateString())
+            ->call('createBadge')
+            ->assertHasErrors(['airport']);
+    }
+
+    public function test_non_admin_cannot_create_standalone_badge(): void
     {
         $client = Client::factory()->create();
         $clientUser = $this->makeClientUser($client);
+        $coworker = Coworker::factory()->create(['client_id' => $client->id]);
 
         $this->actingAs($clientUser)
             ->get('/badge-management')
             ->assertStatus(200);
 
-        // Le composant standalone ne devrait pas être accessible aux non-admins
-        // (le bouton n'est pas affiché côté vue, mais on valide aussi que le composant
-        // requiert la sélection d'un client qui appartient au contexte admin)
         Livewire::actingAs($clientUser)
             ->test(CreateStandaloneBadgeForm::class)
             ->set('selected_client_id', $client->id)
-            ->set('selected_coworker_id', 999)
+            ->set('selected_coworker_id', $coworker->id)
+            ->set('airport', 'CDG')
             ->set('expiry_date', now()->addYear()->toDateString())
             ->call('createBadge')
-            ->assertHasErrors(['selected_coworker_id']);
+            ->assertStatus(403);
+
+        $this->assertEquals(0, Badge::count());
     }
 
     public function test_standalone_badge_requires_valid_client_and_coworker(): void
@@ -76,9 +95,10 @@ class CreateStandaloneBadgeTest extends TestCase
             ->test(CreateStandaloneBadgeForm::class)
             ->set('selected_client_id', null)
             ->set('selected_coworker_id', null)
+            ->set('airport', null)
             ->set('expiry_date', null)
             ->call('createBadge')
-            ->assertHasErrors(['selected_client_id', 'selected_coworker_id', 'expiry_date']);
+            ->assertHasErrors(['selected_client_id', 'selected_coworker_id', 'airport', 'expiry_date']);
     }
 
     public function test_standalone_badge_requires_future_expiry_date(): void
@@ -91,6 +111,7 @@ class CreateStandaloneBadgeTest extends TestCase
             ->test(CreateStandaloneBadgeForm::class)
             ->set('selected_client_id', $client->id)
             ->set('selected_coworker_id', $coworker->id)
+            ->set('airport', 'CDG')
             ->set('expiry_date', now()->subDay()->toDateString())
             ->call('createBadge')
             ->assertHasErrors(['expiry_date']);

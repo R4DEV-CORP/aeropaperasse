@@ -12,6 +12,8 @@ class Index extends Component
 
     public $search = '';
 
+    public ?string $selectedAirport = null;
+
     protected $listeners = [
         'badge-created' => 'refreshBadges',
         'badge-expiry-date-updated' => 'refreshBadges',
@@ -47,6 +49,10 @@ class Index extends Component
             });
         }
 
+        if ($this->selectedAirport) {
+            $query->where('airport', $this->selectedAirport);
+        }
+
         return $query;
     }
 
@@ -63,6 +69,18 @@ class Index extends Component
 
     public function updatedSearch(): void
     {
+        $this->resetPage();
+    }
+
+    public function updatedSelectedAirport(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->search = '';
+        $this->selectedAirport = null;
         $this->resetPage();
     }
 

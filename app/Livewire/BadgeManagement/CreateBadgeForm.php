@@ -109,9 +109,12 @@ class CreateBadgeForm extends Component
             return;
         }
 
+        $badgeRequest = BadgeRequest::with('activityRequest')->find($this->selected_badge_request_id);
+
         try {
             $badge = Badge::create([
                 'badge_request_id' => $this->selected_badge_request_id,
+                'airport' => $badgeRequest?->activityRequest?->airport,
                 'status' => 'active',
                 'expiry_date' => $this->expiry_date,
                 'badge_number' => $this->badge_number ?: null,
