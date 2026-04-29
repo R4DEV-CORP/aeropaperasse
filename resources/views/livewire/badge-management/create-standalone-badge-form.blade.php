@@ -74,6 +74,19 @@
             @enderror
         </flux:field>
         <flux:field class="mt-4">
+            <flux:label>Aéroport<span class="text-red-500">*</span></flux:label>
+            <select wire:model.live="airport"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Sélectionnez un aéroport...</option>
+                <option value="CDG">CDG</option>
+                <option value="ORY">ORY</option>
+                <option value="LBG">LBG</option>
+            </select>
+            @error('airport')
+                <flux:error>{{ $message }}</flux:error>
+            @enderror
+        </flux:field>
+        <flux:field class="mt-4">
             <flux:label>Numéro de badge</flux:label>
             <flux:input wire:model.live="badge_number" placeholder="Ex : 123456" />
         </flux:field>

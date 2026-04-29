@@ -15,6 +15,8 @@ class CreateStandaloneBadgeForm extends Component
 
     public ?int $selected_coworker_id = null;
 
+    public ?string $airport = null;
+
     public ?string $expiry_date = null;
 
     public ?string $badge_number = null;
@@ -30,6 +32,7 @@ class CreateStandaloneBadgeForm extends Component
     protected array $rules = [
         'selected_client_id' => 'required|exists:clients,id',
         'selected_coworker_id' => 'required|exists:coworkers,id',
+        'airport' => 'required|in:ORY,CDG,LBG',
         'expiry_date' => 'required|date|after:today',
         'badge_number' => 'nullable|string|max:255',
     ];
@@ -39,6 +42,8 @@ class CreateStandaloneBadgeForm extends Component
         'selected_client_id.exists' => 'Le client sélectionné n\'existe pas.',
         'selected_coworker_id.required' => 'Veuillez sélectionner un collaborateur.',
         'selected_coworker_id.exists' => 'Le collaborateur sélectionné n\'existe pas.',
+        'airport.required' => 'Veuillez sélectionner un aéroport.',
+        'airport.in' => 'L\'aéroport sélectionné n\'est pas valide.',
         'expiry_date.required' => 'La date d\'expiration est requise.',
         'expiry_date.date' => 'La date d\'expiration doit être une date valide.',
         'expiry_date.after' => 'La date d\'expiration doit être postérieure à aujourd\'hui.',
@@ -70,13 +75,14 @@ class CreateStandaloneBadgeForm extends Component
             'client_id' => $this->selected_client_id,
             'coworker_id' => $this->selected_coworker_id,
             'badge_request_id' => null,
+            'airport' => $this->airport,
             'status' => 'active',
             'expiry_date' => $this->expiry_date,
             'badge_number' => $this->badge_number ?: null,
         ]);
 
         $this->successMessage = 'Badge créé avec succès !';
-        $this->reset(['selected_client_id', 'selected_coworker_id', 'expiry_date', 'badge_number', 'errorMessage']);
+        $this->reset(['selected_client_id', 'selected_coworker_id', 'airport', 'expiry_date', 'badge_number', 'errorMessage']);
         $this->coworkers = collect();
 
         $this->dispatch('badge-created');
@@ -85,7 +91,7 @@ class CreateStandaloneBadgeForm extends Component
 
     public function closeModal(): void
     {
-        $this->reset(['selected_client_id', 'selected_coworker_id', 'expiry_date', 'badge_number', 'errorMessage', 'successMessage']);
+        $this->reset(['selected_client_id', 'selected_coworker_id', 'airport', 'expiry_date', 'badge_number', 'errorMessage', 'successMessage']);
         $this->coworkers = collect();
         Flux::modal('add-standalone-badge')->close();
     }

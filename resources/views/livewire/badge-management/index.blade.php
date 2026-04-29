@@ -11,8 +11,18 @@
         <x-badge-info-card title="Non Restitués" value="{{ $stats['not_returned'] }}" bg-color="yellow-200" />
     </div>
 
-    <div class="flex items-center gap-3 mt-4">
-        <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher par nom, prénom du collaborateur ou nom de l'entreprise" />
+    <div class="flex items-center gap-3 mt-4 flex-wrap">
+        <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Rechercher par nom, prénom du collaborateur ou nom de l'entreprise" class="flex-1 min-w-[200px]" />
+        <select wire:model.live="selectedAirport"
+                class="min-w-[180px] px-3 py-2 border border-gray-300 rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <option value="">Tous les aéroports</option>
+            <option value="CDG">CDG</option>
+            <option value="ORY">ORY</option>
+            <option value="LBG">LBG</option>
+        </select>
+        @if($selectedAirport || $search)
+            <flux:button variant="ghost" icon="x-mark" wire:click="resetFilters">Réinitialiser</flux:button>
+        @endif
         @if(auth()->user()->isAdmin())
             <flux:dropdown>
                 <flux:button variant="primary" icon="plus" icon:trailing="chevron-down">Ajouter un badge</flux:button>
@@ -27,6 +37,15 @@
             </flux:dropdown>
         @endif
     </div>
+    @if($selectedAirport)
+        <div class="mt-2 flex items-center gap-2 flex-wrap">
+            <flux:text class="text-sm text-gray-600">Filtres actifs :</flux:text>
+            <flux:badge color="cyan" size="sm" class="cursor-pointer" wire:click="$set('selectedAirport', null)">
+                {{ $selectedAirport }}
+                <span class="ml-1">×</span>
+            </flux:badge>
+        </div>
+    @endif
 
     <div class="mt-4 py-4 bg-white rounded-lg border border-zinc-200">
         <flux:heading size="lg" class="px-4">Liste des badges</flux:heading>
@@ -48,6 +67,7 @@
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">N° BADGE</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DETENTEUR</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">CONTACT</th>
+                        <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">AEROPORT</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">STATUT</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DATE DE CREATION</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DATE D'EXPIRATION</th>
@@ -72,6 +92,21 @@
                         <td class="px-3 py-2">
                             <p class="text-gray-800 font-medium">{{ $badge->getEffectiveCoworker()?->email }}</p>
                             <flux:text>{{ $badge->getEffectiveCoworker()?->phone }}</flux:text>
+                        </td>
+                        <td class="px-3 py-2">
+                            @switch($badge->airport)
+                                @case('CDG')
+                                    <flux:badge color="cyan" size="sm">CDG</flux:badge>
+                                    @break
+                                @case('ORY')
+                                    <flux:badge color="violet" size="sm">ORY</flux:badge>
+                                    @break
+                                @case('LBG')
+                                    <flux:badge color="lime" size="sm">LBG</flux:badge>
+                                    @break
+                                @default
+                                    <flux:text class="text-gray-400">—</flux:text>
+                            @endswitch
                         </td>
                         <td class="px-3 py-2">
                             @switch($badge->status)
@@ -134,7 +169,7 @@
                     @endforeach
                     @else
                     <tr>
-                        <td class="px-3 py-2" colspan="7">
+                        <td class="px-3 py-2" colspan="8">
                             @if(!empty($search))
                                 <flux:text class="text-gray-500">Aucun badge trouvé pour "{{ $search }}"</flux:text>
                             @else
@@ -146,7 +181,7 @@
                     
                     <!-- Indicateur de chargement -->
                     <tr wire:loading wire:target="search,refreshBadges">
-                        <td class="px-3 py-2" colspan="7">
+                        <td class="px-3 py-2" colspan="8">
                             <div class="flex items-center justify-center py-4">
                                 <svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
