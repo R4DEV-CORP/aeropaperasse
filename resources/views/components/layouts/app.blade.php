@@ -39,21 +39,6 @@
                 <!--<flux:sidebar.item icon="chat-bubble-left-right" href="#" wire:navigate>Messagerie</flux:sidebar.item>-->
             </flux:sidebar.nav>
             <flux:sidebar.spacer />
-                <div class="@min-[64px]/sidebar:block hidden bg-linear-to-t from-[#0d0b0a] to-[#272322] p-4 m-4 rounded-lg">
-                    <div class="flex gap-1 items-center justify-center font-semibold">
-                        <flux:icon.information-circle class="size-6" />
-                        <p class="text-center text-lg">Support client</p>
-                    </div>
-                    <p class="mt-2 text-center">Pour tout incident technique, veuillez ouvrir un ticket.</p>
-                    <div class="flex justify-center p-4">
-                        <a href="https://r4web.zendesk.com" target="_blank" class="py-2 px-4 text-center rounded-lg bg-white text-black font-semibold hover:bg-slate-100 hover:text-slate-900">Ouvrir un ticket</a>
-                    </div>
-                    <div class="flex justify-center">
-                        <img src="{{ asset('images/logo-r4client.png') }}" alt="R4DEV" class="w-24">
-                    </div>
-                    <p class="mt-2 text-center">www.r4dev.fr</p>
-                </div>
-                
             <flux:sidebar.nav>
                 <flux:sidebar.item icon="arrow-left-start-on-rectangle" href="{{ route('auth.logout') }}">Deconnexion</flux:sidebar.item>
             </flux:sidebar.nav>
