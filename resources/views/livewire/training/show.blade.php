@@ -76,7 +76,12 @@
                                 @endphp
                                 <div class="flex items-center justify-between gap-4 py-2 border-b border-zinc-100 last:border-0">
                                     <div class="flex-1">
-                                        <p class="font-medium text-gray-800 text-sm">{{ $training->title }}</p>
+                                        <div class="flex items-center gap-2">
+                                            <p class="font-medium text-gray-800 text-sm">{{ $training->title }}</p>
+                                            @if($training->pivot->airport)
+                                                <flux:badge color="blue" size="sm">{{ $training->pivot->airport }}</flux:badge>
+                                            @endif
+                                        </div>
                                         <p class="text-xs text-gray-500 mt-0.5">
                                             Début : {{ $startedAt->format('d/m/Y') }}
                                             @if($expiresAt) · Expiration : {{ $expiresAt->format('d/m/Y') }}
@@ -130,6 +135,7 @@
                     <tr>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">NOM & PRENOM</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">FORMATION</th>
+                        <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">AEROPORT</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DUREE DE FORMATION</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DATE DE DEBUT</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DATE D'EXPIRATION</th>
@@ -147,6 +153,13 @@
                                 <p>{{ $training->training_title }}</p>
                             </td>
                             <td class="px-3 py-2">
+                                @if($training->airport)
+                                    <flux:badge color="blue" size="sm">{{ $training->airport }}</flux:badge>
+                                @else
+                                    <span class="text-gray-400">—</span>
+                                @endif
+                            </td>
+                            <td class="px-3 py-2">
                                 <p>{{ $training->expires_at ? \Carbon\Carbon::parse($training->started_at)->diffInYears(\Carbon\Carbon::parse($training->expires_at)).' ans' : 'À vie' }}</p>
                             </td>
                             <td class="px-3 py-2">
@@ -162,6 +175,18 @@
                                     </flux:modal.trigger>
                                     @if($training->certificate_path)
                                         <flux:button icon="arrow-down-tray" icon:variant="outline" variant="subtle" square="true" tooltip="Télécharger le certificat" class="!text-blue-500 hover:cursor-pointer" wire:click="downloadCertificate({{ $training->id }})"/>
+                                    @endif
+                                    @if($training->training_requires_airport)
+                                        <flux:button
+                                            icon="pencil-square"
+                                            icon:variant="outline"
+                                            variant="subtle"
+                                            square="true"
+                                            tooltip="Modifier l'aéroport"
+                                            class="!text-amber-500 hover:cursor-pointer"
+                                            wire:click="openEditAirport({{ $training->id }}, '{{ $training->airport }}')"
+                                            wire:key="airport-trigger-{{ $training->id }}"
+                                        />
                                     @endif
                                     <flux:modal :name="'upload-certificate-modal-'.$training->id" wire:key="modal-{{ $training->id }}" class="min-w-4xl !max-w-6xl">
                                         <flux:heading size="lg">Déposer le certificat</flux:heading>
@@ -183,6 +208,9 @@
                                             </div>
                                         </form>
                                     </flux:modal>
+                                    @if($training->training_requires_airport)
+                                        @include('livewire.training.partials.edit-airport-modal', ['training' => $training, 'keyPrefix' => 'active'])
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -204,6 +232,7 @@
                     <tr>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">NOM & PRENOM</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">FORMATION</th>
+                        <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">AEROPORT</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DUREE DE FORMATION</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DATE DE DEBUT</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DATE D'EXPIRATION</th>
@@ -221,6 +250,13 @@
                                 <p>{{ $training->training_title }}</p>
                             </td>
                             <td class="px-3 py-2">
+                                @if($training->airport)
+                                    <flux:badge color="blue" size="sm">{{ $training->airport }}</flux:badge>
+                                @else
+                                    <span class="text-gray-400">—</span>
+                                @endif
+                            </td>
+                            <td class="px-3 py-2">
                                 <p>{{ $training->expires_at ? \Carbon\Carbon::parse($training->started_at)->diffInYears(\Carbon\Carbon::parse($training->expires_at)).' ans' : 'À vie' }}</p>
                             </td>
                             <td class="px-3 py-2">
@@ -236,6 +272,19 @@
                                     </flux:modal.trigger>
                                     @if($training->certificate_path)
                                         <flux:button icon="arrow-down-tray" icon:variant="outline" variant="subtle" square="true" tooltip="Télécharger le certificat" class="!text-blue-500 hover:cursor-pointer" wire:click="downloadCertificate({{ $training->id }})"/>
+                                    @endif
+                                    @if($training->training_requires_airport)
+                                        <flux:button
+                                            icon="pencil-square"
+                                            icon:variant="outline"
+                                            variant="subtle"
+                                            square="true"
+                                            tooltip="Modifier l'aéroport"
+                                            class="!text-amber-500 hover:cursor-pointer"
+                                            wire:click="openEditAirport({{ $training->id }}, '{{ $training->airport }}')"
+                                            wire:key="airport-trigger-expiring-{{ $training->id }}"
+                                        />
+                                        @include('livewire.training.partials.edit-airport-modal', ['training' => $training, 'keyPrefix' => 'expiring'])
                                     @endif
                                 </div>
                             </td>
@@ -258,6 +307,7 @@
                     <tr>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">NOM & PRENOM</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">FORMATION</th>
+                        <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">AEROPORT</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DUREE DE FORMATION</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DATE DE DEBUT</th>
                         <th class="px-3 py-3 text-start text-sm font-medium text-gray-800">DATE D'EXPIRATION</th>
@@ -275,6 +325,13 @@
                                 <p>{{ $training->training_title }}</p>
                             </td>
                             <td class="px-3 py-2">
+                                @if($training->airport)
+                                    <flux:badge color="blue" size="sm">{{ $training->airport }}</flux:badge>
+                                @else
+                                    <span class="text-gray-400">—</span>
+                                @endif
+                            </td>
+                            <td class="px-3 py-2">
                                 <p>{{ $training->expires_at ? \Carbon\Carbon::parse($training->started_at)->diffInYears(\Carbon\Carbon::parse($training->expires_at)).' ans' : 'À vie' }}</p>
                             </td>
                             <td class="px-3 py-2">
@@ -290,6 +347,19 @@
                                     </flux:modal.trigger>
                                     @if($training->certificate_path)
                                         <flux:button icon="arrow-down-tray" icon:variant="outline" variant="subtle" square="true" tooltip="Télécharger le certificat" class="!text-blue-500 hover:cursor-pointer" wire:click="downloadCertificate({{ $training->id }})"/>
+                                    @endif
+                                    @if($training->training_requires_airport)
+                                        <flux:button
+                                            icon="pencil-square"
+                                            icon:variant="outline"
+                                            variant="subtle"
+                                            square="true"
+                                            tooltip="Modifier l'aéroport"
+                                            class="!text-amber-500 hover:cursor-pointer"
+                                            wire:click="openEditAirport({{ $training->id }}, '{{ $training->airport }}')"
+                                            wire:key="airport-trigger-expired-{{ $training->id }}"
+                                        />
+                                        @include('livewire.training.partials.edit-airport-modal', ['training' => $training, 'keyPrefix' => 'expired'])
                                     @endif
                                     <flux:modal :name="'upload-certificate-modal-'.$training->id" wire:key="modal-expired-{{ $training->id }}" class="min-w-4xl !max-w-6xl">
                                         <flux:heading size="lg">Déposer le certificat</flux:heading>

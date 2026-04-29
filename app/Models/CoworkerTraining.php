@@ -10,7 +10,7 @@ class CoworkerTraining extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["coworker_id", "training_id", "started_at", "expires_at", "certificate_path"];
+    protected $fillable = ['coworker_id', 'training_id', 'airport', 'started_at', 'expires_at', 'certificate_path'];
 
     public function coworker(): BelongsTo
     {

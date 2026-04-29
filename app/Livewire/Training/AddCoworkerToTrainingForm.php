@@ -34,6 +34,8 @@ class AddCoworkerToTrainingForm extends Component
 
     public $validity_years;
 
+    public $selected_airport;
+
     public function mount()
     {
         $this->user = auth()->user();
@@ -50,6 +52,24 @@ class AddCoworkerToTrainingForm extends Component
     {
         $this->selected_coworker_id = null;
         $this->loadCoworkers();
+    }
+
+    public function updatedSelectedTrainingId()
+    {
+        if (! $this->getRequiresAirportProperty()) {
+            $this->selected_airport = null;
+        }
+    }
+
+    public function getRequiresAirportProperty(): bool
+    {
+        if (! $this->selected_training_id) {
+            return false;
+        }
+
+        $training = $this->trainings->firstWhere('id', (int) $this->selected_training_id);
+
+        return (bool) ($training?->requires_airport);
     }
 
     public function loadCoworkers()
@@ -73,6 +93,7 @@ class AddCoworkerToTrainingForm extends Component
             'selected_training_id' => 'required|exists:trainings,id',
             'start_date' => 'required|date',
             'validity_years' => 'required|in:2,3,5,lifetime',
+            'selected_airport' => 'nullable|in:ORY,CDG,LBG',
         ], [
             'selected_coworker_id.required' => 'Veuillez sélectionner un collaborateur.',
             'selected_coworker_id.exists' => 'Le collaborateur sélectionné n\'existe pas.',
@@ -82,19 +103,26 @@ class AddCoworkerToTrainingForm extends Component
             'start_date.date' => 'La date de début doit être une date valide.',
             'validity_years.required' => 'Veuillez sélectionner une durée de validité.',
             'validity_years.in' => 'La durée de validité doit être de 2, 3, 5 ans ou à vie.',
+            'selected_airport.in' => 'L\'aéroport sélectionné est invalide.',
         ]);
+
+        $airport = $this->getRequiresAirportProperty() ? $this->selected_airport : null;
 
         try {
             DB::beginTransaction();
 
-            // Vérifier si l'association existe déjà
+            // Vérifier si l'association existe déjà (en tenant compte de l'aéroport)
             $existingAssociation = DB::table('coworker_trainings')
                 ->where('coworker_id', $this->selected_coworker_id)
                 ->where('training_id', $this->selected_training_id)
+                ->when($airport !== null, fn ($q) => $q->where('airport', $airport))
+                ->when($airport === null, fn ($q) => $q->whereNull('airport'))
                 ->first();
 
             if ($existingAssociation) {
-                $this->errorMessage = 'Ce collaborateur a déjà cette formation attribuée.';
+                $this->errorMessage = $airport
+                    ? 'Ce collaborateur a déjà cette formation attribuée pour cet aéroport.'
+                    : 'Ce collaborateur a déjà cette formation attribuée.';
 
                 return;
             }
@@ -109,6 +137,7 @@ class AddCoworkerToTrainingForm extends Component
             DB::table('coworker_trainings')->insert([
                 'coworker_id' => $this->selected_coworker_id,
                 'training_id' => $this->selected_training_id,
+                'airport' => $airport,
                 'started_at' => $startDate,
                 'expires_at' => $expiresAt,
                 'created_at' => now(),
@@ -123,6 +152,7 @@ class AddCoworkerToTrainingForm extends Component
             $this->selected_training_id = null;
             $this->start_date = null;
             $this->validity_years = null;
+            $this->selected_airport = null;
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -136,6 +166,7 @@ class AddCoworkerToTrainingForm extends Component
         $this->selected_training_id = null;
         $this->start_date = null;
         $this->validity_years = null;
+        $this->selected_airport = null;
     }
 
     public function closeModal()

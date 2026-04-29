@@ -4,6 +4,7 @@ namespace App\Livewire\Training;
 
 use App\Models\Client;
 use App\Services\CertificateTrainingDocumentService;
+use Flux\Flux;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -29,6 +30,8 @@ class Show extends Component
     public $successMessage = '';
 
     public $errorMessage = '';
+
+    public $airportToUpdate;
 
     public function mount($slug)
     {
@@ -98,6 +101,68 @@ class Show extends Component
         }
     }
 
+    public function openEditAirport(int $coworkerTrainingId, ?string $currentAirport): void
+    {
+        $this->airportToUpdate = $currentAirport;
+        Flux::modal('edit-airport-modal-'.$coworkerTrainingId)->show();
+    }
+
+    public function updateAirport(int $coworkerTrainingId): void
+    {
+        $this->validate([
+            'airportToUpdate' => 'nullable|in:ORY,CDG,LBG',
+        ], [
+            'airportToUpdate.in' => 'L\'aéroport sélectionné est invalide.',
+        ]);
+
+        try {
+            $airport = $this->airportToUpdate ?: null;
+
+            $coworkerTraining = DB::table('coworker_trainings')
+                ->where('id', $coworkerTrainingId)
+                ->first();
+
+            if (! $coworkerTraining) {
+                $this->errorMessage = 'Attribution introuvable.';
+
+                return;
+            }
+
+            $duplicate = DB::table('coworker_trainings')
+                ->where('coworker_id', $coworkerTraining->coworker_id)
+                ->where('training_id', $coworkerTraining->training_id)
+                ->where('id', '!=', $coworkerTrainingId)
+                ->when($airport !== null, fn ($q) => $q->where('airport', $airport))
+                ->when($airport === null, fn ($q) => $q->whereNull('airport'))
+                ->exists();
+
+            if ($duplicate) {
+                $this->errorMessage = $airport
+                    ? 'Ce collaborateur a déjà cette formation attribuée pour cet aéroport.'
+                    : 'Ce collaborateur a déjà cette formation attribuée sans aéroport.';
+
+                return;
+            }
+
+            DB::table('coworker_trainings')
+                ->where('id', $coworkerTrainingId)
+                ->update([
+                    'airport' => $airport,
+                    'updated_at' => now(),
+                ]);
+
+            $this->successMessage = 'Aéroport mis à jour avec succès.';
+            $this->errorMessage = '';
+            $this->airportToUpdate = null;
+
+            $this->loadTrainings();
+
+            Flux::modal('edit-airport-modal-'.$coworkerTrainingId)->close();
+        } catch (\Exception $e) {
+            $this->errorMessage = 'Erreur lors de la mise à jour de l\'aéroport : '.$e->getMessage();
+        }
+    }
+
     /**
      * Rafraîchir les données des formations
      */
@@ -110,7 +175,8 @@ class Show extends Component
                 'coworker_trainings.*',
                 'coworkers.firstname as coworker_firstname',
                 'coworkers.lastname as coworker_lastname',
-                'trainings.title as training_title'
+                'trainings.title as training_title',
+                'trainings.requires_airport as training_requires_airport'
             )
             ->where(function ($query) {
                 $query->whereNull('coworker_trainings.expires_at')
@@ -126,7 +192,8 @@ class Show extends Component
                 'coworker_trainings.*',
                 'coworkers.firstname as coworker_firstname',
                 'coworkers.lastname as coworker_lastname',
-                'trainings.title as training_title'
+                'trainings.title as training_title',
+                'trainings.requires_airport as training_requires_airport'
             )
             ->whereNotNull('coworker_trainings.expires_at')
             ->where('coworker_trainings.expires_at', '<=', now()->addMonth(6))
@@ -141,7 +208,8 @@ class Show extends Component
                 'coworker_trainings.*',
                 'coworkers.firstname as coworker_firstname',
                 'coworkers.lastname as coworker_lastname',
-                'trainings.title as training_title'
+                'trainings.title as training_title',
+                'trainings.requires_airport as training_requires_airport'
             )
             ->whereNotNull('coworker_trainings.expires_at')
             ->where('coworker_trainings.expires_at', '<', now())

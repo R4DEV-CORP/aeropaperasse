@@ -133,7 +133,7 @@ class DatabaseSeeder extends Seeder
         $training6 = Training::factory()
             ->create(['title' => 'Sécurité piétons']);
         $training7 = Training::factory()
-            ->create(['title' => 'Permis T']);
+            ->create(['title' => 'Permis T', 'requires_airport' => true]);
         $training8 = Training::factory()
             ->create(['title' => 'Pratique permis T']);
         $training9 = Training::factory()

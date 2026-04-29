@@ -11,12 +11,17 @@ class Training extends Model
 
     protected $fillable = [
         'title',
+        'requires_airport',
+    ];
+
+    protected $casts = [
+        'requires_airport' => 'boolean',
     ];
 
     public function coworkers()
     {
         return $this->belongsToMany(Coworker::class, 'coworker_trainings')
-            ->withPivot(['id', 'started_at', 'expires_at', 'certificate_path'])
+            ->withPivot(['id', 'started_at', 'expires_at', 'certificate_path', 'airport'])
             ->withTimestamps();
     }
 }

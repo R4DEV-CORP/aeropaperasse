@@ -17,7 +17,8 @@ class TrainingFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'title' => $this->faker->unique()->words(2, true),
+            'requires_airport' => false,
         ];
     }
 }

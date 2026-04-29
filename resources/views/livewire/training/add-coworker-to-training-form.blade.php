@@ -71,24 +71,38 @@
         @if($selected_coworker_id)
             <div class="border border-gray-800/10 p-4 rounded-lg">
                 <flux:heading size="lg">Selectionnez la formation<span class="text-red-500">*</span></flux:heading>
-                <flux:radio.group wire:model="selected_training_id" label="Formation">
+                <flux:radio.group wire:model.live="selected_training_id" label="Formation">
                     <div class="grid grid-cols-3 gap-4">
                         @foreach($trainings as $training)
                             <flux:radio label="{{ $training->title }}" value="{{ $training->id }}" />
                         @endforeach
                     </div>
                 </flux:radio.group>
-                <flux:field class="mt-4">
+                @if($this->requiresAirport)
+                    <div class="mt-6 pt-4 border-t border-gray-800/10">
+                        <flux:radio.group wire:model="selected_airport" label="Aéroport (optionnel)">
+                            <div class="grid grid-cols-3 gap-4">
+                                <flux:radio value="ORY" label="ORY" />
+                                <flux:radio value="CDG" label="CDG" />
+                                <flux:radio value="LBG" label="LBG" />
+                            </div>
+                        </flux:radio.group>
+                        <flux:error name="selected_airport" />
+                    </div>
+                @endif
+                <flux:field class="mt-6">
                     <flux:label>Date de début<span class="text-red-500">*</span></flux:label>
                     <flux:input wire:model="start_date" type="date" name="start_date" />
                     <flux:error name="start_date" />
                 </flux:field>
-                <flux:radio.group wire:model="validity_years" label="Durée de la formation">
-                    <flux:radio value="2" label="2 ans" />
-                    <flux:radio value="3" label="3 ans" />
-                    <flux:radio value="5" label="5 ans" />
-                    <flux:radio value="lifetime" label="À vie" />
-                </flux:radio.group>
+                <div class="mt-6">
+                    <flux:radio.group wire:model="validity_years" label="Durée de la formation">
+                        <flux:radio value="2" label="2 ans" />
+                        <flux:radio value="3" label="3 ans" />
+                        <flux:radio value="5" label="5 ans" />
+                        <flux:radio value="lifetime" label="À vie" />
+                    </flux:radio.group>
+                </div>
             </div>
         @endif
     @endif
