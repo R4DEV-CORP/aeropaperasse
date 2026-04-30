@@ -11,12 +11,18 @@
 ])
 
 @php
-    $id = $id ?? 'input-' . uniqid();
+    if (! $id && $label) {
+        $id = 'input-' . md5($label);
+    }
     $hasError = ! empty($error);
+    $hasLeadingIcon = isset($leadingIcon);
+    $hasTrailingIcon = isset($trailingIcon);
     $borderClass = $hasError
         ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
         : 'border-border focus:border-accent focus:ring-accent';
-    $inputClass = "block w-full rounded border bg-slate-50 px-3 py-2.5 text-sm text-foreground placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-1 $borderClass" . ($togglePassword ? ' pr-10' : '');
+    $paddingLeft = $hasLeadingIcon ? 'pl-10' : 'px-3';
+    $paddingRight = ($togglePassword || $hasTrailingIcon) ? 'pr-10' : ($hasLeadingIcon ? 'pr-3' : '');
+    $inputClass = "block w-full rounded border bg-white py-2.5 text-sm text-foreground placeholder:text-slate-400 focus:outline-none focus:ring-1 $borderClass $paddingLeft $paddingRight";
 @endphp
 
 <div class="space-y-1.5">
@@ -31,8 +37,13 @@
 
     @if ($togglePassword)
         <div class="relative" x-data="{ visible: false }">
+            @if ($hasLeadingIcon)
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-foreground-subtle">
+                    {{ $leadingIcon }}
+                </div>
+            @endif
             <input
-                id="{{ $id }}"
+                @if ($id) id="{{ $id }}" @endif
                 :type="visible ? 'text' : '{{ $type }}'"
                 @required($required)
                 {{ $attributes->merge(['class' => $inputClass]) }}
@@ -53,9 +64,28 @@
                 </svg>
             </button>
         </div>
+    @elseif ($hasLeadingIcon || $hasTrailingIcon)
+        <div class="relative">
+            @if ($hasLeadingIcon)
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-foreground-subtle">
+                    {{ $leadingIcon }}
+                </div>
+            @endif
+            <input
+                @if ($id) id="{{ $id }}" @endif
+                type="{{ $type }}"
+                @required($required)
+                {{ $attributes->merge(['class' => $inputClass]) }}
+            />
+            @if ($hasTrailingIcon)
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 text-foreground-subtle">
+                    {{ $trailingIcon }}
+                </div>
+            @endif
+        </div>
     @else
         <input
-            id="{{ $id }}"
+            @if ($id) id="{{ $id }}" @endif
             type="{{ $type }}"
             @required($required)
             {{ $attributes->merge(['class' => $inputClass]) }}

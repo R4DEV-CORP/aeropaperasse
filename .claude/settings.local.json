@@ -28,7 +28,12 @@
       "Bash(gh repo *)",
       "Bash(gh api *)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "mcp__plugin_playwright_playwright__browser_press_key"
+      "mcp__plugin_playwright_playwright__browser_press_key",
+      "Bash(magick --version)",
+      "Bash(node -e \"try { require.resolve\\('sharp'\\); console.log\\('sharp: yes'\\) } catch\\(e\\) { console.log\\('sharp: no'\\) }\")",
+      "Bash(grep -iE \"^sharp$|^jimp$|^canvas$\")",
+      "PowerShell(Add-Type -AssemblyName System.Drawing; $img = [System.Drawing.Image]::FromFile\\(\"C:\\\\laragon\\\\www\\\\aeropaperasse\\\\public\\\\images\\\\aeropaperasse-logo-white.png\"\\); Write-Output \"Width: $\\($img.Width\\)x$\\($img.Height\\)\"; $img.Dispose\\(\\))",
+      "Bash(npm run *)"
     ]
   }
 }

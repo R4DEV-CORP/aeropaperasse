@@ -69,9 +69,9 @@ Route::get('/activity-requests', function () {
 * Routes badge requests
 */
 
-Route::get('/badge-requests', function () {
-    return view('badge-requests.index');
-})->middleware('auth');
+Route::livewire('/badge-requests', 'pages::badge-requests.index')
+    ->middleware('auth')
+    ->name('badge-requests.index');
 
 /*
 * Routes badge management
