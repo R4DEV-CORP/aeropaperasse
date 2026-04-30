@@ -1,31 +1,47 @@
 @import 'tailwindcss';
-@import '../../vendor/livewire/flux/dist/flux.css';
 
 @theme {
     --font-sans: Inter, sans-serif;
+
+    /* ──────────────────────────────────────────────────────────────
+     * Accent — primary action color (dark navy, per design system)
+     * Used by: <x-ui.button variant="primary">, focus rings, links
+     * ──────────────────────────────────────────────────────────── */
+    --color-accent: var(--color-slate-900);
+    --color-accent-content: var(--color-slate-800);
+    --color-accent-foreground: var(--color-white);
+
+    /* ──────────────────────────────────────────────────────────────
+     * Brand — small decorative blue (logo, brand pill, badges)
+     * NOT a primary action color — use sparingly.
+     * ──────────────────────────────────────────────────────────── */
+    --color-brand: var(--color-blue-500);
+    --color-brand-content: var(--color-blue-600);
+
+    /* ──────────────────────────────────────────────────────────────
+     * Borders — default subtle border used in inputs, cards, dividers
+     * ──────────────────────────────────────────────────────────── */
+    --color-border: var(--color-slate-200);
+
+    /* ──────────────────────────────────────────────────────────────
+     * Foreground (text hierarchy)
+     * ──────────────────────────────────────────────────────────── */
+    --color-foreground: var(--color-slate-900);          /* primary text: body, headings, input values */
+    --color-foreground-muted: var(--color-slate-600);    /* secondary text: labels, intros, descriptions */
+    --color-foreground-subtle: var(--color-slate-500);   /* tertiary text: hints, captions, copyright */
+
+    /* ──────────────────────────────────────────────────────────────
+     * Status — used for request workflow states (badges + bullets)
+     * ──────────────────────────────────────────────────────────── */
+    --color-status-draft: var(--color-slate-500);
+    --color-status-pending: var(--color-amber-500);
+    --color-status-approved: var(--color-emerald-500);
+    --color-status-rejected: var(--color-red-500);
+    --color-status-in-progress: var(--color-violet-500);
+    --color-status-ready: var(--color-blue-500);
 }
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
-
-/* Re-assign Flux's gray of choice... */
-@theme {
-    --color-zinc-50: var(--color-gray-50);
-    --color-zinc-100: var(--color-gray-100);
-    --color-zinc-200: var(--color-gray-200);
-    --color-zinc-300: var(--color-gray-300);
-    --color-zinc-400: var(--color-gray-400);
-    --color-zinc-500: var(--color-gray-500);
-    --color-zinc-600: var(--color-gray-600);
-    --color-zinc-700: var(--color-gray-700);
-    --color-zinc-800: var(--color-gray-800);
-    --color-zinc-900: var(--color-gray-900);
-    --color-zinc-950: var(--color-gray-950);
-}
-@theme {
-    --color-accent: var(--color-blue-500);
-    --color-accent-content: var(--color-blue-600);
-    --color-accent-foreground: var(--color-white);
-}

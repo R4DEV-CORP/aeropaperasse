@@ -273,7 +273,9 @@ class AuthService
             if (! Hash::check($currentPassword, $user->password)) {
                 return [
                     'success' => false,
-                    'message' => 'Le mot de passe actuel est incorrect.',
+                    'message' => $user->is_new
+                        ? 'Le mot de passe temporaire est incorrect.'
+                        : 'Le mot de passe actuel est incorrect.',
                 ];
             }
 

@@ -1,0 +1,798 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - link [ref=e4] [cursor=pointer]:
+        - /url: /dashboard/badge-requests
+      - button "Réduire" [ref=e8]:
+        - img [ref=e9]
+    - navigation [ref=e11]:
+      - link "Sociétés" [ref=e13] [cursor=pointer]:
+        - /url: /clients
+        - img [ref=e15]
+        - generic [ref=e17]: Sociétés
+      - link "Demande d'activité" [ref=e19] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e21]
+        - generic [ref=e23]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e25] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e27]
+        - generic [ref=e29]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e31] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e33]
+        - generic [ref=e35]: Demande de badge
+      - link "Suivi des badges" [ref=e37] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e39]
+        - generic [ref=e41]: Suivi des badges
+      - link "Formations" [ref=e43] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e45]
+        - generic [ref=e47]: Formations
+      - link "Laissez-passer" [ref=e49] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e51]
+        - generic [ref=e53]: Laissez-passer
+    - generic [ref=e54]:
+      - generic [ref=e55]:
+        - img [ref=e56]
+        - paragraph [ref=e58]: Support client
+      - paragraph [ref=e59]: Pour tout incident technique, veuillez ouvrir un ticket.
+      - link "Ouvrir un ticket" [ref=e61] [cursor=pointer]:
+        - /url: https://r4web.zendesk.com
+      - img "R4DEV" [ref=e63]
+      - paragraph [ref=e64]: www.r4dev.fr
+    - navigation [ref=e65]:
+      - link "Deconnexion" [ref=e67] [cursor=pointer]:
+        - /url: http://localhost:8000/logout
+        - img [ref=e69]
+        - generic [ref=e71]: Deconnexion
+  - generic [ref=e73]:
+    - generic [ref=e74]:
+      - img [ref=e75]
+      - link "Retour à la liste des sociétés" [ref=e77] [cursor=pointer]:
+        - /url: /clients
+    - generic [ref=e78]: EQIOM
+    - generic [ref=e79]:
+      - paragraph [ref=e80]: Consultez et modifiez les informations de cette société.
+      - generic [ref=e81]:
+        - button "Modifier la société" [ref=e84]:
+          - img [ref=e85]
+          - generic [ref=e88]: Modifier la société
+        - button "Télécharger le bilan" [ref=e90]:
+          - img [ref=e92]
+          - img [ref=e95]
+          - generic [ref=e98]: Télécharger le bilan
+    - generic [ref=e99]:
+      - generic [ref=e100]: Informations sur la société
+      - generic [ref=e101]:
+        - generic [ref=e102]:
+          - paragraph [ref=e103]: Raison sociale
+          - paragraph [ref=e104]: EQIOM
+        - generic [ref=e105]:
+          - paragraph [ref=e106]: Nom commercial
+          - paragraph [ref=e107]: Eqiom betons
+        - generic [ref=e108]:
+          - paragraph [ref=e109]: SIRET
+          - paragraph
+      - generic [ref=e110]:
+        - generic [ref=e111]:
+          - paragraph [ref=e112]: Adresse
+          - paragraph
+        - generic [ref=e113]:
+          - paragraph [ref=e114]: Code postal
+          - paragraph
+        - generic [ref=e115]:
+          - paragraph [ref=e116]: Ville
+          - paragraph
+      - generic [ref=e117]:
+        - generic [ref=e118]:
+          - paragraph [ref=e119]: Sous traitant de
+          - paragraph [ref=e120]: Aucun
+        - generic [ref=e121]:
+          - paragraph [ref=e122]: Email de notification
+          - paragraph [ref=e123]: baptiste.cornil@eqiom.com
+        - generic [ref=e124]:
+          - paragraph [ref=e125]: Compagnie aérienne
+          - generic [ref=e126]: Non
+    - generic [ref=e128]: Contacts
+    - generic [ref=e129]:
+      - generic [ref=e130]: Documents
+      - generic [ref=e131]:
+        - paragraph [ref=e132]: KBIS
+        - generic [ref=e133]:
+          - img [ref=e134]
+          - text: Absent
+      - generic [ref=e136]:
+        - paragraph [ref=e137]: Référents sûreté
+        - generic [ref=e138]:
+          - img [ref=e139]
+          - text: Absent
+      - generic [ref=e141]:
+        - paragraph [ref=e142]: Correspondant sécurité
+        - generic [ref=e143]:
+          - img [ref=e144]
+          - text: Absent
+    - generic [ref=e146]:
+      - generic [ref=e147]: Utilisateurs & Collaborateurs
+      - table [ref=e149]:
+        - rowgroup [ref=e150]:
+          - row "NOM & PRENOM ROLE CONTACT STATUT" [ref=e151]:
+            - columnheader "NOM & PRENOM" [ref=e152]
+            - columnheader "ROLE" [ref=e153]
+            - columnheader "CONTACT" [ref=e154]
+            - columnheader "STATUT" [ref=e155]
+        - rowgroup [ref=e156]:
+          - row "ADMILSON FREIRE BARRETO DE CARVALHO Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e157]:
+            - cell "ADMILSON FREIRE BARRETO DE CARVALHO" [ref=e158]:
+              - paragraph [ref=e159]: ADMILSON FREIRE BARRETO DE CARVALHO
+            - cell "Collaborateur" [ref=e160]:
+              - generic [ref=e161]:
+                - img [ref=e162]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e164]:
+              - paragraph [ref=e165]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e166]: "0000000000"
+            - cell "Actif" [ref=e167]:
+              - generic [ref=e168]:
+                - img [ref=e169]
+                - text: Actif
+          - row "MAMADOU LY Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e171]:
+            - cell "MAMADOU LY" [ref=e172]:
+              - paragraph [ref=e173]: MAMADOU LY
+            - cell "Collaborateur" [ref=e174]:
+              - generic [ref=e175]:
+                - img [ref=e176]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e178]:
+              - paragraph [ref=e179]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e180]: "0000000000"
+            - cell "Actif" [ref=e181]:
+              - generic [ref=e182]:
+                - img [ref=e183]
+                - text: Actif
+          - row "IBRAHIMA HAIDARA Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e185]:
+            - cell "IBRAHIMA HAIDARA" [ref=e186]:
+              - paragraph [ref=e187]: IBRAHIMA HAIDARA
+            - cell "Collaborateur" [ref=e188]:
+              - generic [ref=e189]:
+                - img [ref=e190]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e192]:
+              - paragraph [ref=e193]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e194]: "0000000000"
+            - cell "Actif" [ref=e195]:
+              - generic [ref=e196]:
+                - img [ref=e197]
+                - text: Actif
+          - row "ENCA MALIQUE SALLA Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e199]:
+            - cell "ENCA MALIQUE SALLA" [ref=e200]:
+              - paragraph [ref=e201]: ENCA MALIQUE SALLA
+            - cell "Collaborateur" [ref=e202]:
+              - generic [ref=e203]:
+                - img [ref=e204]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e206]:
+              - paragraph [ref=e207]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e208]: "0000000000"
+            - cell "Actif" [ref=e209]:
+              - generic [ref=e210]:
+                - img [ref=e211]
+                - text: Actif
+          - row "CLAUDINO RAMOS MIRANDA Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e213]:
+            - cell "CLAUDINO RAMOS MIRANDA" [ref=e214]:
+              - paragraph [ref=e215]: CLAUDINO RAMOS MIRANDA
+            - cell "Collaborateur" [ref=e216]:
+              - generic [ref=e217]:
+                - img [ref=e218]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e220]:
+              - paragraph [ref=e221]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e222]: "0000000000"
+            - cell "Actif" [ref=e223]:
+              - generic [ref=e224]:
+                - img [ref=e225]
+                - text: Actif
+          - row "JOAO DA SILVA MOREIRA BARRETO Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e227]:
+            - cell "JOAO DA SILVA MOREIRA BARRETO" [ref=e228]:
+              - paragraph [ref=e229]: JOAO DA SILVA MOREIRA BARRETO
+            - cell "Collaborateur" [ref=e230]:
+              - generic [ref=e231]:
+                - img [ref=e232]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e234]:
+              - paragraph [ref=e235]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e236]: "0000000000"
+            - cell "Actif" [ref=e237]:
+              - generic [ref=e238]:
+                - img [ref=e239]
+                - text: Actif
+          - row "MOHAMED ZERROUK Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e241]:
+            - cell "MOHAMED ZERROUK" [ref=e242]:
+              - paragraph [ref=e243]: MOHAMED ZERROUK
+            - cell "Collaborateur" [ref=e244]:
+              - generic [ref=e245]:
+                - img [ref=e246]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e248]:
+              - paragraph [ref=e249]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e250]: "0000000000"
+            - cell "Actif" [ref=e251]:
+              - generic [ref=e252]:
+                - img [ref=e253]
+                - text: Actif
+          - row "KAMEL CHEMMAM Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e255]:
+            - cell "KAMEL CHEMMAM" [ref=e256]:
+              - paragraph [ref=e257]: KAMEL CHEMMAM
+            - cell "Collaborateur" [ref=e258]:
+              - generic [ref=e259]:
+                - img [ref=e260]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e262]:
+              - paragraph [ref=e263]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e264]: "0000000000"
+            - cell "Actif" [ref=e265]:
+              - generic [ref=e266]:
+                - img [ref=e267]
+                - text: Actif
+          - row "ABDELATIF BOUGHANEM Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e269]:
+            - cell "ABDELATIF BOUGHANEM" [ref=e270]:
+              - paragraph [ref=e271]: ABDELATIF BOUGHANEM
+            - cell "Collaborateur" [ref=e272]:
+              - generic [ref=e273]:
+                - img [ref=e274]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e276]:
+              - paragraph [ref=e277]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e278]: "0000000000"
+            - cell "Actif" [ref=e279]:
+              - generic [ref=e280]:
+                - img [ref=e281]
+                - text: Actif
+          - row "ADAMA SANOGO Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e283]:
+            - cell "ADAMA SANOGO" [ref=e284]:
+              - paragraph [ref=e285]: ADAMA SANOGO
+            - cell "Collaborateur" [ref=e286]:
+              - generic [ref=e287]:
+                - img [ref=e288]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e290]:
+              - paragraph [ref=e291]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e292]: "0000000000"
+            - cell "Actif" [ref=e293]:
+              - generic [ref=e294]:
+                - img [ref=e295]
+                - text: Actif
+          - row "IBRAHIMA DIABY Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e297]:
+            - cell "IBRAHIMA DIABY" [ref=e298]:
+              - paragraph [ref=e299]: IBRAHIMA DIABY
+            - cell "Collaborateur" [ref=e300]:
+              - generic [ref=e301]:
+                - img [ref=e302]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e304]:
+              - paragraph [ref=e305]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e306]: "0000000000"
+            - cell "Actif" [ref=e307]:
+              - generic [ref=e308]:
+                - img [ref=e309]
+                - text: Actif
+          - row "OUMAR FOFANA Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e311]:
+            - cell "OUMAR FOFANA" [ref=e312]:
+              - paragraph [ref=e313]: OUMAR FOFANA
+            - cell "Collaborateur" [ref=e314]:
+              - generic [ref=e315]:
+                - img [ref=e316]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e318]:
+              - paragraph [ref=e319]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e320]: "0000000000"
+            - cell "Actif" [ref=e321]:
+              - generic [ref=e322]:
+                - img [ref=e323]
+                - text: Actif
+          - row "MAXIME GIACALONE Collaborateur herve.pellischek@eqiom.com 0000000000 Actif" [ref=e325]:
+            - cell "MAXIME GIACALONE" [ref=e326]:
+              - paragraph [ref=e327]: MAXIME GIACALONE
+            - cell "Collaborateur" [ref=e328]:
+              - generic [ref=e329]:
+                - img [ref=e330]
+                - text: Collaborateur
+            - cell "herve.pellischek@eqiom.com 0000000000" [ref=e332]:
+              - paragraph [ref=e333]: herve.pellischek@eqiom.com
+              - paragraph [ref=e334]: "0000000000"
+            - cell "Actif" [ref=e335]:
+              - generic [ref=e336]:
+                - img [ref=e337]
+                - text: Actif
+          - row "ALI SOUEIDAN Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e339]:
+            - cell "ALI SOUEIDAN" [ref=e340]:
+              - paragraph [ref=e341]: ALI SOUEIDAN
+            - cell "Collaborateur" [ref=e342]:
+              - generic [ref=e343]:
+                - img [ref=e344]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e346]:
+              - paragraph [ref=e347]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e348]: "0000000000"
+            - cell "Actif" [ref=e349]:
+              - generic [ref=e350]:
+                - img [ref=e351]
+                - text: Actif
+          - row "HERVE PELLISCHEK Collaborateur herve.pellischek@eqiom.com 0000000000 Actif" [ref=e353]:
+            - cell "HERVE PELLISCHEK" [ref=e354]:
+              - paragraph [ref=e355]: HERVE PELLISCHEK
+            - cell "Collaborateur" [ref=e356]:
+              - generic [ref=e357]:
+                - img [ref=e358]
+                - text: Collaborateur
+            - cell "herve.pellischek@eqiom.com 0000000000" [ref=e360]:
+              - paragraph [ref=e361]: herve.pellischek@eqiom.com
+              - paragraph [ref=e362]: "0000000000"
+            - cell "Actif" [ref=e363]:
+              - generic [ref=e364]:
+                - img [ref=e365]
+                - text: Actif
+          - row "KEVIN VANCENBROCK Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e367]:
+            - cell "KEVIN VANCENBROCK" [ref=e368]:
+              - paragraph [ref=e369]: KEVIN VANCENBROCK
+            - cell "Collaborateur" [ref=e370]:
+              - generic [ref=e371]:
+                - img [ref=e372]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e374]:
+              - paragraph [ref=e375]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e376]: "0000000000"
+            - cell "Actif" [ref=e377]:
+              - generic [ref=e378]:
+                - img [ref=e379]
+                - text: Actif
+          - row "THIERRY YANG Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e381]:
+            - cell "THIERRY YANG" [ref=e382]:
+              - paragraph [ref=e383]: THIERRY YANG
+            - cell "Collaborateur" [ref=e384]:
+              - generic [ref=e385]:
+                - img [ref=e386]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e388]:
+              - paragraph [ref=e389]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e390]: "0000000000"
+            - cell "Actif" [ref=e391]:
+              - generic [ref=e392]:
+                - img [ref=e393]
+                - text: Actif
+          - row "KRYSTIAN RYSZARD PLUTA Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e395]:
+            - cell "KRYSTIAN RYSZARD PLUTA" [ref=e396]:
+              - paragraph [ref=e397]: KRYSTIAN RYSZARD PLUTA
+            - cell "Collaborateur" [ref=e398]:
+              - generic [ref=e399]:
+                - img [ref=e400]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e402]:
+              - paragraph [ref=e403]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e404]: "0000000000"
+            - cell "Actif" [ref=e405]:
+              - generic [ref=e406]:
+                - img [ref=e407]
+                - text: Actif
+          - row "JEAN PIERRE DUCTEIL Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e409]:
+            - cell "JEAN PIERRE DUCTEIL" [ref=e410]:
+              - paragraph [ref=e411]: JEAN PIERRE DUCTEIL
+            - cell "Collaborateur" [ref=e412]:
+              - generic [ref=e413]:
+                - img [ref=e414]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e416]:
+              - paragraph [ref=e417]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e418]: "0000000000"
+            - cell "Actif" [ref=e419]:
+              - generic [ref=e420]:
+                - img [ref=e421]
+                - text: Actif
+          - row "ANTONIO AFONSO LOPES Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e423]:
+            - cell "ANTONIO AFONSO LOPES" [ref=e424]:
+              - paragraph [ref=e425]: ANTONIO AFONSO LOPES
+            - cell "Collaborateur" [ref=e426]:
+              - generic [ref=e427]:
+                - img [ref=e428]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e430]:
+              - paragraph [ref=e431]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e432]: "0000000000"
+            - cell "Actif" [ref=e433]:
+              - generic [ref=e434]:
+                - img [ref=e435]
+                - text: Actif
+          - row "SOURIGNA SOUVANNAVONG Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e437]:
+            - cell "SOURIGNA SOUVANNAVONG" [ref=e438]:
+              - paragraph [ref=e439]: SOURIGNA SOUVANNAVONG
+            - cell "Collaborateur" [ref=e440]:
+              - generic [ref=e441]:
+                - img [ref=e442]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e444]:
+              - paragraph [ref=e445]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e446]: "0000000000"
+            - cell "Actif" [ref=e447]:
+              - generic [ref=e448]:
+                - img [ref=e449]
+                - text: Actif
+          - row "KEVIN EVRAY Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e451]:
+            - cell "KEVIN EVRAY" [ref=e452]:
+              - paragraph [ref=e453]: KEVIN EVRAY
+            - cell "Collaborateur" [ref=e454]:
+              - generic [ref=e455]:
+                - img [ref=e456]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e458]:
+              - paragraph [ref=e459]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e460]: "0000000000"
+            - cell "Actif" [ref=e461]:
+              - generic [ref=e462]:
+                - img [ref=e463]
+                - text: Actif
+          - row "DIMITRI EVRAY Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e465]:
+            - cell "DIMITRI EVRAY" [ref=e466]:
+              - paragraph [ref=e467]: DIMITRI EVRAY
+            - cell "Collaborateur" [ref=e468]:
+              - generic [ref=e469]:
+                - img [ref=e470]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e472]:
+              - paragraph [ref=e473]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e474]: "0000000000"
+            - cell "Actif" [ref=e475]:
+              - generic [ref=e476]:
+                - img [ref=e477]
+                - text: Actif
+          - row "BRYAN VANCENBROCK Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e479]:
+            - cell "BRYAN VANCENBROCK" [ref=e480]:
+              - paragraph [ref=e481]: BRYAN VANCENBROCK
+            - cell "Collaborateur" [ref=e482]:
+              - generic [ref=e483]:
+                - img [ref=e484]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e486]:
+              - paragraph [ref=e487]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e488]: "0000000000"
+            - cell "Actif" [ref=e489]:
+              - generic [ref=e490]:
+                - img [ref=e491]
+                - text: Actif
+          - row "BAPTISTE CORNIL Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e493]:
+            - cell "BAPTISTE CORNIL" [ref=e494]:
+              - paragraph [ref=e495]: BAPTISTE CORNIL
+            - cell "Collaborateur" [ref=e496]:
+              - generic [ref=e497]:
+                - img [ref=e498]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e500]:
+              - paragraph [ref=e501]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e502]: "0000000000"
+            - cell "Actif" [ref=e503]:
+              - generic [ref=e504]:
+                - img [ref=e505]
+                - text: Actif
+          - row "JOAO DOS SANTOS GONCALO Collaborateur herve.pellischek@eqiom.com 0000000000 Actif" [ref=e507]:
+            - cell "JOAO DOS SANTOS GONCALO" [ref=e508]:
+              - paragraph [ref=e509]: JOAO DOS SANTOS GONCALO
+            - cell "Collaborateur" [ref=e510]:
+              - generic [ref=e511]:
+                - img [ref=e512]
+                - text: Collaborateur
+            - cell "herve.pellischek@eqiom.com 0000000000" [ref=e514]:
+              - paragraph [ref=e515]: herve.pellischek@eqiom.com
+              - paragraph [ref=e516]: "0000000000"
+            - cell "Actif" [ref=e517]:
+              - generic [ref=e518]:
+                - img [ref=e519]
+                - text: Actif
+          - row "ALEXANDRE LEBLAY Collaborateur herve.pellischek@eqiom.com 0000000000 Actif" [ref=e521]:
+            - cell "ALEXANDRE LEBLAY" [ref=e522]:
+              - paragraph [ref=e523]: ALEXANDRE LEBLAY
+            - cell "Collaborateur" [ref=e524]:
+              - generic [ref=e525]:
+                - img [ref=e526]
+                - text: Collaborateur
+            - cell "herve.pellischek@eqiom.com 0000000000" [ref=e528]:
+              - paragraph [ref=e529]: herve.pellischek@eqiom.com
+              - paragraph [ref=e530]: "0000000000"
+            - cell "Actif" [ref=e531]:
+              - generic [ref=e532]:
+                - img [ref=e533]
+                - text: Actif
+          - row "PAULINE FRELON Collaborateur herve.pellischek@eqiom.com 0000000000 Actif" [ref=e535]:
+            - cell "PAULINE FRELON" [ref=e536]:
+              - paragraph [ref=e537]: PAULINE FRELON
+            - cell "Collaborateur" [ref=e538]:
+              - generic [ref=e539]:
+                - img [ref=e540]
+                - text: Collaborateur
+            - cell "herve.pellischek@eqiom.com 0000000000" [ref=e542]:
+              - paragraph [ref=e543]: herve.pellischek@eqiom.com
+              - paragraph [ref=e544]: "0000000000"
+            - cell "Actif" [ref=e545]:
+              - generic [ref=e546]:
+                - img [ref=e547]
+                - text: Actif
+          - row "FRANCK BOSCHARINC Collaborateur herve.pellischek@eqiom.com 0000000000 Actif" [ref=e549]:
+            - cell "FRANCK BOSCHARINC" [ref=e550]:
+              - paragraph [ref=e551]: FRANCK BOSCHARINC
+            - cell "Collaborateur" [ref=e552]:
+              - generic [ref=e553]:
+                - img [ref=e554]
+                - text: Collaborateur
+            - cell "herve.pellischek@eqiom.com 0000000000" [ref=e556]:
+              - paragraph [ref=e557]: herve.pellischek@eqiom.com
+              - paragraph [ref=e558]: "0000000000"
+            - cell "Actif" [ref=e559]:
+              - generic [ref=e560]:
+                - img [ref=e561]
+                - text: Actif
+          - row "WILLIAM DESCAS Collaborateur herve.pellischek@eqiom.com 0000000000 Actif" [ref=e563]:
+            - cell "WILLIAM DESCAS" [ref=e564]:
+              - paragraph [ref=e565]: WILLIAM DESCAS
+            - cell "Collaborateur" [ref=e566]:
+              - generic [ref=e567]:
+                - img [ref=e568]
+                - text: Collaborateur
+            - cell "herve.pellischek@eqiom.com 0000000000" [ref=e570]:
+              - paragraph [ref=e571]: herve.pellischek@eqiom.com
+              - paragraph [ref=e572]: "0000000000"
+            - cell "Actif" [ref=e573]:
+              - generic [ref=e574]:
+                - img [ref=e575]
+                - text: Actif
+          - row "AMILTON SEMEDO BRITO Collaborateur herve.pellischek@eqiom.com 0000000000 Actif" [ref=e577]:
+            - cell "AMILTON SEMEDO BRITO" [ref=e578]:
+              - paragraph [ref=e579]: AMILTON SEMEDO BRITO
+            - cell "Collaborateur" [ref=e580]:
+              - generic [ref=e581]:
+                - img [ref=e582]
+                - text: Collaborateur
+            - cell "herve.pellischek@eqiom.com 0000000000" [ref=e584]:
+              - paragraph [ref=e585]: herve.pellischek@eqiom.com
+              - paragraph [ref=e586]: "0000000000"
+            - cell "Actif" [ref=e587]:
+              - generic [ref=e588]:
+                - img [ref=e589]
+                - text: Actif
+          - row "AMARA KARAMOKO Collaborateur herve.pellischek@eqiom.com 0000000000 Actif" [ref=e591]:
+            - cell "AMARA KARAMOKO" [ref=e592]:
+              - paragraph [ref=e593]: AMARA KARAMOKO
+            - cell "Collaborateur" [ref=e594]:
+              - generic [ref=e595]:
+                - img [ref=e596]
+                - text: Collaborateur
+            - cell "herve.pellischek@eqiom.com 0000000000" [ref=e598]:
+              - paragraph [ref=e599]: herve.pellischek@eqiom.com
+              - paragraph [ref=e600]: "0000000000"
+            - cell "Actif" [ref=e601]:
+              - generic [ref=e602]:
+                - img [ref=e603]
+                - text: Actif
+          - row "FOUSSEINI CAMARA Collaborateur herve.pellischek@eqiom.com 0000000000 Actif" [ref=e605]:
+            - cell "FOUSSEINI CAMARA" [ref=e606]:
+              - paragraph [ref=e607]: FOUSSEINI CAMARA
+            - cell "Collaborateur" [ref=e608]:
+              - generic [ref=e609]:
+                - img [ref=e610]
+                - text: Collaborateur
+            - cell "herve.pellischek@eqiom.com 0000000000" [ref=e612]:
+              - paragraph [ref=e613]: herve.pellischek@eqiom.com
+              - paragraph [ref=e614]: "0000000000"
+            - cell "Actif" [ref=e615]:
+              - generic [ref=e616]:
+                - img [ref=e617]
+                - text: Actif
+          - row "MAMEDY DIARRA Collaborateur herve.pellischek@eqiom.com 0000000000 Actif" [ref=e619]:
+            - cell "MAMEDY DIARRA" [ref=e620]:
+              - paragraph [ref=e621]: MAMEDY DIARRA
+            - cell "Collaborateur" [ref=e622]:
+              - generic [ref=e623]:
+                - img [ref=e624]
+                - text: Collaborateur
+            - cell "herve.pellischek@eqiom.com 0000000000" [ref=e626]:
+              - paragraph [ref=e627]: herve.pellischek@eqiom.com
+              - paragraph [ref=e628]: "0000000000"
+            - cell "Actif" [ref=e629]:
+              - generic [ref=e630]:
+                - img [ref=e631]
+                - text: Actif
+          - row "LACINA SANGARE Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e633]:
+            - cell "LACINA SANGARE" [ref=e634]:
+              - paragraph [ref=e635]: LACINA SANGARE
+            - cell "Collaborateur" [ref=e636]:
+              - generic [ref=e637]:
+                - img [ref=e638]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e640]:
+              - paragraph [ref=e641]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e642]: "0000000000"
+            - cell "Actif" [ref=e643]:
+              - generic [ref=e644]:
+                - img [ref=e645]
+                - text: Actif
+          - row "ISMAILA DIABY Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e647]:
+            - cell "ISMAILA DIABY" [ref=e648]:
+              - paragraph [ref=e649]: ISMAILA DIABY
+            - cell "Collaborateur" [ref=e650]:
+              - generic [ref=e651]:
+                - img [ref=e652]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e654]:
+              - paragraph [ref=e655]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e656]: "0000000000"
+            - cell "Actif" [ref=e657]:
+              - generic [ref=e658]:
+                - img [ref=e659]
+                - text: Actif
+          - row "VICTOR ANTONIO SILVA MOREIRA Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e661]:
+            - cell "VICTOR ANTONIO SILVA MOREIRA" [ref=e662]:
+              - paragraph [ref=e663]: VICTOR ANTONIO SILVA MOREIRA
+            - cell "Collaborateur" [ref=e664]:
+              - generic [ref=e665]:
+                - img [ref=e666]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e668]:
+              - paragraph [ref=e669]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e670]: "0000000000"
+            - cell "Actif" [ref=e671]:
+              - generic [ref=e672]:
+                - img [ref=e673]
+                - text: Actif
+          - row "PASCAL BERTHUMEYRIE Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e675]:
+            - cell "PASCAL BERTHUMEYRIE" [ref=e676]:
+              - paragraph [ref=e677]: PASCAL BERTHUMEYRIE
+            - cell "Collaborateur" [ref=e678]:
+              - generic [ref=e679]:
+                - img [ref=e680]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e682]:
+              - paragraph [ref=e683]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e684]: "0000000000"
+            - cell "Actif" [ref=e685]:
+              - generic [ref=e686]:
+                - img [ref=e687]
+                - text: Actif
+          - row "ATHMANE AIT BESSAI Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e689]:
+            - cell "ATHMANE AIT BESSAI" [ref=e690]:
+              - paragraph [ref=e691]: ATHMANE AIT BESSAI
+            - cell "Collaborateur" [ref=e692]:
+              - generic [ref=e693]:
+                - img [ref=e694]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e696]:
+              - paragraph [ref=e697]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e698]: "0000000000"
+            - cell "Actif" [ref=e699]:
+              - generic [ref=e700]:
+                - img [ref=e701]
+                - text: Actif
+          - row "MAME IBRAHIMA LAYE NIANG Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e703]:
+            - cell "MAME IBRAHIMA LAYE NIANG" [ref=e704]:
+              - paragraph [ref=e705]: MAME IBRAHIMA LAYE NIANG
+            - cell "Collaborateur" [ref=e706]:
+              - generic [ref=e707]:
+                - img [ref=e708]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e710]:
+              - paragraph [ref=e711]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e712]: "0000000000"
+            - cell "Actif" [ref=e713]:
+              - generic [ref=e714]:
+                - img [ref=e715]
+                - text: Actif
+          - row "LUDOVIC FOUQUET Collaborateur herve.pellischek@eqiom.com 0000000000 Actif" [ref=e717]:
+            - cell "LUDOVIC FOUQUET" [ref=e718]:
+              - paragraph [ref=e719]: LUDOVIC FOUQUET
+            - cell "Collaborateur" [ref=e720]:
+              - generic [ref=e721]:
+                - img [ref=e722]
+                - text: Collaborateur
+            - cell "herve.pellischek@eqiom.com 0000000000" [ref=e724]:
+              - paragraph [ref=e725]: herve.pellischek@eqiom.com
+              - paragraph [ref=e726]: "0000000000"
+            - cell "Actif" [ref=e727]:
+              - generic [ref=e728]:
+                - img [ref=e729]
+                - text: Actif
+          - row "SOU VANG Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e731]:
+            - cell "SOU VANG" [ref=e732]:
+              - paragraph [ref=e733]: SOU VANG
+            - cell "Collaborateur" [ref=e734]:
+              - generic [ref=e735]:
+                - img [ref=e736]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e738]:
+              - paragraph [ref=e739]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e740]: "0000000000"
+            - cell "Actif" [ref=e741]:
+              - generic [ref=e742]:
+                - img [ref=e743]
+                - text: Actif
+          - row "THONG MOUA Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e745]:
+            - cell "THONG MOUA" [ref=e746]:
+              - paragraph [ref=e747]: THONG MOUA
+            - cell "Collaborateur" [ref=e748]:
+              - generic [ref=e749]:
+                - img [ref=e750]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e752]:
+              - paragraph [ref=e753]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e754]: "0000000000"
+            - cell "Actif" [ref=e755]:
+              - generic [ref=e756]:
+                - img [ref=e757]
+                - text: Actif
+          - row "DAVID VANG Collaborateur baptiste.cornil@eqiom.com 0000000000 Actif" [ref=e759]:
+            - cell "DAVID VANG" [ref=e760]:
+              - paragraph [ref=e761]: DAVID VANG
+            - cell "Collaborateur" [ref=e762]:
+              - generic [ref=e763]:
+                - img [ref=e764]
+                - text: Collaborateur
+            - cell "baptiste.cornil@eqiom.com 0000000000" [ref=e766]:
+              - paragraph [ref=e767]: baptiste.cornil@eqiom.com
+              - paragraph [ref=e768]: "0000000000"
+            - cell "Actif" [ref=e769]:
+              - generic [ref=e770]:
+                - img [ref=e771]
+                - text: Actif
+          - row "PIERROT LOREDAN Collaborateur jocelyn.cloatre@eqiom.com 0000000000 Actif" [ref=e773]:
+            - cell "PIERROT LOREDAN" [ref=e774]:
+              - paragraph [ref=e775]: PIERROT LOREDAN
+            - cell "Collaborateur" [ref=e776]:
+              - generic [ref=e777]:
+                - img [ref=e778]
+                - text: Collaborateur
+            - cell "jocelyn.cloatre@eqiom.com 0000000000" [ref=e780]:
+              - paragraph [ref=e781]: jocelyn.cloatre@eqiom.com
+              - paragraph [ref=e782]: "0000000000"
+            - cell "Actif" [ref=e783]:
+              - generic [ref=e784]:
+                - img [ref=e785]
+                - text: Actif
+          - row "YEU VANG Collaborateur jocelyn.cloatre@eqiom.com 0000000000 Actif" [ref=e787]:
+            - cell "YEU VANG" [ref=e788]:
+              - paragraph [ref=e789]: YEU VANG
+            - cell "Collaborateur" [ref=e790]:
+              - generic [ref=e791]:
+                - img [ref=e792]
+                - text: Collaborateur
+            - cell "jocelyn.cloatre@eqiom.com 0000000000" [ref=e794]:
+              - paragraph [ref=e795]: jocelyn.cloatre@eqiom.com
+              - paragraph [ref=e796]: "0000000000"
+            - cell "Actif" [ref=e797]:
+              - generic [ref=e798]:
+                - img [ref=e799]
+                - text: Actif
+          - row "JEAN PIERRE ALLANO Collaborateur jocelyn.cloatre@eqiom.com 0000000000 Actif" [ref=e801]:
+            - cell "JEAN PIERRE ALLANO" [ref=e802]:
+              - paragraph [ref=e803]: JEAN PIERRE ALLANO
+            - cell "Collaborateur" [ref=e804]:
+              - generic [ref=e805]:
+                - img [ref=e806]
+                - text: Collaborateur
+            - cell "jocelyn.cloatre@eqiom.com 0000000000" [ref=e808]:
+              - paragraph [ref=e809]: jocelyn.cloatre@eqiom.com
+              - paragraph [ref=e810]: "0000000000"
+            - cell "Actif" [ref=e811]:
+              - generic [ref=e812]:
+                - img [ref=e813]
+                - text: Actif
+          - row "Baptiste Cornil SClient baptiste.cornil@eqiom.com Actif" [ref=e815]:
+            - cell "Baptiste Cornil" [ref=e816]:
+              - paragraph [ref=e817]: Baptiste Cornil
+            - cell "SClient" [ref=e818]:
+              - generic [ref=e819]:
+                - img [ref=e820]
+                - text: SClient
+            - cell "baptiste.cornil@eqiom.com" [ref=e822]:
+              - paragraph [ref=e823]: baptiste.cornil@eqiom.com
+              - paragraph
+            - cell "Actif" [ref=e824]:
+              - generic [ref=e825]:
+                - img [ref=e826]
+                - text: Actif

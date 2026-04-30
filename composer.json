@@ -12,8 +12,8 @@
         "laravel/sanctum": "^3.3",
         "laravel/scout": "^10.19",
         "laravel/tinker": "^2.8",
-        "livewire/flux": "^2.5",
-        "livewire/livewire": "^3.6",
+        "livewire/blaze": "1.0",
+        "livewire/livewire": "4.0",
         "resend/resend-laravel": "^0.19.0",
         "spatie/laravel-pdf": "^1.6"
     },

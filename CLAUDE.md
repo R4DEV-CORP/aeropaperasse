@@ -18,8 +18,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - laravel/prompts (PROMPTS) - v0
 - laravel/sanctum (SANCTUM) - v3
 - laravel/scout (SCOUT) - v10
-- livewire/flux (FLUXUI_FREE) - v2
-- livewire/livewire (LIVEWIRE) - v3
+- livewire/livewire (LIVEWIRE) - v4
 - laravel/pint (PINT) - v1
 - laravel/sail (SAIL) - v1
 - phpunit/phpunit (PHPUNIT) - v10
@@ -187,30 +186,6 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Some MCP clients use Node, which has its own certificate store. If a user tries to connect to their web MCP server locally using https://, it could fail due to this reason. They will need to switch to http:// during local development.
 
 
-=== fluxui-free/core rules ===
-
-## Flux UI Free
-
-- This project is using the free edition of Flux UI. It has full access to the free components and variants, but does not have access to the Pro components.
-- Flux UI is a component library for Livewire. Flux is a robust, hand-crafted, UI component library for your Livewire applications. It's built using Tailwind CSS and provides a set of components that are easy to use and customize.
-- You should use Flux UI components when available.
-- Fallback to standard Blade components if Flux is unavailable.
-- If available, use Laravel Boost's `search-docs` tool to get the exact documentation and code snippets available for this project.
-- Flux UI components look like this:
-
-<code-snippet name="Flux UI Component Usage Example" lang="blade">
-    <flux:button variant="primary"/>
-</code-snippet>
-
-
-### Available Components
-This is correct as of Boost installation, but there may be additional components within the codebase.
-
-<available-flux-components>
-avatar, badge, brand, breadcrumbs, button, callout, checkbox, dropdown, field, heading, icon, input, modal, navbar, otp-input, profile, radio, select, separator, skeleton, switch, text, textarea, tooltip
-</available-flux-components>
-
-
 === livewire/core rules ===
 
 ## Livewire Core
@@ -258,40 +233,42 @@ avatar, badge, brand, breadcrumbs, button, callout, checkbox, dropdown, field, h
     </code-snippet>
 
 
-=== livewire/v3 rules ===
+=== livewire/v4 rules ===
 
-## Livewire 3
+## Livewire 4
 
-### Key Changes From Livewire 2
-- These things changed in Livewire 2, but may not have been updated in this application. Verify this application's setup to ensure you conform with application conventions.
-    - Use `wire:model.live` for real-time updates, `wire:model` is now deferred by default.
-    - Components now use the `App\Livewire` namespace (not `App\Http\Livewire`).
-    - Use `$this->dispatch()` to dispatch events (not `emit` or `dispatchBrowserEvent`).
-    - Use the `components.layouts.app` view as the typical layout path (not `layouts.app`).
+### Component formats
+- Default format is **Single-File Component (SFC)**: PHP class + Blade template in one `.blade.php` file.
+- SFC structure: a `<?php new class extends Component { ... }; ?>` block at the top, followed by the Blade template.
+- Use `php artisan make:livewire <name>` (SFC by default), `--mfc` for multi-file, `--class` for class-based.
 
-### New Directives
-- `wire:show`, `wire:transition`, `wire:cloak`, `wire:offline`, `wire:target` are available for use. Use the documentation to find usage examples.
+### Self-closing tags (breaking change from v3)
+- Component tags MUST be self-closed: `<livewire:foo />`, never `<livewire:foo>`.
+
+### Routing
+- Full-page components MUST be routed with `Route::livewire('/path', 'pages::domain.name')`.
+- Never use `Route::get('/path', Component::class)` or `Route::get('/path', fn() => view(...))` for Livewire pages.
+
+### Layouts
+- Layouts live in `resources/views/layouts/` (e.g. `app.blade.php`, `auth.blade.php`).
+- Reference them as `layouts::app`, `layouts::auth` (the `layouts` namespace is registered in `config/livewire.php`).
+- Apply per-component with the `#[Layout('layouts::auth')]` PHP attribute, or globally via `component_layout` config.
+- Set page titles with `#[Title('...')]` PHP attribute.
+
+### wire:model behavior (breaking change from v3)
+- `wire:model` no longer captures events from child elements. Use `.deep` modifier if needed.
+- `wire:model.blur` and `wire:model.change` now control client-side sync timing too. Use `.live.blur` / `.live.change` for v3-style behavior.
 
 ### Alpine
-- Alpine is now included with Livewire, don't manually include Alpine.js.
-- Plugins included with Alpine: persist, intersect, collapse, and focus.
+- Alpine is bundled with Livewire — do not include it manually.
+- Plugins included: persist, intersect, collapse, focus.
 
-### Lifecycle Hooks
-- You can listen for `livewire:init` to hook into Livewire initialization, and `fail.status === 419` for the page expiring:
-
-<code-snippet name="livewire:load example" lang="js">
-document.addEventListener('livewire:init', function () {
-    Livewire.hook('request', ({ fail }) => {
-        if (fail && fail.status === 419) {
-            alert('Your session expired');
-        }
-    });
-
-    Livewire.hook('message.failed', (message, component) => {
-        console.error(message);
-    });
-});
-</code-snippet>
+### Best practices
+- Components require a single root element.
+- Use `wire:loading` / `wire:dirty` for loading states.
+- Add `wire:key` in loops.
+- Prefer lifecycle hooks (`mount()`, `updatedFoo()`) for initialization and reactive side effects.
+- Validate inputs and run authorization in Livewire actions — they hit the backend like regular HTTP requests.
 
 
 === pint/core rules ===
@@ -342,7 +319,7 @@ document.addEventListener('livewire:init', function () {
 
 
 ### Dark Mode
-- If existing pages and components support dark mode, new pages and components must support dark mode in a similar way, typically using `dark:`.
+- This project uses a **single light theme**. Dark mode is NOT supported — never add `dark:*` variant classes.
 
 
 === tailwindcss/v4 rules ===
@@ -444,6 +421,49 @@ Services in `app/Services/` ending in `DocumentService` handle PDF generation us
 2. Creates a DTO (`CreateXxxData`) and calls an Action from `app/Actions/`
 3. Action wraps in a DB transaction, calls Services for documents/emails
 4. Action returns a Result object (e.g. `ActivityRequestResult`) with success/failure state
+
+## UI Architecture (INVIOLABLE)
+
+This project enforces a **strict separation** between stateless primitives and stateful components. These rules are non-negotiable — they reflect a deliberate architectural decision after migrating off Flux UI.
+
+### Blade primitives — `resources/views/components/ui/`
+- Stateless UI atoms ONLY: button, input, alert, badge, modal-shell, etc.
+- Pure Blade `@props` components. **NEVER** use Livewire directives (`wire:*`, `@livewire`) inside them.
+- Used as `<x-ui.button />`, `<x-ui.input />`.
+- Naming: kebab-case files (`button.blade.php`).
+- Every primitive starts with `@blaze` on line 1 ([livewire/blaze](https://github.com/livewire/blaze) function-compiler optimization). Plain `@blaze` is the safe default — see `docs/ui/blade-primitives.md` → "Performance: @blaze" before using `@blaze(memo: true)` or `@blaze(fold: true)`.
+
+### Livewire components (Single-File) — `resources/views/components/{domain}/`
+- All stateful/interactive components live here, grouped by business domain (e.g. `components/activity-requests/create-form.blade.php`).
+- **Single-File Component (SFC) format ONLY** — PHP class + Blade template in one file.
+- Components MUST compose `<x-ui.*>` primitives — never re-implement a button, an input, etc.
+- Reference: https://livewire.laravel.com/docs/4.x/components#creating-components
+
+### Livewire page components — `resources/views/pages/{domain}/`
+- Full-page Livewire components live here, grouped by domain.
+- Use `#[Layout('layouts::app')]` or `#[Layout('layouts::auth')]` and `#[Title('...')]`.
+- Reference: https://livewire.laravel.com/docs/4.x/components#creating-page-components
+
+### Routing
+- All page routes MUST use `Route::livewire('/path', 'pages::domain.name')`.
+- **NEVER** use `Route::get(..., Component::class)`, never render Livewire pages via `@livewire()` in a Blade file.
+- Reference: https://livewire.laravel.com/docs/4.x/pages#routing-to-components
+
+### Layouts — `resources/views/layouts/`
+- Livewire layouts only: `app.blade.php` (authenticated app), `auth.blade.php` (login flow).
+- Layouts must include `{{ $slot }}` and use the `layouts::` namespace when referenced.
+- Reference: https://livewire.laravel.com/docs/4.x/pages#layouts
+
+### Styling
+- Tailwind v4 only — theme tokens live in `resources/css/app.css` (`@theme` directive).
+- **Single light theme**: do NOT use `dark:*` variant classes anywhere. No external CSS framework.
+
+### Decision flow when creating UI
+1. Is it a primitive (no state, no server interaction)? → Blade in `resources/views/components/ui/`
+2. Is it stateful but embedded inside another view? → Livewire SFC in `resources/views/components/{domain}/`
+3. Is it a full page accessed via a URL? → Livewire SFC in `resources/views/pages/{domain}/` + `Route::livewire(...)`
+
+For full conventions, patterns and examples, see `docs/ui/`.
 
 ## Common Commands
 

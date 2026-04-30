@@ -1,0 +1,21 @@
+- main [ref=e3]:
+  - generic [ref=e5]:
+    - link "Aeropaperasse" [ref=e7] [cursor=pointer]:
+      - /url: http://localhost:8000/login
+      - img "Aeropaperasse" [ref=e8]
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - heading "Vérification en deux étapes" [level=1] [ref=e12]
+        - paragraph [ref=e13]: Un code à 6 chiffres a été envoyé à admin@r4web.fr. Saisissez-le pour finaliser votre connexion.
+      - generic [ref=e14]:
+        - generic [ref=e16]:
+          - textbox "Chiffre 1" [ref=e17]
+          - textbox "Chiffre 2" [ref=e18]
+          - textbox "Chiffre 3" [active] [ref=e19]
+          - textbox "Chiffre 4" [ref=e20]
+          - textbox "Chiffre 5" [ref=e21]
+          - textbox "Chiffre 6" [ref=e22]
+        - button "Vérifier le code" [ref=e23]:
+          - generic [ref=e24]: Vérifier le code
+      - button "Retour à la connexion" [ref=e26]
+  - paragraph [ref=e27]: © 2026 Aeropaperasse. Tous droits réservés.

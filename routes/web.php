@@ -20,25 +20,20 @@ Route::get('/', function () {
 /*
 * Routes pour la connexion, la vérification 2FA et le changement de mot de passe
 */
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('auth.login');
+// Ancienne route Blade (Flux) — remplacée par la page Livewire SFC
+// Route::get('/login', function () {
+//     return view('auth.login');
+// })->name('auth.login');
 
-Route::get('/verify-2fa', function () {
-    return view('auth.verify-2fa');
-});
+Route::livewire('/login', 'pages::auth.login')->name('auth.login');
 
-Route::get('/change-password', function () {
-    return view('auth.change-password');
-});
+Route::livewire('/verify-2fa', 'pages::auth.verify-2fa')->name('auth.verify-2fa');
 
-Route::get('/forgot-password', function () {
-    return view('auth.forgot-password');
-});
+Route::livewire('/change-password', 'pages::auth.change-password')->name('auth.change-password');
 
-Route::get('/reset-password', function () {
-    return view('auth.reset-password');
-});
+Route::livewire('/forgot-password', 'pages::auth.forgot-password')->name('auth.forgot-password');
+
+Route::livewire('/reset-password', 'pages::auth.reset-password')->name('auth.reset-password');
 
 Route::get('/logout', function () {
     auth()->logout();
