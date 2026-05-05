@@ -20,11 +20,6 @@ Route::get('/', function () {
 /*
 * Routes pour la connexion, la vérification 2FA et le changement de mot de passe
 */
-// Ancienne route Blade (Flux) — remplacée par la page Livewire SFC
-// Route::get('/login', function () {
-//     return view('auth.login');
-// })->name('auth.login');
-
 Route::livewire('/login', 'pages::auth.login')->name('auth.login');
 
 Route::livewire('/verify-2fa', 'pages::auth.verify-2fa')->name('auth.verify-2fa');
