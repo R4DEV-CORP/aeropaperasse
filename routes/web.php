@@ -20,25 +20,20 @@ Route::get('/', function () {
 /*
 * Routes pour la connexion, la vérification 2FA et le changement de mot de passe
 */
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('auth.login');
+// Ancienne route Blade (Flux) — remplacée par la page Livewire SFC
+// Route::get('/login', function () {
+//     return view('auth.login');
+// })->name('auth.login');
 
-Route::get('/verify-2fa', function () {
-    return view('auth.verify-2fa');
-});
+Route::livewire('/login', 'pages::auth.login')->name('auth.login');
 
-Route::get('/change-password', function () {
-    return view('auth.change-password');
-});
+Route::livewire('/verify-2fa', 'pages::auth.verify-2fa')->name('auth.verify-2fa');
 
-Route::get('/forgot-password', function () {
-    return view('auth.forgot-password');
-});
+Route::livewire('/change-password', 'pages::auth.change-password')->name('auth.change-password');
 
-Route::get('/reset-password', function () {
-    return view('auth.reset-password');
-});
+Route::livewire('/forgot-password', 'pages::auth.forgot-password')->name('auth.forgot-password');
+
+Route::livewire('/reset-password', 'pages::auth.reset-password')->name('auth.reset-password');
 
 Route::get('/logout', function () {
     auth()->logout();
@@ -62,21 +57,27 @@ Route::get('/clients/{slug}', function ($slug) {
 * Routes demande d'activité
 */
 
-Route::get('/activity-requests', function () {
-    if (auth()->user()->isClient()) {
-        return redirect()->route('clients.view', ['slug' => auth()->user()->client->slug]);
-    }
+Route::livewire('/activity-requests', 'pages::activity-requests.index')
+    ->middleware('auth')
+    ->name('activity-requests.index');
 
-    return view('activity-requests.index');
-})->middleware('auth');
+Route::livewire('/activity-requests/form/{activityRequestId?}', 'pages::activity-requests.form')
+    ->middleware('auth')
+    ->whereNumber('activityRequestId')
+    ->name('activity-requests.form');
 
 /*
 * Routes badge requests
 */
 
-Route::get('/badge-requests', function () {
-    return view('badge-requests.index');
-})->middleware('auth');
+Route::livewire('/badge-requests', 'pages::badge-requests.index')
+    ->middleware('auth')
+    ->name('badge-requests.index');
+
+Route::livewire('/badge-requests/form/{badgeRequestId?}', 'pages::badge-requests.form')
+    ->middleware('auth')
+    ->whereNumber('badgeRequestId')
+    ->name('badge-requests.form');
 
 /*
 * Routes badge management

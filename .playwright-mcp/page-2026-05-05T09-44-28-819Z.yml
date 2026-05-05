@@ -1,0 +1,169 @@
+- generic [ref=e323]:
+  - complementary [ref=e324]:
+    - link "Aeropaperasse" [ref=e326] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e327]
+    - navigation [ref=e328]:
+      - link "Sociétés" [ref=e329] [cursor=pointer]:
+        - /url: /clients
+        - img [ref=e331]
+        - generic [ref=e333]: Sociétés
+      - link "Demande d'activité" [ref=e334] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e336]
+        - generic [ref=e338]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e339] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e341]
+        - generic [ref=e343]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e344] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e346]
+        - generic [ref=e348]: Demande de badge
+      - link "Suivi des badges" [ref=e349] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e351]
+        - generic [ref=e353]: Suivi des badges
+      - link "Formations" [ref=e354] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e356]
+        - generic [ref=e358]: Formations
+      - link "Laissez-passer" [ref=e359] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e361]
+        - generic [ref=e363]: Laissez-passer
+    - link "Déconnexion" [ref=e365] [cursor=pointer]:
+      - /url: http://localhost:8000/logout
+      - img [ref=e366]
+      - generic [ref=e368]: Déconnexion
+  - generic [ref=e369]:
+    - banner [ref=e370]:
+      - button "Masquer la barre latérale" [expanded] [ref=e372]:
+        - img [ref=e373]
+      - navigation "Fil d'Ariane" [ref=e375]:
+        - link "Mallet" [ref=e376] [cursor=pointer]:
+          - /url: http://localhost:8000/clients/02aa2ae8-1c40-37ee-93a9-c86fe4e869c0
+        - img [ref=e377]
+        - link "Demandes de badges" [ref=e379] [cursor=pointer]:
+          - /url: /badge-requests
+        - img [ref=e380]
+        - generic [ref=e382]: Nouvelle demande
+    - main [ref=e383]:
+      - generic [ref=e384]:
+        - generic [ref=e387]:
+          - link "Retour" [ref=e388] [cursor=pointer]:
+            - /url: http://localhost:8000/badge-requests
+            - img [ref=e389]
+            - text: Retour
+          - generic [ref=e391]: /
+          - heading "Nouvelle demande de badge" [level=1] [ref=e392]
+        - generic [ref=e394]:
+          - generic [ref=e396]:
+            - generic [ref=e397]:
+              - 'button "Demande d''activité Demande #16 — CDG" [expanded] [ref=e463]':
+                - img [ref=e400]
+                - generic [ref=e402]:
+                  - generic [ref=e403]: Demande d'activité
+                  - generic [ref=e404]: "Demande #16 — CDG"
+                - img [ref=e405]
+              - generic [ref=e407]:
+                - generic [ref=e408]:
+                  - generic [ref=e409]: Demande d'activité *
+                  - button "Demande d'activité" [ref=e411]:
+                    - generic [ref=e412]: "Demande #16 — CDG"
+                    - img [ref=e413]
+                - generic [ref=e464]:
+                  - generic [ref=e465]:
+                    - generic [ref=e466]: Aéroport
+                    - generic [ref=e468]: CDG
+                  - generic [ref=e470]:
+                    - generic [ref=e471]: Quota badges
+                    - generic [ref=e472]: 3 / 5 utilisés
+            - button "Collaborateur Jean Dupont" [ref=e475]:
+              - img [ref=e418]
+              - generic [ref=e420]:
+                - generic [ref=e421]: Collaborateur
+                - generic [ref=e422]: Jean Dupont
+              - img [ref=e423]
+            - button "Options Habilitation et formation" [ref=e426]:
+              - img [ref=e428]
+              - generic [ref=e431]:
+                - generic [ref=e432]: Options
+                - generic [ref=e433]: Habilitation et formation
+              - img [ref=e434]
+            - generic [ref=e436]:
+              - button "Documents 5 / 5 documents fournis" [expanded] [ref=e567]:
+                - img [ref=e439]
+                - generic [ref=e441]:
+                  - generic [ref=e442]: Documents
+                  - generic [ref=e443]:
+                    - generic [ref=e444]: 5 / 5
+                    - generic [ref=e445]: documents fournis
+                    - img [ref=e568]
+                - img [ref=e446]
+              - generic [ref=e477]:
+                - generic [ref=e478]:
+                  - generic [ref=e479]: Photo d'identité *
+                  - button "Photo d'identité selfie.jpg Nouveau fichier — cliquer pour remplacer" [ref=e560] [cursor=pointer]:
+                    - button "Photo d'identité" [ref=e482]
+                    - img [ref=e485]
+                    - generic [ref=e487]:
+                      - generic [ref=e488]: selfie.jpg
+                      - generic [ref=e489]: Nouveau fichier — cliquer pour remplacer
+                - generic [ref=e490]:
+                  - generic [ref=e491]: Carte d'identité *
+                  - button "Carte d'identité cni.pdf Nouveau fichier — cliquer pour remplacer" [ref=e562] [cursor=pointer]:
+                    - button "Carte d'identité" [ref=e494]
+                    - img [ref=e497]
+                    - generic [ref=e499]:
+                      - generic [ref=e500]: cni.pdf
+                      - generic [ref=e501]: Nouveau fichier — cliquer pour remplacer
+                - generic [ref=e503]:
+                  - generic [ref=e504]: Autorisation d'activité *
+                  - button "Autorisation d'activité autorisation.pdf Nouveau fichier — cliquer pour remplacer" [ref=e564] [cursor=pointer]:
+                    - button "Autorisation d'activité" [ref=e507]
+                    - img [ref=e510]
+                    - generic [ref=e512]:
+                      - generic [ref=e513]: autorisation.pdf
+                      - generic [ref=e514]: Nouveau fichier — cliquer pour remplacer
+                - generic [ref=e515]:
+                  - generic [ref=e516]:
+                    - generic [ref=e517]: Document FOR *
+                    - button "Document FOR for.xlsx Nouveau fichier — cliquer pour remplacer" [ref=e566] [cursor=pointer]:
+                      - button "Document FOR" [ref=e520]
+                      - img [ref=e523]
+                      - generic [ref=e525]:
+                        - generic [ref=e526]: for.xlsx
+                        - generic [ref=e527]: Nouveau fichier — cliquer pour remplacer
+                  - generic [ref=e528]:
+                    - generic [ref=e529]: "Modèle FOR pour CDG :"
+                    - button "Télécharger le template" [ref=e530]:
+                      - img [ref=e531]
+                      - text: Télécharger le template
+                - generic [ref=e534]:
+                  - generic [ref=e535]: Certificat de formation *
+                  - button "Certificat de formation certificat.pdf Nouveau fichier — cliquer pour remplacer" [ref=e570] [cursor=pointer]:
+                    - button "Certificat de formation" [ref=e538]
+                    - img [ref=e541]
+                    - generic [ref=e543]:
+                      - generic [ref=e544]: certificat.pdf
+                      - generic [ref=e545]: Nouveau fichier — cliquer pour remplacer
+                - generic [ref=e547]:
+                  - generic [ref=e548]: Facture (optionnel)
+                  - button "Facture (optionnel) Cliquer ou glisser un fichier PDF, JPG ou PNG — 10 Mo max" [ref=e550] [cursor=pointer]:
+                    - button "Facture (optionnel)" [ref=e551]
+                    - img [ref=e554]
+                    - generic [ref=e556]:
+                      - generic [ref=e557]: Cliquer ou glisser un fichier
+                      - generic [ref=e558]: PDF, JPG ou PNG — 10 Mo max
+          - generic [ref=e449]:
+            - button "Abandonner" [ref=e450]:
+              - img [ref=e451]
+              - text: Abandonner
+            - generic [ref=e453]:
+              - button "Brouillon" [ref=e454]:
+                - img [ref=e455]
+                - generic [ref=e458]: Brouillon
+              - button "Créer la demande" [ref=e459]:
+                - img [ref=e460]
+                - generic [ref=e462]: Créer la demande

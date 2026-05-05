@@ -1,0 +1,12 @@
+[    2213ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/activity-requests/form/19:19
+[    2275ms] [LOG] [toast-stack] livewire:navigated fired, calling consumeFlash @ http://localhost:8000/activity-requests/form/19:78
+[    7066ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/activity-requests/form/19:19
+[    7120ms] [LOG] [toast-stack] livewire:navigated fired, calling consumeFlash @ http://localhost:8000/activity-requests/form/19:78
+[   25098ms] [LOG] [toast-stack] livewire:navigated fired, calling consumeFlash @ http://localhost:8000/activity-requests/form/19:78
+[   26465ms] [ERROR] Failed to send logs: TypeError: Failed to fetch
+    at flushLogs (http://localhost:8000/activity-requests/form/19:56:9) @ http://localhost:8000/activity-requests/form/19:64
+[   27338ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/activity-requests:19
+[   27435ms] [LOG] [toast-stack] livewire:navigated fired, calling consumeFlash @ http://localhost:8000/activity-requests:78
+[   98513ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/activity-requests:19
+[   98606ms] [LOG] [toast-stack] livewire:navigated fired, calling consumeFlash @ http://localhost:8000/activity-requests:78
+[  114316ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/activity-requests:19

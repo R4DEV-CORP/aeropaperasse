@@ -1,0 +1,6 @@
+[    1114ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/badge-requests/form:19
+[    2668ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/badge-requests/form:19
+[   18354ms] undefined
+[   19198ms] [ERROR] Failed to send logs: TypeError: Failed to fetch
+    at flushLogs (http://localhost:8000/badge-requests/form:56:9) @ http://localhost:8000/badge-requests/form:64
+[   19860ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/badge-requests:19

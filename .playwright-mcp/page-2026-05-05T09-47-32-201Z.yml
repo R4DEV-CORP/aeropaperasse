@@ -1,0 +1,121 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /clients
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - link "Déconnexion" [ref=e44] [cursor=pointer]:
+      - /url: http://localhost:8000/logout
+      - img [ref=e45]
+      - generic [ref=e47]: Déconnexion
+  - generic [ref=e48]:
+    - banner [ref=e49]:
+      - button "Masquer la barre latérale" [expanded] [ref=e51]:
+        - img [ref=e52]
+      - navigation "Fil d'Ariane" [ref=e54]:
+        - link "Mallet" [ref=e55] [cursor=pointer]:
+          - /url: http://localhost:8000/clients/02aa2ae8-1c40-37ee-93a9-c86fe4e869c0
+        - img [ref=e56]
+        - link "Demandes d'activité" [ref=e58] [cursor=pointer]:
+          - /url: /activity-requests
+        - img [ref=e59]
+        - generic [ref=e61]: Nouvelle demande
+    - main [ref=e62]:
+      - generic [ref=e63]:
+        - generic [ref=e66]:
+          - link "Retour" [ref=e67] [cursor=pointer]:
+            - /url: http://localhost:8000/activity-requests
+            - img [ref=e68]
+            - text: Retour
+          - generic [ref=e70]: /
+          - heading "Reprendre le brouillon" [level=1] [ref=e71]
+        - generic [ref=e72]:
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - button "Informations sur la société Mallet" [expanded] [ref=e76]:
+                - img [ref=e78]
+                - generic [ref=e80]:
+                  - generic [ref=e81]: Informations sur la société
+                  - generic [ref=e82]: Mallet
+                - img [ref=e83]
+              - generic [ref=e85]:
+                - alert [ref=e86]:
+                  - generic [ref=e87]: Pour modifier les informations de la société, rendez-vous sur la page société.
+                - generic [ref=e88]:
+                  - generic [ref=e89]:
+                    - generic [ref=e90]: Raison sociale
+                    - textbox "Raison sociale" [disabled] [ref=e91]: Mallet
+                  - generic [ref=e92]:
+                    - generic [ref=e93]: Nom commercial
+                    - textbox "Nom commercial" [disabled] [ref=e94]: Mallet
+                  - generic [ref=e95]:
+                    - generic [ref=e96]: Numéro SIRET
+                    - textbox "Numéro SIRET" [disabled] [ref=e97]: "82602093"
+                  - generic [ref=e98]:
+                    - generic [ref=e99]: Adresse
+                    - textbox "Adresse" [disabled] [ref=e100]: 21, boulevard Henry
+                  - generic [ref=e101]:
+                    - generic [ref=e102]: Code postal
+                    - textbox "Code postal" [disabled] [ref=e103]: "42551"
+                  - generic [ref=e104]:
+                    - generic [ref=e105]: Ville
+                    - textbox "Ville" [disabled] [ref=e106]: Bonneau
+            - button "Responsable Coordonnées du responsable" [ref=e108]:
+              - img [ref=e110]
+              - generic [ref=e112]:
+                - generic [ref=e113]: Responsable
+                - generic [ref=e114]: Coordonnées du responsable
+              - img [ref=e115]
+            - button "Informations sur l'activité Aéroport, description, effectifs" [ref=e118]:
+              - img [ref=e120]
+              - generic [ref=e122]:
+                - generic [ref=e123]: Informations sur l'activité
+                - generic [ref=e124]: Aéroport, description, effectifs
+              - img [ref=e125]
+            - button "Documents 0 / 6 documents fournis" [ref=e128]:
+              - img [ref=e130]
+              - generic [ref=e132]:
+                - generic [ref=e133]: Documents
+                - generic [ref=e134]:
+                  - generic [ref=e135]: 0 / 6
+                  - generic [ref=e136]: documents fournis
+              - img [ref=e137]
+          - generic [ref=e140]:
+            - button "Abandonner" [ref=e141]:
+              - img [ref=e142]
+              - text: Abandonner
+            - generic [ref=e144]:
+              - button "Mettre à jour le brouillon" [ref=e145]:
+                - img [ref=e146]
+                - generic [ref=e149]: Mettre à jour le brouillon
+              - button "Soumettre la demande" [disabled] [ref=e150]:
+                - img [ref=e151]
+                - generic [ref=e153]: Soumettre la demande
