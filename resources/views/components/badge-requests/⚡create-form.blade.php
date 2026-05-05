@@ -166,8 +166,7 @@ new class extends Component
     {
         try {
             $query = BadgeRequest::with(['activityRequest.client', 'coworker'])
-                ->where('id', $badgeRequestId)
-                ->where('status', 'draft');
+                ->where('id', $badgeRequestId);
 
             if (! $this->user->isAdmin()) {
                 $query->whereHas('activityRequest', function ($q) {
@@ -176,6 +175,12 @@ new class extends Component
             }
 
             $badgeRequest = $query->firstOrFail();
+
+            if ($badgeRequest->status !== 'draft') {
+                $this->redirectRoute('badge-requests.index', navigate: true);
+
+                return;
+            }
 
             if ($this->user->isAdmin()) {
                 $this->client = $badgeRequest->activityRequest->client;
@@ -319,7 +324,7 @@ new class extends Component
 
     public function abandon(): void
     {
-        $this->redirect(route('badge-requests.index'), navigate: true);
+        $this->redirectRoute('badge-requests.index', navigate: true);
     }
 
     public function downloadForTemplate(string $airport)
@@ -609,11 +614,7 @@ new class extends Component
                 'variant' => 'success',
             ]);
 
-            // Pas `navigate: true` ici : wire:navigate prefetche / mémorise les pages
-            // côté client, donc le toast-stack rendu serait celui d'avant le flash
-            // (pas de toast visible). Un redirect HTTP classique force un fresh GET,
-            // mount() du toast-stack tourne, lit la session, pousse le toast → affiché.
-            $this->redirect(route('badge-requests.index'));
+            $this->redirectRoute('badge-requests.index', navigate: true);
         } catch (\Exception $e) {
             Log::error('Erreur lors du traitement de la demande de badge', [
                 'error' => $e->getMessage(),

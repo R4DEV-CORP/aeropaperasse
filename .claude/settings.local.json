@@ -43,7 +43,16 @@
       "mcp__plugin_playwright_playwright__browser_tabs",
       "mcp__plugin_playwright_playwright__browser_network_requests",
       "mcp__plugin_playwright_playwright__browser_network_request",
-      "Bash(> storage/logs/laravel.log)"
+      "Bash(> storage/logs/laravel.log)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://aeropaperasse.test)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://127.0.0.1)",
+      "Bash(grep -oE '\"redirect[^\"]*\":[^,}]+' \"C:\\\\\\\\Users\\\\\\\\r4web\\\\\\\\.claude\\\\\\\\projects\\\\\\\\C--laragon-www-aeropaperasse\\\\\\\\a1b3b840-9475-46d3-99ba-e5d002111fc0\\\\\\\\tool-results\\\\\\\\mcp-plugin_playwright_playwright-browser_network_request-1777986644840.txt\")",
+      "Bash(grep -oE '\"effects\":\\\\{[^}]{0,200}' \"C:\\\\\\\\Users\\\\\\\\r4web\\\\\\\\.claude\\\\\\\\projects\\\\\\\\C--laragon-www-aeropaperasse\\\\\\\\a1b3b840-9475-46d3-99ba-e5d002111fc0\\\\\\\\tool-results\\\\\\\\mcp-plugin_playwright_playwright-browser_network_request-1777986644840.txt\")",
+      "Bash(python3 *)",
+      "Bash(grep -oE '\\\\\"effects\\\\\":\\\\{[^}]{0,500}' \"C:\\\\\\\\Users\\\\\\\\r4web\\\\\\\\.claude\\\\\\\\projects\\\\\\\\C--laragon-www-aeropaperasse\\\\\\\\a1b3b840-9475-46d3-99ba-e5d002111fc0\\\\\\\\tool-results\\\\\\\\mcp-plugin_playwright_playwright-browser_network_request-1777986644840.txt\")",
+      "Bash(grep -oE '\\\\\"\\(redirect|url|path|navigate|dispatches|toast\\)\\\\\"[^,}]{0,200}' \"C:\\\\\\\\Users\\\\\\\\r4web\\\\\\\\.claude\\\\\\\\projects\\\\\\\\C--laragon-www-aeropaperasse\\\\\\\\a1b3b840-9475-46d3-99ba-e5d002111fc0\\\\\\\\tool-results\\\\\\\\mcp-plugin_playwright_playwright-browser_network_request-1777986644840.txt\")",
+      "Bash(grep *)"
     ]
   }
 }

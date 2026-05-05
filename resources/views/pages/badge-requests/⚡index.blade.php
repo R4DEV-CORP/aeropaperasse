@@ -1,8 +1,11 @@
 <?php
 
+use App\Livewire\Concerns\InteractsWithToasts;
+use App\Models\Badge;
 use App\Models\BadgeRequest;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
@@ -17,7 +20,7 @@ new
 #[Title('Demandes de badges')]
 class extends Component
 {
-    use WithoutUrlPagination, WithPagination;
+    use InteractsWithToasts, WithoutUrlPagination, WithPagination;
 
     public string $search = '';
 
@@ -140,6 +143,93 @@ class extends Component
         }
 
         return $query->orderBy('created_at', 'desc')->paginate(10);
+    }
+
+    #[On('badge-request-status-updated')]
+    public function refreshList(): void
+    {
+        unset($this->statistics, $this->badgeRequests, $this->draftBadgeRequests);
+    }
+
+    public function validateRem(int $badgeRequestId): void
+    {
+        $this->applyStatusTransition($badgeRequestId, expectedStatus: 'pending_rem', newStatus: 'pending_adp', successMessage: 'Demande validée par REM.');
+    }
+
+    public function approveAdp(int $badgeRequestId): void
+    {
+        $this->applyStatusTransition($badgeRequestId, expectedStatus: 'pending_adp', newStatus: 'approved_adp', successMessage: 'Demande approuvée par ADP.');
+    }
+
+    public function startFabrication(int $badgeRequestId): void
+    {
+        $this->applyStatusTransition($badgeRequestId, expectedStatus: 'approved_adp', newStatus: 'pending_fabrication', successMessage: 'Fabrication lancée.');
+    }
+
+    public function markReadyForDelivery(int $badgeRequestId): void
+    {
+        if (! auth()->user()->isAdmin()) {
+            return;
+        }
+
+        $badgeRequest = BadgeRequest::find($badgeRequestId);
+        if ($badgeRequest === null || $badgeRequest->status !== 'pending_fabrication') {
+            return;
+        }
+
+        $badgeRequest->update([
+            'status' => 'ready_for_delivery',
+            'ready_for_delivery_at' => now(),
+        ]);
+
+        Badge::firstOrCreate(
+            ['badge_request_id' => $badgeRequest->id],
+            ['status' => 'active', 'expiry_date' => null],
+        );
+
+        $this->refreshList();
+        $this->toast('Badge prêt à être remis.', 'success', 'Statut mis à jour');
+    }
+
+    public function reopenDraft(int $badgeRequestId): void
+    {
+        if (! auth()->user()->isSAdmin()) {
+            return;
+        }
+
+        $badgeRequest = BadgeRequest::find($badgeRequestId);
+        if ($badgeRequest === null || ! in_array($badgeRequest->status, ['rejected_rem', 'rejected_adp'], true)) {
+            return;
+        }
+
+        $badgeRequest->update([
+            'status' => 'draft',
+            'draft_at' => now(),
+            'reject_reason' => null,
+        ]);
+
+        $this->refreshList();
+        $this->toast('Demande rouverte en brouillon.', 'success', 'Demande rouverte');
+    }
+
+    protected function applyStatusTransition(int $badgeRequestId, string $expectedStatus, string $newStatus, string $successMessage): void
+    {
+        if (! auth()->user()->isAdmin()) {
+            return;
+        }
+
+        $badgeRequest = BadgeRequest::find($badgeRequestId);
+        if ($badgeRequest === null || $badgeRequest->status !== $expectedStatus) {
+            return;
+        }
+
+        $badgeRequest->update([
+            'status' => $newStatus,
+            $newStatus.'_at' => now(),
+        ]);
+
+        $this->refreshList();
+        $this->toast($successMessage, 'success', 'Statut mis à jour');
     }
 }; ?>
 
@@ -486,13 +576,84 @@ class extends Component
                                     </button>
                                 </x-slot:trigger>
 
-                                <x-ui.dropdown-item wire:click="$dispatch('view-badge-request', { id: {{ $badgeRequest->id }} })">
+                                <x-ui.dropdown-item :href="route('badge-requests.show', ['badgeRequestId' => $badgeRequest->id])" wire:navigate>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4 text-foreground-subtle">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                     </svg>
                                     Voir les détails
                                 </x-ui.dropdown-item>
+
+                                @if (auth()->user()->isAdmin())
+                                    @if ($badgeRequest->status === 'pending_rem')
+                                        <x-ui.dropdown-item variant="success" wire:click="validateRem({{ $badgeRequest->id }})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                                            </svg>
+                                            Valider REM
+                                        </x-ui.dropdown-item>
+
+                                        <x-ui.dropdown-item variant="danger" wire:click="$dispatch('reject-badge-request', { id: {{ $badgeRequest->id }}, targetStatus: 'rejected_rem' })">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5h6m4.5 .75v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25M10 21h6.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125H10Z" />
+                                            </svg>
+                                            Marquer dossier incomplet
+                                        </x-ui.dropdown-item>
+                                    @endif
+
+                                    @if ($badgeRequest->status === 'pending_adp')
+                                        <x-ui.dropdown-item variant="success" wire:click="approveAdp({{ $badgeRequest->id }})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
+                                            </svg>
+                                            Approuver ADP
+                                        </x-ui.dropdown-item>
+
+                                        <x-ui.dropdown-item variant="danger" wire:click="$dispatch('reject-badge-request', { id: {{ $badgeRequest->id }}, targetStatus: 'rejected_adp' })">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                            </svg>
+                                            Rejeter ADP
+                                        </x-ui.dropdown-item>
+                                    @endif
+
+                                    @if ($badgeRequest->status === 'approved_adp')
+                                        <x-ui.dropdown-item variant="info" wire:click="startFabrication({{ $badgeRequest->id }})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                            </svg>
+                                            Lancer la fabrication
+                                        </x-ui.dropdown-item>
+                                    @endif
+
+                                    @if ($badgeRequest->status === 'pending_fabrication')
+                                        <x-ui.dropdown-item variant="info" wire:click="markReadyForDelivery({{ $badgeRequest->id }})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                                            </svg>
+                                            Marquer prêt à remettre
+                                        </x-ui.dropdown-item>
+                                    @endif
+
+                                    @if ($badgeRequest->status === 'ready_for_delivery')
+                                        <x-ui.dropdown-item variant="info" wire:click="$dispatch('deliver-badge-request', { id: {{ $badgeRequest->id }} })">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.05 4.575a1.575 1.575 0 1 0-3.15 0v3m3.15-3v-1.5a1.575 1.575 0 0 1 3.15 0v1.5m-3.15 0 .075 5.925m3.075.75V4.575m0 0a1.575 1.575 0 0 1 3.15 0V15M6.9 7.575a1.575 1.575 0 1 0-3.15 0v8.175a6.75 6.75 0 0 0 6.75 6.75h2.018a5.25 5.25 0 0 0 3.712-1.538l1.732-1.732a5.25 5.25 0 0 0 1.538-3.712l.003-2.024a.668.668 0 0 1 .198-.471 1.575 1.575 0 1 0-2.228-2.228 3.818 3.818 0 0 0-1.12 2.687M6.9 7.575V12m6.27 4.318A4.49 4.49 0 0 1 16.35 15m.002 0h-.002" />
+                                            </svg>
+                                            Marquer comme remis
+                                        </x-ui.dropdown-item>
+                                    @endif
+
+                                    @if (auth()->user()->isSAdmin() && in_array($badgeRequest->status, ['rejected_rem', 'rejected_adp']))
+                                        <x-ui.dropdown-item wire:click="reopenDraft({{ $badgeRequest->id }})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4 text-foreground-subtle">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                            </svg>
+                                            Rouvrir en brouillon
+                                        </x-ui.dropdown-item>
+                                    @endif
+                                @endif
 
                                 <x-ui.dropdown-item wire:click="$dispatch('download-badge-request', { id: {{ $badgeRequest->id }} })">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4 text-foreground-subtle">
@@ -519,4 +680,7 @@ class extends Component
             </div>
         @endif
     </x-ui.card>
+
+    <livewire:badge-requests.reject-modal />
+    <livewire:badge-requests.deliver-modal />
 </div>

@@ -61,6 +61,11 @@ Route::livewire('/activity-requests/form/{activityRequestId?}', 'pages::activity
     ->whereNumber('activityRequestId')
     ->name('activity-requests.form');
 
+Route::livewire('/activity-requests/{activityRequestId}', 'pages::activity-requests.show')
+    ->middleware('auth')
+    ->whereNumber('activityRequestId')
+    ->name('activity-requests.show');
+
 /*
 * Routes badge requests
 */
@@ -73,6 +78,11 @@ Route::livewire('/badge-requests/form/{badgeRequestId?}', 'pages::badge-requests
     ->middleware('auth')
     ->whereNumber('badgeRequestId')
     ->name('badge-requests.form');
+
+Route::livewire('/badge-requests/{badgeRequestId}', 'pages::badge-requests.show')
+    ->middleware('auth')
+    ->whereNumber('badgeRequestId')
+    ->name('badge-requests.show');
 
 /*
 * Routes badge management

@@ -43,6 +43,16 @@ class ActivityRequest extends Model
         'reject_reason',
     ];
 
+    protected $casts = [
+        'renewal' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'draft_at' => 'datetime',
+        'pending_at' => 'datetime',
+        'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
+    ];
+
     /**
      * Get the indexable data array for the model.
      *
