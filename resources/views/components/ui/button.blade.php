@@ -15,7 +15,10 @@
         'secondary' => 'bg-white text-foreground ring-1 ring-border hover:bg-slate-50 focus:ring-slate-400',
         'ghost' => 'text-foreground-muted hover:bg-slate-100 focus:ring-slate-300',
         'link' => 'text-accent hover:text-accent-content underline-offset-4 hover:underline focus:ring-accent',
+        'success' => 'bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500',
         'danger' => 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
+        'warning' => 'bg-amber-500 text-white hover:bg-amber-600 focus:ring-amber-500',
+        'info' => 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
     ];
 
     $sizes = [
