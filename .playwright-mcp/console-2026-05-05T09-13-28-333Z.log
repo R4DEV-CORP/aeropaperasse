@@ -1,0 +1,10 @@
+[     794ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/badge-requests/form/16:19
+[  162150ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/badge-requests/form/16:19
+[  244837ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/badge-requests/form/16:19
+[  301211ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/badge-requests/form/16:19
+[  796700ms] [ERROR] An invalid form control with name='' is not focusable. @ http://localhost:8000/badge-requests/form/16:0
+[  796700ms] [ERROR] An invalid form control with name='' is not focusable. @ http://localhost:8000/badge-requests/form/16:0
+[  873691ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/badge-requests/form/16:19
+[  892950ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/badge-requests/form/16:19
+[  897171ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/badge-requests/form/16:19
+[  905408ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/badge-requests/form/16:19

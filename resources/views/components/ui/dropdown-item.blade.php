@@ -10,6 +10,7 @@
 
     $variants = [
         'default' => 'text-foreground hover:bg-slate-50 focus-visible:bg-slate-50',
+        'success' => 'text-emerald-700 hover:bg-emerald-50 focus-visible:bg-emerald-50',
         'danger' => 'text-red-600 hover:bg-red-50 focus-visible:bg-red-50',
     ];
 

@@ -80,6 +80,24 @@ The `pages::` and `layouts::` namespaces are registered in `config/livewire.php`
 
 The dot-notation `pages::activity-requests.index` resolves to `resources/views/pages/activity-requests/⚡index.blade.php` (Livewire automatically locates the ⚡-prefixed SFC).
 
+## Navigation between pages
+
+Any link that goes from one app page to another MUST opt into Livewire's SPA-style navigation via `wire:navigate`. This avoids full-page reloads, preserves Alpine state, and keeps the layout shell mounted.
+
+| Use case | Correct form |
+|---|---|
+| Plain anchor | `<a href="{{ route('...') }}" wire:navigate>…</a>` |
+| Button-as-link (`<x-ui.button>` rendering an `<a>`) | `<x-ui.button :href="route('...')" wire:navigate>…</x-ui.button>` |
+| Server-side redirect from a Livewire method | `$this->redirect(route('...'), navigate: true)` |
+
+Forbidden patterns:
+- `<button wire:click="goToShow({{ $id }})">` where `goToShow()` is just `$this->redirect(...)` — wastes a round-trip; use a real `<a wire:navigate>` or `<x-ui.button :href wire:navigate>`.
+- A `<a href>` between two app pages without `wire:navigate` — degrades the experience to a full reload.
+
+Exceptions (no `wire:navigate`): external URLs, `mailto:` / `tel:`, same-page anchors (`#section`), file downloads, POST forms (e.g. logout).
+
+Reference: https://livewire.laravel.com/docs/4.x/navigate
+
 ## Decision flow
 
 When you need to build a piece of UI, walk this tree:

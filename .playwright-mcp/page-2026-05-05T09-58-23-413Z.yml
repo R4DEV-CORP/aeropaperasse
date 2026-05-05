@@ -1,0 +1,262 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "Aeropaperasse":
+        - /url: /dashboard
+        - img "Aeropaperasse"
+    - navigation [ref=e5]:
+      - link "Sociétés" [ref=e6] [cursor=pointer]:
+        - /url: /clients
+        - img [ref=e8]
+        - generic [ref=e10]: Sociétés
+      - link "Demande d'activité" [ref=e11] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e13]
+        - generic [ref=e15]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e16] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e18]
+        - generic [ref=e20]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e21] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e23]
+        - generic [ref=e25]: Demande de badge
+      - link "Suivi des badges" [ref=e26] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e28]
+        - generic [ref=e30]: Suivi des badges
+      - link "Formations" [ref=e31] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e33]
+        - generic [ref=e35]: Formations
+      - link "Laissez-passer" [ref=e36] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e38]
+        - generic [ref=e40]: Laissez-passer
+    - link "Déconnexion" [ref=e42] [cursor=pointer]:
+      - /url: http://localhost:8000/logout
+      - img [ref=e43]
+      - generic [ref=e45]: Déconnexion
+  - generic [ref=e46]:
+    - banner [ref=e47]:
+      - button "Masquer la barre latérale" [expanded] [ref=e49]:
+        - img [ref=e50]
+      - navigation "Fil d'Ariane" [ref=e52]:
+        - link "Mallet" [ref=e53] [cursor=pointer]:
+          - /url: http://localhost:8000/clients/02aa2ae8-1c40-37ee-93a9-c86fe4e869c0
+        - img [ref=e54]
+        - generic [ref=e56]: Demandes de badges
+    - main [ref=e57]:
+      - generic [ref=e58]:
+        - generic [ref=e59]:
+          - heading "Demandes de badges" [level=1] [ref=e60]
+          - paragraph [ref=e61]: Gérez toutes les demandes de badges depuis cette interface.
+        - generic [ref=e62]:
+          - button "En attente REM 5" [ref=e63]:
+            - generic [ref=e66]:
+              - generic [ref=e69]: En attente REM
+              - generic [ref=e70]: "5"
+          - button "En attente ADP 0" [ref=e71]:
+            - generic [ref=e74]:
+              - generic [ref=e77]: En attente ADP
+              - generic [ref=e78]: "0"
+          - button "Approuvé ADP 0" [ref=e79]:
+            - generic [ref=e82]:
+              - generic [ref=e85]: Approuvé ADP
+              - generic [ref=e86]: "0"
+          - button "En fabrication 1" [ref=e87]:
+            - generic [ref=e90]:
+              - generic [ref=e93]: En fabrication
+              - generic [ref=e94]: "1"
+          - button "Dossier incomplet 1" [ref=e95]:
+            - generic [ref=e98]:
+              - generic [ref=e101]: Dossier incomplet
+              - generic [ref=e102]: "1"
+          - button "Rejeté ADP 2" [ref=e103]:
+            - generic [ref=e106]:
+              - generic [ref=e109]: Rejeté ADP
+              - generic [ref=e110]: "2"
+          - button "Prêt à être Remis 0" [ref=e111]:
+            - generic [ref=e114]:
+              - generic [ref=e117]: Prêt à être Remis
+              - generic [ref=e118]: "0"
+          - button "Remis 0" [ref=e119]:
+            - generic [ref=e122]:
+              - generic [ref=e125]: Remis
+              - generic [ref=e126]: "0"
+        - generic [ref=e127]:
+          - generic [ref=e128]:
+            - generic [ref=e131]:
+              - generic:
+                - img
+              - searchbox "Rechercher une demande, un demandeur, une société..." [ref=e132]
+            - link "Nouvelle demande" [ref=e133] [cursor=pointer]:
+              - /url: http://localhost:8000/badge-requests/form
+              - img [ref=e134]
+              - text: Nouvelle demande
+          - radiogroup [ref=e136]:
+            - radio "Tous les aéroports" [checked] [ref=e137]
+            - radio "CDG" [ref=e138]
+            - radio "ORY" [ref=e139]
+            - radio "LBG" [ref=e140]
+        - button "Brouillons 5 — demandes en cours de rédaction Ouvrir" [ref=e142]:
+          - img [ref=e144]
+          - generic [ref=e146]:
+            - heading "Brouillons" [level=2] [ref=e147]
+            - generic [ref=e148]: "5"
+            - generic [ref=e149]: — demandes en cours de rédaction
+          - generic [ref=e150]:
+            - generic [ref=e151]: Ouvrir
+            - img [ref=e152]
+        - generic [ref=e154]:
+          - generic [ref=e155]:
+            - heading "Demandes récentes" [level=2] [ref=e156]
+            - paragraph [ref=e157]: 9 demandes
+          - table [ref=e159]:
+            - rowgroup [ref=e160]:
+              - row "N° demande d'activité Demandeur Contact Statut Date de création Aéroport Actions" [ref=e161]:
+                - columnheader "N° demande d'activité" [ref=e162]
+                - columnheader "Demandeur" [ref=e163]
+                - columnheader "Contact" [ref=e164]
+                - columnheader "Statut" [ref=e165]
+                - columnheader "Date de création" [ref=e166]
+                - columnheader "Aéroport" [ref=e167]
+                - columnheader "Actions" [ref=e168]
+            - rowgroup [ref=e169]:
+              - row "#16 Jean Dupont Mallet En attente REM 05/05/2026 CDG Actions" [ref=e170]:
+                - cell "#16" [ref=e171]
+                - cell "Jean Dupont Mallet" [ref=e172]:
+                  - generic [ref=e173]: Jean Dupont
+                  - generic [ref=e174]: Mallet
+                - cell [ref=e175]
+                - cell "En attente REM" [ref=e176]:
+                  - generic [ref=e177]: En attente REM
+                - cell "05/05/2026" [ref=e179]
+                - cell "CDG" [ref=e180]:
+                  - generic [ref=e181]: CDG
+                - cell "Actions" [ref=e182]:
+                  - button "Actions" [ref=e185]:
+                    - img [ref=e186]
+              - row "#16 Test Icule Mallet En attente REM 05/05/2026 CDG Actions" [ref=e188]:
+                - cell "#16" [ref=e189]
+                - cell "Test Icule Mallet" [ref=e190]:
+                  - generic [ref=e191]: Test Icule
+                  - generic [ref=e192]: Mallet
+                - cell [ref=e193]
+                - cell "En attente REM" [ref=e194]:
+                  - generic [ref=e195]: En attente REM
+                - cell "05/05/2026" [ref=e197]
+                - cell "CDG" [ref=e198]:
+                  - generic [ref=e199]: CDG
+                - cell "Actions" [ref=e200]:
+                  - button "Actions" [ref=e203]:
+                    - img [ref=e204]
+              - row "#16 dqdqd qdqsd Mallet En attente REM 05/05/2026 CDG Actions" [ref=e206]:
+                - cell "#16" [ref=e207]
+                - cell "dqdqd qdqsd Mallet" [ref=e208]:
+                  - generic [ref=e209]: dqdqd qdqsd
+                  - generic [ref=e210]: Mallet
+                - cell [ref=e211]
+                - cell "En attente REM" [ref=e212]:
+                  - generic [ref=e213]: En attente REM
+                - cell "05/05/2026" [ref=e215]
+                - cell "CDG" [ref=e216]:
+                  - generic [ref=e217]: CDG
+                - cell "Actions" [ref=e218]:
+                  - button "Actions" [ref=e221]:
+                    - img [ref=e222]
+              - row "#16 Titi Toto Mallet tititoto@gmail.com En attente REM 05/05/2026 CDG Actions" [ref=e224]:
+                - cell "#16" [ref=e225]
+                - cell "Titi Toto Mallet" [ref=e226]:
+                  - generic [ref=e227]: Titi Toto
+                  - generic [ref=e228]: Mallet
+                - cell "tititoto@gmail.com" [ref=e229]:
+                  - generic [ref=e230]: tititoto@gmail.com
+                - cell "En attente REM" [ref=e231]:
+                  - generic [ref=e232]: En attente REM
+                - cell "05/05/2026" [ref=e234]
+                - cell "CDG" [ref=e235]:
+                  - generic [ref=e236]: CDG
+                - cell "Actions" [ref=e237]:
+                  - button "Actions" [ref=e240]:
+                    - img [ref=e241]
+              - row "#1 Colette Adam Mallet colette.adam@gmail.com 0375398059 En attente REM 05/05/2026 LBG Actions" [ref=e243]:
+                - cell "#1" [ref=e244]
+                - cell "Colette Adam Mallet" [ref=e245]:
+                  - generic [ref=e246]: Colette Adam
+                  - generic [ref=e247]: Mallet
+                - cell "colette.adam@gmail.com 0375398059" [ref=e248]:
+                  - generic [ref=e249]: colette.adam@gmail.com
+                  - generic [ref=e250]: "0375398059"
+                - cell "En attente REM" [ref=e251]:
+                  - generic [ref=e252]: En attente REM
+                - cell "05/05/2026" [ref=e254]
+                - cell "LBG" [ref=e255]:
+                  - generic [ref=e256]: LBG
+                - cell "Actions" [ref=e257]:
+                  - button "Actions" [ref=e260]:
+                    - img [ref=e261]
+              - row "#2 Colette Adam Mallet colette.adam@gmail.com 0375398059 En fabrication 05/05/2026 ORY Actions" [ref=e263]:
+                - cell "#2" [ref=e264]
+                - cell "Colette Adam Mallet" [ref=e265]:
+                  - generic [ref=e266]: Colette Adam
+                  - generic [ref=e267]: Mallet
+                - cell "colette.adam@gmail.com 0375398059" [ref=e268]:
+                  - generic [ref=e269]: colette.adam@gmail.com
+                  - generic [ref=e270]: "0375398059"
+                - cell "En fabrication" [ref=e271]:
+                  - generic [ref=e272]: En fabrication
+                - cell "05/05/2026" [ref=e274]
+                - cell "ORY" [ref=e275]:
+                  - generic [ref=e276]: ORY
+                - cell "Actions" [ref=e277]:
+                  - button "Actions" [ref=e280]:
+                    - img [ref=e281]
+              - row "#3 Colette Adam Mallet colette.adam@gmail.com 0375398059 Dossier incomplet 05/05/2026 ORY Actions" [ref=e283]:
+                - cell "#3" [ref=e284]
+                - cell "Colette Adam Mallet" [ref=e285]:
+                  - generic [ref=e286]: Colette Adam
+                  - generic [ref=e287]: Mallet
+                - cell "colette.adam@gmail.com 0375398059" [ref=e288]:
+                  - generic [ref=e289]: colette.adam@gmail.com
+                  - generic [ref=e290]: "0375398059"
+                - cell "Dossier incomplet" [ref=e291]:
+                  - generic [ref=e292]: Dossier incomplet
+                - cell "05/05/2026" [ref=e294]
+                - cell "ORY" [ref=e295]:
+                  - generic [ref=e296]: ORY
+                - cell "Actions" [ref=e297]:
+                  - button "Actions" [ref=e300]:
+                    - img [ref=e301]
+              - row "#4 Colette Adam Mallet colette.adam@gmail.com 0375398059 Rejeté ADP 05/05/2026 ORY Actions" [ref=e303]:
+                - cell "#4" [ref=e304]
+                - cell "Colette Adam Mallet" [ref=e305]:
+                  - generic [ref=e306]: Colette Adam
+                  - generic [ref=e307]: Mallet
+                - cell "colette.adam@gmail.com 0375398059" [ref=e308]:
+                  - generic [ref=e309]: colette.adam@gmail.com
+                  - generic [ref=e310]: "0375398059"
+                - cell "Rejeté ADP" [ref=e311]:
+                  - generic [ref=e312]: Rejeté ADP
+                - cell "05/05/2026" [ref=e314]
+                - cell "ORY" [ref=e315]:
+                  - generic [ref=e316]: ORY
+                - cell "Actions" [ref=e317]:
+                  - button "Actions" [ref=e320]:
+                    - img [ref=e321]
+              - row "#5 Colette Adam Mallet colette.adam@gmail.com 0375398059 Rejeté ADP 05/05/2026 LBG Actions" [ref=e323]:
+                - cell "#5" [ref=e324]
+                - cell "Colette Adam Mallet" [ref=e325]:
+                  - generic [ref=e326]: Colette Adam
+                  - generic [ref=e327]: Mallet
+                - cell "colette.adam@gmail.com 0375398059" [ref=e328]:
+                  - generic [ref=e329]: colette.adam@gmail.com
+                  - generic [ref=e330]: "0375398059"
+                - cell "Rejeté ADP" [ref=e331]:
+                  - generic [ref=e332]: Rejeté ADP
+                - cell "05/05/2026" [ref=e334]
+                - cell "LBG" [ref=e335]:
+                  - generic [ref=e336]: LBG
+                - cell "Actions" [ref=e337]:
+                  - button "Actions" [ref=e340]:
+                    - img [ref=e341]

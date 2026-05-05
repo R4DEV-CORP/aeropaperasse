@@ -7,12 +7,13 @@
     'id' => null,
     'type' => 'text',
     'required' => false,
+    'disabled' => false,
     'togglePassword' => false,
 ])
 
 @php
     if (! $id && $label) {
-        $id = 'input-' . md5($label);
+        $id = 'input-'.md5($label);
     }
     $hasError = ! empty($error);
     $hasLeadingIcon = isset($leadingIcon);
@@ -22,12 +23,17 @@
         : 'border-border focus:border-accent focus:ring-accent';
     $paddingLeft = $hasLeadingIcon ? 'pl-10' : 'px-3';
     $paddingRight = ($togglePassword || $hasTrailingIcon) ? 'pr-10' : ($hasLeadingIcon ? 'pr-3' : '');
-    $inputClass = "block w-full rounded border bg-white py-2.5 text-sm text-foreground placeholder:text-slate-400 focus:outline-none focus:ring-1 $borderClass $paddingLeft $paddingRight";
+    $disabledClass = 'disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-foreground-muted disabled:border-slate-200 disabled:focus:ring-0 disabled:focus:border-slate-200';
+    $inputClass = "block w-full rounded border bg-white py-2.5 text-sm text-foreground placeholder:text-slate-400 focus:outline-none focus:ring-1 $borderClass $paddingLeft $paddingRight $disabledClass";
+    $labelClass = $disabled
+        ? 'block text-sm font-medium text-foreground-subtle'
+        : 'block text-sm font-medium text-foreground-muted';
+    $iconWrapperClass = $disabled ? 'text-slate-400' : 'text-foreground-subtle';
 @endphp
 
 <div class="space-y-1.5">
     @if ($label)
-        <label for="{{ $id }}" class="block text-sm font-medium text-foreground-muted">
+        <label for="{{ $id }}" class="{{ $labelClass }}">
             {{ $label }}
             @if ($required)
                 <span class="text-red-500" aria-hidden="true">*</span>
@@ -38,7 +44,7 @@
     @if ($togglePassword)
         <div class="relative" x-data="{ visible: false }">
             @if ($hasLeadingIcon)
-                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-foreground-subtle">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 {{ $iconWrapperClass }}">
                     {{ $leadingIcon }}
                 </div>
             @endif
@@ -46,6 +52,7 @@
                 @if ($id) id="{{ $id }}" @endif
                 :type="visible ? 'text' : '{{ $type }}'"
                 @required($required)
+                @disabled($disabled)
                 {{ $attributes->merge(['class' => $inputClass]) }}
             />
             <button
@@ -53,7 +60,8 @@
                 x-on:click="visible = !visible"
                 :aria-label="visible ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
                 :aria-pressed="visible"
-                class="absolute inset-y-0 right-0 flex items-center pr-3 text-foreground-muted hover:text-foreground focus:text-foreground focus:outline-none"
+                @disabled($disabled)
+                class="absolute inset-y-0 right-0 flex items-center pr-3 text-foreground-muted hover:text-foreground focus:text-foreground focus:outline-none disabled:cursor-not-allowed disabled:text-slate-400 disabled:hover:text-slate-400"
             >
                 <svg x-show="!visible" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
@@ -67,7 +75,7 @@
     @elseif ($hasLeadingIcon || $hasTrailingIcon)
         <div class="relative">
             @if ($hasLeadingIcon)
-                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-foreground-subtle">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 {{ $iconWrapperClass }}">
                     {{ $leadingIcon }}
                 </div>
             @endif
@@ -75,10 +83,11 @@
                 @if ($id) id="{{ $id }}" @endif
                 type="{{ $type }}"
                 @required($required)
+                @disabled($disabled)
                 {{ $attributes->merge(['class' => $inputClass]) }}
             />
             @if ($hasTrailingIcon)
-                <div class="absolute inset-y-0 right-0 flex items-center pr-3 text-foreground-subtle">
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 {{ $iconWrapperClass }}">
                     {{ $trailingIcon }}
                 </div>
             @endif
@@ -88,6 +97,7 @@
             @if ($id) id="{{ $id }}" @endif
             type="{{ $type }}"
             @required($required)
+            @disabled($disabled)
             {{ $attributes->merge(['class' => $inputClass]) }}
         />
     @endif

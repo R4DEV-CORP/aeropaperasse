@@ -1,0 +1,7 @@
+[    1150ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/activity-requests/form/17:19
+[  310579ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/activity-requests/form:19
+[  528464ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/activity-requests:19
+[  547799ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:8000/activity-requests:0
+[  547823ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/activity-requests:139
+[  547986ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://localhost:8000/activity-requests:198
+[  548020ms] [LOG] {report: Object, shareableReport: Object, config: Object, solutions: Array(0), updateConfigEndpoint: /_ignition/update-config} {frames: Array(96), context_items: Object, custom_context_items: Array(0), type: web, entry_point: http://localhost:8000/activity-requests} @ http://localhost:8000/activity-requests:198

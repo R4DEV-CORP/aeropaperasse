@@ -90,6 +90,7 @@ Scaffolds a new Livewire page component and wires the corresponding `Route::live
    - Compose `<x-ui.*>` primitives and embed Livewire SFC via `<livewire:domain.name />` rather than reimplementing UI.
    - Eager-load relations in `with()` to avoid N+1.
    - Authorization redirects (e.g. `isClient()` check) go in `mount()`.
+   - **Cross-page links use `wire:navigate`**: `<a href="{{ route('...') }}" wire:navigate>` or `<x-ui.button :href="route('...')" wire:navigate>`. Server-side redirects from methods use `$this->redirect(route('...'), navigate: true)`. Never write a `wire:click` whose only job is to redirect — use a real link. Exceptions: external URLs, `mailto:`/`tel:`, `#anchors`, downloads, POST forms.
 
 7. **Generate a feature test**:
    ```bash
@@ -105,6 +106,7 @@ Scaffolds a new Livewire page component and wires the corresponding `Route::live
 - Wrapping the page in a Blade view that contains `<livewire:...>` — bind directly.
 - Re-implementing primitive HTML inline.
 - `<flux:*>` components (Flux is removed).
+- Cross-page links without `wire:navigate` (or `wire:click="redirectMethod"` patterns that just redirect).
 
 ## Reference
 

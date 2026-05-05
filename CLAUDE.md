@@ -449,6 +449,16 @@ This project enforces a **strict separation** between stateless primitives and s
 - **NEVER** use `Route::get(..., Component::class)`, never render Livewire pages via `@livewire()` in a Blade file.
 - Reference: https://livewire.laravel.com/docs/4.x/pages#routing-to-components
 
+### Navigation between pages (INVIOLABLE)
+- Any link that navigates from one app page to another MUST use `wire:navigate` (SPA-style transitions, no full reload).
+- This applies to:
+  - Plain anchors → `<a href="{{ route('...') }}" wire:navigate>…</a>`
+  - Button-as-link → `<x-ui.button :href="route('...')" wire:navigate>…</x-ui.button>` (the primitive forwards `wire:navigate` via `$attributes->merge`)
+  - Server-side redirects from a Livewire component → `$this->redirect(route('...'), navigate: true)`
+- **NEVER** use `wire:click` calling a method that only does `$this->redirect(...)` — it forces a server round-trip just to navigate. Use a real `<a wire:navigate>` (or `:href` on the button primitive) instead.
+- Exceptions (no `wire:navigate`): external URLs, `mailto:` / `tel:`, same-page anchors (`#section`), file downloads, POST forms (e.g. logout).
+- Reference: https://livewire.laravel.com/docs/4.x/navigate
+
 ### Layouts — `resources/views/layouts/`
 - Livewire layouts only: `app.blade.php` (authenticated app), `auth.blade.php` (login flow).
 - Layouts must include `{{ $slot }}` and use the `layouts::` namespace when referenced.
@@ -457,6 +467,12 @@ This project enforces a **strict separation** between stateless primitives and s
 ### Styling
 - Tailwind v4 only — theme tokens live in `resources/css/app.css` (`@theme` directive).
 - **Single light theme**: do NOT use `dark:*` variant classes anywhere. No external CSS framework.
+
+### User feedback
+- After any user action that changes server state (create/update/delete/status transition/email/document export), surface the result as a **toast**. Use the trait `App\Livewire\Concerns\InteractsWithToasts` and call `$this->toast($message, $variant, $title)` (variants: `success`, `danger`, `warning`, `info`).
+- **NEVER** use `session()->flash('message', ...)` from a Livewire component — no view reads it. From an HTTP controller / non-Livewire redirect, flash `session()->flash('toast', [...])` instead.
+- Validation errors stay in `$errors` and render via `:error="$errors->first('field')"` on the input — they are NOT toasts.
+- See `docs/ui/feedback.md` for the full guide (variants, anti-patterns, testing).
 
 ### Decision flow when creating UI
 1. Is it a primitive (no state, no server interaction)? → Blade in `resources/views/components/ui/`

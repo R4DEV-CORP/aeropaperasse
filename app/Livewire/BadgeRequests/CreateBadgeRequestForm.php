@@ -8,6 +8,7 @@ use App\DataTransferObjects\CreateBadgeRequestData;
 use App\DataTransferObjects\CreateCoworkerData;
 use App\Forms\BadgeRequestFormData;
 use App\Forms\BadgeRequestFormValidator;
+use App\Livewire\Concerns\InteractsWithToasts;
 use App\Mail\BadgeRequest\BadgeRequestCreated;
 use App\Models\ActivityRequest;
 use App\Models\BadgeRequest;
@@ -24,6 +25,7 @@ use Livewire\WithFileUploads;
 
 class CreateBadgeRequestForm extends Component
 {
+    use InteractsWithToasts;
     use WithFileUploads;
 
     public $user;
@@ -443,6 +445,11 @@ class CreateBadgeRequestForm extends Component
             // 5. Traiter le résultat
             if ($result->isSuccessful()) {
                 $this->successMessage = $result->getMessage();
+                $this->toast(
+                    $result->getMessage(),
+                    'success',
+                    $isDraft ? 'Brouillon enregistré' : 'Demande de badge créée',
+                );
                 $this->dispatch('badge-request-created');
                 $this->closeModal();
 
@@ -455,6 +462,7 @@ class CreateBadgeRequestForm extends Component
                 Mail::to($email)->send(new BadgeRequestCreated($result->getBadgeRequest()));
             } else {
                 $this->errorMessage = $result->getMessage();
+                $this->toast($result->getMessage(), 'danger', 'Erreur');
             }
 
             $this->resetForm();

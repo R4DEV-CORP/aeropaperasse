@@ -16,6 +16,13 @@ You are working inside the **Livewire page components** directory. The rules her
 - Layout files live at `resources/views/layouts/{name}.blade.php`. Generate with `php artisan livewire:layout`.
 - Pages MAY embed Livewire SFC via `<livewire:domain.name />` and MUST compose `<x-ui.*>` primitives for atomic UI.
 - Authorization gates beyond route middleware go in `mount()` (e.g. role-based redirects).
+- User-facing feedback after an action (success / failure / status change) → use the `InteractsWithToasts` trait and `$this->toast(...)`. Never use silent `session()->flash('message', ...)`. See `docs/ui/feedback.md`.
+- **Navigation between pages MUST use `wire:navigate`** (SPA-style, no full reload):
+  - Anchors: `<a href="{{ route('...') }}" wire:navigate>…</a>`
+  - Button-as-link: `<x-ui.button :href="route('...')" wire:navigate>…</x-ui.button>`
+  - Server-side redirects: `$this->redirect(route('...'), navigate: true)`
+  - **NEVER** use `wire:click="someMethod"` where `someMethod` only does `$this->redirect(...)` — use a real `<a wire:navigate>` instead.
+  - Exceptions: external URLs, `mailto:`/`tel:`, `#anchors`, downloads, POST forms (logout). See `docs/ui/architecture.md` → "Navigation between pages".
 
 ## Generating
 
@@ -46,4 +53,5 @@ Route::livewire('/activity-requests', 'pages::activity-requests.index')
 
 - Page anatomy, layouts, route binding, testing: `docs/ui/livewire-pages.md`
 - Layout files convention: `docs/ui/livewire-pages.md` → "Layouts" section
+- User feedback (toasts) after actions: `docs/ui/feedback.md`
 - The big picture: `docs/ui/architecture.md`

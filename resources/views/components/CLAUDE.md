@@ -18,6 +18,8 @@ The rules below apply to **Livewire SFC** in domain subfolders.
 - Single root element per template. Use `wire:key` in loops.
 - Validate inputs and run authorization checks in component methods — they hit the backend like regular HTTP requests.
 - Complex business logic belongs in `app/Actions/`, not in the component. Components orchestrate: validate → build DTO → call Action → handle Result.
+- User-facing feedback after an action (success / failure / status change) → use the `InteractsWithToasts` trait and `$this->toast(...)`. Never use silent `session()->flash('message', ...)`. See `docs/ui/feedback.md`.
+- **Cross-page links MUST use `wire:navigate`**: `<a href="{{ route(...) }}" wire:navigate>…</a>` or `<x-ui.button :href="route(...)" wire:navigate>…</x-ui.button>`. From a method, use `$this->redirect(route('...'), navigate: true)`. **Never** wire a `wire:click` to a method whose only job is to redirect — use a real link. See `docs/ui/architecture.md` → "Navigation between pages".
 
 ## Generating
 
@@ -40,4 +42,5 @@ Examples:
 
 - SFC anatomy, lifecycle hooks, computed properties, testing: `docs/ui/livewire-components.md`
 - Available primitives: `docs/ui/blade-primitives.md`
+- User feedback (toasts) after actions: `docs/ui/feedback.md`
 - Application lifecycle (DTO + Action + Result pattern): root `CLAUDE.md` → "Request Lifecycle (Livewire)"

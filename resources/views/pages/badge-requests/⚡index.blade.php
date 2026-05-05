@@ -53,6 +53,27 @@ class extends Component
     }
 
     #[Computed]
+    public function draftBadgeRequests()
+    {
+        $query = BadgeRequest::with(['coworker', 'activityRequest.client'])
+            ->where('status', 'draft');
+
+        if (! auth()->user()->isAdmin()) {
+            $query->whereHas('activityRequest', function ($q) {
+                $q->where('client_id', auth()->user()->client_id);
+            });
+        }
+
+        if (auth()->user()->isClient()) {
+            $query->whereHas('activityRequest', function ($q) {
+                $q->where('created_by', auth()->user()->id);
+            });
+        }
+
+        return $query->orderBy('updated_at', 'desc')->take(50)->get();
+    }
+
+    #[Computed]
     public function statistics(): array
     {
         $query = BadgeRequest::query()->where('status', '!=', 'draft');
@@ -197,7 +218,7 @@ class extends Component
             </div>
 
             @if (! auth()->user()->isClient())
-                <x-ui.button variant="primary" wire:click="$dispatch('open-create-badge-request')">
+                <x-ui.button variant="primary" :href="route('badge-requests.form')" wire:navigate>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
@@ -259,6 +280,136 @@ class extends Component
         </div>
     @endif
 
+    {{-- Drafts accordion --}}
+    @php
+        $draftsCount = $this->draftBadgeRequests->count();
+        $hasDrafts = $draftsCount > 0;
+    @endphp
+    <div
+        x-data="{ open: false }"
+        x-cloak
+        class="overflow-hidden rounded border border-border bg-white shadow-sm"
+    >
+        @if ($hasDrafts)
+            <button
+                type="button"
+                @click="open = !open"
+                :aria-expanded="open"
+                class="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            >
+                <span class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-slate-100 text-foreground-muted">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="h-4 w-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+                </span>
+
+                <div class="flex flex-shrink-0 items-baseline gap-2">
+                    <h2 class="text-sm font-semibold text-foreground">Brouillons</h2>
+                    <x-ui.badge variant="draft" :dot="false">{{ $draftsCount }}</x-ui.badge>
+                    <span class="hidden text-xs text-foreground-muted sm:inline">— demandes en cours de rédaction</span>
+                </div>
+
+                <div class="ml-auto flex flex-shrink-0 items-center gap-2 text-xs font-medium text-foreground-muted">
+                    <span x-text="open ? 'Replier' : 'Ouvrir'"></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4 transition-transform duration-200" :class="open && 'rotate-180'">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                    </svg>
+                </div>
+            </button>
+        @else
+            <div class="flex items-center gap-3 px-4 py-3">
+                <span class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-slate-50 text-foreground-subtle">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="h-4 w-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+                </span>
+                <div class="flex flex-shrink-0 items-baseline gap-2">
+                    <h2 class="text-sm font-semibold text-foreground-muted">Brouillons</h2>
+                    <span class="text-xs text-foreground-subtle">Aucune demande en cours de rédaction</span>
+                </div>
+            </div>
+        @endif
+
+        @if ($hasDrafts)
+            <div x-show="open" x-collapse class="border-t border-border">
+                <div class="max-h-[360px] overflow-y-auto">
+                    <x-ui.table>
+                        <thead class="sticky top-0 z-10 bg-white">
+                            <tr>
+                                <th>Demandeur</th>
+                                <th>Contact</th>
+                                <th>Société</th>
+                                <th>Aéroport</th>
+                                <th>Modifié</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($this->draftBadgeRequests as $draft)
+                                @php
+                                    $coworker = $draft->coworker;
+                                    $fullName = trim(($coworker->firstname ?? '').' '.($coworker->lastname ?? ''));
+                                    $email = $coworker->email ?? null;
+                                    $phone = $coworker->phone ?? null;
+                                    $company = $draft->activityRequest->client->company_name ?? null;
+                                    $airport = $draft->activityRequest->airport ?? null;
+                                @endphp
+                                <tr wire:key="draft-{{ $draft->id }}" class="transition hover:bg-slate-50">
+                                    <td>
+                                        @if ($fullName !== '')
+                                            <div class="font-medium text-foreground">{{ $fullName }}</div>
+                                        @else
+                                            <div class="font-medium italic text-foreground-subtle">Demandeur non renseigné</div>
+                                        @endif
+                                        <div class="text-xs text-foreground-muted">
+                                            Créé le {{ $draft->created_at->format('d/m/Y') }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="text-foreground">{{ $email ?: '—' }}</div>
+                                        <div class="text-xs text-foreground-muted">{{ $phone ?: '—' }}</div>
+                                    </td>
+                                    <td>
+                                        @if ($company)
+                                            <span class="text-foreground">{{ $company }}</span>
+                                        @else
+                                            <span class="text-foreground-subtle">—</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($airport)
+                                            <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold ring-1 ring-inset {{ $airportMeta[$airport] ?? 'bg-slate-50 text-slate-700 ring-slate-200' }}">
+                                                {{ $airport }}
+                                            </span>
+                                        @else
+                                            <span class="text-foreground-subtle">—</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-foreground-muted">
+                                        <div>{{ $draft->updated_at->diffForHumans() }}</div>
+                                        <div class="text-xs text-foreground-subtle">{{ $draft->updated_at->format('d/m/Y H:i') }}</div>
+                                    </td>
+                                    <td class="text-right">
+                                        <a
+                                            href="{{ route('badge-requests.form', ['badgeRequestId' => $draft->id]) }}"
+                                            wire:navigate
+                                            class="inline-flex items-center gap-1 text-xs font-semibold text-foreground transition hover:text-brand"
+                                        >
+                                            Reprendre
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-3.5 w-3.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                                            </svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </x-ui.table>
+                </div>
+            </div>
+        @endif
+    </div>
+
     {{-- Table card --}}
     <x-ui.card padding="none" class="relative overflow-hidden">
         <div
@@ -277,10 +428,11 @@ class extends Component
         <x-ui.table>
             <thead>
                 <tr>
+                    <th>N° demande d'activité</th>
                     <th>Demandeur</th>
                     <th>Contact</th>
                     <th>Statut</th>
-                    <th>Date</th>
+                    <th>Date de création</th>
                     <th>Aéroport</th>
                     <th class="text-right">Actions</th>
                 </tr>
@@ -292,6 +444,13 @@ class extends Component
                         $airport = $badgeRequest->activityRequest->airport ?? null;
                     @endphp
                     <tr wire:key="badge-request-{{ $badgeRequest->id }}">
+                        <td>
+                            @if ($badgeRequest->activityRequest)
+                                <span class="font-mono text-xs text-foreground-muted">#{{ $badgeRequest->activityRequest->id }}</span>
+                            @else
+                                <span class="text-foreground-subtle">—</span>
+                            @endif
+                        </td>
                         <td>
                             <div class="font-medium text-foreground">{{ $badgeRequest->coworker->firstname }} {{ $badgeRequest->coworker->lastname }}</div>
                             <div class="text-xs text-foreground-muted">{{ $badgeRequest->activityRequest->client->company_name ?? '—' }}</div>
@@ -346,7 +505,7 @@ class extends Component
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center text-foreground-muted">
+                        <td colspan="7" class="text-center text-foreground-muted">
                             <div class="py-12">Aucune demande à afficher.</div>
                         </td>
                     </tr>

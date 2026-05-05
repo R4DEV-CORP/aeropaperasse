@@ -83,10 +83,12 @@ Usage:
 ```blade
 <x-ui.button>Enregistrer</x-ui.button>
 <x-ui.button variant="danger" wire:click="delete">Supprimer</x-ui.button>
-<x-ui.button :href="route('clients.index')" variant="ghost">Retour</x-ui.button>
+<x-ui.button :href="route('clients.index')" wire:navigate variant="ghost">Retour</x-ui.button>
 ```
 
-Note: even though primitives don't *contain* Livewire directives, they MUST forward attributes (via `$attributes->merge`) so consumers can attach `wire:click`, `wire:loading`, etc. from the outside.
+Note: even though primitives don't *contain* Livewire directives, they MUST forward attributes (via `$attributes->merge`) so consumers can attach `wire:click`, `wire:loading`, `wire:navigate`, etc. from the outside.
+
+**Cross-page links** — when a button-as-link or any `<a>` navigates to another app page, always pair `:href` (or `href`) with `wire:navigate`. See `docs/ui/architecture.md` → "Navigation between pages".
 
 ### Form primitive with named slots — `input.blade.php`
 

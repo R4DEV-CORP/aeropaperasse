@@ -1,0 +1,4 @@
+[    1395ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/activity-requests/form/19:19
+[   38803ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/activity-requests:19
+[   97735ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/activity-requests:19
+[   97830ms] [LOG] [toast-stack] livewire:navigated fired, calling consumeFlash @ http://localhost:8000/activity-requests:78

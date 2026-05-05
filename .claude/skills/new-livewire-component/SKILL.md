@@ -65,6 +65,7 @@ Scaffolds a new Livewire SFC in `resources/views/components/{domain}/`.
    - Add type hints and explicit return types on all methods (project rule).
    - For non-trivial business logic, delegate to an Action in `app/Actions/` and pass a DTO from `app/DataTransferObjects/`.
    - For complex form validation, use a validator class from `app/Forms/`.
+   - **Cross-page links use `wire:navigate`**: `<a href="{{ route('...') }}" wire:navigate>` or `<x-ui.button :href="route('...')" wire:navigate>`. From a method, use `$this->redirect(route('...'), navigate: true)`. Never write a `wire:click` whose only job is to call `$this->redirect(...)` — use a real link instead. Exceptions: external URLs, `mailto:`/`tel:`, `#anchors`, downloads, POST forms.
 
 6. **Render it** with `<livewire:{domain}.{name} />` (self-closing — Livewire v4 requires this).
 

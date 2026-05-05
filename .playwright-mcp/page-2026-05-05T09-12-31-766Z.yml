@@ -1,0 +1,149 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Aeropaperasse" [ref=e6]
+      - navigation [ref=e7]:
+        - link "Sociétés" [ref=e8] [cursor=pointer]:
+          - /url: /clients
+          - img [ref=e10]
+          - generic [ref=e12]: Sociétés
+        - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+          - /url: /activity-requests
+          - img [ref=e15]
+          - generic [ref=e17]: Demande d'activité
+        - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+          - /url: /coworkers
+          - img [ref=e20]
+          - generic [ref=e22]: Collaborateurs & utilisateurs
+        - link "Demande de badge" [ref=e23] [cursor=pointer]:
+          - /url: /badge-requests
+          - img [ref=e25]
+          - generic [ref=e27]: Demande de badge
+        - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+          - /url: /badge-management
+          - img [ref=e30]
+          - generic [ref=e32]: Suivi des badges
+        - link "Formations" [ref=e33] [cursor=pointer]:
+          - /url: /trainings
+          - img [ref=e35]
+          - generic [ref=e37]: Formations
+        - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+          - /url: /vehicle-pass
+          - img [ref=e40]
+          - generic [ref=e42]: Laissez-passer
+      - link "Déconnexion" [ref=e44] [cursor=pointer]:
+        - /url: http://localhost:8000/logout
+        - img [ref=e45]
+        - generic [ref=e47]: Déconnexion
+    - generic [ref=e48]:
+      - banner [ref=e49]:
+        - button "Masquer la barre latérale" [expanded] [ref=e51]:
+          - img [ref=e52]
+        - navigation "Fil d'Ariane" [ref=e54]:
+          - link "Mallet" [ref=e55] [cursor=pointer]:
+            - /url: http://localhost:8000/clients/02aa2ae8-1c40-37ee-93a9-c86fe4e869c0
+          - img [ref=e56]
+          - link "Demandes de badges" [ref=e58] [cursor=pointer]:
+            - /url: /badge-requests
+          - img [ref=e59]
+          - generic [ref=e61]: Nouvelle demande
+      - main [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e66]:
+            - link "Retour" [ref=e67] [cursor=pointer]:
+              - /url: http://localhost:8000/badge-requests
+              - img [ref=e68]
+              - text: Retour
+            - generic [ref=e70]: /
+            - heading "Nouvelle demande de badge" [level=1] [ref=e71]
+          - generic [ref=e72]:
+            - generic [ref=e74]:
+              - generic [ref=e75]:
+                - 'button "Demande d''activité Demande #16 — CDG" [expanded] [ref=e150]':
+                  - img [ref=e78]
+                  - generic [ref=e80]:
+                    - generic [ref=e81]: Demande d'activité
+                    - generic [ref=e82]: "Demande #16 — CDG"
+                  - img [ref=e83]
+                - generic [ref=e85]:
+                  - generic [ref=e86]:
+                    - generic [ref=e87]: Demande d'activité *
+                    - button "Demande d'activité" [ref=e89]:
+                      - generic [ref=e90]: "Demande #16 — CDG"
+                      - img [ref=e91]
+                  - generic [ref=e151]:
+                    - generic [ref=e152]:
+                      - generic [ref=e153]: Aéroport
+                      - generic [ref=e155]: CDG
+                    - generic [ref=e157]:
+                      - generic [ref=e158]: Quota badges
+                      - generic [ref=e159]: 0 / 5 utilisés
+              - generic [ref=e93]:
+                - button "Collaborateur Choisissez le collaborateur concerné" [expanded] [ref=e94]:
+                  - img [ref=e96]
+                  - generic [ref=e98]:
+                    - generic [ref=e99]: Collaborateur
+                    - generic [ref=e100]: Choisissez le collaborateur concerné
+                  - img [ref=e101]
+                - generic [ref=e161]:
+                  - generic [ref=e162]:
+                    - generic [ref=e163]: Collaborateur *
+                    - button "Collaborateur" [expanded] [ref=e165]:
+                      - generic [ref=e166]: Sélectionnez un collaborateur…
+                      - img [ref=e167]
+                  - button "Créer un nouveau collaborateur" [ref=e169]:
+                    - img [ref=e170]
+                    - text: Créer un nouveau collaborateur
+              - button "Options Habilitation et formation" [ref=e104]:
+                - img [ref=e106]
+                - generic [ref=e109]:
+                  - generic [ref=e110]: Options
+                  - generic [ref=e111]: Habilitation et formation
+                - img [ref=e112]
+              - button "Documents 0 / 5 documents fournis" [ref=e115]:
+                - img [ref=e117]
+                - generic [ref=e119]:
+                  - generic [ref=e120]: Documents
+                  - generic [ref=e121]:
+                    - generic [ref=e122]: 0 / 5
+                    - generic [ref=e123]: documents fournis
+                - img [ref=e124]
+            - generic [ref=e127]:
+              - button "Abandonner" [ref=e128]:
+                - img [ref=e129]
+                - text: Abandonner
+              - generic [ref=e131]:
+                - button "Brouillon" [ref=e132]:
+                  - img [ref=e133]
+                  - generic [ref=e136]: Brouillon
+                - button "Créer la demande" [disabled] [ref=e137]:
+                  - img [ref=e138]
+                  - generic [ref=e140]: Créer la demande
+  - generic [ref=e172]:
+    - generic [ref=e174]:
+      - generic:
+        - img
+      - textbox "Filtrer par nom, email…" [active] [ref=e175]
+    - listbox [ref=e176]:
+      - option "Colette Adam colette.adam@gmail.com" [ref=e177] [cursor=pointer]:
+        - generic [ref=e178]:
+          - generic [ref=e179]: Colette Adam
+          - generic [ref=e180]: colette.adam@gmail.com
+      - option "Stéphanie Cousin stéphanie.cousin@gmail.com" [ref=e181] [cursor=pointer]:
+        - generic [ref=e182]:
+          - generic [ref=e183]: Stéphanie Cousin
+          - generic [ref=e184]: stéphanie.cousin@gmail.com
+      - option "Alexis Putman client@r4web.fr" [ref=e185] [cursor=pointer]:
+        - generic [ref=e186]:
+          - generic [ref=e187]: Alexis Putman
+          - generic [ref=e188]: client@r4web.fr
+      - option "Clément Richard sclient@r4web.fr" [ref=e189] [cursor=pointer]:
+        - generic [ref=e190]:
+          - generic [ref=e191]: Clément Richard
+          - generic [ref=e192]: sclient@r4web.fr
+      - option "Titi Toto tititoto@gmail.com" [ref=e193] [cursor=pointer]:
+        - generic [ref=e194]:
+          - generic [ref=e195]: Titi Toto
+          - generic [ref=e196]: tititoto@gmail.com

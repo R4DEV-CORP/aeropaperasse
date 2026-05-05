@@ -53,6 +53,44 @@ Route::middleware('auth')->group(function () {
 - `Route::get('/foo', SomeComponent::class)` — wrong v4 idiom
 - `Route::get('/foo', fn () => view('foo'))` returning a Blade file that contains `<livewire:foo />` — adds a useless wrapper
 
+## Navigation between pages
+
+All cross-page links MUST use `wire:navigate` so transitions stay SPA-style (no full reload, layout preserved).
+
+```blade
+{{-- Plain anchor --}}
+<a href="{{ route('clients.view', $client) }}" wire:navigate>{{ $client->name }}</a>
+
+{{-- Button-as-link via the primitive --}}
+<x-ui.button :href="route('activity-requests.form')" wire:navigate>
+    Nouvelle demande
+</x-ui.button>
+```
+
+From a Livewire method, redirect with the `navigate` flag:
+
+```php
+public function save(): void
+{
+    // ...
+    $this->redirect(route('activity-requests.show', $request), navigate: true);
+}
+```
+
+**Anti-pattern** — `wire:click` calling a method that only redirects:
+
+```blade
+{{-- ❌ Forces a server round-trip just to navigate --}}
+<button wire:click="editDraft({{ $draft->id }})">Reprendre</button>
+
+{{-- ✅ Direct navigation, no round-trip --}}
+<a href="{{ route('activity-requests.form', $draft) }}" wire:navigate>Reprendre</a>
+```
+
+Exceptions (omit `wire:navigate`): external URLs, `mailto:` / `tel:`, same-page anchors (`#section`), file downloads, POST forms (e.g. logout).
+
+Reference: https://livewire.laravel.com/docs/4.x/navigate
+
 ## Anatomy of a page component
 
 ```php

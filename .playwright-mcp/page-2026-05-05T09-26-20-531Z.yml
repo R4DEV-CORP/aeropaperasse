@@ -1,0 +1,168 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /clients
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - link "Déconnexion" [ref=e44] [cursor=pointer]:
+      - /url: http://localhost:8000/logout
+      - img [ref=e45]
+      - generic [ref=e47]: Déconnexion
+  - generic [ref=e48]:
+    - banner [ref=e49]:
+      - button "Masquer la barre latérale" [expanded] [ref=e51]:
+        - img [ref=e52]
+      - navigation "Fil d'Ariane" [ref=e54]:
+        - link "Mallet" [ref=e55] [cursor=pointer]:
+          - /url: http://localhost:8000/clients/02aa2ae8-1c40-37ee-93a9-c86fe4e869c0
+        - img [ref=e56]
+        - link "Demandes de badges" [ref=e58] [cursor=pointer]:
+          - /url: /badge-requests
+        - img [ref=e59]
+        - generic [ref=e61]: Nouvelle demande
+    - main [ref=e62]:
+      - generic [ref=e63]:
+        - generic [ref=e66]:
+          - link "Retour" [ref=e67] [cursor=pointer]:
+            - /url: http://localhost:8000/badge-requests
+            - img [ref=e68]
+            - text: Retour
+          - generic [ref=e70]: /
+          - heading "Reprendre le brouillon" [level=1] [ref=e71]
+        - generic [ref=e72]:
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - 'button "Demande d''activité Demande #16 — CDG" [expanded] [ref=e76]':
+                - img [ref=e78]
+                - generic [ref=e80]:
+                  - generic [ref=e81]: Demande d'activité
+                  - generic [ref=e82]: "Demande #16 — CDG"
+                - img [ref=e83]
+              - generic [ref=e85]:
+                - generic [ref=e86]:
+                  - generic [ref=e87]: Demande d'activité *
+                  - button "Demande d'activité" [ref=e89]:
+                    - generic [ref=e90]: "Demande #16 — CDG"
+                    - img [ref=e91]
+                - generic [ref=e93]:
+                  - generic [ref=e94]:
+                    - generic [ref=e95]: Aéroport
+                    - generic [ref=e97]: CDG
+                  - generic [ref=e99]:
+                    - generic [ref=e100]: Quota badges
+                    - generic [ref=e101]: 0 / 5 utilisés
+            - button "Collaborateur Titi Toto" [ref=e167]:
+              - img [ref=e106]
+              - generic [ref=e108]:
+                - generic [ref=e109]: Collaborateur
+                - generic [ref=e110]: Titi Toto
+              - img [ref=e111]
+            - button "Options Habilitation et formation" [ref=e114]:
+              - img [ref=e116]
+              - generic [ref=e119]:
+                - generic [ref=e120]: Options
+                - generic [ref=e121]: Habilitation et formation
+              - img [ref=e122]
+            - generic [ref=e124]:
+              - button "Documents 4 / 5 documents fournis" [expanded] [ref=e257]:
+                - img [ref=e127]
+                - generic [ref=e129]:
+                  - generic [ref=e130]: Documents
+                  - generic [ref=e131]:
+                    - generic [ref=e132]: 4 / 5
+                    - generic [ref=e133]: documents fournis
+                - img [ref=e134]
+              - generic [ref=e169]:
+                - generic [ref=e170]:
+                  - generic [ref=e171]: Photo d'identité *
+                  - button "Photo d'identité selfie.jpg Nouveau fichier — cliquer pour remplacer" [ref=e252] [cursor=pointer]:
+                    - button "Photo d'identité" [ref=e174]
+                    - img [ref=e177]
+                    - generic [ref=e179]:
+                      - generic [ref=e180]: selfie.jpg
+                      - generic [ref=e181]: Nouveau fichier — cliquer pour remplacer
+                - generic [ref=e182]:
+                  - generic [ref=e183]: Carte d'identité *
+                  - button "Carte d'identité cni.pdf Nouveau fichier — cliquer pour remplacer" [ref=e254] [cursor=pointer]:
+                    - button "Carte d'identité" [ref=e186]
+                    - img [ref=e189]
+                    - generic [ref=e191]:
+                      - generic [ref=e192]: cni.pdf
+                      - generic [ref=e193]: Nouveau fichier — cliquer pour remplacer
+                - generic [ref=e195]:
+                  - generic [ref=e196]: Autorisation d'activité *
+                  - button "Autorisation d'activité autorisation.pdf Nouveau fichier — cliquer pour remplacer" [ref=e256] [cursor=pointer]:
+                    - button "Autorisation d'activité" [ref=e199]
+                    - img [ref=e202]
+                    - generic [ref=e204]:
+                      - generic [ref=e205]: autorisation.pdf
+                      - generic [ref=e206]: Nouveau fichier — cliquer pour remplacer
+                - generic [ref=e207]:
+                  - generic [ref=e208]:
+                    - generic [ref=e209]: Document FOR *
+                    - button "Document FOR for.xlsx Nouveau fichier — cliquer pour remplacer" [ref=e258] [cursor=pointer]:
+                      - button "Document FOR" [ref=e212]
+                      - img [ref=e215]
+                      - generic [ref=e217]:
+                        - generic [ref=e218]: for.xlsx
+                        - generic [ref=e219]: Nouveau fichier — cliquer pour remplacer
+                  - generic [ref=e220]:
+                    - generic [ref=e221]: "Modèle FOR pour CDG :"
+                    - button "Télécharger le template" [ref=e222]:
+                      - img [ref=e223]
+                      - text: Télécharger le template
+                - generic [ref=e226]:
+                  - generic [ref=e227]: Certificat de formation *
+                  - button "Certificat de formation Cliquer ou glisser un fichier PDF — 8 Mo max" [ref=e229] [cursor=pointer]:
+                    - button "Certificat de formation" [ref=e230]
+                    - img [ref=e233]
+                    - generic [ref=e235]:
+                      - generic [ref=e236]: Cliquer ou glisser un fichier
+                      - generic [ref=e237]: PDF — 8 Mo max
+                - generic [ref=e239]:
+                  - generic [ref=e240]: Facture (optionnel)
+                  - button "Facture (optionnel) Cliquer ou glisser un fichier PDF, JPG ou PNG — 10 Mo max" [ref=e242] [cursor=pointer]:
+                    - button "Facture (optionnel)" [ref=e243]
+                    - img [ref=e246]
+                    - generic [ref=e248]:
+                      - generic [ref=e249]: Cliquer ou glisser un fichier
+                      - generic [ref=e250]: PDF, JPG ou PNG — 10 Mo max
+          - generic [ref=e137]:
+            - button "Abandonner" [ref=e138]:
+              - img [ref=e139]
+              - text: Abandonner
+            - generic [ref=e141]:
+              - button "Mettre à jour le brouillon" [ref=e142]:
+                - img [ref=e143]
+                - generic [ref=e146]: Mettre à jour le brouillon
+              - button "Soumettre la demande" [disabled] [ref=e147]:
+                - img [ref=e148]
+                - generic [ref=e150]: Soumettre la demande

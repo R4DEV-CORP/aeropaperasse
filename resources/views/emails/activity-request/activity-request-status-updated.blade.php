@@ -170,7 +170,18 @@
             @if($activityRequest->status === 'approved')
             <p><strong>Félicitations !</strong> Votre demande d'activité a été approuvée. Des instructions supplémentaires vous seront communiquées prochainement.</p>
             @elseif($activityRequest->status === 'rejected')
-            <p><strong>Nous sommes désolés.</strong> Votre demande d'activité n'a pas pu être approuvée. Si vous souhaitez connaître les raisons de cette décision ou obtenir plus d'informations, veuillez nous contacter.</p>
+            <p><strong>Nous sommes désolés.</strong> Votre demande d'activité n'a pas pu être approuvée.</p>
+
+            @if(! empty($activityRequest->reject_reason))
+            <div class="info-section">
+                <div class="section-title">Motif du rejet</div>
+                <div class="info-box">
+                    <p style="margin: 0; white-space: pre-line; color: #1f2937;">{{ $activityRequest->reject_reason }}</p>
+                </div>
+            </div>
+            @endif
+
+            <p>Pour toute question complémentaire concernant cette décision, n'hésitez pas à nous contacter.</p>
             @endif
         </div>
         

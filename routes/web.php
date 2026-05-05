@@ -57,13 +57,14 @@ Route::get('/clients/{slug}', function ($slug) {
 * Routes demande d'activité
 */
 
-Route::get('/activity-requests', function () {
-    if (auth()->user()->isClient()) {
-        return redirect()->route('clients.view', ['slug' => auth()->user()->client->slug]);
-    }
+Route::livewire('/activity-requests', 'pages::activity-requests.index')
+    ->middleware('auth')
+    ->name('activity-requests.index');
 
-    return view('activity-requests.index');
-})->middleware('auth');
+Route::livewire('/activity-requests/form/{activityRequestId?}', 'pages::activity-requests.form')
+    ->middleware('auth')
+    ->whereNumber('activityRequestId')
+    ->name('activity-requests.form');
 
 /*
 * Routes badge requests
@@ -72,6 +73,11 @@ Route::get('/activity-requests', function () {
 Route::livewire('/badge-requests', 'pages::badge-requests.index')
     ->middleware('auth')
     ->name('badge-requests.index');
+
+Route::livewire('/badge-requests/form/{badgeRequestId?}', 'pages::badge-requests.form')
+    ->middleware('auth')
+    ->whereNumber('badgeRequestId')
+    ->name('badge-requests.form');
 
 /*
 * Routes badge management

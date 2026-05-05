@@ -65,19 +65,44 @@
             ])->filter(fn ($item) => $item['visible']);
         @endphp
 
-        <div x-data="{ sidebarOpen: false }" class="flex h-full">
+        <div
+            x-data="{
+                mobileOpen: false,
+                desktopOpen: $persist(true).as('sidebarDesktopOpen'),
+                isDesktop() {
+                    return window.matchMedia('(min-width: 1024px)').matches;
+                },
+                isSidebarVisible() {
+                    return this.isDesktop() ? this.desktopOpen : this.mobileOpen;
+                },
+                sidebarLabel() {
+                    return this.isSidebarVisible() ? 'Masquer la barre latérale' : 'Afficher la barre latérale';
+                },
+                toggleSidebar() {
+                    if (this.isDesktop()) {
+                        this.desktopOpen = ! this.desktopOpen;
+                    } else {
+                        this.mobileOpen = ! this.mobileOpen;
+                    }
+                },
+            }"
+            class="flex h-full"
+        >
             {{-- Mobile overlay --}}
             <div
-                x-show="sidebarOpen"
+                x-show="mobileOpen"
                 x-transition.opacity
-                @click="sidebarOpen = false"
+                @click="mobileOpen = false"
                 class="fixed inset-0 z-30 bg-slate-900/50 lg:hidden"
                 style="display: none;"
             ></div>
 
             {{-- Sidebar --}}
             <aside
-                :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+                :class="[
+                    mobileOpen ? 'translate-x-0' : '-translate-x-full',
+                    desktopOpen ? '' : 'lg:hidden',
+                ]"
                 class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-slate-900 text-slate-100 transition-transform duration-200 lg:static lg:translate-x-0"
             >
                 {{-- Brand --}}
@@ -154,16 +179,23 @@
             <div class="flex min-w-0 flex-1 flex-col">
                 {{-- Topbar --}}
                 <header class="flex h-14 shrink-0 items-center gap-3 border-b border-border bg-white px-6">
-                    <button
-                        type="button"
-                        @click="sidebarOpen = ! sidebarOpen"
-                        class="inline-flex h-8 w-8 items-center justify-center rounded-md text-foreground-muted transition hover:bg-slate-100 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                        aria-label="Basculer la barre latérale"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.5h16.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H3.75a.75.75 0 0 1-.75-.75V5.25a.75.75 0 0 1 .75-.75ZM9 4.5v15" />
-                        </svg>
-                    </button>
+                    <x-ui.tooltip placement="bottom" align="start">
+                        <button
+                            type="button"
+                            @click="toggleSidebar()"
+                            :aria-expanded="isSidebarVisible().toString()"
+                            :aria-label="sidebarLabel()"
+                            class="inline-flex h-8 w-8 items-center justify-center rounded-md text-foreground-muted transition hover:bg-slate-100 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.5h16.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H3.75a.75.75 0 0 1-.75-.75V5.25a.75.75 0 0 1 .75-.75ZM9 4.5v15" />
+                            </svg>
+                        </button>
+
+                        <x-slot:content>
+                            <span x-text="sidebarLabel()"></span>
+                        </x-slot:content>
+                    </x-ui.tooltip>
 
                     @php
                         $isClientSide = $user && ($user->isClient() || $user->isSClient());
@@ -191,6 +223,8 @@
                 </main>
             </div>
         </div>
+
+        <livewire:notifications.toast-stack />
 
         @livewireScripts
     </body>

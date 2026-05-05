@@ -33,7 +33,17 @@
       "Bash(node -e \"try { require.resolve\\('sharp'\\); console.log\\('sharp: yes'\\) } catch\\(e\\) { console.log\\('sharp: no'\\) }\")",
       "Bash(grep -iE \"^sharp$|^jimp$|^canvas$\")",
       "PowerShell(Add-Type -AssemblyName System.Drawing; $img = [System.Drawing.Image]::FromFile\\(\"C:\\\\laragon\\\\www\\\\aeropaperasse\\\\public\\\\images\\\\aeropaperasse-logo-white.png\"\\); Write-Output \"Width: $\\($img.Width\\)x$\\($img.Height\\)\"; $img.Dispose\\(\\))",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(start *)",
+      "PowerShell(Start-Process \"C:\\\\laragon\\\\www\\\\aeropaperasse\\\\public\\\\drafts-preview.html\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\laragon\\\\www\\\\aeropaperasse\\\\app\\\\Livewire\" -Recurse -Filter \"*.php\")",
+      "Bash(Select-Object -First 20 -ExpandProperty Name)",
+      "mcp__plugin_playwright_playwright__browser_resize",
+      "mcp__plugin_playwright_playwright__browser_file_upload",
+      "mcp__plugin_playwright_playwright__browser_tabs",
+      "mcp__plugin_playwright_playwright__browser_network_requests",
+      "mcp__plugin_playwright_playwright__browser_network_request",
+      "Bash(> storage/logs/laravel.log)"
     ]
   }
 }
