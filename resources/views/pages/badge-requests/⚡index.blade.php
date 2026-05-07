@@ -153,7 +153,7 @@ class extends Component
 
     public function validateRem(int $badgeRequestId): void
     {
-        $this->applyStatusTransition($badgeRequestId, expectedStatus: 'pending_rem', newStatus: 'pending_adp', successMessage: 'Demande validée par REM.');
+        $this->applyStatusTransition($badgeRequestId, expectedStatus: 'pending_rem', newStatus: 'pending_adp', successMessage: 'Demande validée.');
     }
 
     public function approveAdp(int $badgeRequestId): void
@@ -168,7 +168,7 @@ class extends Component
 
     public function markReadyForDelivery(int $badgeRequestId): void
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->canChangeRequestStatus()) {
             return;
         }
 
@@ -214,7 +214,7 @@ class extends Component
 
     protected function applyStatusTransition(int $badgeRequestId, string $expectedStatus, string $newStatus, string $successMessage): void
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->canChangeRequestStatus()) {
             return;
         }
 
@@ -235,7 +235,7 @@ class extends Component
 
 @php
     $statusMeta = [
-        'pending_rem' => ['label' => 'En attente REM', 'variant' => 'pending'],
+        'pending_rem' => ['label' => 'En attente', 'variant' => 'pending'],
         'pending_adp' => ['label' => 'En attente ADP', 'variant' => 'pending'],
         'approved_adp' => ['label' => 'Approuvé ADP', 'variant' => 'approved'],
         'pending_fabrication' => ['label' => 'En fabrication', 'variant' => 'in-progress'],
@@ -263,7 +263,7 @@ class extends Component
     {{-- Stats grid --}}
     @php
         $statCards = [
-            ['key' => 'pending_rem', 'variant' => 'pending', 'label' => 'En attente REM', 'ring' => 'ring-amber-500'],
+            ['key' => 'pending_rem', 'variant' => 'pending', 'label' => 'En attente', 'ring' => 'ring-amber-500'],
             ['key' => 'pending_adp', 'variant' => 'pending', 'label' => 'En attente ADP', 'ring' => 'ring-amber-500'],
             ['key' => 'approved_adp', 'variant' => 'approved', 'label' => 'Approuvé ADP', 'ring' => 'ring-emerald-500'],
             ['key' => 'pending_fabrication', 'variant' => 'in-progress', 'label' => 'En fabrication', 'ring' => 'ring-violet-500'],
@@ -584,13 +584,13 @@ class extends Component
                                     Voir les détails
                                 </x-ui.dropdown-item>
 
-                                @if (auth()->user()->isAdmin())
+                                @if (auth()->user()->canChangeRequestStatus())
                                     @if ($badgeRequest->status === 'pending_rem')
                                         <x-ui.dropdown-item variant="success" wire:click="validateRem({{ $badgeRequest->id }})">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
                                             </svg>
-                                            Valider REM
+                                            Valider
                                         </x-ui.dropdown-item>
 
                                         <x-ui.dropdown-item variant="danger" wire:click="$dispatch('reject-badge-request', { id: {{ $badgeRequest->id }}, targetStatus: 'rejected_rem' })">

@@ -155,7 +155,7 @@ class extends Component
 
     public function approve(int $activityRequestId): void
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->canChangeRequestStatus()) {
             return;
         }
 
@@ -595,7 +595,7 @@ class extends Component
                                     Voir les détails
                                 </x-ui.dropdown-item>
 
-                                @if ($activityRequest->status === 'pending' && auth()->user()->isAdmin())
+                                @if ($activityRequest->status === 'pending' && auth()->user()->canChangeRequestStatus())
                                     <x-ui.dropdown-item variant="success" wire:click="approve({{ $activityRequest->id }})">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />

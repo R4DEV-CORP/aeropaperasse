@@ -19,7 +19,7 @@ new class extends Component
     #[On('deliver-badge-request')]
     public function open(int $id): void
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->canChangeRequestStatus()) {
             return;
         }
 
@@ -32,7 +32,7 @@ new class extends Component
 
     public function submit(DeliverBadgeRequestAction $action): void
     {
-        if (! auth()->user()->isAdmin() || $this->badgeRequestId === null) {
+        if (! auth()->user()->canChangeRequestStatus() || $this->badgeRequestId === null) {
             return;
         }
 

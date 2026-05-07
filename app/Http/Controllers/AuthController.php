@@ -24,7 +24,7 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users,email|unique:coworkers,email',
             'phone' => 'required|string|max:255',
             'password' => 'required|string|min:8',
-            'role' => 'nullable|string|in:sclient,sadmin,client,admin', // Facultatif : rôle spécifique
+            'role' => 'nullable|string|in:sclient,sadmin,client,admin,aclient', // Facultatif : rôle spécifique
         ]);
 
         $user = User::create([

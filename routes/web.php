@@ -106,9 +106,19 @@ Route::livewire('/badge-management/{badgeId}', 'pages::badge-management.show')
 * Routes coworkers
 */
 
-Route::get('/coworkers', function () {
-    return view('coworkers.index');
-})->middleware('auth');
+Route::livewire('/coworkers', 'pages::coworkers.index')
+    ->middleware('auth')
+    ->name('coworkers.index');
+
+Route::livewire('/coworkers/form/{coworkerId?}', 'pages::coworkers.form')
+    ->middleware('auth')
+    ->whereNumber('coworkerId')
+    ->name('coworkers.form');
+
+Route::livewire('/coworkers/{coworkerId}', 'pages::coworkers.show')
+    ->middleware('auth')
+    ->whereNumber('coworkerId')
+    ->name('coworkers.show');
 
 /*
 * Routes trainings
