@@ -224,6 +224,10 @@ class extends Component
 
     public function downloadDocuments(int $activityRequestId)
     {
+        if (! auth()->user()->isAdmin()) {
+            return null;
+        }
+
         $activityRequest = ActivityRequest::findOrFail($activityRequestId);
 
         $documentService = new ActivityRequestDocumentService;

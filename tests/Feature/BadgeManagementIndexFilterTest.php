@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Livewire\BadgeManagement\Index;
 use App\Models\ActivityRequest;
 use App\Models\Badge;
 use App\Models\BadgeRequest;
@@ -16,6 +15,8 @@ use Tests\TestCase;
 class BadgeManagementIndexFilterTest extends TestCase
 {
     use RefreshDatabase;
+
+    private const PAGE = 'pages::badge-management.index';
 
     private function makeAdmin(): User
     {
@@ -63,14 +64,14 @@ class BadgeManagementIndexFilterTest extends TestCase
         $coworker = Coworker::factory()->create(['client_id' => $client->id]);
 
         $cdgBadge = $this->createStandaloneBadge($client, $coworker, 'CDG');
-        $oryBadge = $this->createStandaloneBadge($client, $coworker, 'ORY');
-        $lbgBadge = $this->createStandaloneBadge($client, $coworker, 'LBG');
+        $this->createStandaloneBadge($client, $coworker, 'ORY');
+        $this->createStandaloneBadge($client, $coworker, 'LBG');
 
         $component = Livewire::actingAs($admin)
-            ->test(Index::class)
+            ->test(self::PAGE)
             ->set('selectedAirport', 'CDG');
 
-        $badges = $component->viewData('badges');
+        $badges = $component->instance()->badges;
 
         $this->assertEquals(1, $badges->total());
         $this->assertEquals($cdgBadge->id, $badges->items()[0]->id);
@@ -82,14 +83,14 @@ class BadgeManagementIndexFilterTest extends TestCase
         $client = Client::factory()->create();
         $coworker = Coworker::factory()->create(['client_id' => $client->id]);
 
-        $cdgBadge = $this->createLinkedBadge($admin, $client, $coworker, 'CDG');
+        $this->createLinkedBadge($admin, $client, $coworker, 'CDG');
         $oryBadge = $this->createLinkedBadge($admin, $client, $coworker, 'ORY');
 
         $component = Livewire::actingAs($admin)
-            ->test(Index::class)
+            ->test(self::PAGE)
             ->set('selectedAirport', 'ORY');
 
-        $badges = $component->viewData('badges');
+        $badges = $component->instance()->badges;
 
         $this->assertEquals(1, $badges->total());
         $this->assertEquals($oryBadge->id, $badges->items()[0]->id);
@@ -106,10 +107,10 @@ class BadgeManagementIndexFilterTest extends TestCase
         $standaloneOry = $this->createStandaloneBadge($client, $coworker, 'ORY');
 
         $component = Livewire::actingAs($admin)
-            ->test(Index::class)
+            ->test(self::PAGE)
             ->set('selectedAirport', 'CDG');
 
-        $badges = $component->viewData('badges');
+        $badges = $component->instance()->badges;
         $ids = collect($badges->items())->pluck('id')->all();
 
         $this->assertEquals(2, $badges->total());
@@ -128,13 +129,12 @@ class BadgeManagementIndexFilterTest extends TestCase
         $this->createStandaloneBadge($client, $coworker, 'ORY');
         $this->createStandaloneBadge($client, $coworker, 'LBG');
 
-        $component = Livewire::actingAs($admin)
-            ->test(Index::class);
+        $component = Livewire::actingAs($admin)->test(self::PAGE);
 
-        $this->assertEquals(3, $component->viewData('badges')->total());
+        $this->assertEquals(3, $component->instance()->badges->total());
     }
 
-    public function test_reset_filters_clears_airport(): void
+    public function test_reset_filters_clears_airport_and_status(): void
     {
         $admin = $this->makeAdmin();
         $client = Client::factory()->create();
@@ -144,14 +144,54 @@ class BadgeManagementIndexFilterTest extends TestCase
         $this->createStandaloneBadge($client, $coworker, 'ORY');
 
         Livewire::actingAs($admin)
-            ->test(Index::class)
+            ->test(self::PAGE)
             ->set('selectedAirport', 'CDG')
+            ->set('selectedStatus', 'active')
             ->call('resetFilters')
             ->assertSet('selectedAirport', null)
+            ->assertSet('selectedStatus', null)
             ->assertSet('search', '');
     }
 
-    public function test_stats_respect_airport_filter(): void
+    public function test_filter_by_status_keeps_only_matching_badges(): void
+    {
+        $admin = $this->makeAdmin();
+        $client = Client::factory()->create();
+        $coworker = Coworker::factory()->create(['client_id' => $client->id]);
+
+        $active = $this->createStandaloneBadge($client, $coworker, 'CDG');
+        $returned = Badge::create([
+            'client_id' => $client->id,
+            'coworker_id' => $coworker->id,
+            'badge_request_id' => null,
+            'airport' => 'CDG',
+            'status' => 'returned',
+            'returned_at' => now(),
+            'expiry_date' => now()->addYear(),
+        ]);
+
+        $component = Livewire::actingAs($admin)
+            ->test(self::PAGE)
+            ->call('filterByStatus', 'active');
+
+        $ids = collect($component->instance()->badges->items())->pluck('id')->all();
+        $this->assertContains($active->id, $ids);
+        $this->assertNotContains($returned->id, $ids);
+    }
+
+    public function test_filter_by_status_toggles_off_when_clicked_twice(): void
+    {
+        $admin = $this->makeAdmin();
+
+        Livewire::actingAs($admin)
+            ->test(self::PAGE)
+            ->call('filterByStatus', 'active')
+            ->assertSet('selectedStatus', 'active')
+            ->call('filterByStatus', 'active')
+            ->assertSet('selectedStatus', null);
+    }
+
+    public function test_statistics_count_per_status(): void
     {
         $admin = $this->makeAdmin();
         $client = Client::factory()->create();
@@ -159,16 +199,22 @@ class BadgeManagementIndexFilterTest extends TestCase
 
         $this->createStandaloneBadge($client, $coworker, 'CDG');
         $this->createStandaloneBadge($client, $coworker, 'CDG');
-        $this->createStandaloneBadge($client, $coworker, 'ORY');
+        Badge::create([
+            'client_id' => $client->id,
+            'coworker_id' => $coworker->id,
+            'badge_request_id' => null,
+            'airport' => 'CDG',
+            'status' => 'returned',
+            'returned_at' => now(),
+            'expiry_date' => now()->addYear(),
+        ]);
 
-        $component = Livewire::actingAs($admin)
-            ->test(Index::class)
-            ->set('selectedAirport', 'CDG');
+        $component = Livewire::actingAs($admin)->test(self::PAGE);
+        $stats = $component->instance()->statistics;
 
-        $stats = $component->viewData('stats');
-
-        $this->assertEquals(2, $stats['total']);
+        $this->assertEquals(3, $stats['total']);
         $this->assertEquals(2, $stats['active']);
+        $this->assertEquals(1, $stats['returned']);
     }
 
     public function test_linked_badge_creation_persists_airport(): void
@@ -180,5 +226,25 @@ class BadgeManagementIndexFilterTest extends TestCase
         $badge = $this->createLinkedBadge($admin, $client, $coworker, 'LBG');
 
         $this->assertEquals('LBG', $badge->fresh()->airport);
+    }
+
+    public function test_mount_marks_active_badges_with_past_expiry_as_expired(): void
+    {
+        $admin = $this->makeAdmin();
+        $client = Client::factory()->create();
+        $coworker = Coworker::factory()->create(['client_id' => $client->id]);
+
+        $expired = Badge::create([
+            'client_id' => $client->id,
+            'coworker_id' => $coworker->id,
+            'badge_request_id' => null,
+            'airport' => 'CDG',
+            'status' => 'active',
+            'expiry_date' => now()->subDay(),
+        ]);
+
+        Livewire::actingAs($admin)->test(self::PAGE);
+
+        $this->assertEquals('expired', $expired->fresh()->status);
     }
 }

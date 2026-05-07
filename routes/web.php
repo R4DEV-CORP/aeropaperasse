@@ -88,9 +88,19 @@ Route::livewire('/badge-requests/{badgeRequestId}', 'pages::badge-requests.show'
 * Routes badge management
 */
 
-Route::get('/badge-management', function () {
-    return view('badge-management.index');
-})->middleware('auth');
+Route::livewire('/badge-management', 'pages::badge-management.index')
+    ->middleware('auth')
+    ->name('badge-management.index');
+
+Route::livewire('/badge-management/form/{mode?}', 'pages::badge-management.form')
+    ->middleware('auth')
+    ->where('mode', 'linked|standalone')
+    ->name('badge-management.form');
+
+Route::livewire('/badge-management/{badgeId}', 'pages::badge-management.show')
+    ->middleware('auth')
+    ->whereNumber('badgeId')
+    ->name('badge-management.show');
 
 /*
 * Routes coworkers

@@ -154,6 +154,10 @@ class extends Component
 
     public function downloadAllDocuments()
     {
+        if (! auth()->user()->isAdmin()) {
+            return null;
+        }
+
         $service = new ActivityRequestDocumentService;
         $zipPath = $service->createDocumentsZip($this->activityRequest);
 

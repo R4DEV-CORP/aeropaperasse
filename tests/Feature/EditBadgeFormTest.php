@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Livewire\BadgeManagement\EditBadgeNumberForm;
 use App\Models\Badge;
 use App\Models\Client;
 use App\Models\Coworker;
@@ -14,6 +13,8 @@ use Tests\TestCase;
 class EditBadgeFormTest extends TestCase
 {
     use RefreshDatabase;
+
+    private const COMPONENT = 'badge-management.edit-number-modal';
 
     private function makeAdmin(): User
     {
@@ -52,13 +53,14 @@ class EditBadgeFormTest extends TestCase
         $badge = $this->makeBadge('CDG', '111');
 
         Livewire::actingAs($admin)
-            ->test(EditBadgeNumberForm::class, ['badge' => $badge])
+            ->test(self::COMPONENT)
+            ->call('open', $badge->id)
             ->assertSet('airport', 'CDG')
-            ->assertSet('badgeNumber', '111')
-            ->set('badgeNumber', '999')
+            ->assertSet('badge_number', '111')
+            ->set('badge_number', '999')
             ->set('airport', 'ORY')
-            ->call('editBadge')
-            ->assertDispatched('badge-number-updated');
+            ->call('submit')
+            ->assertDispatched('badge-updated');
 
         $badge->refresh();
         $this->assertEquals('999', $badge->badge_number);
@@ -71,24 +73,41 @@ class EditBadgeFormTest extends TestCase
         $badge = $this->makeBadge('CDG');
 
         Livewire::actingAs($sadmin)
-            ->test(EditBadgeNumberForm::class, ['badge' => $badge])
+            ->test(self::COMPONENT)
+            ->call('open', $badge->id)
             ->set('airport', 'LBG')
-            ->call('editBadge')
-            ->assertDispatched('badge-number-updated');
+            ->call('submit')
+            ->assertDispatched('badge-updated');
 
         $this->assertEquals('LBG', $badge->refresh()->airport);
     }
 
-    public function test_non_admin_cannot_edit_badge(): void
+    public function test_non_admin_cannot_open_modal(): void
     {
         $badge = $this->makeBadge('CDG');
         $clientUser = $this->makeClientUser($badge->client);
 
         Livewire::actingAs($clientUser)
-            ->test(EditBadgeNumberForm::class, ['badge' => $badge])
+            ->test(self::COMPONENT)
+            ->call('open', $badge->id)
+            ->assertSet('badgeId', null);
+
+        $this->assertEquals('CDG', $badge->refresh()->airport);
+    }
+
+    public function test_non_admin_submit_is_a_noop(): void
+    {
+        $badge = $this->makeBadge('CDG');
+        $clientUser = $this->makeClientUser($badge->client);
+
+        // On force les valeurs comme si la modal avait été ouverte côté client.
+        Livewire::actingAs($clientUser)
+            ->test(self::COMPONENT)
+            ->set('badgeId', $badge->id)
+            ->set('badge_number', $badge->badge_number)
             ->set('airport', 'ORY')
-            ->call('editBadge')
-            ->assertStatus(403);
+            ->call('submit')
+            ->assertNotDispatched('badge-updated');
 
         $this->assertEquals('CDG', $badge->refresh()->airport);
     }
@@ -99,9 +118,10 @@ class EditBadgeFormTest extends TestCase
         $badge = $this->makeBadge('CDG');
 
         Livewire::actingAs($admin)
-            ->test(EditBadgeNumberForm::class, ['badge' => $badge])
+            ->test(self::COMPONENT)
+            ->call('open', $badge->id)
             ->set('airport', null)
-            ->call('editBadge')
+            ->call('submit')
             ->assertHasErrors(['airport']);
 
         $this->assertEquals('CDG', $badge->refresh()->airport);
@@ -113,9 +133,10 @@ class EditBadgeFormTest extends TestCase
         $badge = $this->makeBadge('CDG');
 
         Livewire::actingAs($admin)
-            ->test(EditBadgeNumberForm::class, ['badge' => $badge])
+            ->test(self::COMPONENT)
+            ->call('open', $badge->id)
             ->set('airport', 'XYZ')
-            ->call('editBadge')
+            ->call('submit')
             ->assertHasErrors(['airport']);
     }
 }
