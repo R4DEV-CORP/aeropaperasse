@@ -3,6 +3,7 @@
 use App\Livewire\Concerns\InteractsWithToasts;
 use App\Mail\BadgeReturned;
 use App\Models\Badge;
+use App\Models\BadgeRequest;
 use App\Services\BadgeRequestDocumentService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -78,10 +79,11 @@ new class extends Component
             $service = new BadgeRequestDocumentService;
 
             if ($badge->badge_request_id) {
+                $badgeRequest = BadgeRequest::findOrFail($badge->badge_request_id);
                 $stored = $service->storeDocuments(
                     ['return_badge_document' => $this->return_badge_document],
                     $client,
-                    $badge->badge_request_id
+                    $badgeRequest
                 );
                 $returnDocumentPath = $stored['return_badge_document'];
             } else {
