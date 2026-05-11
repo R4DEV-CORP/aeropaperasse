@@ -90,7 +90,7 @@ class CreateStandaloneBadgeTest extends TestCase
 
         $this->actingAs($clientUser)
             ->get(route('badge-management.form', ['mode' => 'standalone']))
-            ->assertRedirect(route('clients.view', ['slug' => 'acme']));
+            ->assertRedirect(route('companies.show', ['companyId' => $client->id]));
     }
 
     public function test_sclient_can_create_standalone_badge_for_their_own_client(): void

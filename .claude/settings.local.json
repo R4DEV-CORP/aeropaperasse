@@ -52,7 +52,28 @@
       "Bash(python3 *)",
       "Bash(grep -oE '\\\\\"effects\\\\\":\\\\{[^}]{0,500}' \"C:\\\\\\\\Users\\\\\\\\r4web\\\\\\\\.claude\\\\\\\\projects\\\\\\\\C--laragon-www-aeropaperasse\\\\\\\\a1b3b840-9475-46d3-99ba-e5d002111fc0\\\\\\\\tool-results\\\\\\\\mcp-plugin_playwright_playwright-browser_network_request-1777986644840.txt\")",
       "Bash(grep -oE '\\\\\"\\(redirect|url|path|navigate|dispatches|toast\\)\\\\\"[^,}]{0,200}' \"C:\\\\\\\\Users\\\\\\\\r4web\\\\\\\\.claude\\\\\\\\projects\\\\\\\\C--laragon-www-aeropaperasse\\\\\\\\a1b3b840-9475-46d3-99ba-e5d002111fc0\\\\\\\\tool-results\\\\\\\\mcp-plugin_playwright_playwright-browser_network_request-1777986644840.txt\")",
-      "Bash(grep *)"
+      "Bash(grep *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\laragon\\\\www\\\\aeropaperasse\" -Directory)",
+      "Bash(Select-Object -ExpandProperty Name)",
+      "Bash(Get-ChildItem -Path \"C:\\\\laragon\\\\www\\\\aeropaperasse\\\\resources\\\\views\\\\pages\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(find C:\\\\\\\\laragon\\\\\\\\www\\\\\\\\aeropaperasse\\\\\\\\resources\\\\\\\\views\\\\\\\\pages -type f -name \"*.blade.php\")",
+      "Bash(mkdir -p /tmp/razelbec_xlsx)",
+      "Bash(unzip -o \"docs/Suivi Badges.xlsx\" -d /tmp/razelbec_xlsx/)",
+      "Bash(php storage/app/xlsx_parser.php /tmp/razelbec_xlsx sheet1.xml)",
+      "Read(//tmp/**)",
+      "Bash(awk 'NR<=5 || /^17[89]|^18[01]/' /tmp/razelbec_badges.tsv)",
+      "Bash(awk NR>=140 && NR<=185 *)",
+      "Bash(awk NR>=55 && NR<=120 *)",
+      "Bash(awk '$1>1')",
+      "Bash(unzip -o -q \"docs/Suivi Badges.xlsx\" -d /tmp/razelbec_xlsx/)",
+      "PowerShell(Get-Command *)",
+      "Bash(python -c \"import xlrd; print\\(xlrd.__version__\\)\")",
+      "Read(//c/tmp/xlsparse/**)",
+      "Bash(composer install *)",
+      "Bash(/c/laragon/bin/php/php-8.3.30-Win32-vs16-x64/php.exe -m)",
+      "Bash(/c/laragon/bin/php/php-8.3.30-Win32-vs16-x64/php.exe /c/tmp/xlsparse/dump.php \"docs/ExportExcel LISTE LPV - EQIOM BETONS - AAO 23-01561.xls\")",
+      "Bash(/c/laragon/bin/php/php-8.3.30-Win32-vs16-x64/php.exe *)"
     ]
   }
 }

@@ -31,7 +31,7 @@ class extends Component
     public function mount(int $activityRequestId): void
     {
         if (auth()->user()->isClient()) {
-            $this->redirect(route('clients.view', ['slug' => auth()->user()->client->slug]));
+            $this->redirect(route('companies.show', ['companyId' => auth()->user()->client_id]), navigate: true);
 
             return;
         }

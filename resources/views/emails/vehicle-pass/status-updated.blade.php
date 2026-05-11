@@ -102,7 +102,7 @@
         </div>
 
         <div class="content">
-            <p><strong>Bonjour {{ $vehiclePass->user->name }},</strong></p>
+            <p><strong>Bonjour {{ $vehiclePass->createdBy?->name }},</strong></p>
 
             <p>Nous vous informons que le statut de votre demande de laisser-passer véhicule a été mis à jour.</p>
 

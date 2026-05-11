@@ -23,7 +23,7 @@
                 <flux:sidebar.collapse class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2" />
             </flux:sidebar.header>
             <flux:sidebar.nav>
-                <flux:sidebar.item icon="building-office" href="/clients" wire:navigate>Sociétés</flux:sidebar.item>
+                <flux:sidebar.item icon="building-office" href="/companies" wire:navigate>Sociétés</flux:sidebar.item>
                 @if(!auth()->user()->isClient())
                 <flux:sidebar.item icon="document-text" href="/activity-requests" wire:navigate>Demande d'activité</flux:sidebar.item>
                 @endif

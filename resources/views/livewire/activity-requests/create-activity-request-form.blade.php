@@ -91,7 +91,7 @@
         <flux:callout class="mt-4" icon="information-circle" color="blue" inline>
             <flux:callout.heading>Pour modifier les informations de la société, veuillez vous rendre dans la page société.</flux:callout.heading>
             <x-slot name="actions">
-                <flux:button href="/clients">Modifier -></flux:button>
+                <flux:button href="/companies">Modifier -></flux:button>
             </x-slot>
         </flux:callout>
         @endif

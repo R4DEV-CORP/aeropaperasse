@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Livewire\Training\AddCoworkerToTrainingForm;
 use App\Models\Client;
 use App\Models\Coworker;
 use App\Models\Training;
@@ -15,6 +14,8 @@ use Tests\TestCase;
 class AddCoworkerToTrainingFormTest extends TestCase
 {
     use RefreshDatabase;
+
+    private const COMPONENT = 'trainings.assign-modal';
 
     private function makeAdmin(): User
     {
@@ -29,7 +30,7 @@ class AddCoworkerToTrainingFormTest extends TestCase
         $training = Training::factory()->create(['title' => 'Permis T', 'requires_airport' => true]);
 
         Livewire::actingAs($admin)
-            ->test(AddCoworkerToTrainingForm::class)
+            ->test(self::COMPONENT)
             ->set('selected_client_id', $client->id)
             ->set('selected_coworker_id', $coworker->id)
             ->set('selected_training_id', $training->id)
@@ -53,7 +54,7 @@ class AddCoworkerToTrainingFormTest extends TestCase
         $training = Training::factory()->create(['title' => 'Permis T', 'requires_airport' => true]);
 
         Livewire::actingAs($admin)
-            ->test(AddCoworkerToTrainingForm::class)
+            ->test(self::COMPONENT)
             ->set('selected_client_id', $client->id)
             ->set('selected_coworker_id', $coworker->id)
             ->set('selected_training_id', $training->id)
@@ -87,7 +88,7 @@ class AddCoworkerToTrainingFormTest extends TestCase
         ]);
 
         Livewire::actingAs($admin)
-            ->test(AddCoworkerToTrainingForm::class)
+            ->test(self::COMPONENT)
             ->set('selected_client_id', $client->id)
             ->set('selected_coworker_id', $coworker->id)
             ->set('selected_training_id', $training->id)
@@ -120,7 +121,7 @@ class AddCoworkerToTrainingFormTest extends TestCase
         ]);
 
         Livewire::actingAs($admin)
-            ->test(AddCoworkerToTrainingForm::class)
+            ->test(self::COMPONENT)
             ->set('selected_client_id', $client->id)
             ->set('selected_coworker_id', $coworker->id)
             ->set('selected_training_id', $training->id)
@@ -143,7 +144,7 @@ class AddCoworkerToTrainingFormTest extends TestCase
         $training = Training::factory()->create(['title' => '11.2.3.9', 'requires_airport' => false]);
 
         Livewire::actingAs($admin)
-            ->test(AddCoworkerToTrainingForm::class)
+            ->test(self::COMPONENT)
             ->set('selected_client_id', $client->id)
             ->set('selected_coworker_id', $coworker->id)
             ->set('selected_training_id', $training->id)
@@ -167,7 +168,7 @@ class AddCoworkerToTrainingFormTest extends TestCase
         $training = Training::factory()->create(['title' => 'Permis T', 'requires_airport' => true]);
 
         Livewire::actingAs($admin)
-            ->test(AddCoworkerToTrainingForm::class)
+            ->test(self::COMPONENT)
             ->set('selected_client_id', $client->id)
             ->set('selected_coworker_id', $coworker->id)
             ->set('selected_training_id', $training->id)
