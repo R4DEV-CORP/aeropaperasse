@@ -4,6 +4,7 @@ use App\Actions\ActivityRequest\RenewActivityRequestAction;
 use App\Livewire\Concerns\InteractsWithToasts;
 use App\Mail\ActivityRequestStatusUpdated;
 use App\Models\ActivityRequest;
+use App\Models\Client;
 use App\Services\ActivityRequestDocumentService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -33,6 +34,8 @@ class extends Component
 
     public ?string $selectedStatus = null;
 
+    public ?int $selectedClientId = null;
+
     public function mount(): void
     {
         if (auth()->user()->isClient()) {
@@ -55,6 +58,11 @@ class extends Component
         $this->resetPage();
     }
 
+    public function updatedSelectedClientId(): void
+    {
+        $this->resetPage();
+    }
+
     public function filterByStatus(?string $status): void
     {
         $this->selectedStatus = $status === $this->selectedStatus ? null : $status;
@@ -63,8 +71,18 @@ class extends Component
 
     public function resetFilters(): void
     {
-        $this->reset(['selectedAirport', 'selectedStatus', 'search']);
+        $this->reset(['selectedAirport', 'selectedStatus', 'selectedClientId', 'search']);
         $this->resetPage();
+    }
+
+    #[Computed]
+    public function clients()
+    {
+        if (! auth()->user()->isAdmin()) {
+            return collect();
+        }
+
+        return Client::orderBy('company_name')->get();
     }
 
     #[On('activity-request-rejected')]
@@ -95,6 +113,10 @@ class extends Component
             $query->where('client_id', auth()->user()->client_id);
         }
 
+        if ($this->selectedClientId && auth()->user()->isAdmin()) {
+            $query->where('client_id', $this->selectedClientId);
+        }
+
         return [
             'total' => (clone $query)->count(),
             'pending' => (clone $query)->where('status', 'pending')->count(),
@@ -117,6 +139,10 @@ class extends Component
             $query->where('client_id', auth()->user()->client_id);
         }
 
+        if ($this->selectedClientId && auth()->user()->isAdmin()) {
+            $query->where('client_id', $this->selectedClientId);
+        }
+
         if ($this->selectedAirport) {
             $query->where('airport', $this->selectedAirport);
         }
@@ -132,15 +158,20 @@ class extends Component
     {
         $selectedAirport = $this->selectedAirport;
         $selectedStatus = $this->selectedStatus;
+        $selectedClientId = $this->selectedClientId;
 
         return ActivityRequest::search($this->search)
-            ->query(function ($query) use ($selectedAirport, $selectedStatus) {
+            ->query(function ($query) use ($selectedAirport, $selectedStatus, $selectedClientId) {
                 $query->join('clients', 'activity_requests.client_id', 'clients.id')
                     ->select('activity_requests.*', 'clients.company_name as company_name', 'clients.trade_name as trade_name')
                     ->where('activity_requests.status', '!=', 'draft');
 
                 if (! auth()->user()->isAdmin()) {
                     $query->where('activity_requests.client_id', auth()->user()->client_id);
+                }
+
+                if ($selectedClientId && auth()->user()->isAdmin()) {
+                    $query->where('activity_requests.client_id', $selectedClientId);
                 }
 
                 if ($selectedAirport) {
@@ -317,6 +348,29 @@ class extends Component
                 </x-ui.input>
             </div>
 
+            @if (auth()->user()->isAdmin())
+                @php
+                    $clientOptions = [['value' => null, 'label' => 'Toutes les sociétés']];
+                    foreach ($this->clients as $c) {
+                        $clientOptions[] = [
+                            'value' => $c->id,
+                            'label' => $c->company_name,
+                            'hint' => $c->siret_number,
+                        ];
+                    }
+                @endphp
+                <div class="sm:w-64">
+                    <x-ui.select
+                        :value="$selectedClientId"
+                        wire:model.live="selectedClientId"
+                        :options="$clientOptions"
+                        placeholder="Toutes les sociétés"
+                        searchable
+                        search-placeholder="Filtrer par société…"
+                    />
+                </div>
+            @endif
+
             @if (! auth()->user()->isClient())
                 <x-ui.button variant="primary" :href="route('activity-requests.form')">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
@@ -340,9 +394,13 @@ class extends Component
     </div>
 
     {{-- Active filter chips --}}
-    @if ($selectedStatus || $selectedAirport || ! empty($search))
+    @if ($selectedStatus || $selectedAirport || $selectedClientId || ! empty($search))
         @php
             $chipClass = 'inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-foreground transition hover:bg-slate-200';
+            $selectedClientLabel = null;
+            if ($selectedClientId) {
+                $selectedClientLabel = optional($this->clients->firstWhere('id', $selectedClientId))->company_name;
+            }
         @endphp
         <div class="flex flex-wrap items-center gap-2">
             <span class="text-xs font-medium text-foreground-muted">Filtres :</span>
@@ -368,6 +426,15 @@ class extends Component
             @if ($selectedAirport)
                 <button type="button" wire:click="$set('selectedAirport', null)" class="{{ $chipClass }}">
                     Aéroport : <span class="font-semibold">{{ $selectedAirport }}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-3 w-3 text-foreground-muted">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            @endif
+
+            @if ($selectedClientId && $selectedClientLabel)
+                <button type="button" wire:click="$set('selectedClientId', null)" class="{{ $chipClass }}">
+                    Société : <span class="font-semibold">{{ $selectedClientLabel }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-3 w-3 text-foreground-muted">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                     </svg>
@@ -514,7 +581,7 @@ class extends Component
     <x-ui.card padding="none" class="relative overflow-hidden">
         <div
             wire:loading.delay.short
-            wire:target="search,selectedAirport,selectedStatus,filterByStatus,resetFilters"
+            wire:target="search,selectedAirport,selectedStatus,selectedClientId,filterByStatus,resetFilters"
             class="absolute inset-x-0 top-0 z-10 h-0.5 overflow-hidden bg-blue-100"
         >
             <div class="h-full w-1/3 animate-pulse bg-blue-500"></div>

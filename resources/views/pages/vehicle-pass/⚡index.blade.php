@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Concerns\InteractsWithToasts;
+use App\Models\Client;
 use App\Models\VehiclePass;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
@@ -27,6 +28,8 @@ class extends Component
 
     public ?string $selectedStatus = null;
 
+    public ?int $selectedClientId = null;
+
     public function mount(): void
     {
         if (auth()->user()->isClient()) {
@@ -49,6 +52,11 @@ class extends Component
         $this->resetPage();
     }
 
+    public function updatedSelectedClientId(): void
+    {
+        $this->resetPage();
+    }
+
     public function filterByStatus(?string $status): void
     {
         $this->selectedStatus = $status === $this->selectedStatus ? null : $status;
@@ -57,8 +65,18 @@ class extends Component
 
     public function resetFilters(): void
     {
-        $this->reset(['search', 'selectedAirport', 'selectedStatus']);
+        $this->reset(['search', 'selectedAirport', 'selectedStatus', 'selectedClientId']);
         $this->resetPage();
+    }
+
+    #[Computed]
+    public function clients()
+    {
+        if (! auth()->user()->isAdmin()) {
+            return collect();
+        }
+
+        return Client::orderBy('company_name')->get();
     }
 
     private function baseQuery()
@@ -67,6 +85,10 @@ class extends Component
 
         if (! auth()->user()->isAdmin()) {
             $query->where('client_id', auth()->user()->client_id);
+        }
+
+        if ($this->selectedClientId && auth()->user()->isAdmin()) {
+            $query->where('client_id', $this->selectedClientId);
         }
 
         return $query;
@@ -216,6 +238,29 @@ class extends Component
                     </x-slot:leadingIcon>
                 </x-ui.input>
             </div>
+
+            @if (auth()->user()->isAdmin())
+                @php
+                    $clientOptions = [['value' => null, 'label' => 'Toutes les sociétés']];
+                    foreach ($this->clients as $c) {
+                        $clientOptions[] = [
+                            'value' => $c->id,
+                            'label' => $c->company_name,
+                            'hint' => $c->siret_number,
+                        ];
+                    }
+                @endphp
+                <div class="sm:w-64">
+                    <x-ui.select
+                        :value="$selectedClientId"
+                        wire:model.live="selectedClientId"
+                        :options="$clientOptions"
+                        placeholder="Toutes les sociétés"
+                        searchable
+                        search-placeholder="Filtrer par société…"
+                    />
+                </div>
+            @endif
         </div>
 
         <x-ui.segmented
@@ -231,9 +276,13 @@ class extends Component
     </div>
 
     {{-- Active filter chips --}}
-    @if ($selectedStatus || $selectedAirport || ! empty($search))
+    @if ($selectedStatus || $selectedAirport || $selectedClientId || ! empty($search))
         @php
             $chipClass = 'inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-foreground transition hover:bg-slate-200';
+            $selectedClientLabel = null;
+            if ($selectedClientId) {
+                $selectedClientLabel = optional($this->clients->firstWhere('id', $selectedClientId))->company_name;
+            }
         @endphp
         <div class="flex flex-wrap items-center gap-2">
             <span class="text-xs font-medium text-foreground-muted">Filtres :</span>
@@ -265,6 +314,15 @@ class extends Component
                 </button>
             @endif
 
+            @if ($selectedClientId && $selectedClientLabel)
+                <button type="button" wire:click="$set('selectedClientId', null)" class="{{ $chipClass }}">
+                    Société : <span class="font-semibold">{{ $selectedClientLabel }}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-3 w-3 text-foreground-muted">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            @endif
+
             <button type="button" wire:click="resetFilters" class="text-xs font-medium text-foreground-muted underline transition hover:text-foreground">
                 Tout réinitialiser
             </button>
@@ -275,7 +333,7 @@ class extends Component
     <x-ui.card padding="none" class="relative overflow-hidden">
         <div
             wire:loading.delay.short
-            wire:target="search,selectedAirport,selectedStatus,filterByStatus,resetFilters"
+            wire:target="search,selectedAirport,selectedStatus,selectedClientId,filterByStatus,resetFilters"
             class="absolute inset-x-0 top-0 z-10 h-0.5 overflow-hidden bg-blue-100"
         >
             <div class="h-full w-1/3 animate-pulse bg-blue-500"></div>
@@ -377,7 +435,7 @@ class extends Component
                     <tr>
                         <td colspan="6" class="text-center text-foreground-muted">
                             <div class="py-12">
-                                @if (! empty($search) || $selectedStatus || $selectedAirport)
+                                @if (! empty($search) || $selectedStatus || $selectedAirport || $selectedClientId)
                                     Aucune demande ne correspond aux filtres en cours.
                                 @else
                                     Aucune demande de laissez-passer.
