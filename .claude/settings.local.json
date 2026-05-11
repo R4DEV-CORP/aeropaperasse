@@ -73,7 +73,11 @@
       "Bash(composer install *)",
       "Bash(/c/laragon/bin/php/php-8.3.30-Win32-vs16-x64/php.exe -m)",
       "Bash(/c/laragon/bin/php/php-8.3.30-Win32-vs16-x64/php.exe /c/tmp/xlsparse/dump.php \"docs/ExportExcel LISTE LPV - EQIOM BETONS - AAO 23-01561.xls\")",
-      "Bash(/c/laragon/bin/php/php-8.3.30-Win32-vs16-x64/php.exe *)"
+      "Bash(/c/laragon/bin/php/php-8.3.30-Win32-vs16-x64/php.exe *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://aeropaperasse.test/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://aeropaperasse.localhost/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://aeropaperasse.local/)"
     ]
   }
 }

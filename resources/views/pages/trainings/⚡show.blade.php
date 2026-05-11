@@ -207,15 +207,20 @@ class extends Component
 
     {{-- Sections --}}
     @foreach ($sections as $section)
+        @php $count = $section['items']->count(); @endphp
         <x-ui.card padding="none">
-            <div class="border-b border-border px-5 py-4">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-base font-semibold text-foreground">{{ $section['title'] }}</h2>
-                    <span class="text-xs text-foreground-muted">{{ $section['items']->count() }}</span>
-                </div>
-            </div>
+            <details class="group" @if ($count <= 5) open @endif>
+                <summary class="flex cursor-pointer list-none items-center justify-between px-5 py-4 group-open:border-b group-open:border-border [&::-webkit-details-marker]:hidden">
+                    <div class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4 text-foreground-muted transition-transform duration-150 group-open:rotate-90">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                        </svg>
+                        <h2 class="text-base font-semibold text-foreground">{{ $section['title'] }}</h2>
+                    </div>
+                    <span class="text-xs text-foreground-muted">{{ $count }}</span>
+                </summary>
 
-            @if ($section['items']->isEmpty())
+                @if ($section['items']->isEmpty())
                 <div class="px-5 py-12 text-center text-sm text-foreground-muted">
                     {{ $section['empty'] }}
                 </div>
@@ -307,6 +312,7 @@ class extends Component
                     </tbody>
                 </x-ui.table>
             @endif
+            </details>
         </x-ui.card>
     @endforeach
 
