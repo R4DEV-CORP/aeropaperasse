@@ -28,7 +28,7 @@ class CoworkerValidator
             'create_user' => 'nullable|boolean',
             'password' => 'required_if:create_user,true|string|min:8|confirmed',
             'password_confirmation' => 'required_if:create_user,true|string|min:8',
-            'role' => 'nullable|string|in:sclient,sadmin,client,admin',
+            'role' => 'nullable|string|in:sclient,sadmin,client,admin,aclient',
         ];
     }
 
@@ -110,7 +110,7 @@ class CoworkerValidator
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required|string|min:8',
-            'role' => 'nullable|string|in:sclient,sadmin,client,admin',
+            'role' => 'nullable|string|in:sclient,sadmin,client,admin,aclient',
         ];
 
         $messages = [
@@ -165,7 +165,7 @@ class CoworkerValidator
             'email' => 'nullable|email|max:255|unique:coworkers,email,'.$coworkerId,
             'phone' => 'nullable|string|max:255',
             'can_access_formation' => 'nullable|boolean',
-            'role' => 'nullable|string|in:sclient,sadmin,client,admin',
+            'role' => 'nullable|string|in:sclient,sadmin,client,admin,aclient',
         ];
 
         $messages = [

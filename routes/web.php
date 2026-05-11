@@ -37,16 +37,22 @@ Route::get('/logout', function () {
 })->middleware('auth')->name('auth.logout');
 
 /*
-* Route sociétés
+* Routes sociétés
 */
 
-Route::get('/clients', function () {
-    return view('clients.index');
-})->middleware('auth');
+Route::livewire('/companies', 'pages::companies.index')
+    ->middleware('auth')
+    ->name('companies.index');
 
-Route::get('/clients/{slug}', function ($slug) {
-    return view('clients.show', ['slug' => $slug]);
-})->middleware('auth')->name('clients.view');
+Route::livewire('/companies/form/{companyId?}', 'pages::companies.form')
+    ->middleware('auth')
+    ->whereNumber('companyId')
+    ->name('companies.form');
+
+Route::livewire('/companies/{companyId}', 'pages::companies.show')
+    ->middleware('auth')
+    ->whereNumber('companyId')
+    ->name('companies.show');
 
 /*
 * Routes demande d'activité
@@ -106,39 +112,47 @@ Route::livewire('/badge-management/{badgeId}', 'pages::badge-management.show')
 * Routes coworkers
 */
 
-Route::get('/coworkers', function () {
-    return view('coworkers.index');
-})->middleware('auth');
+Route::livewire('/coworkers', 'pages::coworkers.index')
+    ->middleware('auth')
+    ->name('coworkers.index');
+
+Route::livewire('/coworkers/form/{coworkerId?}', 'pages::coworkers.form')
+    ->middleware('auth')
+    ->whereNumber('coworkerId')
+    ->name('coworkers.form');
+
+Route::livewire('/coworkers/{coworkerId}', 'pages::coworkers.show')
+    ->middleware('auth')
+    ->whereNumber('coworkerId')
+    ->name('coworkers.show');
 
 /*
 * Routes trainings
 */
 
-Route::get('/trainings', function () {
-    if (auth()->user()->isClient() && ! auth()->user()->can_access_formation) {
-        return redirect()->route('clients.view', ['slug' => auth()->user()->client->slug]);
-    }
+Route::livewire('/trainings', 'pages::trainings.index')
+    ->middleware('auth')
+    ->name('trainings.index');
 
-    return view('trainings.index');
-})->middleware('auth');
-
-Route::get('/trainings/client/{slug}', function ($slug) {
-    if (auth()->user()->isClient() && ! auth()->user()->can_access_formation) {
-        return redirect()->route('clients.view', ['slug' => auth()->user()->client->slug]);
-    }
-
-    return view('trainings.client', ['slug' => $slug]);
-})->middleware('auth')->name('training.client');
+Route::livewire('/trainings/{companyId}', 'pages::trainings.show')
+    ->middleware('auth')
+    ->whereNumber('companyId')
+    ->name('trainings.show');
 
 /*
-*
-* Routes vehicle passes
+* Routes laissez-passer
 */
 
-Route::get('/vehicle-pass', function () {
-    if (auth()->user()->isClient()) {
-        return redirect()->route('clients.view', ['slug' => auth()->user()->client->slug]);
-    }
+Route::livewire('/vehicle-pass', 'pages::vehicle-pass.index')
+    ->middleware('auth')
+    ->name('vehicle-pass.index');
 
-    return view('vehicle-pass.index');
-})->middleware('auth');
+Route::livewire('/vehicle-pass/form/{mode?}', 'pages::vehicle-pass.form')
+    ->middleware('auth')
+    ->where('mode', 'linked|standalone')
+    ->name('vehicle-pass.form');
+
+Route::livewire('/vehicle-pass/{vehiclePassId}', 'pages::vehicle-pass.show')
+    ->middleware('auth')
+    ->whereNumber('vehiclePassId')
+    ->name('vehicle-pass.show');

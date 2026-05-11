@@ -34,28 +34,34 @@ class VehiclePassCreated extends Mailable
      */
     public function build()
     {
+        $immatriculation = $this->vehiclePass->plate_number;
+        $nomEntreprise = $this->vehiclePass->client?->company_name;
+        $aeroport = $this->vehiclePass->airport;
+        $marqueVehicule = $this->vehiclePass->car_brand;
+        $creator = $this->vehiclePass->createdBy;
+
         if ($this->isAdminNotification) {
-            $subject = 'Nouvelle demande de laisser-passer véhicule reçue - '.$this->vehiclePass->immatriculation;
+            $subject = 'Nouvelle demande de laisser-passer véhicule reçue - '.$immatriculation;
 
             return $this->subject($subject)
                 ->view('emails.vehicle-pass.created-admin')
                 ->with([
-                    'immatriculation' => $this->vehiclePass->immatriculation,
-                    'nom_entreprise' => $this->vehiclePass->nom_entreprise,
-                    'aeroport' => $this->vehiclePass->aeroport,
-                    'marque_vehicule' => $this->vehiclePass->marque_vehicule,
-                    'user_name' => $this->vehiclePass->user->name,
-                    'user_email' => $this->vehiclePass->user->email,
+                    'immatriculation' => $immatriculation,
+                    'nom_entreprise' => $nomEntreprise,
+                    'aeroport' => $aeroport,
+                    'marque_vehicule' => $marqueVehicule,
+                    'user_name' => $creator?->name,
+                    'user_email' => $creator?->email,
                 ]);
         }
 
         return $this->view('emails.vehicle-pass.created')
             ->subject('Confirmation de votre demande de laisser-passer véhicule')
             ->with([
-                'immatriculation' => $this->vehiclePass->immatriculation,
-                'nom_entreprise' => $this->vehiclePass->nom_entreprise,
-                'aeroport' => $this->vehiclePass->aeroport,
-                'marque_vehicule' => $this->vehiclePass->marque_vehicule,
+                'immatriculation' => $immatriculation,
+                'nom_entreprise' => $nomEntreprise,
+                'aeroport' => $aeroport,
+                'marque_vehicule' => $marqueVehicule,
             ]);
     }
 }

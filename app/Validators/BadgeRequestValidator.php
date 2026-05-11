@@ -51,7 +51,7 @@ class BadgeRequestValidator
             'activity_authorization' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
             'for_document' => 'nullable|file|mimes:xlsx,xls|max:10240',
             'invoice_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
-            'formation_certificate_document' => 'nullable|file|mimes:pdf|max:8192',
+            'formation_certificate_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
         ];
     }
 
@@ -118,9 +118,9 @@ class BadgeRequestValidator
         // Obligatoire uniquement si validate_training = false
         $validateTraining = $data['validate_training'] ?? false;
         if ($validateTraining) {
-            $rules['formation_certificate_document'] = 'nullable|file|mimes:pdf|max:8192';
+            $rules['formation_certificate_document'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240';
         } else {
-            $rules['formation_certificate_document'] = 'required|file|mimes:pdf|max:8192';
+            $rules['formation_certificate_document'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:10240';
         }
 
         return Validator::make($data, $rules, self::getMessages());

@@ -22,7 +22,7 @@
             $navItems = collect([
                 [
                     'label' => 'Sociétés',
-                    'href' => '/clients',
+                    'href' => '/companies',
                     'icon' => 'building-office',
                     'visible' => true,
                 ],
@@ -203,7 +203,7 @@
                         if ($isClientSide && $user->client) {
                             $breadcrumbRoot = [
                                 'label' => $user->client->company_name,
-                                'href' => $user->client->slug ? route('clients.view', ['slug' => $user->client->slug]) : null,
+                                'href' => route('companies.show', ['companyId' => $user->client_id]),
                             ];
                         } else {
                             $breadcrumbRoot = ['label' => 'Administration'];

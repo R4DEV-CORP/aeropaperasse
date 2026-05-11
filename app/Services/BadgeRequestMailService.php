@@ -166,7 +166,7 @@ class BadgeRequestMailService
     private function getStatusLabel($status)
     {
         $labels = [
-            'pending_rem' => 'En attente de validation par Rem Distribution',
+            'pending_rem' => 'En attente',
             'rejected_rem' => 'Rejetée par Rem Distribution',
             'pending_adp' => 'En attente de validation par ADP',
             'approved_adp' => 'Approuvée par ADP',

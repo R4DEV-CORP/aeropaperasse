@@ -32,8 +32,7 @@ class BadgeRequestPolicy
      */
     public function deliver(User $user, BadgeRequest $badgeRequest): bool
     {
-        // Seuls les admins peuvent marquer un badge comme remis
-        if (! $user->isAdmin()) {
+        if (! $user->canChangeRequestStatus()) {
             return false;
         }
 

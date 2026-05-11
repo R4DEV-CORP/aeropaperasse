@@ -18,7 +18,7 @@ new class extends Component
     #[On('reject-activity-request')]
     public function open(int $id): void
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->canChangeRequestStatus()) {
             return;
         }
 
@@ -31,7 +31,7 @@ new class extends Component
 
     public function submit(): void
     {
-        if (! auth()->user()->isAdmin() || $this->activityRequestId === null) {
+        if (! auth()->user()->canChangeRequestStatus() || $this->activityRequestId === null) {
             return;
         }
 

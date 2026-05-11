@@ -12,9 +12,25 @@ use ZipArchive;
 class BadgeRequestDocumentService
 {
     /**
-     * Stock les documents de la demande de badge dans le dossier du client
+     * Mapping des champs de document vers leur code court de fichier.
+     * Les champs absents conservent l'ancien format ({type}-{client}-{timestamp}.{ext})
+     * — c'est le cas de `return_badge_document` (badges standalone) et `delivery_photo`.
      */
-    public function storeDocuments(array $documents, Client $client, int $badgeRequestId): array
+    public const DOCUMENT_TYPE_CODES = [
+        'selfie_photo' => 'phi',
+        'identification_card' => 'pid',
+        'for_document' => 'for',
+        'invoice_document' => 'fac',
+        'activity_authorization' => 'aao',
+        'formation_certificate_document' => 'fre',
+    ];
+
+    /**
+     * Stock les documents de la demande de badge dans le dossier du client.
+     * Pour les types présents dans DOCUMENT_TYPE_CODES, l'ancien fichier référencé
+     * en BDD est supprimé avant l'écriture du nouveau pour éviter les orphelins.
+     */
+    public function storeDocuments(array $documents, Client $client, BadgeRequest $badgeRequest): array
     {
         $storedDocuments = [];
 
@@ -23,16 +39,36 @@ class BadgeRequestDocumentService
 
         foreach ($documents as $documentType => $file) {
             if ($file instanceof UploadedFile) {
+                $this->deleteExistingDocument($badgeRequest, $documentType);
+
                 $storedDocuments[$documentType] = $this->storeDocument(
                     $file,
                     $documentType,
                     $clientFolderName,
-                    $badgeRequestId
+                    $badgeRequest->id
                 );
             }
         }
 
         return $storedDocuments;
+    }
+
+    /**
+     * Supprime le fichier physique référencé en BDD pour ce type de document, s'il existe.
+     * No-op si le champ n'existe pas sur le modèle ou si le fichier est absent du disque.
+     */
+    protected function deleteExistingDocument(BadgeRequest $badgeRequest, string $documentType): void
+    {
+        $existingPath = $badgeRequest->{$documentType} ?? null;
+
+        if (empty($existingPath)) {
+            return;
+        }
+
+        $disk = Storage::disk('public');
+        if ($disk->exists($existingPath)) {
+            $disk->delete($existingPath);
+        }
     }
 
     /**
@@ -84,14 +120,22 @@ class BadgeRequestDocumentService
     }
 
     /**
-     * Génère un nom de fichier : [type-document]-[nom-entreprise]-[timestamp].extension
+     * Génère le nom de fichier.
+     * - Si le type est dans DOCUMENT_TYPE_CODES : format court `{code}.{ext}` (ex: phi.jpeg).
+     * - Sinon : format historique `{type}-{client}-{timestamp}.{ext}` (return_badge_document, etc.).
      */
     protected function generateFilename(UploadedFile $file, string $documentType, string $clientFolderName): string
     {
-        $timestamp = now()->timestamp;
         $extension = $file->getClientOriginalExtension();
 
-        // Format : [type-document]-[nom-entreprise]-[timestamp].extension
+        if (isset(self::DOCUMENT_TYPE_CODES[$documentType])) {
+            $code = self::DOCUMENT_TYPE_CODES[$documentType];
+
+            return "{$code}.{$extension}";
+        }
+
+        $timestamp = now()->timestamp;
+
         return "{$documentType}-{$clientFolderName}-{$timestamp}.{$extension}";
     }
 
@@ -102,15 +146,8 @@ class BadgeRequestDocumentService
      */
     public function createDocumentsZip(BadgeRequest $badgeRequest): ?string
     {
-        // Types de documents à inclure dans le ZIP
-        $documentTypes = [
-            'selfie_photo' => 'photo-selfie',
-            'identification_card' => 'carte-identite',
-            'activity_authorization' => 'autorisation-activite',
-            'for_document' => 'document-for',
-            'formation_certificate_document' => 'certificat-formation',
-            'invoice_document' => 'facture',
-        ];
+        // Les noms dans le ZIP reprennent les codes courts utilisés sur disque (phi, pid, aao, ...).
+        $documentTypes = self::DOCUMENT_TYPE_CODES;
 
         // Créer un nom de fichier pour le ZIP
         $zipFileName = 'demande-badge-'.$badgeRequest->id.'-'.now()->timestamp.'.zip';

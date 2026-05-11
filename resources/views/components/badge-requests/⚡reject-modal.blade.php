@@ -18,7 +18,7 @@ new class extends Component
     #[On('reject-badge-request')]
     public function open(int $id, string $targetStatus): void
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->canChangeRequestStatus()) {
             return;
         }
 
@@ -36,7 +36,7 @@ new class extends Component
 
     public function submit(): void
     {
-        if (! auth()->user()->isAdmin()
+        if (! auth()->user()->canChangeRequestStatus()
             || $this->badgeRequestId === null
             || ! in_array($this->targetStatus, ['rejected_rem', 'rejected_adp'], true)) {
             return;

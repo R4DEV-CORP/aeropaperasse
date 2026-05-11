@@ -122,7 +122,7 @@ class SaveBadgeRequestAction
         $storedDocuments = $this->documentService->storeDocuments(
             $data->getDocuments(),
             $client,
-            $badgeRequest->id
+            $badgeRequest
         );
 
         $badgeRequest->update($storedDocuments);

@@ -38,10 +38,10 @@ class VehiclePassStatusUpdated extends Mailable
         return $this->view('emails.vehicle-pass.status-updated')
             ->subject($subject)
             ->with([
-                'immatriculation' => $this->vehiclePass->immatriculation,
-                'nom_entreprise' => $this->vehiclePass->nom_entreprise,
-                'aeroport' => $this->vehiclePass->aeroport,
-                'marque_vehicule' => $this->vehiclePass->marque_vehicule,
+                'immatriculation' => $this->vehiclePass->plate_number,
+                'nom_entreprise' => $this->vehiclePass->client?->company_name,
+                'aeroport' => $this->vehiclePass->airport,
+                'marque_vehicule' => $this->vehiclePass->car_brand,
                 'previous_status' => $this->previousStatus,
                 'current_status' => $this->vehiclePass->status,
                 'status_label' => $this->getStatusLabel(),

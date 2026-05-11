@@ -63,7 +63,7 @@ class extends Component
 
     public function validateRem(): void
     {
-        $this->applyStatusTransition('pending_rem', 'pending_adp', 'Demande validée par REM.');
+        $this->applyStatusTransition('pending_rem', 'pending_adp', 'Demande validée.');
     }
 
     public function approveAdp(): void
@@ -78,7 +78,7 @@ class extends Component
 
     public function markReadyForDelivery(): void
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->canChangeRequestStatus()) {
             return;
         }
 
@@ -124,7 +124,7 @@ class extends Component
 
     protected function applyStatusTransition(string $expectedStatus, string $newStatus, string $successMessage): void
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->canChangeRequestStatus()) {
             return;
         }
 
@@ -176,7 +176,7 @@ class extends Component
 @php
     $statusMeta = [
         'draft' => ['label' => 'Brouillon', 'variant' => 'draft'],
-        'pending_rem' => ['label' => 'En attente REM', 'variant' => 'pending'],
+        'pending_rem' => ['label' => 'En attente', 'variant' => 'pending'],
         'pending_adp' => ['label' => 'En attente ADP', 'variant' => 'pending'],
         'approved_adp' => ['label' => 'Approuvé ADP', 'variant' => 'approved'],
         'pending_fabrication' => ['label' => 'En fabrication', 'variant' => 'in-progress'],
@@ -213,6 +213,7 @@ class extends Component
     $user = auth()->user();
     $isAdmin = $user->isAdmin();
     $isSAdmin = $user->isSAdmin();
+    $canChangeStatus = $user->canChangeRequestStatus();
 @endphp
 
 <div class="space-y-6 p-8">
@@ -248,37 +249,37 @@ class extends Component
     @php
         $actionContexts = [
             'pending_rem' => [
-                'title' => 'Validation REM requise',
+                'title' => 'Validation requise',
                 'description' => 'Vérifiez le dossier puis validez la demande ou marquez-la comme incomplète.',
-                'role' => 'admin',
+                'role' => 'status_changer',
                 'accent' => 'amber',
             ],
             'pending_adp' => [
                 'title' => 'Approbation ADP requise',
-                'description' => "La demande a passé l'étape REM, elle attend maintenant la décision ADP.",
-                'role' => 'admin',
+                'description' => 'La demande a été validée, elle attend maintenant la décision ADP.',
+                'role' => 'status_changer',
                 'accent' => 'amber',
             ],
             'approved_adp' => [
                 'title' => 'Prête pour la fabrication',
                 'description' => 'La demande est approuvée — vous pouvez lancer la fabrication du badge.',
-                'role' => 'admin',
+                'role' => 'status_changer',
                 'accent' => 'emerald',
             ],
             'pending_fabrication' => [
                 'title' => 'Fabrication en cours',
                 'description' => "Dès que le badge sort de fabrication, marquez-le comme prêt à être remis.",
-                'role' => 'admin',
+                'role' => 'status_changer',
                 'accent' => 'violet',
             ],
             'ready_for_delivery' => [
                 'title' => 'Prêt à être remis',
                 'description' => 'Le badge peut être remis au demandeur. Une photo de remise sera demandée.',
-                'role' => 'admin',
+                'role' => 'status_changer',
                 'accent' => 'blue',
             ],
             'rejected_rem' => [
-                'title' => 'Demande refusée par REM',
+                'title' => 'Demande refusée',
                 'description' => 'Vous pouvez la rouvrir en brouillon pour la corriger.',
                 'role' => 'sadmin',
                 'accent' => 'red',
@@ -293,7 +294,7 @@ class extends Component
 
         $ctx = $actionContexts[$br->status] ?? null;
         $showCtx = $ctx && (
-            ($ctx['role'] === 'admin' && $isAdmin) ||
+            ($ctx['role'] === 'status_changer' && $canChangeStatus) ||
             ($ctx['role'] === 'sadmin' && $isSAdmin)
         );
 
@@ -321,25 +322,25 @@ class extends Component
                         <p class="mt-0.5 text-sm text-foreground-muted">{{ $ctx['description'] }}</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-2">
-                        @if ($isAdmin && $br->status === 'pending_rem')
-                            <x-ui.button variant="success" size="sm" wire:click="validateRem">Valider REM</x-ui.button>
+                        @if ($canChangeStatus && $br->status === 'pending_rem')
+                            <x-ui.button variant="success" size="sm" wire:click="validateRem">Valider</x-ui.button>
                             <x-ui.button variant="danger" size="sm" wire:click="$dispatch('reject-badge-request', { id: {{ $br->id }}, targetStatus: 'rejected_rem' })">Marquer dossier incomplet</x-ui.button>
                         @endif
 
-                        @if ($isAdmin && $br->status === 'pending_adp')
+                        @if ($canChangeStatus && $br->status === 'pending_adp')
                             <x-ui.button variant="success" size="sm" wire:click="approveAdp">Approuver ADP</x-ui.button>
                             <x-ui.button variant="danger" size="sm" wire:click="$dispatch('reject-badge-request', { id: {{ $br->id }}, targetStatus: 'rejected_adp' })">Rejeter ADP</x-ui.button>
                         @endif
 
-                        @if ($isAdmin && $br->status === 'approved_adp')
+                        @if ($canChangeStatus && $br->status === 'approved_adp')
                             <x-ui.button variant="info" size="sm" wire:click="startFabrication">Lancer la fabrication</x-ui.button>
                         @endif
 
-                        @if ($isAdmin && $br->status === 'pending_fabrication')
+                        @if ($canChangeStatus && $br->status === 'pending_fabrication')
                             <x-ui.button variant="info" size="sm" wire:click="markReadyForDelivery">Marquer prêt à remettre</x-ui.button>
                         @endif
 
-                        @if ($isAdmin && $br->status === 'ready_for_delivery')
+                        @if ($canChangeStatus && $br->status === 'ready_for_delivery')
                             <x-ui.button variant="info" size="sm" wire:click="$dispatch('deliver-badge-request', { id: {{ $br->id }} })">Marquer comme remis</x-ui.button>
                         @endif
 
@@ -543,9 +544,9 @@ class extends Component
                         @php
                             $timeline = [
                                 ['label' => 'Brouillon créé', 'at' => $br->draft_at],
-                                ['label' => 'Soumis à REM', 'at' => $br->pending_rem_at],
-                                ['label' => 'Validé par REM', 'at' => $br->pending_adp_at],
-                                ['label' => 'Refusé par REM', 'at' => $br->rejected_rem_at],
+                                ['label' => 'Soumise à validation', 'at' => $br->pending_rem_at],
+                                ['label' => 'Validée', 'at' => $br->pending_adp_at],
+                                ['label' => 'Validation refusée', 'at' => $br->rejected_rem_at],
                                 ['label' => 'Approuvé par ADP', 'at' => $br->approved_adp_at],
                                 ['label' => 'Refusé par ADP', 'at' => $br->rejected_adp_at],
                                 ['label' => 'En fabrication', 'at' => $br->pending_fabrication_at],

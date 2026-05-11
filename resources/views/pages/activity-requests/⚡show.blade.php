@@ -31,7 +31,7 @@ class extends Component
     public function mount(int $activityRequestId): void
     {
         if (auth()->user()->isClient()) {
-            $this->redirect(route('clients.view', ['slug' => auth()->user()->client->slug]));
+            $this->redirect(route('companies.show', ['companyId' => auth()->user()->client_id]), navigate: true);
 
             return;
         }
@@ -64,7 +64,7 @@ class extends Component
 
     public function approve(): void
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->canChangeRequestStatus()) {
             return;
         }
 
@@ -218,6 +218,7 @@ class extends Component
     $user = auth()->user();
     $isAdmin = $user->isAdmin();
     $isSAdmin = $user->isSAdmin();
+    $canChangeStatus = $user->canChangeRequestStatus();
     $attachmentsByType = $ar->attachments->groupBy('type');
     $activeBadgeCount = $ar->getActiveBadgeRequestsCount();
     $remainingBadge = $ar->getRemainingBadgeQuota();
@@ -265,7 +266,7 @@ class extends Component
             'pending' => [
                 'title' => 'Décision requise',
                 'description' => 'Vérifiez la demande puis approuvez-la ou rejetez-la avec un motif.',
-                'role' => 'admin',
+                'role' => 'status_changer',
                 'accent' => 'amber',
             ],
             'approved' => [
@@ -285,6 +286,7 @@ class extends Component
         $ctx = $actionContexts[$ar->status] ?? null;
         $showCtx = $ctx && (
             $ctx['role'] === 'any' ||
+            ($ctx['role'] === 'status_changer' && $canChangeStatus) ||
             ($ctx['role'] === 'admin' && $isAdmin) ||
             ($ctx['role'] === 'sadmin' && $isSAdmin)
         );
@@ -311,7 +313,7 @@ class extends Component
                         <p class="mt-0.5 text-sm text-foreground-muted">{{ $ctx['description'] }}</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-2">
-                        @if ($isAdmin && $ar->status === 'pending')
+                        @if ($canChangeStatus && $ar->status === 'pending')
                             <x-ui.button variant="success" size="sm" wire:click="approve">Approuver</x-ui.button>
                             <x-ui.button variant="danger" size="sm" wire:click="$dispatch('reject-activity-request', { id: {{ $ar->id }} })">Rejeter</x-ui.button>
                         @endif

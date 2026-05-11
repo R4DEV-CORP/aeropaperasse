@@ -47,7 +47,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'role' => 'required|in:sadmin,sclient,admin,client',
+            'role' => 'required|in:sadmin,sclient,admin,client,aclient',
             'client_id' => 'nullable|exists:clients,id',
             'has_left' => 'nullable|boolean',
             'departure_date' => 'nullable|date|required_if:has_left,true',
@@ -116,7 +116,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
-            'role' => 'required|string|in:sadmin,sclient,admin,client',
+            'role' => 'required|string|in:sadmin,sclient,admin,client,aclient',
             'client_id' => 'required',
             'password' => 'nullable|string|min:6', // Le mot de passe est optionnel à la mise à jour
             'has_left' => 'nullable|boolean',
