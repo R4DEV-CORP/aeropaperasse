@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ActivityRequest;
 use App\Models\Client;
+use Spatie\Browsershot\Browsershot;
 use Spatie\LaravelPdf\Facades\Pdf;
 
 class ClientOverviewPdfService
@@ -19,6 +20,7 @@ class ClientOverviewPdfService
         // 2. Générer le PDF
         return Pdf::view('pdf.client-overview', ['client' => $clientData])
             ->format('a4')
+            ->withBrowsershot(fn (Browsershot $browsershot) => $browsershot->noSandbox())
             ->name("Bilan_{$clientData['company_name']}_".date('Y-m-d').'.pdf');
     }
 
