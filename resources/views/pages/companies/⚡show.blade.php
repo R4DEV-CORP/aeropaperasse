@@ -302,7 +302,7 @@ class extends Component
                                 <th>Rôle</th>
                                 <th>Contact</th>
                                 <th>Statut</th>
-                                <th class="text-right"></th>
+                                <th class="sticky right-0 z-10 bg-white text-right shadow-[-8px_0_12px_-12px_rgba(15,23,42,0.18)]"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -339,7 +339,7 @@ class extends Component
                                             <x-ui.badge variant="approved">Actif</x-ui.badge>
                                         @endif
                                     </td>
-                                    <td class="text-right">
+                                    <td class="sticky right-0 z-10 bg-white text-right shadow-[-8px_0_12px_-12px_rgba(15,23,42,0.18)]">
                                         <a
                                             href="{{ route('coworkers.show', ['coworkerId' => $coworker->id]) }}"
                                             wire:navigate
