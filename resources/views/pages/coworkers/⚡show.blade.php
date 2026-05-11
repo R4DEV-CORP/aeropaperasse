@@ -151,7 +151,7 @@ class extends Component
                 <x-ui.badge variant="draft">Collaborateur</x-ui.badge>
             @endif
             @if ($cw->has_leave)
-                <x-ui.badge variant="rejected">Parti le {{ $cw->departure_date->format('d/m/Y') }}</x-ui.badge>
+                <x-ui.badge variant="rejected">{{ $cw->departure_date ? 'Parti le '.$cw->departure_date->format('d/m/Y') : 'Parti' }}</x-ui.badge>
             @else
                 <x-ui.badge variant="approved">Actif</x-ui.badge>
             @endif
@@ -214,7 +214,7 @@ class extends Component
 
     @if ($cw->has_leave)
         <x-ui.alert variant="warning">
-            Ce collaborateur a quitté l'entreprise le {{ $cw->departure_date->format('d/m/Y') }}.
+            Ce collaborateur a quitté l'entreprise{{ $cw->departure_date ? ' le '.$cw->departure_date->format('d/m/Y') : '' }}.
         </x-ui.alert>
     @endif
 

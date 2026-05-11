@@ -334,7 +334,7 @@ class extends Component
                                     </td>
                                     <td>
                                         @if ($coworker->has_leave)
-                                            <x-ui.badge variant="rejected">Parti le {{ $coworker->departure_date->format('d/m/Y') }}</x-ui.badge>
+                                            <x-ui.badge variant="rejected">{{ $coworker->departure_date ? 'Parti le '.$coworker->departure_date->format('d/m/Y') : 'Parti' }}</x-ui.badge>
                                         @else
                                             <x-ui.badge variant="approved">Actif</x-ui.badge>
                                         @endif
