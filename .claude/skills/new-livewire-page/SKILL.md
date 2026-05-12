@@ -105,7 +105,6 @@ Scaffolds a new Livewire page component and wires the corresponding `Route::live
 - `Route::get('/path', SomeComponent::class)` or `Route::get('/path', fn () => view(...))` — must be `Route::livewire(...)`.
 - Wrapping the page in a Blade view that contains `<livewire:...>` — bind directly.
 - Re-implementing primitive HTML inline.
-- `<flux:*>` components (Flux is removed).
 - Cross-page links without `wire:navigate` (or `wire:click="redirectMethod"` patterns that just redirect).
 
 ## Reference

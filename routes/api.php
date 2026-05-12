@@ -8,11 +8,9 @@ use App\Http\Controllers\BadgeRequestController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientUserController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\MessageCommentController;
-use App\Http\Controllers\MessageController;
 use App\Http\Controllers\TrainingCatalogController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
@@ -162,31 +160,6 @@ Route::middleware(['auth:sanctum', 'training.access'])->group(function () {
     Route::get('/user-trainings/{id}/certificate', [TrainingController::class, 'downloadCertificate']); // Download de certificat
 });
 
-// Route::middleware(['auth:sanctum'])->group(function () {
-//     Route::get('/conversations', [ConversationController::class, 'index']);
-//     Route::post('/conversations', [ConversationController::class, 'store']);
-//     Route::get('/conversations/{id}', [ConversationController::class, 'show']);
-//     Route::get('/conversations/{id}/messages', [ConversationController::class, 'getMessages']);
-//     Route::post('/conversations/{id}/messages', [ConversationController::class, 'addMessage']);
-//     Route::patch('/conversations/{id}/status', [ConversationController::class, 'updateStatus']);
-// });
-
-// Routes du systeme de messagerie
-// Route::middleware('auth:sanctum')->group(function () {
-//     // Routes pour les messages
-//     Route::get('/messages', [MessageController::class, 'index']);
-//     Route::post('/messages', [MessageController::class, 'store']);
-//     Route::get('/messages/{message}', [MessageController::class, 'show']);
-//     Route::post('/messages/{message}/reply', [MessageController::class, 'reply']);
-
-//     // Si vous êtes admin, ajoutez ces routes avec middleware supplémentaire
-//     // Route::middleware('admin')->group(function () {
-//     //     Route::get('/admin/messages', [MessageController::class, 'adminIndex']); // Pour voir tous les messages
-//     //     Route::post('/admin/messages/{message}/reply', [MessageController::class, 'adminReply']); // Pour répondre
-//     //     Route::put('/messages/{message}/mark-as-read', [MessageController::class, 'markAsRead']); // Marquer comme lu
-//     // });
-// });
-// routes/api.php
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/badges', [BadgeController::class, 'index']);
     Route::post('/badges/import', [BadgeController::class, 'import']);

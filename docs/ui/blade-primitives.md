@@ -252,34 +252,13 @@ None of these patterns are used by primitives in `components/ui/`, so this const
 
 To profile primitive rendering locally, set `BLAZE_DEBUG=true` in `.env` (or call `Blaze::debug()` in a service provider). This adds an overlay with render times and a flame chart. Do not commit `BLAZE_DEBUG=true`.
 
-## Inventory to build
+## Inventory
 
-The following primitives are needed to replace Flux. Build them on demand, not preemptively:
+The primitives currently available in `resources/views/components/ui/` (run `ls resources/views/components/ui` for the authoritative list):
 
-| Primitive | Replaces | Notes |
-|---|---|---|
-| `button` | `<flux:button>` | variants: primary, secondary, ghost, link, danger |
-| `input` | `<flux:input>` | with label/hint/error/required props; `bg-slate-50` default, `bg-white` on focus |
-| `card` | (custom) | simple frame: white bg, slate border, `rounded`, padding prop (`none`, `sm`, `md`, `lg`) |
-| `textarea` | `<flux:textarea>` | |
-| `select` | `<flux:select>` | |
-| `checkbox` | `<flux:checkbox>` | |
-| `radio` | `<flux:radio>` | |
-| `switch` | `<flux:switch>` | |
-| `badge` | `<flux:badge>` | variants by status color |
-| `alert` | `<flux:callout>` | variants: info, success, warning, danger |
-| `avatar` | `<flux:avatar>` | |
-| `icon` | `<flux:icon>` | wraps Heroicons or similar |
-| `heading` | `<flux:heading>` | h1/h2/h3 wrapper |
-| `text` | `<flux:text>` | typographic variants |
-| `separator` | `<flux:separator>` | |
-| `modal` | `<flux:modal>` | shell only — content driven by Livewire |
-| `dropdown` | `<flux:dropdown>` | Alpine-based, stateless toggle |
-| `tooltip` | `<flux:tooltip>` | Alpine-based |
-| `breadcrumbs` | `<flux:breadcrumbs>` | |
-| `tabs` | (custom) | |
-| `field` | `<flux:field>` | label + control + error wrapper |
-| `skeleton` | `<flux:skeleton>` | |
+`alert`, `badge`, `breadcrumb`, `button`, `card`, `checkbox`, `dropdown`, `dropdown-item`, `file-upload`, `flyout`, `input`, `modal`, `otp-input`, `radio-cards`, `segmented`, `select`, `split-button`, `stat-card`, `table`, `textarea`, `toast`, `tooltip`.
+
+Build new primitives on demand, not preemptively. Before creating one, check that no existing primitive already covers the need.
 
 ## Testing primitives
 

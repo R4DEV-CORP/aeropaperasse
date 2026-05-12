@@ -1,6 +1,6 @@
 # Styling — Tailwind v4
 
-All styling lives in `resources/css/app.css` and per-component utility classes. No external CSS framework is used (Flux removed).
+All styling lives in `resources/css/app.css` and per-component utility classes. No external CSS framework is used.
 
 ## Stack
 

@@ -424,7 +424,7 @@ Services in `app/Services/` ending in `DocumentService` handle PDF generation us
 
 ## UI Architecture (INVIOLABLE)
 
-This project enforces a **strict separation** between stateless primitives and stateful components. These rules are non-negotiable — they reflect a deliberate architectural decision after migrating off Flux UI.
+This project enforces a **strict separation** between stateless primitives and stateful components. These rules are non-negotiable.
 
 ### Blade primitives — `resources/views/components/ui/`
 - Stateless UI atoms ONLY: button, input, alert, badge, modal-shell, etc.

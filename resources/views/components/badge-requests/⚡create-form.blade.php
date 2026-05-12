@@ -15,7 +15,6 @@ use App\Models\Coworker;
 use App\Validators\CoworkerValidator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -353,16 +352,29 @@ new class extends Component
     public function downloadForTemplate(string $airport)
     {
         $airport = strtoupper($airport);
-        $fileName = "template-for-{$airport}.xlsx";
-        $filePath = "templates/{$fileName}";
 
-        if (! Storage::disk('public')->exists($filePath)) {
+        $airportSlugs = [
+            'CDG' => 'aeroportCDG',
+            'ORY' => 'aeroportOrly',
+            'LBG' => 'aeroportBourget',
+        ];
+
+        if (! isset($airportSlugs[$airport])) {
             $this->toast("Le template pour {$airport} n'existe pas.", 'warning');
 
             return null;
         }
 
-        return response()->download(Storage::disk('public')->path($filePath), $fileName);
+        $fileName = "template-for-{$airportSlugs[$airport]}.xlsx";
+        $filePath = public_path("documents/{$fileName}");
+
+        if (! file_exists($filePath)) {
+            $this->toast("Le template pour {$airport} n'existe pas.", 'warning');
+
+            return null;
+        }
+
+        return response()->download($filePath, $fileName);
     }
 
     public function createNewCoworker(): void

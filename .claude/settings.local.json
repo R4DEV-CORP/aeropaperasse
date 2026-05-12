@@ -10,7 +10,6 @@
       "Bash(where soffice:*)",
       "Bash(xargs grep *)",
       "Bash(git stash *)",
-      "WebFetch(domain:fluxui.dev)",
       "Bash(ls C:\\\\laragon\\\\www\\\\aeropaperasse *)",
       "WebSearch",
       "Bash(composer show *)",
@@ -77,7 +76,8 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://aeropaperasse.test/)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost/)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://aeropaperasse.localhost/)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://aeropaperasse.local/)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://aeropaperasse.local/)",
+      "Bash(git rm *)"
     ]
   }
 }

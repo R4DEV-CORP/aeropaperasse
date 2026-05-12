@@ -82,7 +82,6 @@ Scaffolds a new Livewire SFC in `resources/views/components/{domain}/`.
 - Class-based components (`app/Livewire/...`) — SFC only.
 - Re-implementing primitive HTML inline.
 - `DB::` queries — use Eloquent.
-- `<flux:*>` components (Flux is removed).
 - Heavy business logic in component methods — extract to Actions.
 
 ## Reference

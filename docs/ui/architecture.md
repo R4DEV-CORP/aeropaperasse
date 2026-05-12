@@ -1,6 +1,6 @@
 # UI Architecture
 
-This document is the source of truth for the UI architecture of Aéropaperasse. The rules below are **inviolable** and reflect the post-Flux migration decisions.
+This document is the source of truth for the UI architecture of Aéropaperasse. The rules below are **inviolable**.
 
 ## Core principle
 
@@ -112,13 +112,6 @@ When you need to build a piece of UI, walk this tree:
    → Livewire SFC in `resources/views/pages/{domain}/` + `Route::livewire(...)` entry
 
 If a primitive grows state (e.g. a dropdown that needs server data), do NOT add Livewire to `ui/` — extract it as a Livewire component in `components/{domain}/` (or `components/shared/` if cross-domain) that *uses* the primitive shell.
-
-## What this replaces
-
-This architecture replaces the previous Flux UI / Livewire v3 stack:
-- `<flux:*>` components → either `<x-ui.*>` primitives or Livewire SFC
-- `app/Livewire/{Domain}/{Name}.php` + `resources/views/livewire/{domain}/{name}.blade.php` → `resources/views/components/{domain}/{name}.blade.php` (single file)
-- `Route::get(..., fn () => view(...))` returning a Blade wrapper around `<livewire:...>` → `Route::livewire(...)` directly to a page component
 
 ## Files
 
