@@ -162,6 +162,15 @@ new class extends Component
         ])->all();
     }
 
+    protected function buildActivityRequestOptions(): array
+    {
+        return collect($this->activityRequests)->map(fn ($ar) => [
+            'value' => $ar->id,
+            'label' => "Demande #{$ar->id} — {$ar->airport}",
+            'hint' => trim((string) ($ar->description ?? '')),
+        ])->all();
+    }
+
     protected function loadDraft(int $badgeRequestId): void
     {
         try {
@@ -253,6 +262,20 @@ new class extends Component
         $this->selected_activity_request_id = null;
         $this->activityRequest = null;
         $this->selected_coworker_id = null;
+
+        $this->dispatch(
+            'select-options-updated',
+            target: 'activity-request',
+            options: $this->buildActivityRequestOptions(),
+            value: null,
+        );
+
+        $this->dispatch(
+            'select-options-updated',
+            target: 'coworker',
+            options: $this->buildCoworkerOptions(),
+            value: null,
+        );
     }
 
     public function updatedSelectedActivityRequestId($value): void
@@ -681,11 +704,7 @@ new class extends Component
         'LBG' => 'bg-emerald-50 text-emerald-700 ring-emerald-200',
     ];
 
-    $activityOptions = collect($activityRequests)->map(fn ($ar) => [
-        'value' => $ar->id,
-        'label' => "Demande #{$ar->id} — {$ar->airport}",
-        'hint' => trim((string) ($ar->description ?? '')),
-    ])->all();
+    $activityOptions = $this->buildActivityRequestOptions();
 
     $coworkerOptions = $this->buildCoworkerOptions();
 @endphp
@@ -769,6 +788,7 @@ new class extends Component
                                 :value="$selected_activity_request_id"
                                 wire:model.live="selected_activity_request_id"
                                 :options="$activityOptions"
+                                options-target="activity-request"
                                 placeholder="Sélectionnez une demande…"
                                 search-placeholder="Filtrer par numéro ou description…"
                                 empty-text="Aucune demande trouvée."
