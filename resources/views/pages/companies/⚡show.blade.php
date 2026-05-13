@@ -86,12 +86,6 @@ class extends Component
         unset($this->company, $this->stats);
         $this->toast('Société mise à jour.', 'success', 'Mise à jour réussie');
     }
-
-    #[On('company-deleted')]
-    public function onDeleted(): void
-    {
-        $this->redirect(route('companies.index'), navigate: true);
-    }
 }; ?>
 
 @php
@@ -99,7 +93,6 @@ class extends Component
     $isAdmin = $authUser->isAdmin();
     $isClient = $authUser->isClient();
     $canEdit = ! $isClient;
-    $canDelete = $isAdmin;
 
     $company = $this->company;
     $stats = $this->stats;
@@ -158,26 +151,6 @@ class extends Component
                 <x-ui.button :href="route('companies.form', ['companyId' => $company->id])" wire:navigate variant="primary" size="sm">
                     Modifier
                 </x-ui.button>
-            @endif
-
-            @if ($canDelete)
-                <x-ui.dropdown align="right" width="w-56">
-                    <x-slot:trigger>
-                        <button
-                            type="button"
-                            class="inline-flex h-9 items-center gap-1.5 rounded-md bg-white px-3 text-sm font-medium text-foreground-muted ring-1 ring-border transition hover:bg-slate-50"
-                        >
-                            Actions
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                            </svg>
-                        </button>
-                    </x-slot:trigger>
-
-                    <x-ui.dropdown-item variant="danger" wire:click="$dispatch('open-delete-company', { id: {{ $company->id }} })">
-                        Supprimer la société
-                    </x-ui.dropdown-item>
-                </x-ui.dropdown>
             @endif
         </div>
     </div>
@@ -349,6 +322,4 @@ class extends Component
             <livewire:companies.trainings-list :company-id="$company->id" :key="'t-list-'.$company->id" />
         </div>
     </div>
-
-    <livewire:companies.delete-modal />
 </div>

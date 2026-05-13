@@ -135,7 +135,7 @@ Route::middleware('auth:sanctum')->group(function () {
 // Routes admin
 Route::middleware(['auth:sanctum', 'role:admin,sadmin'])->group(function () {
     Route::apiResource('users', UserController::class);
-    Route::apiResource('clients', ClientController::class);
+    Route::apiResource('clients', ClientController::class)->except(['destroy']);
     Route::get('/clients/{client}/document', [ClientController::class, 'downloadDocument']);
 });
 Route::middleware(['auth:sanctum', 'role:sclient'])->group(function () {
