@@ -2,82 +2,104 @@
 
 namespace App\Services;
 
-use App\Models\ActivityRequest;
+use App\Models\Badge;
 use App\Models\Client;
+use App\Models\CoworkerTraining;
+use App\Models\VehiclePass;
 use Spatie\Browsershot\Browsershot;
 use Spatie\LaravelPdf\Facades\Pdf;
 
 class ClientOverviewPdfService
 {
-    /**
-     * Point d'entrée principal - génère le PDF
-     */
+    private const BADGE_ACTIVE_STATUSES = ['active', 'expiring_soon'];
+
+    private const BADGE_TERMINATED_STATUSES = ['expired', 'returned', 'lost'];
+
     public function generateOverview(int $clientId)
     {
-        // 1. Récupérer les données formatées
         $clientData = $this->getClientData($clientId);
 
-        // 2. Générer le PDF
         return Pdf::view('pdf.client-overview', ['client' => $clientData])
             ->format('a4')
             ->withBrowsershot(fn (Browsershot $browsershot) => $browsershot->noSandbox())
             ->name("Bilan_{$clientData['company_name']}_".date('Y-m-d').'.pdf');
     }
 
-    /**
-     * Récupère et formate les données client
-     */
     private function getClientData(int $clientId): array
     {
-        // Récupération du client
-        $client = Client::with('contacts')->with('activityRequests')->findOrFail($clientId);
+        $client = Client::with([
+            'contacts',
+            'coworkers' => fn ($q) => $q->orderBy('has_leave')->orderBy('lastname')->orderBy('firstname'),
+            'activityRequests' => fn ($q) => $q->where('status', 'approved')->orderBy('created_at', 'desc'),
+        ])->findOrFail($clientId);
 
-        // contacts
-        $clientContacts = $client->contacts;
         $contacts = [];
-        foreach ($clientContacts as $contact) {
-            $contacts[$contact->role] = $contact;
-        }
-
-        // Activités
-        $clientActivityRequests = $client->activityRequests;
-        $activityRequests = [];
-        $activityAirports = [
-            'CDG' => 0,
-            'ORY' => 0,
-            'LBG' => 0,
-        ];
-        foreach ($clientActivityRequests as $activityRequest) {
-            if ($activityRequest->status !== 'approved') {
-                $activityRequests[$activityRequest->id] = [
-                    'description' => $activityRequest->description,
-                ];
-                $activityAirports[$activityRequest->airport]++;
+        $safetyReferents = [];
+        foreach ($client->contacts as $contact) {
+            if ($contact->role === 'safety') {
+                $safetyReferents[] = $contact;
+            } else {
+                $contacts[$contact->role] = $contact;
             }
         }
 
-        // Compilation des données (priorité aux données Client, fallback sur ActivityRequest)
-        return [
-            // Info sur la société
-            'id' => $client->id,
-            'company_name' => $client->company_name, // raison sociale
-            'trade_name' => $client->trade_name, // nom commercial
-            'siret_number' => $client->siret_number, // numéro SIRET
-            'address' => $client->address, // adresse
-            'zip_code' => $client->zip_code, // code postal
-            'city' => $client->city, // ville
-            'subcontractor_of' => $client->subcontractor_of, // sous traitant de
+        $approvedActivityRequests = $client->activityRequests;
+        $activityAirports = [];
+        foreach ($approvedActivityRequests as $ar) {
+            if ($ar->airport) {
+                $activityAirports[$ar->airport] = ($activityAirports[$ar->airport] ?? 0) + 1;
+            }
+        }
 
-            // Contacts (sureté, hr et sécurité)
+        $badgeQuery = Badge::with(['coworker', 'badgeRequest.coworker'])
+            ->where(function ($q) use ($clientId) {
+                $q->where('client_id', $clientId)
+                    ->orWhereHas('badgeRequest.activityRequest', fn ($q2) => $q2->where('client_id', $clientId));
+            })
+            ->orderBy('expiry_date');
+
+        $activeBadges = (clone $badgeQuery)->whereIn('status', self::BADGE_ACTIVE_STATUSES)->get();
+        $terminatedBadges = (clone $badgeQuery)->whereIn('status', self::BADGE_TERMINATED_STATUSES)->get();
+
+        $vehiclePasses = VehiclePass::with('activityRequest')
+            ->where(function ($q) use ($clientId) {
+                $q->where('client_id', $clientId)
+                    ->orWhereHas('activityRequest', fn ($q2) => $q2->where('client_id', $clientId));
+            })
+            ->where('status', 'approved')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $coworkerIds = $client->coworkers->pluck('id');
+        $trainings = CoworkerTraining::with(['coworker', 'training'])
+            ->whereIn('coworker_id', $coworkerIds)
+            ->orderByRaw('expires_at IS NULL, expires_at ASC')
+            ->get();
+
+        return [
+            'id' => $client->id,
+            'company_name' => $client->company_name,
+            'trade_name' => $client->trade_name,
+            'siret_number' => $client->siret_number,
+            'address' => $client->address,
+            'zip_code' => $client->zip_code,
+            'city' => $client->city,
+            'subcontractor_of' => $client->subcontractor_of,
+
+            'safety_referents' => $safetyReferents,
             'contacts' => $contacts,
 
-            // Activités
-            'activities' => $activityRequests,
-            'activity_count' => count($activityRequests),
-            'activity_airports' => $activityAirports, // aéroports concernés
+            'coworkers' => $client->coworkers,
 
-            // Badges et laissez passer
-            // Note: Les quotas sont maintenant gérés au niveau de chaque ActivityRequest
+            'approved_activity_requests' => $approvedActivityRequests,
+            'activity_airports' => $activityAirports,
+
+            'active_badges' => $activeBadges,
+            'terminated_badges' => $terminatedBadges,
+
+            'vehicle_passes' => $vehiclePasses,
+
+            'trainings' => $trainings,
         ];
     }
 }

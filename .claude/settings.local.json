@@ -77,7 +77,8 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost/)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://aeropaperasse.localhost/)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://aeropaperasse.local/)",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "PowerShell(vendor/bin/pint --dirty)"
     ]
   }
 }

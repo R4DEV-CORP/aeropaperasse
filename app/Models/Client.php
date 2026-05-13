@@ -92,9 +92,12 @@ class Client extends Model
 
     public function getActiveBadgeCount(): int
     {
-        return Badge::where('status', '!=', 'returned')
-            ->whereHas('badgeRequest.activityRequest', function ($query) {
-                $query->where('client_id', $this->id);
+        return Badge::where('status', 'active')
+            ->where(function ($query) {
+                $query->where('client_id', $this->id)
+                    ->orWhereHas('badgeRequest.activityRequest', function ($q) {
+                        $q->where('client_id', $this->id);
+                    });
             })
             ->count();
     }

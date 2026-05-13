@@ -42,13 +42,21 @@ class extends Component
     #[Computed]
     public function company(): Client
     {
-        return Client::with([
-            'contacts',
-            'coworkers.user',
-            'users',
-            'badges',
-            'activityRequests',
-        ])->findOrFail($this->companyId);
+        return Client::with(['contacts'])->findOrFail($this->companyId);
+    }
+
+    #[Computed]
+    public function stats(): array
+    {
+        $company = $this->company;
+
+        return [
+            'coworkers' => $company->coworkers()->count(),
+            'users' => $company->users()->count(),
+            'activeBadges' => $company->getActiveBadgeCount(),
+            'activeTrainings' => $company->getActiveTrainingCount(),
+            'activityRequests' => $company->activityRequests()->count(),
+        ];
     }
 
     public function downloadOverview()
@@ -75,7 +83,7 @@ class extends Component
     #[On('company-saved')]
     public function refresh(): void
     {
-        unset($this->company);
+        unset($this->company, $this->stats);
         $this->toast('Société mise à jour.', 'success', 'Mise à jour réussie');
     }
 
@@ -94,17 +102,16 @@ class extends Component
     $canDelete = $isAdmin;
 
     $company = $this->company;
+    $stats = $this->stats;
     $contacts = $company->contacts;
     $safetyReferents = $contacts->where('role', 'safety')->values();
     $securityCorrespondent = $contacts->where('role', 'security')->first();
     $hrContact = $contacts->where('role', 'hr')->first();
 
-    $roleMeta = [
-        'admin' => ['label' => 'Admin', 'variant' => 'rejected'],
-        'sadmin' => ['label' => 'Sadmin', 'variant' => 'rejected'],
-        'sclient' => ['label' => 'SClient', 'variant' => 'in-progress'],
-        'aclient' => ['label' => 'AClient', 'variant' => 'in-progress'],
-        'client' => ['label' => 'Client', 'variant' => 'ready'],
+    $docs = [
+        ['label' => 'KBIS', 'path' => $company->kbis_document],
+        ['label' => 'Référents sûreté', 'path' => $company->safety_document],
+        ['label' => 'Correspondant sécurité', 'path' => $company->security_document],
     ];
 @endphp
 
@@ -130,6 +137,9 @@ class extends Component
                 <x-ui.badge variant="approved">Compagnie aérienne</x-ui.badge>
             @else
                 <x-ui.badge variant="default">Non aérienne</x-ui.badge>
+            @endif
+            @if ($company->siret_number)
+                <span class="font-mono text-xs text-foreground-muted">SIRET {{ $company->siret_number }}</span>
             @endif
         </div>
 
@@ -172,13 +182,27 @@ class extends Component
         </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {{-- Colonne gauche --}}
-        <div class="space-y-6 lg:col-span-2">
+    {{-- KPIs --}}
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        <x-ui.stat-card variant="default" label="Collaborateurs" :value="$stats['coworkers']" />
+        <x-ui.stat-card variant="ready" label="Utilisateurs" :value="$stats['users']" />
+        <x-ui.stat-card variant="approved" label="Badges actifs" :value="$stats['activeBadges']" />
+        <x-ui.stat-card variant="in-progress" label="Formations actives" :value="$stats['activeTrainings']" />
+        <x-ui.stat-card variant="pending" label="Demandes d'activité" :value="$stats['activityRequests']" />
+    </div>
+
+    {{-- Section: Identité --}}
+    <div class="space-y-3">
+        <div class="flex items-baseline justify-between">
+            <h2 class="text-sm font-semibold uppercase tracking-wide text-foreground-muted">Identité</h2>
+            <span class="text-xs text-foreground-subtle">Créée le {{ $company->created_at->format('d/m/Y') }}</span>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {{-- Informations société --}}
             <x-ui.card>
                 <div class="space-y-4">
-                    <h2 class="text-base font-semibold text-foreground">Informations société</h2>
+                    <h3 class="text-base font-semibold text-foreground">Informations société</h3>
                     <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
                             <dt class="text-xs font-medium uppercase tracking-wide text-foreground-muted">Raison sociale</dt>
@@ -207,7 +231,7 @@ class extends Component
             {{-- Adresse --}}
             <x-ui.card>
                 <div class="space-y-4">
-                    <h2 class="text-base font-semibold text-foreground">Adresse</h2>
+                    <h3 class="text-base font-semibold text-foreground">Adresse</h3>
                     <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div class="sm:col-span-2">
                             <dt class="text-xs font-medium uppercase tracking-wide text-foreground-muted">Adresse</dt>
@@ -228,12 +252,11 @@ class extends Component
             {{-- Contacts --}}
             <x-ui.card>
                 <div class="space-y-5">
-                    <h2 class="text-base font-semibold text-foreground">Contacts</h2>
+                    <h3 class="text-base font-semibold text-foreground">Contacts</h3>
 
-                    {{-- Référents sûreté --}}
                     <div class="space-y-3">
                         <div class="flex items-center gap-2">
-                            <h3 class="text-sm font-semibold text-foreground">Référents sûreté</h3>
+                            <h4 class="text-sm font-semibold text-foreground">Référents sûreté</h4>
                             <span class="text-xs text-foreground-muted">{{ $safetyReferents->count() }}</span>
                         </div>
                         @if ($safetyReferents->isEmpty())
@@ -251,9 +274,8 @@ class extends Component
                         @endif
                     </div>
 
-                    {{-- Correspondant sécurité --}}
                     <div class="space-y-3 border-t border-border pt-4">
-                        <h3 class="text-sm font-semibold text-foreground">Correspondant sécurité</h3>
+                        <h4 class="text-sm font-semibold text-foreground">Correspondant sécurité</h4>
                         @if (! $securityCorrespondent)
                             <p class="text-sm text-foreground-muted">Non renseigné.</p>
                         @else
@@ -265,9 +287,8 @@ class extends Component
                         @endif
                     </div>
 
-                    {{-- Contact RH --}}
                     <div class="space-y-3 border-t border-border pt-4">
-                        <h3 class="text-sm font-semibold text-foreground">Contact RH</h3>
+                        <h4 class="text-sm font-semibold text-foreground">Contact RH</h4>
                         @if (! $hrContact)
                             <p class="text-sm text-foreground-muted">Non renseigné.</p>
                         @else
@@ -281,113 +302,22 @@ class extends Component
                 </div>
             </x-ui.card>
 
-            {{-- Utilisateurs & Collaborateurs --}}
-            <x-ui.card padding="none">
-                <div class="border-b border-border px-5 py-4">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-base font-semibold text-foreground">Utilisateurs & Collaborateurs</h2>
-                        <span class="text-xs text-foreground-muted">{{ $company->coworkers->count() }}</span>
-                    </div>
-                </div>
-
-                @if ($company->coworkers->isEmpty())
-                    <div class="px-5 py-12 text-center text-sm text-foreground-muted">
-                        Aucun utilisateur ou collaborateur.
-                    </div>
-                @else
-                    <x-ui.table>
-                        <thead>
-                            <tr>
-                                <th>Nom & prénom</th>
-                                <th>Rôle</th>
-                                <th>Contact</th>
-                                <th>Statut</th>
-                                <th class="sticky right-0 z-10 bg-white text-right shadow-[-8px_0_12px_-12px_rgba(15,23,42,0.18)]"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($company->coworkers as $coworker)
-                                <tr wire:key="coworker-{{ $coworker->id }}">
-                                    <td>
-                                        <div class="flex items-center gap-2">
-                                            <span class="font-medium text-foreground">{{ $coworker->firstname }} {{ $coworker->lastname }}</span>
-                                            @if ($coworker->user_id && $coworker->user && $coworker->user->can_access_formation)
-                                                <span title="Accès formations" class="text-blue-600">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4">
-                                                        <path d="M9.664 1.319a.75.75 0 0 1 .672 0 41.059 41.059 0 0 1 8.198 5.424.75.75 0 0 1-.254 1.285 31.372 31.372 0 0 0-7.86 3.83.75.75 0 0 1-.84 0 31.508 31.508 0 0 0-2.08-1.287V9.394c0-.244.116-.463.302-.592a35.504 35.504 0 0 1 3.305-2.033.75.75 0 0 0-.714-1.319 37 37 0 0 0-3.446 2.12A2.216 2.216 0 0 0 6 9.393v.38a31.293 31.293 0 0 0-4.28-1.746.75.75 0 0 1-.254-1.285 41.059 41.059 0 0 1 8.198-5.424ZM6 11.459a29.848 29.848 0 0 0-2.455-1.158 41.029 41.029 0 0 0-.39 3.114.75.75 0 0 0 .419.74c.528.256 1.046.53 1.554.82-.21.324-.455.63-.74.91a.75.75 0 0 0 1.06 1.061c.4-.4.733-.836 1-1.298.86.514 1.687 1.07 2.475 1.661a.75.75 0 0 0 .91 0 30.31 30.31 0 0 1 4.913-3.034.75.75 0 0 0 .42-.74 41.013 41.013 0 0 0-.391-3.114 29.84 29.84 0 0 0-5.59 2.875.75.75 0 0 1-.84 0c-.5-.34-1.013-.66-1.535-.957a.748.748 0 0 0 .118-.418v-.418Z" />
-                                                    </svg>
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td>
-                                        @if ($coworker->user_id && $coworker->user)
-                                            @php $r = $roleMeta[$coworker->user->role] ?? ['label' => $coworker->user->role, 'variant' => 'default']; @endphp
-                                            <x-ui.badge :variant="$r['variant']">{{ $r['label'] }}</x-ui.badge>
-                                        @else
-                                            <x-ui.badge variant="draft">Collaborateur</x-ui.badge>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <div class="text-foreground">{{ $coworker->email ?: '—' }}</div>
-                                        <div class="text-xs text-foreground-muted">{{ $coworker->phone ?: '—' }}</div>
-                                    </td>
-                                    <td>
-                                        @if ($coworker->has_leave)
-                                            <x-ui.badge variant="rejected">{{ $coworker->departure_date ? 'Parti le '.$coworker->departure_date->format('d/m/Y') : 'Parti' }}</x-ui.badge>
-                                        @else
-                                            <x-ui.badge variant="approved">Actif</x-ui.badge>
-                                        @endif
-                                    </td>
-                                    <td class="sticky right-0 z-10 bg-white text-right shadow-[-8px_0_12px_-12px_rgba(15,23,42,0.18)]">
-                                        <a
-                                            href="{{ route('coworkers.show', ['coworkerId' => $coworker->id]) }}"
-                                            wire:navigate
-                                            class="inline-flex items-center gap-1 text-xs font-semibold text-foreground transition hover:text-accent"
-                                        >
-                                            Voir
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-3.5 w-3.5">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                                            </svg>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </x-ui.table>
-                @endif
-            </x-ui.card>
-        </div>
-
-        {{-- Colonne droite --}}
-        <div class="space-y-6">
             {{-- Documents --}}
             <x-ui.card>
                 <div class="space-y-4">
-                    <h2 class="text-base font-semibold text-foreground">Documents</h2>
-                    @php
-                        $docs = [
-                            ['label' => 'KBIS', 'path' => $company->kbis_document],
-                            ['label' => 'Référents sûreté', 'path' => $company->safety_document],
-                            ['label' => 'Correspondant sécurité', 'path' => $company->security_document],
-                        ];
-                    @endphp
+                    <h3 class="text-base font-semibold text-foreground">Documents</h3>
                     <ul class="space-y-2">
                         @foreach ($docs as $doc)
                             <li class="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-2">
                                 <div class="min-w-0">
                                     <div class="text-sm font-medium text-foreground">{{ $doc['label'] }}</div>
-                                    @if ($doc['path'])
-                                        <div class="text-xs text-foreground-muted">Document fourni</div>
-                                    @else
-                                        <div class="text-xs text-foreground-muted">Non fourni</div>
-                                    @endif
+                                    <div class="text-xs text-foreground-muted">{{ $doc['path'] ? 'Document fourni' : 'Non fourni' }}</div>
                                 </div>
                                 @if ($doc['path'])
                                     <a
                                         href="{{ asset('storage/'.$doc['path']) }}"
                                         target="_blank"
-                                        rel="noopener"
+                                        rel="noopener noreferrer"
                                         class="inline-flex h-8 w-8 items-center justify-center rounded-md text-foreground-muted transition hover:bg-slate-100 hover:text-foreground"
                                         aria-label="Télécharger {{ $doc['label'] }}"
                                     >
@@ -403,39 +333,20 @@ class extends Component
                     </ul>
                 </div>
             </x-ui.card>
+        </div>
+    </div>
 
-            {{-- Statistiques --}}
-            <x-ui.card>
-                <div class="space-y-4">
-                    <h2 class="text-base font-semibold text-foreground">Statistiques</h2>
-                    <dl class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <dt class="text-sm text-foreground-muted">Collaborateurs</dt>
-                            <dd class="text-sm font-semibold text-foreground">{{ $company->coworkers->count() }}</dd>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <dt class="text-sm text-foreground-muted">Utilisateurs</dt>
-                            <dd class="text-sm font-semibold text-foreground">{{ $company->users->count() }}</dd>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <dt class="text-sm text-foreground-muted">Badges actifs</dt>
-                            <dd class="text-sm font-semibold text-foreground">{{ $company->getActiveBadgeCount() }}</dd>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <dt class="text-sm text-foreground-muted">Formations actives</dt>
-                            <dd class="text-sm font-semibold text-foreground">{{ $company->getActiveTrainingCount() }}</dd>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <dt class="text-sm text-foreground-muted">Demandes d'activité</dt>
-                            <dd class="text-sm font-semibold text-foreground">{{ $company->activityRequests->count() }}</dd>
-                        </div>
-                        <div class="flex items-center justify-between border-t border-border pt-3">
-                            <dt class="text-sm text-foreground-muted">Créée le</dt>
-                            <dd class="text-sm text-foreground">{{ $company->created_at->format('d/m/Y') }}</dd>
-                        </div>
-                    </dl>
-                </div>
-            </x-ui.card>
+    {{-- Section: Ressources --}}
+    <div class="space-y-3">
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-foreground-muted">Ressources</h2>
+
+        <div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
+            <livewire:companies.coworkers-list :company-id="$company->id" :key="'coworkers-list-'.$company->id" />
+            <livewire:companies.activity-requests-list :company-id="$company->id" :key="'ar-list-'.$company->id" />
+            <livewire:companies.badge-requests-list :company-id="$company->id" :key="'br-list-'.$company->id" />
+            <livewire:companies.badges-list :company-id="$company->id" :key="'b-list-'.$company->id" />
+            <livewire:companies.vehicle-passes-list :company-id="$company->id" :key="'vp-list-'.$company->id" />
+            <livewire:companies.trainings-list :company-id="$company->id" :key="'t-list-'.$company->id" />
         </div>
     </div>
 

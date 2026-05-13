@@ -12,8 +12,18 @@ class CoworkerTraining extends Model
 
     protected $fillable = ['coworker_id', 'training_id', 'airport', 'started_at', 'expires_at', 'certificate_path'];
 
+    protected $casts = [
+        'started_at' => 'date',
+        'expires_at' => 'date',
+    ];
+
     public function coworker(): BelongsTo
     {
         return $this->belongsTo(Coworker::class);
+    }
+
+    public function training(): BelongsTo
+    {
+        return $this->belongsTo(Training::class);
     }
 }

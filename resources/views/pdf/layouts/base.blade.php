@@ -137,28 +137,112 @@
       }
     }
 
-    /* Tableaux si nécessaire */
+    /* Tableaux */
     .table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
 
     .table th,
     .table td {
-      padding: 8px;
+      padding: 6px 8px;
       text-align: left;
-      border-bottom: 1px solid #d1d5db;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
     }
 
     .table th {
       background-color: #f9fafb;
       font-weight: bold;
-      font-size: 10pt;
+      font-size: 9pt;
+      color: #4b5563;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .table td {
       font-size: 10pt;
+    }
+
+    .table.compact th,
+    .table.compact td {
+      padding: 4px 6px;
+      font-size: 9pt;
+    }
+
+    .table .num {
+      font-family: 'Courier New', monospace;
+      font-size: 9pt;
+      color: #6b7280;
+    }
+
+    .table .muted {
+      color: #6b7280;
+      font-size: 9pt;
+    }
+
+    /* Sous-titre de section pour grouper des tableaux */
+    .group-title {
+      font-size: 10pt;
+      font-weight: bold;
+      color: #4b5563;
+      margin-top: 12px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* État vide pour une section liste */
+    .empty-state {
+      padding: 10px;
+      text-align: center;
+      font-size: 10pt;
+      color: #9ca3af;
+      font-style: italic;
+      background-color: #f9fafb;
+      border-radius: 4px;
+    }
+
+    /* Pastilles de statut */
+    .pill {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 8.5pt;
+      font-weight: 600;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .pill-default { background: #f1f5f9; color: #475569; }
+    .pill-approved { background: #d1fae5; color: #065f46; }
+    .pill-pending { background: #fef3c7; color: #92400e; }
+    .pill-rejected { background: #fee2e2; color: #991b1b; }
+    .pill-info { background: #dbeafe; color: #1e40af; }
+    .pill-violet { background: #ede9fe; color: #5b21b6; }
+
+    /* Indicateur de compteur dans le titre de section */
+    .section-count {
+      font-size: 10pt;
+      font-weight: normal;
+      color: #6b7280;
+      margin-left: 6px;
+    }
+
+    /* Forcer un saut de page avant une section */
+    .section.page-break {
+      page-break-before: always;
+    }
+
+    /* Permettre de couper une section longue */
+    .section.allow-break {
+      page-break-inside: auto;
+    }
+
+    /* Éviter une rupture au milieu d'une ligne de tableau */
+    .table tr {
+      page-break-inside: avoid;
     }
   </style>
 </head>
