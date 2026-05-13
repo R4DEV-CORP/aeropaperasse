@@ -220,6 +220,24 @@
                 {{-- Page content --}}
                 <main class="flex-1 overflow-y-auto bg-slate-50">
                     {{ $slot }}
+
+                    <footer class="border-t border-border bg-white px-6 py-4 text-xs text-foreground-muted">
+                        <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                            <p>&copy; {{ date('Y') }} Aeropaperasse &mdash; tous droits réservés</p>
+
+                            <nav class="flex flex-wrap items-center gap-x-4 gap-y-1">
+                                <a href="#" class="hover:text-foreground hover:underline">Mentions légales</a>
+                                <a href="#" class="hover:text-foreground hover:underline">Politique de confidentialité</a>
+                                <a href="#" class="hover:text-foreground hover:underline">CGU</a>
+                                <a href="#" class="hover:text-foreground hover:underline">CGV</a>
+                            </nav>
+
+                            <p>
+                                Une réalisation
+                                <a href="https://r4dev.fr" target="_blank" rel="noopener noreferrer" class="font-medium text-foreground hover:underline">R4DEV</a>
+                            </p>
+                        </div>
+                    </footer>
                 </main>
             </div>
         </div>
