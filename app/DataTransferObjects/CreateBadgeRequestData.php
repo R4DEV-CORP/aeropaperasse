@@ -28,12 +28,13 @@ class CreateBadgeRequestData
         public int $client_id,
         public int $created_by,
         public bool $is_draft = false,
+        public bool $is_resubmission = false,
     ) {}
 
     /**
      * Créer le DTO à partir d'un array
      */
-    public static function fromArray(array $data, int $clientId, int $userId, bool $isDraft = false): self
+    public static function fromArray(array $data, int $clientId, int $userId, bool $isDraft = false, bool $isResubmission = false): self
     {
         return new self(
             activity_request_id: (int) $data['activity_request_id'],
@@ -49,6 +50,7 @@ class CreateBadgeRequestData
             client_id: $clientId,
             created_by: $userId,
             is_draft: $isDraft,
+            is_resubmission: $isResubmission,
         );
     }
 
@@ -59,7 +61,8 @@ class CreateBadgeRequestData
         BadgeRequestFormData $formData,
         int $clientId,
         int $userId,
-        bool $isDraft = false
+        bool $isDraft = false,
+        bool $isResubmission = false
     ): self {
         return new self(
             activity_request_id: $formData->activity_request_id,
@@ -75,6 +78,7 @@ class CreateBadgeRequestData
             client_id: $clientId,
             created_by: $userId,
             is_draft: $isDraft,
+            is_resubmission: $isResubmission,
         );
     }
 
@@ -95,15 +99,18 @@ class CreateBadgeRequestData
         if ($this->is_draft) {
             $data['status'] = 'draft';
             $data['draft_at'] = now();
-        } else {
-            $data['status'] = 'pending_rem';
-            $data['pending_rem_at'] = now();
+
+            return $data;
         }
 
-        // Filtrer uniquement les valeurs null (garder false et 0)
-        return array_filter($data, function ($value) {
-            return ! is_null($value);
-        });
+        $data['status'] = 'pending_rem';
+        $data['pending_rem_at'] = now();
+
+        if ($this->is_resubmission) {
+            $data['reject_reason'] = null;
+        }
+
+        return $data;
     }
 
     /**

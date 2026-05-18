@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\BadgeRequest;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -8,13 +9,15 @@ new
 #[Layout('layouts::app', [
     'breadcrumb' => [
         ['label' => 'Demandes de badges', 'href' => '/badge-requests'],
-        ['label' => 'Nouvelle demande'],
+        ['label' => 'Formulaire'],
     ],
 ])]
-#[Title('Nouvelle demande de badge')]
+#[Title('Demande de badge')]
 class extends Component
 {
     public ?int $badgeRequestId = null;
+
+    public string $mode = 'create';
 
     public function mount(?int $badgeRequestId = null): void
     {
@@ -25,8 +28,26 @@ class extends Component
         }
 
         $this->badgeRequestId = $badgeRequestId;
+
+        if ($this->badgeRequestId) {
+            $status = BadgeRequest::whereKey($this->badgeRequestId)->value('status');
+
+            $this->mode = match ($status) {
+                'rejected_rem', 'rejected_adp' => 'correction',
+                'draft' => 'draft',
+                default => 'create',
+            };
+        }
     }
 }; ?>
+
+@php
+    $pageTitle = match ($mode) {
+        'correction' => 'Corriger la demande de badge',
+        'draft' => 'Reprendre le brouillon',
+        default => 'Nouvelle demande de badge',
+    };
+@endphp
 
 <div class="flex min-h-full flex-col">
     {{-- Sous-header : Retour / titre --}}
@@ -44,9 +65,7 @@ class extends Component
                     Retour
                 </a>
                 <span class="text-foreground-subtle">/</span>
-                <h1 class="text-base font-semibold text-foreground">
-                    {{ $badgeRequestId ? 'Reprendre le brouillon' : 'Nouvelle demande de badge' }}
-                </h1>
+                <h1 class="text-base font-semibold text-foreground">{{ $pageTitle }}</h1>
             </div>
         </div>
     </div>

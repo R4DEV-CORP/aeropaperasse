@@ -34,6 +34,14 @@ new class extends Component
 
     public ?int $badgeRequestId = null;
 
+    // Mode du formulaire : 'create' (création), 'draft' (édition brouillon), 'correction' (resoumission après rejet)
+    public string $mode = 'create';
+
+    // Statut source en mode correction (rejected_rem ou rejected_adp) — utilisé pour afficher le motif initial
+    public ?string $sourceStatus = null;
+
+    public ?string $sourceRejectReason = null;
+
     // Activité
     public $activityRequests;
 
@@ -127,7 +135,7 @@ new class extends Component
         }
 
         if ($this->badgeRequestId) {
-            $this->loadDraft($this->badgeRequestId);
+            $this->loadExisting($this->badgeRequestId);
         }
     }
 
@@ -170,7 +178,7 @@ new class extends Component
         ])->all();
     }
 
-    protected function loadDraft(int $badgeRequestId): void
+    protected function loadExisting(int $badgeRequestId): void
     {
         try {
             $query = BadgeRequest::with(['activityRequest.client', 'coworker'])
@@ -182,13 +190,33 @@ new class extends Component
                 });
             }
 
-            $badgeRequest = $query->firstOrFail();
+            $badgeRequest = $query->first();
 
-            if ($badgeRequest->status !== 'draft') {
+            // Demande inexistante ou hors périmètre de l'utilisateur : retour à l'index.
+            if ($badgeRequest === null) {
                 $this->redirectRoute('badge-requests.index', navigate: true);
 
                 return;
             }
+
+            $allowedStatuses = ['draft', 'rejected_rem', 'rejected_adp'];
+            if (! in_array($badgeRequest->status, $allowedStatuses, true)) {
+                $this->redirectRoute('badge-requests.index', navigate: true);
+
+                return;
+            }
+
+            // Une demande rejetée ne peut être corrigée que par un utilisateur ayant le droit de création.
+            // Le rôle "client" est exclu (cohérent avec le mount de la page form qui le redirige).
+            if (in_array($badgeRequest->status, ['rejected_rem', 'rejected_adp'], true) && $this->user->isClient()) {
+                $this->redirectRoute('badge-requests.index', navigate: true);
+
+                return;
+            }
+
+            $this->mode = $badgeRequest->status === 'draft' ? 'draft' : 'correction';
+            $this->sourceStatus = $badgeRequest->status;
+            $this->sourceRejectReason = $badgeRequest->reject_reason;
 
             if ($this->user->isAdmin()) {
                 $this->client = $badgeRequest->activityRequest->client;
@@ -215,13 +243,13 @@ new class extends Component
 
             $this->loadExistingDocumentNames($badgeRequest);
         } catch (\Exception $e) {
-            Log::error('Erreur lors du chargement du brouillon de badge', [
+            Log::error('Erreur lors du chargement de la demande de badge', [
                 'error' => $e->getMessage(),
                 'badge_request_id' => $badgeRequestId,
                 'user_id' => $this->user->id,
             ]);
 
-            $this->toast('Erreur lors du chargement du brouillon.', 'danger');
+            $this->toast('Erreur lors du chargement de la demande.', 'danger');
         }
     }
 
@@ -336,6 +364,11 @@ new class extends Component
 
     public function saveDraft(): void
     {
+        // Le brouillon n'a pas de sens en mode correction : on ne fait pas régresser une demande rejetée vers le statut brouillon.
+        if ($this->mode === 'correction') {
+            return;
+        }
+
         $this->processBadgeRequest(isDraft: true);
     }
 
@@ -623,11 +656,14 @@ new class extends Component
                 return;
             }
 
+            $isResubmission = $this->mode === 'correction' && ! $isDraft;
+
             $data = CreateBadgeRequestData::fromFormData(
                 $formData,
                 $this->client->id,
                 $this->user->id,
-                $isDraft
+                $isDraft,
+                $isResubmission,
             );
 
             $action = app(SaveBadgeRequestAction::class);
@@ -644,8 +680,12 @@ new class extends Component
                 Mail::to($email)->send(new BadgeRequestCreated($result->getBadgeRequest()));
             }
 
+            $successMessage = $isResubmission
+                ? 'Demande corrigée et resoumise avec succès.'
+                : $result->getMessage();
+
             session()->flash('toast', [
-                'message' => $result->getMessage(),
+                'message' => $successMessage,
                 'variant' => 'success',
             ]);
 
@@ -709,6 +749,22 @@ new class extends Component
     $isAdmin = $user->isAdmin();
     $hasClient = (bool) $client;
     $clientPickerVisible = $isAdmin && ! $badgeRequestId;
+    $isCorrection = $mode === 'correction';
+    $isDraftEdit = $mode === 'draft';
+
+    $submitLabel = match (true) {
+        $isCorrection => 'Resoumettre la demande',
+        $isDraftEdit => 'Soumettre la demande',
+        default => 'Créer la demande',
+    };
+
+    $submitLoadingLabel = $isCorrection ? 'Resoumission...' : 'Envoi...';
+
+    $sourceStatusLabel = match ($sourceStatus) {
+        'rejected_rem' => 'Dossier incomplet',
+        'rejected_adp' => 'Rejeté par ADP',
+        default => null,
+    };
 
     $airportMeta = [
         'CDG' => 'bg-blue-50 text-blue-700 ring-blue-200',
@@ -726,6 +782,21 @@ new class extends Component
     {{-- Zone de contenu (centrée, prend toute la hauteur restante) --}}
     <div class="flex-1 px-4 pb-8 sm:px-6 lg:px-8">
         <div class="mx-auto w-full max-w-3xl space-y-3">
+            {{-- Bandeau motif de rejet (mode correction) --}}
+            @if ($isCorrection && $sourceRejectReason)
+                <x-ui.alert variant="danger">
+                    <div class="space-y-1">
+                        <div class="font-semibold">
+                            Motif du rejet précédent — {{ $sourceStatusLabel }}
+                        </div>
+                        <div class="text-sm">{{ $sourceRejectReason }}</div>
+                        <div class="mt-2 text-xs text-foreground-muted">
+                            Corrigez les éléments concernés puis resoumettez la demande. Elle repartira en validation interne.
+                        </div>
+                    </div>
+                </x-ui.alert>
+            @endif
+
             {{-- Section : Sélection du client (admin uniquement, mode création) --}}
             @if ($clientPickerVisible)
                 <div x-data="{ open: true }" class="overflow-hidden rounded-lg bg-amber-50/50 ring-1 ring-amber-200/70 ring-inset">
@@ -1100,22 +1171,24 @@ new class extends Component
             </x-ui.button>
 
             <div class="flex items-center gap-2">
-                <x-ui.button
-                    type="button"
-                    variant="secondary"
-                    wire:click="saveDraft"
-                    wire:loading.attr="disabled"
-                    wire:target="abandon,saveDraft,submit"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor" class="h-4 w-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 21h-15a1.5 1.5 0 0 1-1.5-1.5v-15A1.5 1.5 0 0 1 4.5 3h11.379a1.5 1.5 0 0 1 1.06.44l3.122 3.12a1.5 1.5 0 0 1 .439 1.061V19.5a1.5 1.5 0 0 1-1.5 1.5Z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 3v5.25a.75.75 0 0 0 .75.75h6a.75.75 0 0 0 .75-.75V3M7.5 21v-6.75a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 .75.75V21" />
-                    </svg>
-                    <span wire:loading.remove wire:target="saveDraft">
-                        {{ $badgeRequestId ? 'Mettre à jour le brouillon' : 'Brouillon' }}
-                    </span>
-                    <span wire:loading wire:target="saveDraft">Enregistrement...</span>
-                </x-ui.button>
+                @unless ($isCorrection)
+                    <x-ui.button
+                        type="button"
+                        variant="secondary"
+                        wire:click="saveDraft"
+                        wire:loading.attr="disabled"
+                        wire:target="abandon,saveDraft,submit"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor" class="h-4 w-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 21h-15a1.5 1.5 0 0 1-1.5-1.5v-15A1.5 1.5 0 0 1 4.5 3h11.379a1.5 1.5 0 0 1 1.06.44l3.122 3.12a1.5 1.5 0 0 1 .439 1.061V19.5a1.5 1.5 0 0 1-1.5 1.5Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 3v5.25a.75.75 0 0 0 .75.75h6a.75.75 0 0 0 .75-.75V3M7.5 21v-6.75a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 .75.75V21" />
+                        </svg>
+                        <span wire:loading.remove wire:target="saveDraft">
+                            {{ $badgeRequestId ? 'Mettre à jour le brouillon' : 'Brouillon' }}
+                        </span>
+                        <span wire:loading wire:target="saveDraft">Enregistrement...</span>
+                    </x-ui.button>
+                @endunless
 
                 <x-ui.button
                     type="submit"
@@ -1127,10 +1200,8 @@ new class extends Component
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
-                    <span wire:loading.remove wire:target="submit">
-                        {{ $badgeRequestId ? 'Soumettre la demande' : 'Créer la demande' }}
-                    </span>
-                    <span wire:loading wire:target="submit">Envoi...</span>
+                    <span wire:loading.remove wire:target="submit">{{ $submitLabel }}</span>
+                    <span wire:loading wire:target="submit">{{ $submitLoadingLabel }}</span>
                 </x-ui.button>
             </div>
         </div>

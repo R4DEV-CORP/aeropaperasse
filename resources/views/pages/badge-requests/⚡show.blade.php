@@ -214,6 +214,8 @@ class extends Component
     $isAdmin = $user->isAdmin();
     $isSAdmin = $user->isSAdmin();
     $canChangeStatus = $user->canChangeRequestStatus();
+    // Les "client" simples n'ont pas le droit de créer une demande — ils ne peuvent donc pas non plus la corriger.
+    $canCorrectRejected = ! $user->isClient();
 @endphp
 
 <div class="space-y-6 p-8">
@@ -280,14 +282,14 @@ class extends Component
             ],
             'rejected_rem' => [
                 'title' => 'Demande refusée',
-                'description' => 'Vous pouvez la rouvrir en brouillon pour la corriger.',
-                'role' => 'sadmin',
+                'description' => 'Corrigez le dossier puis resoumettez la demande pour relancer la validation.',
+                'role' => 'rejected',
                 'accent' => 'red',
             ],
             'rejected_adp' => [
                 'title' => 'Demande refusée par ADP',
-                'description' => 'Vous pouvez la rouvrir en brouillon pour la corriger.',
-                'role' => 'sadmin',
+                'description' => 'Corrigez le dossier puis resoumettez la demande pour relancer la validation.',
+                'role' => 'rejected',
                 'accent' => 'red',
             ],
         ];
@@ -295,7 +297,8 @@ class extends Component
         $ctx = $actionContexts[$br->status] ?? null;
         $showCtx = $ctx && (
             ($ctx['role'] === 'status_changer' && $canChangeStatus) ||
-            ($ctx['role'] === 'sadmin' && $isSAdmin)
+            ($ctx['role'] === 'sadmin' && $isSAdmin) ||
+            ($ctx['role'] === 'rejected' && ($canCorrectRejected || $isSAdmin))
         );
 
         $accentMap = [
@@ -342,6 +345,17 @@ class extends Component
 
                         @if ($canChangeStatus && $br->status === 'ready_for_delivery')
                             <x-ui.button variant="info" size="sm" wire:click="$dispatch('deliver-badge-request', { id: {{ $br->id }} })">Marquer comme remis</x-ui.button>
+                        @endif
+
+                        @if ($canCorrectRejected && in_array($br->status, ['rejected_rem', 'rejected_adp']))
+                            <x-ui.button
+                                variant="danger"
+                                size="sm"
+                                :href="route('badge-requests.form', ['badgeRequestId' => $br->id])"
+                                wire:navigate
+                            >
+                                Corriger et resoumettre
+                            </x-ui.button>
                         @endif
 
                         @if ($isSAdmin && in_array($br->status, ['rejected_rem', 'rejected_adp']))
