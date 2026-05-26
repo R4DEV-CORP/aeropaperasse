@@ -78,7 +78,15 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://aeropaperasse.localhost/)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://aeropaperasse.local/)",
       "Bash(git rm *)",
-      "PowerShell(vendor/bin/pint --dirty)"
+      "PowerShell(vendor/bin/pint --dirty)",
+      "Bash(composer why-not *)",
+      "Bash(Select-Object -First 40)",
+      "PowerShell(composer why-not *)",
+      "PowerShell(php artisan test 2>&1 | Select-Object -Last 40)",
+      "PowerShell(composer update *)",
+      "PowerShell(php artisan test 2>&1 | Select-Object -Last 50)",
+      "PowerShell(vendor/bin/pint --dirty 2>&1 | Select-Object -Last 10)",
+      "PowerShell(& \"C:\\\\laragon\\\\bin\\\\php\\\\php-8.3.30-Win32-vs16-x64\\\\php.exe\" -v; Write-Output \"===TESTS===\"; & \"C:\\\\laragon\\\\bin\\\\php\\\\php-8.3.30-Win32-vs16-x64\\\\php.exe\" artisan test 2>&1 | Select-Object -Last 20)"
     ]
   }
 }
