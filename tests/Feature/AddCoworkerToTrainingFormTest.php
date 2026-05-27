@@ -6,15 +6,12 @@ use App\Models\Client;
 use App\Models\Coworker;
 use App\Models\Training;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
-use Tests\TestCase;
+use Tests\TenantTestCase;
 
-class AddCoworkerToTrainingFormTest extends TestCase
+class AddCoworkerToTrainingFormTest extends TenantTestCase
 {
-    use RefreshDatabase;
-
     private const COMPONENT = 'trainings.assign-modal';
 
     private function makeAdmin(): User

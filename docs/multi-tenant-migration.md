@@ -13,6 +13,33 @@ It is the **source of truth** for architectural decisions, open questions, and t
 - **Framework:** Laravel **13.11.2** (the codebase was bumped 10→11→12→13 since this doc was first written). Note: only the framework *version* was upgraded — the application **keeps the Laravel 10-style skeleton** (`app/Http/Kernel.php` and `app/Console/Kernel.php` still present; `bootstrap/app.php` is the old-style bootstrapper, not the L11+ config-driven `Application::configure()` builder). Middleware registration (e.g. `RoleMiddleware`) therefore still lives in `Http/Kernel.php`, and the L10-specific notes elsewhere in this doc remain valid.
 - **Last updated:** 2026-05-27
 
+### Resume here (handoff) {#resume-here}
+
+**Where we stopped:** the POC is functionally complete and the **full test suite is green (67/67)** under multi-tenancy. Everything below works locally except the manual DNS/vhost step (#5), which is the only thing left before browser end-to-end testing.
+
+**Done:**
+- `stancl/tenancy` v3.10 installed & configured; central connection `central` → `aeropaperasse_central`; tenant DB naming `tenant_<id>`; custom `App\Models\Tenant` (multi-DB).
+- Migrations partitioned: **10 central / 36 tenant** (`database/migrations/tenant/`); all cross-DB FKs to `users`/`trainings` removed (columns kept as plain ints).
+- Central pivot `tenant_user` (`user_id`, `tenant_id`, `role`, nullable `client_id`).
+- Central auth + per-tenant authorization: `EnsureTenantMembership` middleware (REM `admin`/`sadmin` bypass → all tenants; otherwise `tenant_user` lookup; otherwise redirect to `tenant.no-access`). Web routes wrapped in `InitializeTenancyByDomain` + `PreventAccessFromCentralDomains`. `no-access` page is `pages/auth/⚡no-access.blade.php`.
+- Sessions on central, central-pinned models, `exists:central.*` rules, `User::newRelatedInstance()` override — see [Cross-database gotchas](#poc-gotchas).
+- POC seeder `PocMultitenantSeeder` + tenant test harness `Tests\TenantTestCase`; all 8 business test files converted.
+
+**Immediate next step — finish #5 (DNS/vhost), then browser test:**
+1. Add to `C:\Windows\System32\drivers\etc\hosts` (admin): `127.0.0.1 app.aeropaperasse.test` and `127.0.0.1 client1.aeropaperasse.test`.
+2. Reload Apache in Laragon (vhost `C:\laragon\etc\apache2\sites-enabled\aeropaperasse-multitenant.conf` is already in place; `ServerAlias *.aeropaperasse.test` → project `public/`).
+3. Browse `http://app.aeropaperasse.test` and `http://client1.aeropaperasse.test`.
+
+**Environment notes for resuming:**
+- Use Laragon's PHP 8.3 for artisan: `C:\laragon\bin\php\php-8.3.30-Win32-vs16-x64\php.exe` (a stray PHP 8.5 shadows the PATH).
+- Rebuild local state from scratch if needed: drop `tenant_rem`/`tenant_c1`/`tenant_test`, `php artisan migrate:fresh`, recreate the two tenants (ids `rem` → `app.aeropaperasse.test`, `c1` → `client1.aeropaperasse.test`), then `php artisan db:seed --class=PocMultitenantSeeder`.
+- **Running the test suite resets `aeropaperasse_central`** (RefreshDatabase) — re-seed afterwards.
+- Seeded accounts (password `password`): `rem-admin@aeropaperasse.test` (REM super-admin, reaches both subdomains) and `owner@client1.test` (Owner of C1 only; rejected on `app.*` → no-access page).
+
+**Git state:** this work is uncommitted on branch `poc-multitenant-l13`. It also exists as two "Initial commit" commits on `dev`/`origin/dev` (an accidental branch-switch committed it there); cleaning `dev` was deliberately deferred (would rewrite published history). Decide commit strategy before pushing.
+
+**Then continue with:** the [Roadmap after POC](#roadmap-after-poc) — first the auth/roles refactor ([Q-ROLES](#q-roles)) and pinning `password_reset_tokens` to central.
+
 ---
 
 ## Motivation & business context
@@ -217,9 +244,21 @@ Today a `client` / `sclient` user is tied to **their company** via `users.client
 - a central `users.client_id` can no longer reference it (cross-DB), and
 - a user on several tenants can't carry a single global company link.
 
-**Decided — model it now (POC):** a **nullable `client_id` on the `tenant_user` pivot** holds the company this user maps to *within that tenant* (plain int, no FK — it references the tenant DB's `clients`, integrity app-enforced). `User::client()` becomes **contextual to the active tenant** (resolve the pivot row for `(user, current tenant)`, then load `Client` on the tenant connection). The cross-DB FK (`users.client_id` → `clients`) is dropped. The legacy `users.client_id` column is **kept physically** (nullable, no FK) but **deprecated** — `tenant_user.client_id` is the source of truth. Migrating every existing call-site of `$user->client` to the contextual resolution and finally removing the dead column are finished as part of the post-POC auth/roles refactor ([Q-ROLES](#q-roles)).
+**Decided — model it now (POC):** a **nullable `client_id` on the `tenant_user` pivot** holds the company this user maps to *within that tenant* (plain int, no FK — it references the tenant DB's `clients`, integrity app-enforced). `User::client()` / `User::coworker()` become **contextual to the active tenant**. The cross-DB FK (`users.client_id` → `clients`) is dropped. The legacy `users.client_id` / `users.coworker_id` columns are **kept physically** (nullable, no FK) but **deprecated** — `tenant_user.client_id` is the source of truth.
+
+**Implemented (POC):** `User` overrides `newRelatedInstance()` so it does **not** force the central connection onto related models — relations to tenant models (`client`, `coworker`, `badgeRequests`, …) resolve on the **active tenant** connection, while central-pinned models (`Tenant`, `Training`) keep central. This is what makes `$user->client` work in tenant context without per-relation rewrites. Migrating every call-site to read the company from `tenant_user.client_id` (rather than the deprecated column) and removing the dead columns remain post-POC ([Q-ROLES](#q-roles)).
 
 > **Resolved (was Q1 — users table split):** the `users` table is **not** split. All users live in `central.users`; per-tenant role lives on the `tenant_user` pivot; a user can belong to several tenants. Email is unique across the single central directory.
+
+### Cross-database gotchas resolved during the POC {#poc-gotchas}
+
+Recurring patterns to know when touching this code (all because the default connection is swapped to the tenant in tenant context, while central tables stay central):
+
+- **Sessions** are on the central connection (`SESSION_DRIVER=database`, `SESSION_CONNECTION=central`, `sessions` migration in central) so the store lives outside the tenant switch — required because `FilesystemTenancyBootstrapper` suffixes `storage_path`.
+- **Central-pinned models** (`$connection = 'central'`): `User`, `Training`, `TwoFactorCode` (2FA is issued during login, which runs in tenant context). `Tenant`/`Domain` are pinned by the package (`CentralConnection`).
+- **Validation `exists`/`unique` rules against central tables** must name the connection: `exists:central.trainings,id` (a bare `exists:trainings,id` would hit the tenant DB). Rules against tenant tables (`clients`, `coworkers`, …) stay unqualified.
+- **`User` relations to tenant models** resolve via the `newRelatedInstance()` override (see Q-CLIENT).
+- **Tests** touching tenant-scoped models extend `Tests\TenantTestCase` (boots a real tenant DB + initializes tenancy + gives it a domain for HTTP tests). Non-REM users acting in a tenant need a `tenant_user` row (or use a REM `admin`/`sadmin` who bypasses the membership gate).
 
 ---
 

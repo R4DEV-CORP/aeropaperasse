@@ -103,7 +103,9 @@
       "Bash(/c/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe -u root -N -e 'SELECT table_name FROM information_schema.tables WHERE table_schema='\\\\''aeropaperasse_central'\\\\'' AND table_name IN \\('\\\\''users'\\\\'','\\\\''trainings'\\\\'','\\\\''tenant_user'\\\\'','\\\\''tenants'\\\\'','\\\\''domains'\\\\'','\\\\''clients'\\\\'','\\\\''coworkers'\\\\'','\\\\''badges'\\\\''\\) ORDER BY table_name;')",
       "Bash(/c/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe -u root -N -e 'SELECT table_name FROM information_schema.tables WHERE table_schema='\\\\''tenant_rem'\\\\'' AND table_name IN \\('\\\\''users'\\\\'','\\\\''trainings'\\\\'','\\\\''clients'\\\\'','\\\\''coworkers'\\\\'','\\\\''badges'\\\\'','\\\\''activity_requests'\\\\'','\\\\''vehicle_passes'\\\\''\\) ORDER BY table_name;')",
       "Bash(/c/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe -u root -N -e 'SELECT COUNT\\(*\\) FROM information_schema.tables WHERE table_schema='\\\\''tenant_rem'\\\\'';')",
-      "Bash(/c/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe -u root -N -e 'SELECT COUNT\\(*\\) FROM information_schema.tables WHERE table_schema='\\\\''tenant_c1'\\\\'';')"
+      "Bash(/c/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe -u root -N -e 'SELECT COUNT\\(*\\) FROM information_schema.tables WHERE table_schema='\\\\''tenant_c1'\\\\'';')",
+      "Read(//c/laragon/etc/apache2/sites-enabled//**)",
+      "Read(//c/laragon/etc/apache2/sites-enabled/**)"
     ]
   }
 }

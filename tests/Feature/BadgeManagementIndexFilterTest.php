@@ -8,14 +8,11 @@ use App\Models\BadgeRequest;
 use App\Models\Client;
 use App\Models\Coworker;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
-use Tests\TestCase;
+use Tests\TenantTestCase;
 
-class BadgeManagementIndexFilterTest extends TestCase
+class BadgeManagementIndexFilterTest extends TenantTestCase
 {
-    use RefreshDatabase;
-
     private const PAGE = 'pages::badge-management.index';
 
     private function makeAdmin(): User

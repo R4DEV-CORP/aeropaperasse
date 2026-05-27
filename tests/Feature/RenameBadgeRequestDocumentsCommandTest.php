@@ -7,14 +7,11 @@ use App\Models\BadgeRequest;
 use App\Models\Client;
 use App\Models\Coworker;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\TenantTestCase;
 
-class RenameBadgeRequestDocumentsCommandTest extends TestCase
+class RenameBadgeRequestDocumentsCommandTest extends TenantTestCase
 {
-    use RefreshDatabase;
-
     private function makeBadgeRequest(): BadgeRequest
     {
         $admin = User::factory()->create(['role' => 'admin']);

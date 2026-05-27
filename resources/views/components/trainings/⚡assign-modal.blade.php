@@ -113,7 +113,7 @@ new class extends Component
         $this->validate([
             'selected_client_id' => 'required|exists:clients,id',
             'selected_coworker_id' => 'required|exists:coworkers,id',
-            'selected_training_id' => 'required|exists:trainings,id',
+            'selected_training_id' => 'required|exists:central.trainings,id',
             'start_date' => 'required|date',
             'validity_years' => 'required|in:2,3,5,lifetime',
             'selected_airport' => 'nullable|in:ORY,CDG,LBG',

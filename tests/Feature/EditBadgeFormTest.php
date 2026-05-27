@@ -6,14 +6,11 @@ use App\Models\Badge;
 use App\Models\Client;
 use App\Models\Coworker;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
-use Tests\TestCase;
+use Tests\TenantTestCase;
 
-class EditBadgeFormTest extends TestCase
+class EditBadgeFormTest extends TenantTestCase
 {
-    use RefreshDatabase;
-
     private const COMPONENT = 'badge-management.edit-number-modal';
 
     private function makeAdmin(): User

@@ -7,15 +7,12 @@ use App\Models\BadgeRequest;
 use App\Models\Client;
 use App\Models\Coworker;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
-use Tests\TestCase;
+use Tests\TenantTestCase;
 
-class AClientRoleTest extends TestCase
+class AClientRoleTest extends TenantTestCase
 {
-    use RefreshDatabase;
-
     private function makeAClient(Client $client): User
     {
         return User::factory()->create([

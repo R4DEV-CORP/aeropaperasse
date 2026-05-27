@@ -7,16 +7,13 @@ use App\Models\BadgeRequest;
 use App\Models\Client;
 use App\Models\Coworker;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
-use Tests\TestCase;
+use Tests\TenantTestCase;
 
-class BadgeRequestCorrectionTest extends TestCase
+class BadgeRequestCorrectionTest extends TenantTestCase
 {
-    use RefreshDatabase;
-
     private const COMPONENT = 'badge-requests.create-form';
 
     protected function setUp(): void
@@ -140,6 +137,7 @@ class BadgeRequestCorrectionTest extends TestCase
     {
         $data = $this->makeRejectedRequest('rejected_rem');
         $client = User::factory()->create(['role' => 'client', 'client_id' => $data['client']->id]);
+        $client->tenants()->attach($this->tenant->getTenantKey(), ['role' => 'client', 'client_id' => $data['client']->id]);
 
         $this->actingAs($client)
             ->get(route('badge-requests.form', ['badgeRequestId' => $data['badgeRequest']->id]))

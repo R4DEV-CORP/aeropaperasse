@@ -8,15 +8,12 @@ use App\Models\Client;
 use App\Models\Coworker;
 use App\Models\User;
 use App\Services\BadgeRequestDocumentService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Tests\TenantTestCase;
 
-class BadgeRequestDocumentServiceTest extends TestCase
+class BadgeRequestDocumentServiceTest extends TenantTestCase
 {
-    use RefreshDatabase;
-
     private function makeBadgeRequest(): BadgeRequest
     {
         $admin = User::factory()->create(['role' => 'admin']);

@@ -6,14 +6,11 @@ use App\Models\Badge;
 use App\Models\Client;
 use App\Models\Coworker;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
-use Tests\TestCase;
+use Tests\TenantTestCase;
 
-class CreateStandaloneBadgeTest extends TestCase
+class CreateStandaloneBadgeTest extends TenantTestCase
 {
-    use RefreshDatabase;
-
     private const COMPONENT = 'badge-management.create-standalone-form';
 
     private function makeAdmin(): User
@@ -23,12 +20,18 @@ class CreateStandaloneBadgeTest extends TestCase
 
     private function makeClientUser(Client $client): User
     {
-        return User::factory()->create(['role' => 'client', 'client_id' => $client->id]);
+        $user = User::factory()->create(['role' => 'client', 'client_id' => $client->id]);
+        $user->tenants()->attach($this->tenant->getTenantKey(), ['role' => 'client', 'client_id' => $client->id]);
+
+        return $user;
     }
 
     private function makeSClientUser(Client $client): User
     {
-        return User::factory()->create(['role' => 'sclient', 'client_id' => $client->id]);
+        $user = User::factory()->create(['role' => 'sclient', 'client_id' => $client->id]);
+        $user->tenants()->attach($this->tenant->getTenantKey(), ['role' => 'sclient', 'client_id' => $client->id]);
+
+        return $user;
     }
 
     public function test_admin_can_create_standalone_badge(): void
