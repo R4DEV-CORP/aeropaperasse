@@ -2,8 +2,16 @@
     "agents": [
         "claude_code"
     ],
+    "cloud": false,
     "editors": [
         "phpstorm"
     ],
-    "guidelines": []
+    "skills": [
+        "laravel-best-practices",
+        "mcp-development",
+        "scout-development",
+        "livewire-development",
+        "tailwindcss-development",
+        "laravel-specialist"
+    ]
 }

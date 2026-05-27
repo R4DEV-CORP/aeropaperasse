@@ -13,7 +13,7 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
 - php - 8.3.30
-- laravel/framework (LARAVEL) - v10
+- laravel/framework (LARAVEL) - v13 (framework version only — the app retains the Laravel 10-style skeleton: `Http/Kernel.php` + `Console/Kernel.php`, so the "laravel/v10 rules" structural notes below still apply)
 - laravel/mcp (MCP) - v0
 - laravel/prompts (PROMPTS) - v0
 - laravel/sanctum (SANCTUM) - v3

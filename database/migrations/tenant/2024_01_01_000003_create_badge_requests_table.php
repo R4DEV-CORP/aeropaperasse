@@ -17,7 +17,6 @@ return new class extends Migration
 
             // Créateur de la demande de badge
             $table->unsignedBigInteger('created_by');
-            $table->foreign('created_by')->references('id')->on('users');
 
             // Relation avec la demande d'activité
             $table->unsignedBigInteger('activity_request_id');

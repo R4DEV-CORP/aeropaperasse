@@ -21,7 +21,6 @@ return new class extends Migration
 
             // Relation avec la table users si le collaborateur a un compte
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
 
             // Informations sur le collaborateur
             $table->string('firstname');
@@ -34,10 +33,9 @@ return new class extends Migration
             $table->date('departure_date')->nullable();
         });
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('coworker_id')->nullable();
-            $table->foreign('coworker_id')->references('id')->on('coworkers')->onDelete('set null');
-        });
+        // Note: the user ↔ coworker link is carried by `coworkers.user_id` (above).
+        // The legacy reverse pointer `users.coworker_id` is a central column (added in
+        // the central create_users migration, no cross-DB FK). See docs/multi-tenant-migration.md (Q-CLIENT).
     }
 
     /**
@@ -46,9 +44,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('coworkers');
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['coworker_id']);
-            $table->dropColumn('coworker_id');
-        });
     }
 };

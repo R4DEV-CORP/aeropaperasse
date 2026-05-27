@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('role')->default('user');
             $table->string('function')->nullable();
             $table->unsignedBigInteger('client_id')->nullable();
+            $table->unsignedBigInteger('coworker_id')->nullable();
             $table->boolean('two_factor_enabled')->default(true);
             $table->boolean('can_access_formation')->default(false);
         });

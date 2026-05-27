@@ -3,13 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Stancl\Tenancy\Database\Models\Tenant;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    /**
+     * Users live in the central database — a single directory shared across all
+     * tenants. Pinned explicitly so the model keeps resolving to the central
+     * connection even when tenancy has switched the default connection to a tenant.
+     */
+    protected $connection = 'central';
 
     /**
      * The attributes that are mass assignable.
@@ -96,6 +105,18 @@ class User extends Authenticatable
     public function coworker()
     {
         return $this->hasOne(Coworker::class);
+    }
+
+    /**
+     * Tenants this user belongs to, with the tenant-scoped role and (optionally)
+     * the company (`client_id`) they map to within that tenant — carried on the
+     * central `tenant_user` pivot. See docs/multi-tenant-migration.md.
+     */
+    public function tenants(): BelongsToMany
+    {
+        return $this->belongsToMany(Tenant::class, 'tenant_user')
+            ->withPivot(['role', 'client_id'])
+            ->withTimestamps();
     }
 
     public function conversations()

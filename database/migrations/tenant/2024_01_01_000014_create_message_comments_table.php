@@ -19,7 +19,6 @@ return new class extends Migration
             $table->text('content');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('discussion_id')->references('id')->on('discussions')->onDelete('cascade');
             $table->foreign('parent_id')->references('id')->on('message_comments')->onDelete('cascade');
         });

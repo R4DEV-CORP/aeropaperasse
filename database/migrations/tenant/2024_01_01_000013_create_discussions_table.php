@@ -20,8 +20,6 @@ return new class extends Migration
             $table->enum('status', ['open', 'closed'])->default('open');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('last_comment_user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

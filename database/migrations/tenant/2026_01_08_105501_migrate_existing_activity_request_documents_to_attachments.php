@@ -45,13 +45,13 @@ return new class extends Migration
         // Vérifier que la table activity_request_attachments existe
         if (! Schema::hasTable('activity_request_attachments')) {
             Log::error('La table activity_request_attachments n\'existe pas. Veuillez exécuter la migration de création d\'abord.');
-            throw new \RuntimeException('La table activity_request_attachments n\'existe pas.');
+            throw new RuntimeException('La table activity_request_attachments n\'existe pas.');
         }
 
         // Vérifier que la table activity_requests existe et contient les colonnes attendues
         if (! Schema::hasTable('activity_requests')) {
             Log::error('La table activity_requests n\'existe pas.');
-            throw new \RuntimeException('La table activity_requests n\'existe pas.');
+            throw new RuntimeException('La table activity_requests n\'existe pas.');
         }
 
         $disk = Storage::disk('public');
@@ -116,7 +116,7 @@ return new class extends Migration
 
                             $migratedCount++;
                         });
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         Log::error('Erreur lors de la création de l\'attachment', [
                             'activity_request_id' => $activityRequest->id,
                             'type' => $documentType,

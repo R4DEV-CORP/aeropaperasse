@@ -9,6 +9,13 @@ class Training extends Model
 {
     use HasFactory;
 
+    /**
+     * The training catalog is shared across all tenants — it lives in the
+     * central database. Pinned so it keeps resolving to the central connection
+     * even when tenancy has switched the default connection to a tenant.
+     */
+    protected $connection = 'central';
+
     protected $fillable = [
         'title',
         'requires_airport',

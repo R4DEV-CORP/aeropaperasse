@@ -20,7 +20,6 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->foreign('badge_comment_id')->references('id')->on('badge_comments')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

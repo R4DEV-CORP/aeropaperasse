@@ -93,7 +93,17 @@
       "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost/storage/clients/mercier-sarl/documents/badge-requests/16/phi.pdf\" -Method Head -TimeoutSec 10 -ErrorAction Stop; \"Status: $\\($r.StatusCode\\) | Content-Type: $\\($r.Headers['Content-Type']\\) | Length: $\\($r.Headers['Content-Length']\\)\" } catch { \"ERREUR: $\\($_.Exception.Response.StatusCode.value__\\) $\\($_.Exception.Message\\)\" })",
       "PowerShell(foreach \\($p in @\\(\"http://localhost/\",\"http://localhost/favicon.ico\",\"http://localhost/index.php\",\"http://aeropaperasse.test/storage/clients/mercier-sarl/documents/badge-requests/16/phi.pdf\"\\)\\) { try { $r = Invoke-WebRequest -Uri $p -Method Head -MaximumRedirection 0 -TimeoutSec 8 -ErrorAction Stop; \"$p => $\\($r.StatusCode\\)\" } catch { $c=$_.Exception.Response.StatusCode.value__; \"$p => $\\(if\\($c\\){$c}else{'unreachable: '+$_.Exception.Message}\\)\" } })",
       "PowerShell(& \"C:\\\\laragon\\\\bin\\\\php\\\\php-8.3.30-Win32-vs16-x64\\\\php.exe\" artisan --version 2>&1; Write-Output \"===TESTS===\"; & \"C:\\\\laragon\\\\bin\\\\php\\\\php-8.3.30-Win32-vs16-x64\\\\php.exe\" artisan test 2>&1 | Select-Object -Last 35)",
-      "PowerShell(& \"C:\\\\laragon\\\\bin\\\\php\\\\php-8.3.30-Win32-vs16-x64\\\\php.exe\" artisan optimize:clear 2>&1; Write-Output \"===TESTS===\"; & \"C:\\\\laragon\\\\bin\\\\php\\\\php-8.3.30-Win32-vs16-x64\\\\php.exe\" artisan test 2>&1 | Select-Object -Last 30)"
+      "PowerShell(& \"C:\\\\laragon\\\\bin\\\\php\\\\php-8.3.30-Win32-vs16-x64\\\\php.exe\" artisan optimize:clear 2>&1; Write-Output \"===TESTS===\"; & \"C:\\\\laragon\\\\bin\\\\php\\\\php-8.3.30-Win32-vs16-x64\\\\php.exe\" artisan test 2>&1 | Select-Object -Last 30)",
+      "Bash(composer validate *)",
+      "Bash(composer run-script *)",
+      "Read(//c/laragon/bin/mysql/**)",
+      "Read(//c/laragon/bin/**)",
+      "Bash(/c/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe -u root -e 'CREATE DATABASE IF NOT EXISTS aeropaperasse_central CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;')",
+      "Bash(xargs -n1 basename)",
+      "Bash(/c/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe -u root -N -e 'SELECT table_name FROM information_schema.tables WHERE table_schema='\\\\''aeropaperasse_central'\\\\'' AND table_name IN \\('\\\\''users'\\\\'','\\\\''trainings'\\\\'','\\\\''tenant_user'\\\\'','\\\\''tenants'\\\\'','\\\\''domains'\\\\'','\\\\''clients'\\\\'','\\\\''coworkers'\\\\'','\\\\''badges'\\\\''\\) ORDER BY table_name;')",
+      "Bash(/c/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe -u root -N -e 'SELECT table_name FROM information_schema.tables WHERE table_schema='\\\\''tenant_rem'\\\\'' AND table_name IN \\('\\\\''users'\\\\'','\\\\''trainings'\\\\'','\\\\''clients'\\\\'','\\\\''coworkers'\\\\'','\\\\''badges'\\\\'','\\\\''activity_requests'\\\\'','\\\\''vehicle_passes'\\\\''\\) ORDER BY table_name;')",
+      "Bash(/c/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe -u root -N -e 'SELECT COUNT\\(*\\) FROM information_schema.tables WHERE table_schema='\\\\''tenant_rem'\\\\'';')",
+      "Bash(/c/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe -u root -N -e 'SELECT COUNT\\(*\\) FROM information_schema.tables WHERE table_schema='\\\\''tenant_c1'\\\\'';')"
     ]
   }
 }

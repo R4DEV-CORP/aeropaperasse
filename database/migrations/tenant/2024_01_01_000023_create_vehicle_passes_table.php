@@ -17,7 +17,6 @@ return new class extends Migration
 
             // Créateur de la demande du laissez-passer
             $table->unsignedBigInteger('created_by');
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
 
             // Relation avec la table clients
             $table->unsignedBigInteger('client_id');

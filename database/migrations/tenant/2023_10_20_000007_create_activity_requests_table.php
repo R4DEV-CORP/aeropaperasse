@@ -21,7 +21,6 @@ return new class extends Migration
 
             // Relation avec la table user : créateur de la demande
             $table->unsignedBigInteger('created_by');
-            $table->foreign('created_by')->references('id')->on('users');
 
             // Aéroport concerné
             $table->enum('airport', ['ORY', 'CDG', 'LBG'])->nullable();
