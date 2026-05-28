@@ -62,9 +62,31 @@ class User extends Authenticatable
         'can_access_formation' => 'boolean',
     ];
 
-    public function isAdmin(): bool
+    /**
+     * Per-request memo of the resolved tenant role, keyed by tenant id.
+     *
+     * @var array<string, ?Role>
+     */
+    private array $effectiveRoleCache = [];
+
+    /**
+     * REM-level staff (`rem_admin` / `rem_super_admin`) — cross-tenant access to every
+     * tenant. This is a **global** capability read from `users.role` (not tenant-scoped),
+     * and it short-circuits per-tenant membership/role resolution. Keeping it global also
+     * avoids a cycle with effectiveRole()/contextualRole(), which call it.
+     * See docs/multi-tenant-migration.md (Roles, Auth model).
+     */
+    public function isRemStaff(): bool
     {
         return $this->role === Role::RemAdmin->value || $this->role === Role::RemSuperAdmin->value;
+    }
+
+    /**
+     * REM staff are admins on every tenant — a global capability, not tenant-scoped.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->isRemStaff();
     }
 
     public function isSAdmin(): bool
@@ -74,27 +96,17 @@ class User extends Authenticatable
 
     public function isClient(): bool
     {
-        return $this->role === Role::Client->value;
+        return $this->contextualRole() === Role::Client->value;
     }
 
     public function isSClient(): bool
     {
-        return $this->role === Role::SClient->value;
+        return $this->contextualRole() === Role::SClient->value;
     }
 
     public function isAClient(): bool
     {
-        return $this->role === Role::AClient->value;
-    }
-
-    /**
-     * REM-level staff (`admin` / `sadmin`) — cross-tenant access to every tenant.
-     * Under the multi-tenant model these short-circuit any per-tenant membership check.
-     * See docs/multi-tenant-migration.md (Roles, Auth model).
-     */
-    public function isRemStaff(): bool
-    {
-        return $this->isAdmin();
+        return $this->contextualRole() === Role::AClient->value;
     }
 
     /**
@@ -131,9 +143,12 @@ class User extends Authenticatable
             return null;
         }
 
-        $pivotRole = $this->membershipFor($tenantId)?->pivot->role;
+        if (! array_key_exists($tenantId, $this->effectiveRoleCache)) {
+            $pivotRole = $this->membershipFor($tenantId)?->pivot->role;
+            $this->effectiveRoleCache[$tenantId] = $pivotRole === null ? null : Role::tryFrom($pivotRole);
+        }
 
-        return $pivotRole === null ? null : Role::tryFrom($pivotRole);
+        return $this->effectiveRoleCache[$tenantId];
     }
 
     /**
@@ -142,6 +157,19 @@ class User extends Authenticatable
     public function effectiveRoleFor(string $tenantId): ?string
     {
         return $this->effectiveRole($tenantId)?->value;
+    }
+
+    /**
+     * The role this user effectively holds in the current context: the tenant-scoped role
+     * for the active tenant when one resolves (REM short-circuit, or the `tenant_user`
+     * pivot), otherwise the global `users.role` column (central/console context, or a user
+     * with no pivot row for the active tenant). Tenant-level helpers
+     * (isClient/isSClient/isAClient) read this so checks follow the active tenant.
+     * See docs/multi-tenant-migration.md (Q-ROLES).
+     */
+    public function contextualRole(): ?string
+    {
+        return $this->effectiveRole()?->value ?? $this->role;
     }
 
     public function canChangeRequestStatus(): bool

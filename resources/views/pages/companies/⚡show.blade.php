@@ -288,7 +288,7 @@ class extends Component
                                 </div>
                                 @if ($doc['path'])
                                     <a
-                                        href="{{ asset('storage/'.$doc['path']) }}"
+                                        href="{{ tenant_asset($doc['path']) }}"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class="inline-flex h-8 w-8 items-center justify-center rounded-md text-foreground-muted transition hover:bg-slate-100 hover:text-foreground"

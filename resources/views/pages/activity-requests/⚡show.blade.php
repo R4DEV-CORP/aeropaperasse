@@ -455,7 +455,7 @@ class extends Component
                                                 $extension = strtolower(pathinfo($att->path, PATHINFO_EXTENSION));
                                                 $isViewable = in_array($extension, ['pdf', 'png', 'jpg', 'jpeg'], true);
                                                 $exists = Storage::disk('public')->exists($att->path);
-                                                $url = $exists && $isViewable ? Storage::disk('public')->url($att->path) : null;
+                                                $url = $exists && $isViewable ? tenant_asset($att->path) : null;
                                             @endphp
                                             <li wire:key="att-{{ $att->id }}" class="flex items-center justify-between gap-3 rounded-md bg-slate-50 px-3 py-2">
                                                 <div class="min-w-0">

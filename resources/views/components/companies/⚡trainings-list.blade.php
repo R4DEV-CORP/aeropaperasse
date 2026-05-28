@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\CoworkerTraining;
+use App\Models\Training;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -38,14 +39,16 @@ new class extends Component
 
         if (trim($this->search) !== '') {
             $term = '%'.trim($this->search).'%';
-            $query->where(function ($q) use ($term) {
+            // `trainings` is central — match titles there and filter by id, since a
+            // cross-DB whereHas() can't run on the tenant connection.
+            $trainingIds = Training::query()->where('title', 'like', $term)->pluck('id')->all();
+            $query->where(function ($q) use ($term, $trainingIds) {
                 $q->whereHas('coworker', function ($q2) use ($term) {
                     $q2->where('firstname', 'like', $term)
                         ->orWhere('lastname', 'like', $term)
                         ->orWhereRaw("CONCAT(firstname, ' ', lastname) LIKE ?", [$term]);
-                })->orWhereHas('training', function ($q2) use ($term) {
-                    $q2->where('title', 'like', $term);
-                })->orWhere('airport', 'like', $term);
+                })->orWhereIn('training_id', $trainingIds)
+                    ->orWhere('airport', 'like', $term);
             });
         }
 

@@ -102,6 +102,8 @@ class extends Component
     $roleMeta = [
         'rem_admin' => ['label' => 'Administrateur REM', 'variant' => 'rejected'],
         'rem_super_admin' => ['label' => 'Super admin REM', 'variant' => 'rejected'],
+        'owner' => ['label' => 'Owner', 'variant' => 'rejected'],
+        'tenant_admin' => ['label' => 'Administrateur', 'variant' => 'rejected'],
         'sclient' => ['label' => 'SClient', 'variant' => 'in-progress'],
         'aclient' => ['label' => 'AClient', 'variant' => 'in-progress'],
         'client' => ['label' => 'Client', 'variant' => 'ready'],
@@ -145,7 +147,7 @@ class extends Component
             <span class="text-foreground-subtle">/</span>
             <h1 class="text-xl font-bold leading-tight text-foreground">{{ $cw->firstname }} {{ $cw->lastname }}</h1>
             @if ($hasUser)
-                @php $r = $roleMeta[$u->role] ?? ['label' => $u->role, 'variant' => 'default']; @endphp
+                @php $cr = $u->contextualRole(); $r = $roleMeta[$cr] ?? ['label' => $cr, 'variant' => 'default']; @endphp
                 <x-ui.badge :variant="$r['variant']">{{ $r['label'] }}</x-ui.badge>
             @else
                 <x-ui.badge variant="draft">Collaborateur</x-ui.badge>
@@ -365,7 +367,7 @@ class extends Component
                             <div>
                                 <dt class="text-xs font-medium uppercase tracking-wide text-foreground-muted">Rôle</dt>
                                 <dd class="mt-1">
-                                    @php $r = $roleMeta[$u->role] ?? ['label' => $u->role, 'variant' => 'default']; @endphp
+                                    @php $cr = $u->contextualRole(); $r = $roleMeta[$cr] ?? ['label' => $cr, 'variant' => 'default']; @endphp
                                     <x-ui.badge :variant="$r['variant']">{{ $r['label'] }}</x-ui.badge>
                                 </dd>
                             </div>

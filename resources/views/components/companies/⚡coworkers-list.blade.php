@@ -61,6 +61,8 @@ new class extends Component
     $roleMeta = [
         'rem_admin' => ['label' => 'Administrateur REM', 'variant' => 'rejected'],
         'rem_super_admin' => ['label' => 'Super admin REM', 'variant' => 'rejected'],
+        'owner' => ['label' => 'Owner', 'variant' => 'rejected'],
+        'tenant_admin' => ['label' => 'Administrateur', 'variant' => 'rejected'],
         'sclient' => ['label' => 'SClient', 'variant' => 'in-progress'],
         'aclient' => ['label' => 'AClient', 'variant' => 'in-progress'],
         'client' => ['label' => 'Client', 'variant' => 'ready'],
@@ -103,8 +105,9 @@ new class extends Component
         <ul class="divide-y divide-border">
             @foreach ($this->items as $coworker)
                 @php
+                    $cr = $coworker->user?->contextualRole();
                     $role = $coworker->user
-                        ? ($roleMeta[$coworker->user->role] ?? ['label' => $coworker->user->role, 'variant' => 'default'])
+                        ? ($roleMeta[$cr] ?? ['label' => $cr, 'variant' => 'default'])
                         : ['label' => 'Collaborateur', 'variant' => 'draft'];
                 @endphp
                 <li wire:key="coworker-{{ $coworker->id }}" class="flex items-center justify-between gap-3 px-5 py-3 transition hover:bg-slate-50">

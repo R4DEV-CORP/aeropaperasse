@@ -3,6 +3,7 @@
 use App\Livewire\Concerns\InteractsWithToasts;
 use App\Models\Client;
 use App\Models\Coworker;
+use App\Models\User;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -64,11 +65,12 @@ class extends Component
         $authUser = auth()->user();
 
         if ($authUser->isAdmin() && ! $authUser->isSAdmin()) {
-            $query->where(function ($q) {
+            // `users` is central, so a cross-DB whereHas() can't run against the tenant
+            // connection — filter on a user-id list fetched from central instead.
+            $superAdminIds = $this->userIdsWithRole('rem_super_admin');
+            $query->where(function ($q) use ($superAdminIds) {
                 $q->whereNull('user_id')
-                    ->orWhereHas('user', function ($u) {
-                        $u->where('role', '!=', 'rem_super_admin');
-                    });
+                    ->orWhereNotIn('user_id', $superAdminIds);
             });
         }
 
@@ -79,6 +81,27 @@ class extends Component
         return $query;
     }
 
+    /**
+     * Ids of central users carrying the given (global) role. Used to filter tenant
+     * coworkers by user without a cross-database whereHas(). See docs/multi-tenant-migration.md.
+     *
+     * @return array<int, int>
+     */
+    private function userIdsWithRole(string $role): array
+    {
+        return User::query()->where('role', $role)->pluck('id')->all();
+    }
+
+    /**
+     * Ids of central users who may access trainings.
+     *
+     * @return array<int, int>
+     */
+    private function userIdsWithFormationAccess(): array
+    {
+        return User::query()->where('can_access_formation', true)->pluck('id')->all();
+    }
+
     #[Computed]
     public function statistics(): array
     {
@@ -87,7 +110,7 @@ class extends Component
         $total = (clone $base)->count();
         $withUser = (clone $base)->whereNotNull('user_id')->count();
         $withoutUser = $total - $withUser;
-        $withFormation = (clone $base)->whereHas('user', fn ($q) => $q->where('can_access_formation', true))->count();
+        $withFormation = (clone $base)->whereIn('user_id', $this->userIdsWithFormationAccess())->count();
         $left = (clone $base)->where('has_leave', true)->count();
 
         return [
@@ -122,7 +145,7 @@ class extends Component
             if ($this->selectedRole === 'none') {
                 $query->whereNull('user_id');
             } else {
-                $query->whereHas('user', fn ($q) => $q->where('role', $this->selectedRole));
+                $query->whereIn('user_id', $this->userIdsWithRole($this->selectedRole));
             }
         }
 
@@ -131,7 +154,7 @@ class extends Component
         } elseif ($this->selectedKind === 'without_user') {
             $query->whereNull('user_id');
         } elseif ($this->selectedKind === 'with_formation') {
-            $query->whereHas('user', fn ($q) => $q->where('can_access_formation', true));
+            $query->whereIn('user_id', $this->userIdsWithFormationAccess());
         } elseif ($this->selectedKind === 'left') {
             $query->where('has_leave', true);
         }
@@ -163,6 +186,8 @@ class extends Component
     $roleMeta = [
         'rem_admin' => ['label' => 'Administrateur REM', 'variant' => 'rejected'],
         'rem_super_admin' => ['label' => 'Super admin REM', 'variant' => 'rejected'],
+        'owner' => ['label' => 'Owner', 'variant' => 'rejected'],
+        'tenant_admin' => ['label' => 'Administrateur', 'variant' => 'rejected'],
         'sclient' => ['label' => 'SClient', 'variant' => 'in-progress'],
         'aclient' => ['label' => 'AClient', 'variant' => 'in-progress'],
         'client' => ['label' => 'Client', 'variant' => 'ready'],
@@ -427,7 +452,7 @@ class extends Component
                         @endif
                         <td>
                             @if ($hasUser)
-                                @php $r = $roleMeta[$u->role] ?? ['label' => $u->role, 'variant' => 'default']; @endphp
+                                @php $cr = $u->contextualRole(); $r = $roleMeta[$cr] ?? ['label' => $cr, 'variant' => 'default']; @endphp
                                 <x-ui.badge :variant="$r['variant']">{{ $r['label'] }}</x-ui.badge>
                             @else
                                 <x-ui.badge variant="draft">Collaborateur</x-ui.badge>
