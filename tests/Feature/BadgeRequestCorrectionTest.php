@@ -30,7 +30,7 @@ class BadgeRequestCorrectionTest extends TenantTestCase
      */
     private function makeRejectedRequest(string $status = 'rejected_rem', ?int $createdBy = null): array
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = User::factory()->create(['role' => 'rem_admin']);
         $client = Client::factory()->create(['company_name' => 'Acme Corp']);
         $coworker = Coworker::factory()->create(['client_id' => $client->id]);
 
@@ -109,7 +109,7 @@ class BadgeRequestCorrectionTest extends TenantTestCase
     public function test_admin_can_also_correct_rejected_request(): void
     {
         $data = $this->makeRejectedRequest('rejected_rem');
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = User::factory()->create(['role' => 'rem_admin']);
 
         Livewire::actingAs($admin)
             ->test(self::COMPONENT, ['badgeRequestId' => $data['badgeRequest']->id])

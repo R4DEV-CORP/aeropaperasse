@@ -8,6 +8,7 @@ use App\Models\Coworker;
 use App\Models\PasswordResetToken;
 use App\Models\TwoFactorCode;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -24,7 +25,7 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users,email|unique:coworkers,email',
             'phone' => 'required|string|max:255',
             'password' => 'required|string|min:8',
-            'role' => 'nullable|string|in:sclient,sadmin,client,admin,aclient', // Facultatif : rôle spécifique
+            'role' => 'nullable|string|in:sclient,rem_super_admin,client,rem_admin,aclient', // Facultatif : rôle spécifique
         ]);
 
         $user = User::create([
@@ -233,7 +234,7 @@ class AuthController extends Controller
     /**
      * Change le mot de passe de l'utilisateur et marque le compte comme n'étant plus nouveau
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function changePassword(Request $request)
     {
@@ -267,7 +268,7 @@ class AuthController extends Controller
     /**
      * Change le mot de passe lors de la première connexion
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function firstLoginChangePassword(Request $request)
     {
@@ -300,7 +301,7 @@ class AuthController extends Controller
     /**
      * Demande de mot de passe oublié
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function forgotPassword(Request $request)
     {
@@ -348,7 +349,7 @@ class AuthController extends Controller
     /**
      * Vérifier le token de réinitialisation
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function checkResetToken(Request $request)
     {
@@ -378,7 +379,7 @@ class AuthController extends Controller
     /**
      * Réinitialiser le mot de passe
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function resetPassword(Request $request)
     {

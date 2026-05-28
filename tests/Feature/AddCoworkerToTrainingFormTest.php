@@ -16,7 +16,7 @@ class AddCoworkerToTrainingFormTest extends TenantTestCase
 
     private function makeAdmin(): User
     {
-        return User::factory()->create(['role' => 'admin']);
+        return User::factory()->create(['role' => 'rem_admin']);
     }
 
     public function test_assigning_training_with_airport_when_required(): void

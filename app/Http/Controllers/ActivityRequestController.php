@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Mail\ActivityRequestConfirmation;
 use App\Mail\ActivityRequestCreated;
 use App\Mail\ActivityRequestStatusUpdated;
@@ -18,7 +19,7 @@ class ActivityRequestController extends Controller
         $user = $request->user();
 
         // Si l'utilisateur est admin, récupérer toutes les demandes, sauf les brouillons
-        if ($user->role === 'admin' || $user->role === 'sadmin') {
+        if ($user->role === Role::RemAdmin->value || $user->role === Role::RemSuperAdmin->value) {
             $requests = ActivityRequest::where('status', '!=', 'draft')->latest()->get();
             $draftCount = ActivityRequest::where('status', 'draft')->count();
         }
@@ -219,7 +220,7 @@ class ActivityRequestController extends Controller
         $user = $request->user();
 
         // Si l'utilisateur est admin, récupérer tous les brouillons
-        if ($user->role === 'admin' || $user->role === 'sadmin') {
+        if ($user->role === Role::RemAdmin->value || $user->role === Role::RemSuperAdmin->value) {
             $drafts = ActivityRequest::where('status', 'draft')->with('user')->latest()->get();
         } else {
             // Sinon, récupérer uniquement les brouillons de l'utilisateur

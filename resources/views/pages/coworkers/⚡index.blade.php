@@ -67,7 +67,7 @@ class extends Component
             $query->where(function ($q) {
                 $q->whereNull('user_id')
                     ->orWhereHas('user', function ($u) {
-                        $u->where('role', '!=', 'sadmin');
+                        $u->where('role', '!=', 'rem_super_admin');
                     });
             });
         }
@@ -161,8 +161,8 @@ class extends Component
 
 @php
     $roleMeta = [
-        'admin' => ['label' => 'Admin', 'variant' => 'rejected'],
-        'sadmin' => ['label' => 'Sadmin', 'variant' => 'rejected'],
+        'rem_admin' => ['label' => 'Administrateur REM', 'variant' => 'rejected'],
+        'rem_super_admin' => ['label' => 'Super admin REM', 'variant' => 'rejected'],
         'sclient' => ['label' => 'SClient', 'variant' => 'in-progress'],
         'aclient' => ['label' => 'AClient', 'variant' => 'in-progress'],
         'client' => ['label' => 'Client', 'variant' => 'ready'],
@@ -261,10 +261,10 @@ class extends Component
                         ['value' => 'client', 'label' => 'Client'],
                         ['value' => 'sclient', 'label' => 'SClient'],
                         ['value' => 'aclient', 'label' => 'AClient'],
-                        ['value' => 'admin', 'label' => 'Admin'],
+                        ['value' => 'rem_admin', 'label' => 'Administrateur REM'],
                     ];
                     if ($authUser->isSAdmin()) {
-                        $roleOptions[] = ['value' => 'sadmin', 'label' => 'Sadmin'];
+                        $roleOptions[] = ['value' => 'rem_super_admin', 'label' => 'Super admin REM'];
                     }
                 @endphp
                 <div class="lg:w-64">

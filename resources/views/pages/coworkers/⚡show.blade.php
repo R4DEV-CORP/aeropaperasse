@@ -37,7 +37,7 @@ class extends Component
             abort(403);
         }
 
-        if ($authUser->isAdmin() && ! $authUser->isSAdmin() && $coworker->user && $coworker->user->role === 'sadmin') {
+        if ($authUser->isAdmin() && ! $authUser->isSAdmin() && $coworker->user && $coworker->user->role === 'rem_super_admin') {
             abort(403);
         }
 
@@ -100,8 +100,8 @@ class extends Component
     $canDelete = $isAdmin;
 
     $roleMeta = [
-        'admin' => ['label' => 'Admin', 'variant' => 'rejected'],
-        'sadmin' => ['label' => 'Sadmin', 'variant' => 'rejected'],
+        'rem_admin' => ['label' => 'Administrateur REM', 'variant' => 'rejected'],
+        'rem_super_admin' => ['label' => 'Super admin REM', 'variant' => 'rejected'],
         'sclient' => ['label' => 'SClient', 'variant' => 'in-progress'],
         'aclient' => ['label' => 'AClient', 'variant' => 'in-progress'],
         'client' => ['label' => 'Client', 'variant' => 'ready'],

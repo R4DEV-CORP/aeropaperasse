@@ -59,8 +59,8 @@ new class extends Component
 
 @php
     $roleMeta = [
-        'admin' => ['label' => 'Admin', 'variant' => 'rejected'],
-        'sadmin' => ['label' => 'Sadmin', 'variant' => 'rejected'],
+        'rem_admin' => ['label' => 'Administrateur REM', 'variant' => 'rejected'],
+        'rem_super_admin' => ['label' => 'Super admin REM', 'variant' => 'rejected'],
         'sclient' => ['label' => 'SClient', 'variant' => 'in-progress'],
         'aclient' => ['label' => 'AClient', 'variant' => 'in-progress'],
         'client' => ['label' => 'Client', 'variant' => 'ready'],

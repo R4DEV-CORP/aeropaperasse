@@ -17,7 +17,7 @@ class BadgeManagementIndexFilterTest extends TenantTestCase
 
     private function makeAdmin(): User
     {
-        return User::factory()->create(['role' => 'admin']);
+        return User::factory()->create(['role' => 'rem_admin']);
     }
 
     private function createStandaloneBadge(Client $client, Coworker $coworker, string $airport): Badge

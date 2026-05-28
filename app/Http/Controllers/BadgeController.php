@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Models\Badge;
 use App\Models\BadgeRequest;
 use Illuminate\Http\Request;
@@ -18,11 +19,11 @@ class BadgeController extends Controller
         $badgesQuery = Badge::with(['badgeRequest', 'badgeRequest.user', 'badgeRequest.user.client'])
             ->orderBy('created_at', 'desc');
 
-        if ($user->role == 'sadmin') {
+        if ($user->role == Role::RemSuperAdmin->value) {
             // Les super admins peuvent voir tous les badges
-        } elseif ($user->role == 'admin') {
+        } elseif ($user->role == Role::RemAdmin->value) {
             // Les admins peuvent voir tous les badges
-        } elseif ($user->role == 'sclient' || $user->role == 'client') {
+        } elseif ($user->role == Role::SClient->value || $user->role == Role::Client->value) {
             // Les clients ne peuvent voir que les badges de leur société
             $badgesQuery->whereHas('badgeRequest.user', function ($query) use ($user) {
                 $query->where('client_id', $user->client_id);

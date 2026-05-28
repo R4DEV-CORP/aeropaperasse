@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Enums\Role;
 use App\Models\User;
 
 class UserRedirectService
@@ -20,9 +21,9 @@ class UserRedirectService
 
         // Redirection selon le rôle (identique à AuthController API)
         return match ($user->role) {
-            'admin', 'sadmin' => '/badge-requests',
-            'sclient' => '/badge-requests',
-            'client' => '/badge-requests',
+            Role::RemAdmin->value, Role::RemSuperAdmin->value => '/badge-requests',
+            Role::SClient->value => '/badge-requests',
+            Role::Client->value => '/badge-requests',
             default => '/badge-requests'
         };
     }

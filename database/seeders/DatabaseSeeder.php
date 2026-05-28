@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Désactiver les observers pendant le seeding
-        \App\Models\BadgeRequest::withoutEvents(function () {
+        BadgeRequest::withoutEvents(function () {
             $this->seedData();
         });
     }
@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
             ->create([
                 'name' => 'Corentin Sarda',
                 'email' => 'sadmin@r4web.fr',
-                'role' => 'sadmin',
+                'role' => 'rem_super_admin',
             ]);
 
         $coworkerSAdmin = Coworker::factory()
@@ -65,7 +65,7 @@ class DatabaseSeeder extends Seeder
             ->create([
                 'name' => 'Corentin Sarda',
                 'email' => 'admin@r4web.fr',
-                'role' => 'admin',
+                'role' => 'rem_admin',
             ]);
 
         $coworkerAdmin = Coworker::factory()

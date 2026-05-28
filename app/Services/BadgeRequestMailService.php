@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\Role;
 use App\Models\BadgeRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
@@ -141,7 +142,7 @@ class BadgeRequestMailService
     {
         try {
             // Récupérer tous les admins et super admins
-            $admins = User::whereIn('role', ['admin', 'sadmin'])
+            $admins = User::whereIn('role', [Role::RemAdmin->value, Role::RemSuperAdmin->value])
                 ->whereNotNull('email')
                 ->get();
 

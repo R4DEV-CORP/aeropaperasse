@@ -297,7 +297,7 @@ class extends Component
         $ctx = $actionContexts[$br->status] ?? null;
         $showCtx = $ctx && (
             ($ctx['role'] === 'status_changer' && $canChangeStatus) ||
-            ($ctx['role'] === 'sadmin' && $isSAdmin) ||
+            ($ctx['role'] === 'rem_super_admin' && $isSAdmin) ||
             ($ctx['role'] === 'rejected' && ($canCorrectRejected || $isSAdmin))
         );
 

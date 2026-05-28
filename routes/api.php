@@ -133,7 +133,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 // Routes admin
-Route::middleware(['auth:sanctum', 'role:admin,sadmin'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:rem_admin,rem_super_admin'])->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('clients', ClientController::class)->except(['destroy']);
     Route::get('/clients/{client}/document', [ClientController::class, 'downloadDocument']);
@@ -146,7 +146,7 @@ Route::middleware(['auth:sanctum', 'role:sclient'])->group(function () {
 });
 
 // Formations
-Route::middleware(['auth:sanctum', 'role:sadmin,admin'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:rem_super_admin,rem_admin'])->group(function () {
     Route::get('/trainings/clients', [TrainingController::class, 'getClientsWithTrainings']);
 });
 

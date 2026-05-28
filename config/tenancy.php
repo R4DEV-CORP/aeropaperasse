@@ -143,8 +143,13 @@ return [
          * packages that use asset() calls inside the tenant app. To avoid such issues, you can
          * disable asset() helper tenancy and explicitly use tenant_asset() calls in places
          * where you want to use tenant-specific assets (product images, avatars, etc).
+         *
+         * Disabled here: every asset() in this app targets a GLOBAL static file (the Vite/Tailwind
+         * build in public/build, the logo in public/images). Tenant-specific files (documents, PDFs)
+         * are served through Storage download routes, not asset(). Leaving this on rewrote the Vite
+         * build + logo URLs to /tenancy/assets/* and broke styling. See docs/multi-tenant-migration.md.
          */
-        'asset_helper_tenancy' => true,
+        'asset_helper_tenancy' => false,
     ],
 
     /**

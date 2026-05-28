@@ -74,9 +74,9 @@ new class extends Component
             return;
         }
 
-        $allowedRoles = ['client', 'sclient', 'aclient', 'admin'];
+        $allowedRoles = ['client', 'sclient', 'aclient', 'rem_admin'];
         if ($authUser->isSAdmin()) {
-            $allowedRoles[] = 'sadmin';
+            $allowedRoles[] = 'rem_super_admin';
         }
 
         $this->validate([
@@ -156,10 +156,10 @@ new class extends Component
         ['value' => 'client', 'label' => 'Client'],
         ['value' => 'sclient', 'label' => 'SClient'],
         ['value' => 'aclient', 'label' => 'AClient'],
-        ['value' => 'admin', 'label' => 'Admin'],
+        ['value' => 'rem_admin', 'label' => 'Administrateur REM'],
     ];
     if ($authUser?->isSAdmin()) {
-        $roleOptions[] = ['value' => 'sadmin', 'label' => 'Sadmin'];
+        $roleOptions[] = ['value' => 'rem_super_admin', 'label' => 'Super admin REM'];
     }
 @endphp
 

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Mail\BadgeExpiryNotification;
 use App\Models\Badge;
+use App\Models\Tenant;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
@@ -30,14 +31,35 @@ class NotifyBadgeExpiry extends Command
     }
 
     /**
-     * Execute the console command.
+     * Badges live in the per-tenant databases, so the check runs once inside each
+     * tenant's context. The log path is resolved once in the central context so all
+     * tenants append to a single log file (storage_path is suffixed per tenant once
+     * tenancy is initialized). See docs/multi-tenant-migration.md (tenant-aware infra).
      */
     public function handle(): int
     {
         $logPath = storage_path('logs/badge-expiry-check.log');
-        file_put_contents($logPath, date('[Y-m-d H:i:s] ')."Démarrage de la vérification des badges\n", FILE_APPEND | LOCK_EX);
-        chmod($logPath, 0664);
 
+        if (! is_dir(dirname($logPath))) {
+            mkdir(dirname($logPath), 0775, true);
+        }
+
+        $this->log($logPath, 'Démarrage de la vérification des badges');
+
+        Tenant::all()->each(function (Tenant $tenant) use ($logPath): void {
+            $tenant->run(function () use ($logPath, $tenant): void {
+                $this->checkExpiringBadgesForCurrentTenant($logPath, (string) $tenant->getTenantKey());
+            });
+        });
+
+        $this->info('Vérification terminée à '.Carbon::now());
+        $this->log($logPath, 'Vérification des badges terminée.');
+
+        return 0;
+    }
+
+    private function checkExpiringBadgesForCurrentTenant(string $logPath, string $tenantId): void
+    {
         $expiryIntervals = [90, 30, 15, 7];
 
         foreach ($expiryIntervals as $days) {
@@ -48,8 +70,8 @@ class NotifyBadgeExpiry extends Command
                 ->whereDate('expiry_date', $expiryDate)
                 ->get();
 
-            $this->info("Traitement de {$badges->count()} badges expirant dans {$days} jours");
-            file_put_contents($logPath, date('[Y-m-d H:i:s] ')."Traitement de {$badges->count()} badges expirant dans {$days} jours\n", FILE_APPEND | LOCK_EX);
+            $this->info("[{$tenantId}] Traitement de {$badges->count()} badges expirant dans {$days} jours");
+            $this->log($logPath, "[{$tenantId}] Traitement de {$badges->count()} badges expirant dans {$days} jours");
 
             foreach ($badges as $badge) {
                 $recipientEmail = $badge->getRecipientEmail();
@@ -58,22 +80,23 @@ class NotifyBadgeExpiry extends Command
                     try {
                         Mail::to($recipientEmail)->send(new BadgeExpiryNotification($badge, $days));
 
-                        $this->info("Notification envoyée pour le badge #{$badge->id} à {$recipientEmail}");
-                        file_put_contents($logPath, date('[Y-m-d H:i:s] ')."Notification envoyée pour le badge #{$badge->id} à {$recipientEmail}\n", FILE_APPEND | LOCK_EX);
+                        $this->info("[{$tenantId}] Notification envoyée pour le badge #{$badge->id} à {$recipientEmail}");
+                        $this->log($logPath, "[{$tenantId}] Notification envoyée pour le badge #{$badge->id} à {$recipientEmail}");
                     } catch (\Exception $e) {
-                        $this->error("Erreur lors de l'envoi de la notification pour le badge #{$badge->id}: ".$e->getMessage());
-                        file_put_contents($logPath, date('[Y-m-d H:i:s] ')."Erreur lors de l'envoi de la notification pour le badge #{$badge->id}: ".$e->getMessage(), FILE_APPEND | LOCK_EX);
+                        $this->error("[{$tenantId}] Erreur lors de l'envoi de la notification pour le badge #{$badge->id}: ".$e->getMessage());
+                        $this->log($logPath, "[{$tenantId}] Erreur lors de l'envoi de la notification pour le badge #{$badge->id}: ".$e->getMessage());
                     }
                 } else {
-                    $this->warn("Impossible d'envoyer une notification pour le badge #{$badge->id}: email manquant");
-                    file_put_contents($logPath, date('[Y-m-d H:i:s] ')."Impossible d'envoyer une notification pour le badge #{$badge->id}: email manquant\n", FILE_APPEND | LOCK_EX);
+                    $this->warn("[{$tenantId}] Impossible d'envoyer une notification pour le badge #{$badge->id}: email manquant");
+                    $this->log($logPath, "[{$tenantId}] Impossible d'envoyer une notification pour le badge #{$badge->id}: email manquant");
                 }
             }
         }
+    }
 
-        $this->info('Vérification terminée à '.Carbon::now());
-        file_put_contents($logPath, date('[Y-m-d H:i:s] ')."Vérification des badges terminée.\n", FILE_APPEND | LOCK_EX);
-
-        return 0;
+    private function log(string $logPath, string $message): void
+    {
+        file_put_contents($logPath, date('[Y-m-d H:i:s] ').$message."\n", FILE_APPEND | LOCK_EX);
+        @chmod($logPath, 0664);
     }
 }

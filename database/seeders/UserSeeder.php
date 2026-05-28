@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
             ->create([
                 'name' => 'R4Web',
                 'email' => 'contact@r4web.fr',
-                'role' => 'admin',
+                'role' => 'rem_admin',
             ]);
 
         // User client

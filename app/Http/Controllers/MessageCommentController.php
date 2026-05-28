@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Mail\NewMessage;
 use App\Models\Discussion;
 use App\Models\DiscussionFile;
@@ -92,7 +93,7 @@ class MessageCommentController extends Controller
         // Si c'est une réponse à un message existant
         if ($comment->parent_id) {
             // Vérifier qui est l'auteur de la réponse et à qui il faut envoyer la notification
-            if ($currentUser->role === 'admin' || $currentUser->role === 'sadmin') {
+            if ($currentUser->role === Role::RemAdmin->value || $currentUser->role === Role::RemSuperAdmin->value) {
                 // Si la réponse vient d'un admin, envoyer à l'auteur de la discussion
                 $discussionAuthor = User::find($discussion->user_id);
                 if ($discussionAuthor && $discussionAuthor->id != $currentUserId && $discussionAuthor->email) {
@@ -100,7 +101,7 @@ class MessageCommentController extends Controller
                 }
             } else {
                 // Si la réponse vient d'un client, envoyer aux admins/sadmins
-                $admins = User::whereIn('role', ['admin', 'sadmin'])->get();
+                $admins = User::whereIn('role', [Role::RemAdmin->value, Role::RemSuperAdmin->value])->get();
                 foreach ($admins as $admin) {
                     if ($admin->id != $currentUserId && $admin->email) {
                         Mail::to($admin->email)->send(new NewMessage($discussion, $comment));
@@ -111,8 +112,8 @@ class MessageCommentController extends Controller
         // Si c'est un nouveau message (pas une réponse)
         else {
             // Si le message vient d'un client, envoyer à tous les admins et super admins
-            if ($currentUser->role !== 'admin' && $currentUser->role !== 'sadmin') {
-                $admins = User::whereIn('role', ['admin', 'sadmin'])->get();
+            if ($currentUser->role !== Role::RemAdmin->value && $currentUser->role !== Role::RemSuperAdmin->value) {
+                $admins = User::whereIn('role', [Role::RemAdmin->value, Role::RemSuperAdmin->value])->get();
 
                 foreach ($admins as $admin) {
                     if ($admin->email) {

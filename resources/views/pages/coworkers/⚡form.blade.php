@@ -420,10 +420,10 @@ class extends Component
     ];
     if ($isAdmin) {
         $roleOptions[] = ['value' => 'aclient', 'label' => 'AClient'];
-        $roleOptions[] = ['value' => 'admin', 'label' => 'Admin'];
+        $roleOptions[] = ['value' => 'rem_admin', 'label' => 'Administrateur REM'];
     }
     if ($isSAdmin) {
-        $roleOptions[] = ['value' => 'sadmin', 'label' => 'Sadmin'];
+        $roleOptions[] = ['value' => 'rem_super_admin', 'label' => 'Super admin REM'];
     }
 
     $validityOptions = [

@@ -2,28 +2,18 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
 |--------------------------------------------------------------------------
 |
-| Here you can register the tenant routes for your application.
-| These routes are loaded by the TenantRouteServiceProvider.
+| This application registers ALL its routes in routes/web.php, which is already
+| wrapped in the tenancy middleware (InitializeTenancyByDomain + PreventAccess-
+| FromCentralDomains). This file is intentionally left without routes: stancl's
+| default placeholder `GET /` route was removed because it shadowed the real `/`
+| route in web.php (it is registered later, so it overwrote it).
 |
-| Feel free to customize them however you want. Good luck!
+| Add tenant-only routes here only if they must NOT also resolve on the central
+| domain. See docs/multi-tenant-migration.md (Routing).
 |
 */
-
-Route::middleware([
-    'web',
-    InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class,
-])->group(function () {
-    Route::get('/', function () {
-        return 'This is your multi-tenant application. The id of the current tenant is '.tenant('id');
-    });
-});

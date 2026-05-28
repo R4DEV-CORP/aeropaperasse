@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\Role;
 use App\Models\Client;
 use App\Models\User;
 use App\Models\VehiclePass;
@@ -117,8 +118,8 @@ class ImportEqiomBetonsVehiclePasses extends Command
         $this->info('');
         $this->info('=== Laissez-passer véhicules (AAO 23/01561 — Orly) ===');
 
-        $createdBy = User::where('role', 'sadmin')->orderBy('id')->value('id')
-            ?? User::where('role', 'admin')->orderBy('id')->value('id');
+        $createdBy = User::where('role', Role::RemSuperAdmin->value)->orderBy('id')->value('id')
+            ?? User::where('role', Role::RemAdmin->value)->orderBy('id')->value('id');
 
         if (! $isDryRun && ! $createdBy) {
             $this->warn('  [ignoré]   Aucun utilisateur sadmin/admin trouvé — laissez-passer non importés.');

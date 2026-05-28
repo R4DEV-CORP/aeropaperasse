@@ -35,8 +35,8 @@ class AClientRoleTest extends TenantTestCase
 
     public function test_can_change_request_status_matrix(): void
     {
-        $admin = User::factory()->create(['role' => 'admin']);
-        $sadmin = User::factory()->create(['role' => 'sadmin']);
+        $admin = User::factory()->create(['role' => 'rem_admin']);
+        $sadmin = User::factory()->create(['role' => 'rem_super_admin']);
         $sclient = User::factory()->create(['role' => 'sclient']);
         $client = User::factory()->create(['role' => 'client']);
 

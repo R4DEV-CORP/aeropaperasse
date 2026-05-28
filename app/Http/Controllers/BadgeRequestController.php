@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Models\Badge;
 use App\Models\BadgeRequest;
 use App\Models\Client;
@@ -25,7 +26,7 @@ class BadgeRequestController extends Controller
         $client_id = $user->client_id;
 
         // Si l'utilisateur est admin, récupérer toutes les demandes, sauf les brouillons
-        if ($user->role === 'admin' || $user->role === 'sadmin') {
+        if ($user->role === Role::RemAdmin->value || $user->role === Role::RemSuperAdmin->value) {
             $requests = BadgeRequest::where('status', '!=', 'draft')->with(['user', 'client'])->latest()->get();
             $draftCount = BadgeRequest::where('status', 'draft')->count();
         }
@@ -330,7 +331,7 @@ class BadgeRequestController extends Controller
         $user = $request->user();
         $client_id = $user->client_id;
 
-        if ($user->role === 'admin' || $user->role === 'sadmin') {
+        if ($user->role === Role::RemAdmin->value || $user->role === Role::RemSuperAdmin->value) {
             $drafts = BadgeRequest::where('status', 'draft')->with(['user', 'client'])->latest()->get();
         } else {
             $drafts = BadgeRequest::where('status', 'draft')
@@ -520,7 +521,7 @@ class BadgeRequestController extends Controller
             // - L'utilisateur qui a créé le brouillon peut le supprimer
             // - Les admin/sadmin peuvent supprimer n'importe quel brouillon
             $user = $request->user();
-            if ($draft->user_id !== $user->id && ! in_array($user->role, ['admin', 'sadmin'])) {
+            if ($draft->user_id !== $user->id && ! in_array($user->role, [Role::RemAdmin->value, Role::RemSuperAdmin->value])) {
                 return response()->json([
                     'message' => 'Vous n\'êtes pas autorisé à supprimer ce brouillon',
                 ], 403);

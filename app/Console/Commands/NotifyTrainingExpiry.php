@@ -3,7 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Mail\TrainingExpiryNotification;
-use App\Models\UserTraining;
+use App\Models\CoworkerTraining;
+use App\Models\Tenant;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
@@ -22,63 +23,75 @@ class NotifyTrainingExpiry extends Command
      *
      * @var string
      */
-    protected $description = 'Vérifie les formations qui vont bientôt expirer et envoie une notification à l\'utilisateur';
+    protected $description = 'Vérifie les formations qui vont bientôt expirer et envoie une notification au collaborateur';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
+     * Training assignments live in the per-tenant `coworker_trainings` table, so the
+     * check runs once inside each tenant's context. The log path is resolved once in
+     * the central context so every tenant appends to a single log file (storage_path
+     * is suffixed per tenant once tenancy is initialized).
+     * See docs/multi-tenant-migration.md (tenant-aware infrastructure).
      */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle()
+    public function handle(): int
     {
         $logPath = storage_path('logs/training-expiry-check.log');
-        file_put_contents($logPath, date('[Y-m-d H:i:s] ')."Démarrage de la vérification des formations\n", FILE_APPEND | LOCK_EX);
-        chmod($logPath, 0664);
-        // Récupérer les formations qui expirent dans 90, 30, 15 et 7 jours
+
+        if (! is_dir(dirname($logPath))) {
+            mkdir(dirname($logPath), 0775, true);
+        }
+
+        $this->log($logPath, 'Démarrage de la vérification des formations');
+
+        Tenant::all()->each(function (Tenant $tenant) use ($logPath): void {
+            $tenant->run(function () use ($logPath, $tenant): void {
+                $this->checkExpiringTrainingsForCurrentTenant($logPath, (string) $tenant->getTenantKey());
+            });
+        });
+
+        $this->log($logPath, 'Vérification des formations terminée.');
+
+        return 0;
+    }
+
+    private function checkExpiringTrainingsForCurrentTenant(string $logPath, string $tenantId): void
+    {
         $expiryIntervals = [90, 30, 15, 7];
 
         foreach ($expiryIntervals as $days) {
             $expiryDate = Carbon::now()->addDays($days)->toDateString();
 
-            $userTrainings = UserTraining::with(['user'])
+            $coworkerTrainings = CoworkerTraining::with(['coworker', 'training'])
                 ->whereNotNull('expires_at')
                 ->whereDate('expires_at', $expiryDate)
                 ->get();
 
-            $this->info("Traitement de {$userTrainings->count()} formations expirant dans {$days} jours");
-            file_put_contents($logPath, date('[Y-m-d H:i:s] ')."Traitement de {$userTrainings->count()} formations expirant dans {$days} jours\n", FILE_APPEND | LOCK_EX);
+            $this->info("[{$tenantId}] Traitement de {$coworkerTrainings->count()} formations expirant dans {$days} jours");
+            $this->log($logPath, "[{$tenantId}] Traitement de {$coworkerTrainings->count()} formations expirant dans {$days} jours");
 
-            foreach ($userTrainings as $userTraining) {
-                if ($userTraining->user && $userTraining->user->email) {
-                    // Envoyer un email à l'utilisateur
+            foreach ($coworkerTrainings as $coworkerTraining) {
+                $recipientEmail = $coworkerTraining->coworker?->email;
+
+                if ($recipientEmail) {
                     try {
-                        Mail::to($userTraining->user->email)
-                            ->send(new TrainingExpiryNotification($userTraining, $days));
+                        Mail::to($recipientEmail)->send(new TrainingExpiryNotification($coworkerTraining, $days));
 
-                        $this->info("Notification envoyée pour la formation #{$userTraining->id} à {$userTraining->user->email}");
-                        file_put_contents($logPath, date('[Y-m-d H:i:s] ')."Notification envoyée pour la formation #{$userTraining->id} à {$userTraining->user->email}\n", FILE_APPEND | LOCK_EX);
+                        $this->info("[{$tenantId}] Notification envoyée pour la formation #{$coworkerTraining->id} à {$recipientEmail}");
+                        $this->log($logPath, "[{$tenantId}] Notification envoyée pour la formation #{$coworkerTraining->id} à {$recipientEmail}");
                     } catch (\Exception $e) {
-                        $this->error("Erreur lors de l'envoi de la notification pour la formation #{$userTraining->id}: ".$e->getMessage());
-                        file_put_contents($logPath, date('[Y-m-d H:i:s] ')."Erreur lors de l'envoi de la notification pour la formation #{$userTraining->id}: ".$e->getMessage(), FILE_APPEND | LOCK_EX);
+                        $this->error("[{$tenantId}] Erreur lors de l'envoi de la notification pour la formation #{$coworkerTraining->id}: ".$e->getMessage());
+                        $this->log($logPath, "[{$tenantId}] Erreur lors de l'envoi de la notification pour la formation #{$coworkerTraining->id}: ".$e->getMessage());
                     }
                 } else {
-                    $this->warn("Impossible d'envoyer une notification pour la formation #{$userTraining->id}: email manquant");
-                    file_put_contents($logPath, date('[Y-m-d H:i:s] ')."Impossible d'envoyer une notification pour la formation #{$userTraining->id}: email manquant\n", FILE_APPEND | LOCK_EX);
+                    $this->warn("[{$tenantId}] Impossible d'envoyer une notification pour la formation #{$coworkerTraining->id}: email manquant");
+                    $this->log($logPath, "[{$tenantId}] Impossible d'envoyer une notification pour la formation #{$coworkerTraining->id}: email manquant");
                 }
             }
         }
-        file_put_contents($logPath, date('[Y-m-d H:i:s] ')."Vérification des formations terminée.\n", FILE_APPEND | LOCK_EX);
+    }
 
-        return 0;
+    private function log(string $logPath, string $message): void
+    {
+        file_put_contents($logPath, date('[Y-m-d H:i:s] ').$message."\n", FILE_APPEND | LOCK_EX);
+        @chmod($logPath, 0664);
     }
 }

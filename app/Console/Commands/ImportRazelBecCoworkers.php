@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\Role;
 use App\Models\Badge;
 use App\Models\Client;
 use App\Models\Coworker;
@@ -918,8 +919,8 @@ class ImportRazelBecCoworkers extends Command
             return;
         }
 
-        $createdBy = User::where('role', 'sadmin')->orderBy('id')->value('id')
-            ?? User::where('role', 'admin')->orderBy('id')->value('id');
+        $createdBy = User::where('role', Role::RemSuperAdmin->value)->orderBy('id')->value('id')
+            ?? User::where('role', Role::RemAdmin->value)->orderBy('id')->value('id');
 
         if (! $isDryRun && ! $createdBy) {
             $this->warn('  [ignoré]   Aucun utilisateur sadmin/admin trouvé — laissez-passer non importés.');

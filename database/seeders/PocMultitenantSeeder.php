@@ -15,7 +15,7 @@ use Illuminate\Database\Seeder;
  *
  * Seeds:
  *  - shared trainings (central),
- *  - a REM super-admin (central role `sadmin`) — reaches every tenant via the REM short-circuit, no pivot row,
+ *  - a REM super-admin (central role `rem_super_admin`) — reaches every tenant via the REM short-circuit, no pivot row,
  *  - a C1 owner (no central REM role) attached to tenant `c1` only via the `tenant_user` pivot,
  *  - a couple of distinct clients/coworkers inside each tenant DB so isolation is visible.
  *
@@ -27,18 +27,25 @@ class PocMultitenantSeeder extends Seeder
     {
         $this->seedSharedTrainings();
 
+        // 2FA disabled + is_new=false on these POC accounts so local browser testing isn't
+        // blocked by the email code (MAIL_MAILER=log) or the forced first-login password
+        // change — this is demo data, not a security baseline.
         $remAdmin = User::updateOrCreate(
             ['email' => 'rem-admin@aeropaperasse.test'],
-            ['name' => 'REM Super Admin', 'password' => 'password', 'role' => 'sadmin', 'can_access_formation' => true],
+            ['name' => 'REM Super Admin', 'password' => 'password', 'role' => 'rem_super_admin', 'can_access_formation' => true, 'two_factor_enabled' => false, 'is_new' => false],
         );
 
         $c1Owner = User::updateOrCreate(
             ['email' => 'owner@client1.test'],
-            ['name' => 'Owner Client 1', 'password' => 'password', 'role' => 'client', 'can_access_formation' => true],
+            ['name' => 'Owner Client 1', 'password' => 'password', 'role' => 'client', 'can_access_formation' => true, 'two_factor_enabled' => false, 'is_new' => false],
         );
 
         $rem = Tenant::findOrFail('rem');
         $c1 = Tenant::findOrFail('c1');
+
+        // Friendly display names (stored on the tenant's `data` column) — shown in the tenant chooser.
+        $rem->update(['name' => 'REM Distribution']);
+        $c1->update(['name' => 'Client 1']);
 
         // C1 owner belongs to c1 only, with the tenant-scoped role `owner`. REM admin keeps no pivot row
         // (their cross-tenant access comes from the REM short-circuit), so app.* rejects the C1 owner.

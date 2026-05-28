@@ -278,7 +278,7 @@ class extends Component
             'rejected' => [
                 'title' => 'Demande rejetée',
                 'description' => 'Vous pouvez la rouvrir en brouillon pour la corriger.',
-                'role' => 'sadmin',
+                'role' => 'rem_super_admin',
                 'accent' => 'red',
             ],
         ];
@@ -287,8 +287,8 @@ class extends Component
         $showCtx = $ctx && (
             $ctx['role'] === 'any' ||
             ($ctx['role'] === 'status_changer' && $canChangeStatus) ||
-            ($ctx['role'] === 'admin' && $isAdmin) ||
-            ($ctx['role'] === 'sadmin' && $isSAdmin)
+            ($ctx['role'] === 'rem_admin' && $isAdmin) ||
+            ($ctx['role'] === 'rem_super_admin' && $isSAdmin)
         );
 
         $accentMap = [

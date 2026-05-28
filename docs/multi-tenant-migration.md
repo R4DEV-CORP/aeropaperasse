@@ -11,7 +11,7 @@ It is the **source of truth** for architectural decisions, open questions, and t
 - **Current phase:** POC (local, throwaway-safe)
 - **Branch:** `poc-multitenant-l13` (created from `multitenant`)
 - **Framework:** Laravel **13.11.2** (the codebase was bumped 10→11→12→13 since this doc was first written). Note: only the framework *version* was upgraded — the application **keeps the Laravel 10-style skeleton** (`app/Http/Kernel.php` and `app/Console/Kernel.php` still present; `bootstrap/app.php` is the old-style bootstrapper, not the L11+ config-driven `Application::configure()` builder). Middleware registration (e.g. `RoleMiddleware`) therefore still lives in `Http/Kernel.php`, and the L10-specific notes elsewhere in this doc remain valid.
-- **Last updated:** 2026-05-27
+- **Last updated:** 2026-05-28
 
 ### Resume here (handoff) {#resume-here}
 
@@ -38,7 +38,24 @@ It is the **source of truth** for architectural decisions, open questions, and t
 
 **Git state:** this work is uncommitted on branch `poc-multitenant-l13`. It also exists as two "Initial commit" commits on `dev`/`origin/dev` (an accidental branch-switch committed it there); cleaning `dev` was deliberately deferred (would rewrite published history). Decide commit strategy before pushing.
 
-**Then continue with:** the [Roadmap after POC](#roadmap-after-poc) — first the auth/roles refactor ([Q-ROLES](#q-roles)) and pinning `password_reset_tokens` to central.
+**Then continue with:** the [Roadmap after POC](#roadmap-after-poc).
+
+**Update (2026-05-28) — Q-ROLES partially done + password broker pinned:**
+- Password broker pinned to central (`config/auth.php` → `passwords.users.connection = 'central'`).
+- Role values finalized in `App\Enums\Role` and the stored REM values renamed (central data migration `2026_05_28_000001_rename_rem_role_values`: `sadmin → rem_super_admin`, `admin → rem_admin`; tenant values conserved). All `'admin'`/`'sadmin'` literals across app code, views, validators, seeders and tests were updated; `aclient` was added to the role taxonomy (kept as-is).
+- A typed contextual accessor `User::effectiveRole(?tenantId): ?Role` was added; the global helpers (`isAdmin()` etc.) were kept (now enum-based) and **call-site migration to the contextual role remains progressive** ([Q-ROLES](#q-roles)).
+- Verified: full suite **green**; tinker smoke confirms `rem_super_admin` reaches both tenants and the C1 `owner` is pivot-resolved and rejected on `app.*`.
+- **Caveat:** the raw SQL dumps (`dump.sql`, `database/dump.sql`) still contain pre-rename role values — they predate the rename and are not part of the `migrate:fresh` + seed flow; restoring from them would need a manual role fix.
+
+**Update (2026-05-28) — scheduler tenant-awareness (roadmap item 3):**
+- Both expiry commands now run **per tenant** (`Tenant::all()->each->run(...)`): `NotifyBadgeExpiry` (tenant `badges`) and `NotifyTrainingExpiry` (rewritten onto tenant `coworker_trainings`; `TrainingExpiryNotification` now takes a `CoworkerTraining`). New tests `NotifyBadgeExpiryTest` + `NotifyTrainingExpiryTest` (2 tenants each). Full suite **71/71 green**.
+- Audit findings recorded under [Roadmap → item 3](#roadmap-after-poc): queues N/A (no jobs), Scout auto-isolated (database driver).
+
+**Update (2026-05-28) — universal login + tenant chooser:**
+- A logged-in user who lacks access to the current tenant but belongs to others is now sent to a **tenant chooser** (`/choose-tenant`) instead of the no-access page; users with zero tenants still get no-access. `app.*` is the universal portal. See [Universal login + tenant chooser](#universal-login--tenant-chooser-decided-implemented). New `tests/Feature/TenantChooserTest`; full suite **77/77 green**; verified end-to-end in the browser.
+- Two integration bugs fixed along the way (see [gotchas](#poc-gotchas)): stancl's placeholder `GET /` in `routes/tenant.php` shadowed the app's `/`; and `User::tenants()` referenced the base stancl Tenant (no `domains` relation) instead of `App\Models\Tenant`.
+- Local browser testing: Vite dev server CORS fixed in `vite.config.js`; POC seeder accounts now have 2FA + first-login-password-change disabled.
+- **Chooser UX:** dedicated `layouts::select`, a live search box, and tenant **names** (on the tenant `data` column) instead of raw links. For **REM staff** the chooser lists **all** tenants; they reach it via a **"Changer d'espace"** link in the app sidebar (shown to REM or any user with ≥2 tenants). Full suite **79/79 green**; verified end-to-end in the browser.
 
 ---
 
@@ -123,17 +140,18 @@ Two role levels, decided:
 
 REM staff. These roles grant access to **every tenant** (present and future).
 
-| Display name | Replaces | Proposed enum value |
+| Display name | Replaces | Enum value (`App\Enums\Role`) |
 |---|---|---|
-| **Super administrateur REM** | old `sadmin` | `rem_super_admin` *(to confirm at implementation)* |
-| **Administrateur REM** | old `admin` | `rem_admin` *(to confirm)* |
+| **Super administrateur REM** | old `sadmin` | `rem_super_admin` |
+| **Administrateur REM** | old `admin` | `rem_admin` |
 
 ### Tenant level (scoped to one tenant, carried by the `tenant_user` pivot)
 
-| Display name | Origin | Proposed enum value |
+| Display name | Origin | Enum value (`App\Enums\Role`) |
 |---|---|---|
-| **Owner** | **new** role | `owner` *(to confirm)* |
-| **Administrateur** | **new** role | `tenant_admin` *(to confirm — avoid clashing with the old REM `admin`)* |
+| **Owner** | **new** role | `owner` |
+| **Administrateur** | **new** role | `tenant_admin` |
+| **AClient** | conserved as-is | `aclient` |
 | **sclient** | conserved as-is | `sclient` |
 | **client** | conserved as-is | `client` |
 
@@ -141,7 +159,9 @@ The **role lives on the `tenant_user` pivot**, not on the user row — so the sa
 
 `Owner` and `Administrateur` are **new** tenant-level roles, assigned manually after the migration. No existing row is auto-converted into them.
 
-> **Implementation note:** the current code uses `User::role` plus helpers `isAdmin()` / `isSAdmin()` / `isClient()` / `isSClient()` and `RoleMiddleware` (`role:admin,sadmin`). These resolve a *global* role on the user. Under the new model the effective role is **contextual** (it depends on the current tenant), so these helpers and the middleware must be reworked to read the role from the `tenant_user` pivot for the active tenant (REM roles short-circuit to "access granted"). This refactor is part of the post-POC auth work.
+`AClient` is a pre-existing tenant-level role: an `sclient` with one extra right — creating badges **within the scope of its own company**. Kept as-is for both `app.aeropaperasse` and the new tenants; it may be renamed later (machine value stays `aclient` for now). It was absent from the earlier draft of these tables.
+
+> **Implementation note (status):** the canonical role values now live in the `App\Enums\Role` backed enum, and the stored `users.role` REM values were renamed via a central data migration (`2026_05_28_000001_rename_rem_role_values`: `sadmin → rem_super_admin`, `admin → rem_admin`; tenant values unchanged). The existing global helpers `isAdmin()` / `isSAdmin()` / `isClient()` / `isSClient()` / `isAClient()` were kept (now compare against the enum) and a **typed contextual accessor** `User::effectiveRole(?tenantId): ?Role` was added (REM role short-circuits; otherwise the `tenant_user` pivot role for the active tenant). **Still to do (progressive):** migrate the ~236 call-sites that read the *global* helpers over to the contextual `effectiveRole()` where they should depend on the active tenant, and rework `RoleMiddleware` (`role:admin,sadmin`, legacy API only) accordingly.
 
 ---
 
@@ -168,13 +188,20 @@ A **single central user directory** — there is no longer a split between "cent
 
 ### Guard & session (decided)
 
-- **Auth guard on the central connection.** `stancl/tenancy` switches the default DB connection to the tenant in tenant context, but `users` is central. The auth provider (and `password_reset_tokens`, Sanctum tokens) must therefore be **pinned to the central connection** explicitly, so login always queries the central directory regardless of the current tenant.
+- **Auth guard on the central connection.** `stancl/tenancy` switches the default DB connection to the tenant in tenant context, but `users` is central. The auth provider (and `password_reset_tokens`, Sanctum tokens) must therefore be **pinned to the central connection** explicitly, so login always queries the central directory regardless of the current tenant. **Done:** the password broker is pinned via `config/auth.php` → `passwords.users.connection = 'central'` (the `password_reset_tokens` migration already lives in central). Sanctum `personal_access_tokens` is **not yet pinned** (API legacy, non-blocking).
 - **Shared login across subdomains.** Set `SESSION_DOMAIN=.aeropaperasse.fr` so the session cookie is shared across `app.*` and `client*.*` — a user logged in on one subdomain stays logged in on the others. The **session store must live outside the tenant switch** (central connection / Redis / file), otherwise moving subdomain would change the session table and drop the session.
 - **Shared login ≠ shared access.** The session is shared, but every subdomain re-runs the per-tenant authorization (step 3 above). A user who is not a member of the current tenant stays authenticated but is sent to the **"no access to this space"** screen (see below).
 
-### "No access" state (decided)
+### Universal login + tenant chooser (decided, implemented)
 
-A logged-in user can land on a subdomain where they have **no `tenant_user` row** (e.g. a freshly created user, a user removed from a tenant, or a multi-tenant user hitting a wrong subdomain). This must render a graceful **"you don't have access to this space"** page — not a raw 403, not a forced logout. Built with the project's own `x-ui.*` primitives on `layouts::auth` (**no FluxUI**), consistent with the rest of the app.
+Any subdomain authenticates against the central directory, so **anyone can log in anywhere** — `app.*` acts as the universal portal. What differs is where a logged-in user goes when they **lack access to the tenant they landed on** (no `tenant_user` row and not REM staff):
+
+- **They belong to ≥1 other tenant** → redirected to a **tenant chooser** (`/choose-tenant`, route `tenant.choose`) that lists their tenants with a link to each one's subdomain. The session cookie is shared across `*.aeropaperasse.*`, so picking one keeps them authenticated on arrival. Example: a C1-only user logging in on `app.*` is sent to the chooser and picks C1; on `client2.*` they get the chooser (listing C1) and never see C2's data.
+- **They belong to no tenant at all** → the graceful **"no access to this space"** page (`tenant.no-access`).
+
+REM staff reach every tenant directly (short-circuit), so the gate never *redirects* them to the chooser — but when they open it (`/choose-tenant`), it lists **all** tenants (`Tenant::all()`), since they manage every space, rather than a pivot-scoped list. REM staff keep landing on `app` after login (unchanged); they reach the chooser on demand via a **"Changer d'espace"** link in the app sidebar (`layouts::app`). That link is shown to anyone who can reach more than one space — REM staff, or a user with ≥2 `tenant_user` rows. Both chooser/no-access pages are full Livewire pages under `pages/auth/`, built from `x-ui.*` primitives, and live **outside** the `tenant.member` gate (with `auth` only) to avoid redirect loops. The logic lives in `EnsureTenantMembership`. The `/` route is a smart entry: authenticated → the user's landing (`UserRedirectService`), guest → login — so the chooser's links to each tenant's `/` land inside the app.
+
+**Chooser UI:** the no-access page stays on `layouts::auth`, but the chooser uses its own **dedicated layout `layouts::select`** (a wide, full-page layout — not `app`/`auth`) because a user may belong to many tenants. It shows a **live search box** (`wire:model.live` + a `#[Computed]` filter over the in-memory list) and renders each tenant as a card showing its **friendly name** (with the domain as a subtitle), not a raw link. Tenant names are stored on the tenant's `data` column (`$tenant->name`, set by the seeder / at provisioning); the chooser falls back to the domain when no name is set.
 
 ---
 
@@ -216,7 +243,7 @@ When a REM super-admin logs in on `app.aeropaperasse.fr`, they see REM tenant da
 - Is there a central admin landing (e.g. `admin.aeropaperasse.fr`) that lists all tenants and lets a super-admin pick one?
 - Or does it stay subdomain-driven only (REM staff bookmark each subdomain)?
 
-A "switch tenant" UI is the natural home for this once a user can belong to several tenants. Not blocking for POC.
+A "switch tenant" UI is the natural home for this once a user can belong to several tenants. **Addressed:** the [tenant chooser](#universal-login--tenant-chooser-decided-implemented) handles both cases — non-REM users who land on a tenant they can't access (lists their tenants), and **REM staff** who open it via the **"Changer d'espace"** sidebar link (lists *all* tenants). Decided: REM staff keep landing on `app` after login (not auto-routed to the chooser). A dedicated `admin.aeropaperasse.fr` central landing remains optional/future.
 
 ### Q3 — DNS provider for wildcard SSL
 
@@ -236,7 +263,9 @@ POC model: REM staff get a `tenant_user` row per tenant (auto-attached at provis
 
 ### Q-ROLES — Final enum values & helper refactor {#q-roles}
 
-The machine values in the [Roles](#roles) tables are proposals. To finalize: exact enum/string values, and the rework of `isAdmin()`/`isSAdmin()`/`isClient()`/`isSClient()` + `RoleMiddleware` into **tenant-contextual** checks.
+**Resolved (enum values, 2026-05-28):** the machine values are now final and live in `App\Enums\Role`: `rem_super_admin`, `rem_admin`, `owner`, `tenant_admin`, `aclient`, `sclient`, `client`. The REM values were renamed in the stored data (central migration); tenant values were conserved. The password broker was pinned to central.
+
+**Still open (progressive):** the helper refactor into **tenant-contextual** checks is partially done — a typed `User::effectiveRole(?tenantId)` accessor exists, but the global helpers (`isAdmin()`/`isSAdmin()`/`isClient()`/`isSClient()`/`isAClient()`) are still global and read `users.role`. Migrating the ~236 call-sites to read the active-tenant role from the pivot (and reworking the legacy `RoleMiddleware`) is deliberately incremental. Also pending: choosing a final display name/value for `aclient`.
 
 ### Q-CLIENT — User ↔ company (client) association becomes tenant-contextual {#q-client}
 
@@ -255,10 +284,15 @@ Today a `client` / `sclient` user is tied to **their company** via `users.client
 Recurring patterns to know when touching this code (all because the default connection is swapped to the tenant in tenant context, while central tables stay central):
 
 - **Sessions** are on the central connection (`SESSION_DRIVER=database`, `SESSION_CONNECTION=central`, `sessions` migration in central) so the store lives outside the tenant switch — required because `FilesystemTenancyBootstrapper` suffixes `storage_path`.
+- **Local HTTP testing — `SESSION_SECURE_COOKIE=false` in `.env`.** `config/session.php` defaults `secure` to `true`; over plain `http://*.aeropaperasse.test` the browser then drops the (secure) session + XSRF cookies, so no session persists and every Livewire request returns **419 "page expired"** (the login form appears to reload back to itself). Set `SESSION_SECURE_COOKIE=false` for local dev; it **must be `true` in production** (HTTPS). `SESSION_DOMAIN=.aeropaperasse.test` (leading dot) shares the cookie across `app.*`/`client*.*`.
 - **Central-pinned models** (`$connection = 'central'`): `User`, `Training`, `TwoFactorCode` (2FA is issued during login, which runs in tenant context). `Tenant`/`Domain` are pinned by the package (`CentralConnection`).
 - **Validation `exists`/`unique` rules against central tables** must name the connection: `exists:central.trainings,id` (a bare `exists:trainings,id` would hit the tenant DB). Rules against tenant tables (`clients`, `coworkers`, …) stay unqualified.
 - **`User` relations to tenant models** resolve via the `newRelatedInstance()` override (see Q-CLIENT).
-- **Tests** touching tenant-scoped models extend `Tests\TenantTestCase` (boots a real tenant DB + initializes tenancy + gives it a domain for HTTP tests). Non-REM users acting in a tenant need a `tenant_user` row (or use a REM `admin`/`sadmin` who bypasses the membership gate).
+- **Assets (Vite / `asset()`):** `config/tenancy.php` → `asset_helper_tenancy = false`. With it on, the `FilesystemTenancyBootstrapper` rewrites every `asset()` URL (including the `@vite` build files and the `public/images` logo) to the per-tenant `/tenancy/assets/*` route, which serves tenant storage — so the Tailwind/Vite build and the logo 404'd and pages rendered unstyled. All `asset()` usages here target **global** static files (build, logo); tenant files (documents/PDFs) go through Storage download routes, so global `asset()` is correct.
+- **Vite dev server cross-origin:** the dev server (`npm run dev` / `composer run dev`) is a different origin (`127.0.0.1:5173`) than the tenant domains, so its ES-module/HMR assets are loaded cross-origin and were blocked by the browser (styles missing, images fine). Fixed in `vite.config.js` with `server.cors` allowing `*.aeropaperasse.test` (+ `host: 127.0.0.1`). Restart the dev server after changing that config. (`npm run build` also works without a dev server.)
+- **`routes/tenant.php` placeholder shadowed `/`:** stancl's scaffolding registers a default `GET /` (returning a string) under the tenant domains; it loads **after** `routes/web.php`, so it **overwrote** the app's `/` route. Removed it — this app puts all routes in `web.php` (already wrapped in tenancy middleware); `routes/tenant.php` is now empty.
+- **`User::tenants()` must reference `App\Models\Tenant`** (not the base `Stancl\Tenancy\Database\Models\Tenant`): only the app model has the `HasDomains` trait, so `->tenants()->with('domains')` (used by the chooser) needs it. Achieved by *not* importing the base class in `User` (same namespace resolves to `App\Models\Tenant`).
+- **Tests** touching tenant-scoped models extend `Tests\TenantTestCase` (boots a real tenant DB + initializes tenancy + gives it a domain for HTTP tests). Non-REM users acting in a tenant need a `tenant_user` row (or use a REM `admin`/`sadmin` who bypasses the membership gate). The POC seeder accounts have `two_factor_enabled = false` and `is_new = false` so local browser testing isn't blocked by the email 2FA code (`MAIL_MAILER=log`) or the forced first-login password change.
 
 ---
 
@@ -309,7 +343,11 @@ Once the POC is validated, the post-POC roadmap (high level — to be detailed w
 
 1. **Auth/roles refactor** — finalize enum values, rework role helpers + `RoleMiddleware` to read the tenant-contextual role from `tenant_user` (Q-ROLES).
 2. **Real-data migration plan** — promote the existing DB to the central DB, carve business tables into `tenant_rem`, back-fill `tenant_user` rows, map roles (see [Migration of existing data](#migration-of-existing-data)).
-3. **Tenant-aware infrastructure** — queues, scheduler, storage, mail, PDF, Scout.
+3. **Tenant-aware infrastructure** — queues, scheduler, storage, mail, PDF, Scout. **Audit (2026-05-28):**
+   - **Queues:** no `ShouldQueue` jobs in the app → nothing to make tenant-aware.
+   - **Scout:** driver is `database` (`config/scout.php`); the searchable models (`Client`, `ActivityRequest`, `BadgeRequest`) are tenant-scoped, so `::search()` hits the active tenant DB directly → isolation is **already automatic**, no per-tenant index needed. The per-tenant index-prefix decision only applies if migrating to an external engine (Algolia/Meilisearch/Typesense).
+   - **Scheduler:** both expiry commands **now iterate `Tenant::all()` and run per tenant** via `$tenant->run()`, with the log path resolved once in central. `NotifyBadgeExpiry` (`badges:check-expiry`) reads tenant `badges`; `NotifyTrainingExpiry` (`trainings:check-expiry`) was **rewritten to read the tenant `coworker_trainings` table** (the live training-assignment model — `user_trainings` was a dead legacy table with no migration) and notifies each coworker; its `TrainingExpiryNotification` mailable now takes a `CoworkerTraining`. Covered by `tests/Feature/NotifyBadgeExpiryTest` and `tests/Feature/NotifyTrainingExpiryTest` (2 tenants each, isolation + out-of-window). Schedule entries unchanged. *(Legacy `App\Models\UserTraining` + `TrainingController` API still reference `user_trainings` — untouched, legacy API.)*
+   - **Storage / mail / PDF:** the filesystem + queue bootstrappers are enabled (`config/tenancy.php`); document/PDF isolation per tenant is not yet verified end-to-end (needs the local domains up).
 4. **Forge production setup** — wildcard site, wildcard SSL, deploy workflow that runs both central and tenant migrations.
 5. **Tenant provisioning flow** — admin UI or command to create a new tenant (DB + migrations + REM `tenant_user` back-fill), then a self-service version with billing.
 6. **Cutover plan** — staging validation, production cutover, rollback plan.

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Mail\UserCreated;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,14 +17,14 @@ class UserController extends Controller
     {
         try {
             $user = Auth::user();
-            if ($user->role == 'sadmin') {
+            if ($user->role == Role::RemSuperAdmin->value) {
                 $users = User::with('client')->get();
-            } elseif ($user->role == 'admin') {
-                $users = User::with('client')->where('role', '!=', 'sadmin')->get();
-            } elseif ($user->role == 'sclient') {
+            } elseif ($user->role == Role::RemAdmin->value) {
+                $users = User::with('client')->where('role', '!=', Role::RemSuperAdmin->value)->get();
+            } elseif ($user->role == Role::SClient->value) {
                 $users = User::with('client')
-                    ->where('role', '!=', 'sadmin')
-                    ->where('role', '!=', 'admin')
+                    ->where('role', '!=', Role::RemSuperAdmin->value)
+                    ->where('role', '!=', Role::RemAdmin->value)
                     ->where('client_id', $user->client_id)
                     ->get();
             }
@@ -47,7 +48,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'role' => 'required|in:sadmin,sclient,admin,client,aclient',
+            'role' => 'required|in:rem_super_admin,sclient,rem_admin,client,aclient',
             'client_id' => 'nullable|exists:clients,id',
             'has_left' => 'nullable|boolean',
             'departure_date' => 'nullable|date|required_if:has_left,true',
@@ -116,7 +117,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
-            'role' => 'required|string|in:sadmin,sclient,admin,client,aclient',
+            'role' => 'required|string|in:rem_super_admin,sclient,rem_admin,client,aclient',
             'client_id' => 'required',
             'password' => 'nullable|string|min:6', // Le mot de passe est optionnel à la mise à jour
             'has_left' => 'nullable|boolean',
@@ -189,15 +190,15 @@ class UserController extends Controller
 
             $usersQuery = User::query();
 
-            if ($user->role == 'sadmin') {
+            if ($user->role == Role::RemSuperAdmin->value) {
                 // Les super admins peuvent voir tous les utilisateurs
-            } elseif ($user->role == 'admin') {
+            } elseif ($user->role == Role::RemAdmin->value) {
                 // Les admins ne peuvent pas voir les super admins
-                $usersQuery->where('role', '!=', 'sadmin');
-            } elseif ($user->role == 'sclient') {
+                $usersQuery->where('role', '!=', Role::RemSuperAdmin->value);
+            } elseif ($user->role == Role::SClient->value) {
                 // Les super clients ne peuvent voir que les utilisateurs de leur société
-                $usersQuery->where('role', '!=', 'sadmin')
-                    ->where('role', '!=', 'admin')
+                $usersQuery->where('role', '!=', Role::RemSuperAdmin->value)
+                    ->where('role', '!=', Role::RemAdmin->value)
                     ->where('client_id', $user->client_id);
             } else {
                 // Pour les autres rôles, on limite l'accès
@@ -215,7 +216,7 @@ class UserController extends Controller
             }
 
             if ($clientId) {
-                if ($user->role == 'sclient' && $clientId != $user->client_id) {
+                if ($user->role == Role::SClient->value && $clientId != $user->client_id) {
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Vous ne pouvez voir que les utilisateurs de votre société',

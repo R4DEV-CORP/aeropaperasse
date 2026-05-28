@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Role;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -30,13 +31,14 @@ class TenantMembershipTest extends TestCase
         $this->makeTenant('rem');
         $this->makeTenant('c1');
 
-        $rem = User::factory()->create(['role' => 'sadmin']);
+        $rem = User::factory()->create(['role' => 'rem_super_admin']);
 
         $this->assertTrue($rem->isRemStaff());
         $this->assertTrue($rem->belongsToTenant('rem'));
         $this->assertTrue($rem->belongsToTenant('c1'));
-        $this->assertSame('sadmin', $rem->effectiveRoleFor('rem'));
-        $this->assertSame('sadmin', $rem->effectiveRoleFor('c1'));
+        $this->assertSame('rem_super_admin', $rem->effectiveRoleFor('rem'));
+        $this->assertSame('rem_super_admin', $rem->effectiveRoleFor('c1'));
+        $this->assertSame(Role::RemSuperAdmin, $rem->effectiveRole('c1'));
         $this->assertCount(0, $rem->tenants);
     }
 
@@ -66,5 +68,7 @@ class TenantMembershipTest extends TestCase
 
         $this->assertSame('sclient', $user->effectiveRoleFor('rem'));
         $this->assertSame('owner', $user->effectiveRoleFor('c1'));
+        $this->assertSame(Role::SClient, $user->effectiveRole('rem'));
+        $this->assertSame(Role::Owner, $user->effectiveRole('c1'));
     }
 }

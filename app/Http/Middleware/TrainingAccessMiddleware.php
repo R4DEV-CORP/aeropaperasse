@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\Role;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -12,12 +13,12 @@ class TrainingAccessMiddleware
         $user = $request->user();
 
         // Les admin et sadmin ont toujours accès
-        if ($user->role === 'admin' || $user->role === 'sadmin') {
+        if ($user->role === Role::RemAdmin->value || $user->role === Role::RemSuperAdmin->value) {
             return $next($request);
         }
 
         // Les client, sclient et aclient ont accès uniquement si is_student est true
-        if (in_array($user->role, ['client', 'sclient', 'aclient'], true) && ! $user->is_student) {
+        if (in_array($user->role, [Role::Client->value, Role::SClient->value, Role::AClient->value], true) && ! $user->is_student) {
             return response()->json(['message' => 'Unauthorized - No training access'], 403);
         }
 

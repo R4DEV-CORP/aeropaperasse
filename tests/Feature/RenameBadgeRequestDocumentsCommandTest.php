@@ -14,7 +14,7 @@ class RenameBadgeRequestDocumentsCommandTest extends TenantTestCase
 {
     private function makeBadgeRequest(): BadgeRequest
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = User::factory()->create(['role' => 'rem_admin']);
         $client = Client::factory()->create(['company_name' => 'Acme Corp']);
         $coworker = Coworker::factory()->create(['client_id' => $client->id]);
         $activityRequest = ActivityRequest::factory()->create([

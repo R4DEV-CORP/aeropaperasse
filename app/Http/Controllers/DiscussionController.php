@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Models\Discussion;
 use App\Models\DiscussionFile;
 use Illuminate\Http\Request;
@@ -24,12 +25,12 @@ class DiscussionController extends Controller
         // Option 1: Filtrer uniquement sur l'utilisateur connecté
 
         // OU Option 2: Filtrer selon le rôle de l'utilisateur
-        if ($user->role == 'sadmin') {
+        if ($user->role == Role::RemSuperAdmin->value) {
             // Les admins peuvent voir toutes les discussions
             // Pas besoin de filtre supplémentaire
-        } elseif ($user->role == 'admin') {
+        } elseif ($user->role == Role::RemAdmin->value) {
 
-        } elseif ($user->role == 'sclient') {
+        } elseif ($user->role == Role::SClient->value) {
             // Les modérateurs peuvent voir les discussions de leur département
             $discussions = $discussions->whereHas('user', function ($query) use ($user) {
                 $query->where('client_id', $user->client_id);
@@ -150,8 +151,8 @@ class DiscussionController extends Controller
         $user = auth()->user();
         $userId = $user->id;
 
-        if ($user->role !== 'sadmin' && $user->role !== 'admin') {
-            if ($user->role === 'sclient') {
+        if ($user->role !== Role::RemSuperAdmin->value && $user->role !== Role::RemAdmin->value) {
+            if ($user->role === Role::SClient->value) {
                 $discussionUser = $discussion->user;
 
                 if ($discussionUser->client_id !== $user->client_id) {

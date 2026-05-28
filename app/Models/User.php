@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Stancl\Tenancy\Database\Models\Tenant;
 
 class User extends Authenticatable
 {
@@ -64,28 +64,27 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        // return $this->role === 'admin'; // ou votre logique d'admin
-        return $this->role === 'admin' || $this->role === 'sadmin';
+        return $this->role === Role::RemAdmin->value || $this->role === Role::RemSuperAdmin->value;
     }
 
     public function isSAdmin(): bool
     {
-        return $this->role === 'sadmin';
+        return $this->role === Role::RemSuperAdmin->value;
     }
 
     public function isClient(): bool
     {
-        return $this->role === 'client';
+        return $this->role === Role::Client->value;
     }
 
     public function isSClient(): bool
     {
-        return $this->role === 'sclient';
+        return $this->role === Role::SClient->value;
     }
 
     public function isAClient(): bool
     {
-        return $this->role === 'aclient';
+        return $this->role === Role::AClient->value;
     }
 
     /**
@@ -116,16 +115,33 @@ class User extends Authenticatable
     }
 
     /**
-     * Effective role for the active tenant: the REM role short-circuits (REM staff),
+     * Effective role (typed) for a tenant: the REM role short-circuits (REM staff),
      * otherwise the role carried on the `tenant_user` pivot for that tenant.
+     * Defaults to the currently initialized tenant when no id is given.
+     */
+    public function effectiveRole(?string $tenantId = null): ?Role
+    {
+        $tenantId ??= tenant()?->getTenantKey();
+
+        if ($this->isRemStaff()) {
+            return Role::tryFrom((string) $this->role);
+        }
+
+        if ($tenantId === null) {
+            return null;
+        }
+
+        $pivotRole = $this->membershipFor($tenantId)?->pivot->role;
+
+        return $pivotRole === null ? null : Role::tryFrom($pivotRole);
+    }
+
+    /**
+     * String form of {@see effectiveRole()} for a specific tenant.
      */
     public function effectiveRoleFor(string $tenantId): ?string
     {
-        if ($this->isRemStaff()) {
-            return $this->role;
-        }
-
-        return $this->membershipFor($tenantId)?->pivot->role;
+        return $this->effectiveRole($tenantId)?->value;
     }
 
     public function canChangeRequestStatus(): bool

@@ -203,7 +203,7 @@ class extends Component
                 Mail::to($recipient)->send(new VehiclePassCreated($vehiclePass, false));
             }
 
-            $admins = User::whereIn('role', ['admin', 'sadmin'])->get();
+            $admins = User::whereIn('role', ['rem_admin', 'rem_super_admin'])->get();
             foreach ($admins as $admin) {
                 Mail::to($admin->email)->send(new VehiclePassCreated($vehiclePass, true));
             }

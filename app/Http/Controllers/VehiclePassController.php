@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Mail\VehiclePassCreated;
 use App\Mail\VehiclePassStatusUpdated;
 use App\Models\User;
@@ -18,7 +19,7 @@ class VehiclePassController extends Controller
         $user = $request->user();
 
         // Si l'utilisateur est admin, récupérer toutes les demandes, sauf les brouillons
-        if ($user->role === 'admin' || $user->role === 'sadmin') {
+        if ($user->role === Role::RemAdmin->value || $user->role === Role::RemSuperAdmin->value) {
             $requests = VehiclePass::where('status', '!=', 'draft')->latest()->get();
             $draftCount = VehiclePass::where('status', 'draft')->count();
         }
@@ -181,7 +182,7 @@ class VehiclePassController extends Controller
         $user = $request->user();
 
         // Si l'utilisateur est admin, récupérer tous les brouillons
-        if ($user->role === 'admin' || $user->role === 'sadmin') {
+        if ($user->role === Role::RemAdmin->value || $user->role === Role::RemSuperAdmin->value) {
             $drafts = VehiclePass::where('status', 'draft')->with('user')->latest()->get();
         } else {
             // Sinon, récupérer uniquement les brouillons de l'utilisateur
@@ -390,7 +391,7 @@ class VehiclePassController extends Controller
             // - L'utilisateur qui a créé le brouillon peut le supprimer
             // - Les admin/sadmin peuvent supprimer n'importe quel brouillon
             $user = $request->user();
-            if ($draft->user_id !== $user->id && ! in_array($user->role, ['admin', 'sadmin'])) {
+            if ($draft->user_id !== $user->id && ! in_array($user->role, [Role::RemAdmin->value, Role::RemSuperAdmin->value])) {
                 return response()->json([
                     'message' => 'Vous n\'êtes pas autorisé à supprimer ce brouillon',
                 ], 403);
@@ -434,7 +435,7 @@ class VehiclePassController extends Controller
                 ->send(new VehiclePassCreated($vehiclePass, false));
 
             // Email de notification aux admins
-            $adminUsers = User::whereIn('role', ['admin', 'sadmin'])->get();
+            $adminUsers = User::whereIn('role', [Role::RemAdmin->value, Role::RemSuperAdmin->value])->get();
             foreach ($adminUsers as $admin) {
                 Mail::to($admin->email)
                     ->send(new VehiclePassCreated($vehiclePass, true));

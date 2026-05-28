@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Models\ActivityRequest;
 use App\Models\Client;
 use App\Services\ClientOverviewPdfService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class ClientController extends Controller
 {
@@ -215,7 +217,7 @@ class ClientController extends Controller
             $clientId = (int) $id;
 
             // Vérification des droits d'accès
-            $isAdmin = $user->role === 'sadmin' || $user->role === 'admin';
+            $isAdmin = $user->role === Role::RemSuperAdmin->value || $user->role === Role::RemAdmin->value;
             if (! $isAdmin && $user->client_id !== $clientId) {
                 return response()->json(['error' => 'Unauthorized'], 403);
             }
@@ -314,7 +316,7 @@ class ClientController extends Controller
             $clientId = (int) $id;
 
             // Vérification des droits d'accès
-            $isAdmin = $user->role === 'sadmin' || $user->role === 'admin';
+            $isAdmin = $user->role === Role::RemSuperAdmin->value || $user->role === Role::RemAdmin->value;
             if (! $isAdmin && $user->client_id !== $clientId) {
                 return response()->json(['error' => 'Unauthorized'], 403);
             }
@@ -392,7 +394,7 @@ class ClientController extends Controller
                 'client' => $client->fresh(),
             ]);
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Données invalides',
@@ -414,7 +416,7 @@ class ClientController extends Controller
             $clientId = (int) $id;
 
             // Vérification des droits d'accès
-            $isAdmin = $user->role === 'sadmin' || $user->role === 'admin';
+            $isAdmin = $user->role === Role::RemSuperAdmin->value || $user->role === Role::RemAdmin->value;
             if (! $isAdmin && $user->client_id !== $clientId) {
                 return response()->json(['error' => 'Unauthorized'], 403);
             }

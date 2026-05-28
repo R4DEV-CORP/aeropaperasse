@@ -15,7 +15,7 @@ class CreateStandaloneBadgeTest extends TenantTestCase
 
     private function makeAdmin(): User
     {
-        return User::factory()->create(['role' => 'admin']);
+        return User::factory()->create(['role' => 'rem_admin']);
     }
 
     private function makeClientUser(Client $client): User

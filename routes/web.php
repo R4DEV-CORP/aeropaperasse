@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\Auth\UserRedirectService;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -20,7 +21,11 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
-    Route::get('/', function () {
+    Route::get('/', function (UserRedirectService $redirectService) {
+        if (auth()->check()) {
+            return redirect($redirectService->getRedirectPath(auth()->user()));
+        }
+
         return redirect()->route('auth.login');
     });
 
@@ -50,6 +55,15 @@ Route::middleware([
     Route::livewire('/no-access', 'pages::auth.no-access')
         ->middleware('auth')
         ->name('tenant.no-access');
+
+    /*
+    * Choix de l'espace — authentifié mais hors du gate tenant.member : permet à un user
+    * sans accès au tenant courant (ex. login sur le portail `app`) de choisir un tenant
+    * auquel il appartient. Voir docs/multi-tenant-migration.md.
+    */
+    Route::livewire('/choose-tenant', 'pages::auth.choose-tenant')
+        ->middleware('auth')
+        ->name('tenant.choose');
 
     /*
     * Application authentifiée — chaque page est filtrée par l'appartenance au tenant courant.
