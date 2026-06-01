@@ -50,9 +50,9 @@ new class extends Component
             abort(403);
         }
 
-        if (! $user->isAdmin()) {
+        if (! $user->isTenantManager()) {
             $this->client = $user->client;
-            $this->selected_client_id = $this->client?->id;
+            $this->selected_client_id = $user->contextualClientId();
         }
     }
 
@@ -98,8 +98,8 @@ new class extends Component
         }
 
         // sclient ne peut créer un badge que pour son propre client.
-        if (! $user->isAdmin()) {
-            $this->selected_client_id = $user->client_id;
+        if (! $user->isTenantManager()) {
+            $this->selected_client_id = $user->contextualClientId();
         }
 
         $this->validate();
@@ -153,7 +153,7 @@ new class extends Component
 }; ?>
 
 @php
-    $isAdmin = auth()->user()->isAdmin();
+    $isAdmin = auth()->user()->isTenantManager();
 
     $airportMeta = [
         'CDG' => 'bg-blue-50 text-blue-700 ring-blue-200',

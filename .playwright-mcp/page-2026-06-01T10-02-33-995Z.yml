@@ -1,0 +1,123 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - link "Déconnexion" [ref=e44] [cursor=pointer]:
+      - /url: http://client1.aeropaperasse.test/logout
+      - img [ref=e45]
+      - generic [ref=e47]: Déconnexion
+  - generic [ref=e48]:
+    - banner [ref=e49]:
+      - button "Masquer la barre latérale" [expanded] [ref=e51]:
+        - img [ref=e52]
+      - navigation "Fil d'Ariane" [ref=e54]:
+        - generic [ref=e55]: Administration
+        - img [ref=e56]
+        - link "Collaborateurs & utilisateurs" [ref=e58] [cursor=pointer]:
+          - /url: /coworkers
+        - img [ref=e59]
+        - generic [ref=e61]: Formulaire
+    - main [ref=e62]:
+      - generic [ref=e63]:
+        - generic [ref=e66]:
+          - link "Retour" [ref=e67] [cursor=pointer]:
+            - /url: http://client1.aeropaperasse.test/coworkers
+            - img [ref=e68]
+            - text: Retour
+          - generic [ref=e70]: /
+          - heading "Nouveau collaborateur" [level=1] [ref=e71]
+        - generic [ref=e72]:
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - button "Société Sélection client" [expanded] [ref=e76]:
+                - img [ref=e78]
+                - generic [ref=e80]:
+                  - generic [ref=e81]: Société
+                  - generic [ref=e82]: Sélection client
+                - img [ref=e83]
+              - generic [ref=e86]:
+                - generic [ref=e87]: Client *
+                - button "Client" [ref=e89]:
+                  - generic [ref=e90]: Sélectionnez un client…
+                  - img [ref=e91]
+            - generic [ref=e93]:
+              - button "Identité Coordonnées du collaborateur" [expanded] [ref=e94]:
+                - img [ref=e96]
+                - generic [ref=e98]:
+                  - generic [ref=e99]: Identité
+                  - generic [ref=e100]: Coordonnées du collaborateur
+                - img [ref=e101]
+              - generic [ref=e104]:
+                - generic [ref=e105]:
+                  - generic [ref=e106]: Prénom *
+                  - textbox "Prénom" [ref=e107]
+                - generic [ref=e108]:
+                  - generic [ref=e109]: Nom *
+                  - textbox "Nom" [ref=e110]
+                - generic [ref=e111]:
+                  - generic [ref=e112]: Email
+                  - textbox "Email" [ref=e113]
+                - generic [ref=e114]:
+                  - generic [ref=e115]: Téléphone
+                  - textbox "Téléphone" [ref=e116]
+            - button "Compte utilisateur Optionnel — créer un accès à l'application" [ref=e118]:
+              - img [ref=e120]
+              - generic [ref=e122]:
+                - generic [ref=e123]: Compte utilisateur
+                - generic [ref=e124]: Optionnel — créer un accès à l'application
+              - img [ref=e125]
+            - button "Formations 0 formation(s) attribuée(s)" [ref=e128]:
+              - img [ref=e130]
+              - generic [ref=e132]:
+                - generic [ref=e133]: Formations
+                - generic [ref=e134]: 0 formation(s) attribuée(s)
+              - img [ref=e135]
+          - generic [ref=e138]:
+            - button "Annuler" [ref=e139]
+            - button "Créer le collaborateur" [ref=e140]:
+              - generic [ref=e141]: Créer le collaborateur
+      - generic [ref=e143]:
+        - paragraph [ref=e144]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e145]:
+          - link "Mentions légales" [ref=e146] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e147] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e148] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e149] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e150]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e151] [cursor=pointer]:
+            - /url: https://r4dev.fr

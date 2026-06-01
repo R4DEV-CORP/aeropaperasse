@@ -379,7 +379,7 @@ The `User` model has a `role` field with these values:
 
 Role checks use helper methods: `isAdmin()`, `isSAdmin()`, `isClient()`, `isSClient()`. API routes are protected by `RoleMiddleware` via `role:admin,sadmin` etc.
 
-Clients with `can_access_formation = false` are redirected away from training routes.
+Clients without formation access are redirected away from training routes. The flag is **per tenant** (carried on the `tenant_user` pivot) — read via `$user->canAccessFormation()` (REM short-circuit, then pivot for active tenant, fallback to deprecated `users.can_access_formation` column).
 
 ## Architecture
 

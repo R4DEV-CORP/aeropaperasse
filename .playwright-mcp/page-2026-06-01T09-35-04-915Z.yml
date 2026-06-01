@@ -1,0 +1,150 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - generic [ref=e43]:
+      - link "Changer d'espace" [ref=e44] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/choose-tenant
+        - img [ref=e45]
+        - generic [ref=e47]: Changer d'espace
+      - link "Déconnexion" [ref=e48] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/logout
+        - img [ref=e49]
+        - generic [ref=e51]: Déconnexion
+  - generic [ref=e52]:
+    - banner [ref=e53]:
+      - button "Masquer la barre latérale" [expanded] [ref=e55]:
+        - img [ref=e56]
+      - navigation "Fil d'Ariane" [ref=e58]:
+        - generic [ref=e59]: Administration
+        - img [ref=e60]
+        - link "Formations" [ref=e62] [cursor=pointer]:
+          - /url: /trainings
+        - img [ref=e63]
+        - generic [ref=e65]: Détail
+    - main [ref=e66]:
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - generic [ref=e69]:
+            - link "Retour" [ref=e70] [cursor=pointer]:
+              - /url: http://app.aeropaperasse.test/trainings
+              - img [ref=e71]
+              - text: Retour
+            - generic [ref=e73]: /
+            - heading "Test Société SA" [level=1] [ref=e74]
+            - generic [ref=e75]: 1 collaborateur(s)
+          - generic [ref=e76]:
+            - link "Voir la société" [ref=e77] [cursor=pointer]:
+              - /url: http://app.aeropaperasse.test/companies/3
+            - button "Attribuer une formation" [ref=e78]:
+              - img [ref=e79]
+              - text: Attribuer une formation
+        - generic [ref=e81]:
+          - generic [ref=e84]:
+            - generic [ref=e87]: Actives
+            - generic [ref=e88]: "0"
+          - generic [ref=e91]:
+            - generic [ref=e94]: Expirent < 6 mois
+            - generic [ref=e95]: "0"
+          - generic [ref=e98]:
+            - generic [ref=e101]: Expirées
+            - generic [ref=e102]: "0"
+        - group [ref=e104]:
+          - generic "Formations actives 0" [ref=e105] [cursor=pointer]:
+            - generic [ref=e106]:
+              - img [ref=e107]
+              - heading "Formations actives" [level=2] [ref=e109]
+            - generic [ref=e110]: "0"
+          - generic [ref=e111]: Aucune formation active.
+        - group [ref=e113]:
+          - generic "Formations qui expirent (< 6 mois) 0" [ref=e114] [cursor=pointer]:
+            - generic [ref=e115]:
+              - img [ref=e116]
+              - heading "Formations qui expirent (< 6 mois)" [level=2] [ref=e118]
+            - generic [ref=e119]: "0"
+          - generic [ref=e120]: Aucune formation n'expire dans les 6 prochains mois.
+        - group [ref=e122]:
+          - generic "Formations expirées 0" [ref=e123] [cursor=pointer]:
+            - generic [ref=e124]:
+              - img [ref=e125]
+              - heading "Formations expirées" [level=2] [ref=e127]
+            - generic [ref=e128]: "0"
+          - generic [ref=e129]: Aucune formation expirée.
+        - dialog [ref=e140]:
+          - generic [ref=e143]:
+            - generic [ref=e144]:
+              - heading "Attribuer une formation" [level=2] [ref=e145]
+              - paragraph [ref=e146]: Sélectionnez le collaborateur, la formation et les dates de validité.
+            - generic [ref=e147]:
+              - generic [ref=e148]: Société *
+              - button "Société" [ref=e150]:
+                - generic [ref=e151]: Test Société SA
+                - img [ref=e152]
+            - generic [ref=e154]:
+              - generic [ref=e155]: Collaborateur *
+              - button "Collaborateur" [ref=e157]:
+                - generic [ref=e158]: Alice Durand
+                - img [ref=e159]
+            - generic [ref=e174]:
+              - generic [ref=e175]: Formation *
+              - button "Formation" [ref=e177]:
+                - generic [ref=e178]: Sélectionnez une formation…
+                - img [ref=e179]
+            - generic [ref=e181]:
+              - generic [ref=e182]:
+                - generic [ref=e183]: Date de début *
+                - textbox "Date de début" [ref=e184]
+              - generic [ref=e185]:
+                - generic [ref=e186]: Durée de validité *
+                - button "Durée de validité" [ref=e188]:
+                  - generic [ref=e189]: Sélectionner…
+                  - img [ref=e190]
+            - generic [ref=e161]:
+              - button "Annuler" [ref=e162]
+              - button "Attribuer" [ref=e163]:
+                - generic [ref=e164]: Attribuer
+      - generic [ref=e131]:
+        - paragraph [ref=e132]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e133]:
+          - link "Mentions légales" [ref=e134] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e135] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e136] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e137] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e138]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e139] [cursor=pointer]:
+            - /url: https://r4dev.fr

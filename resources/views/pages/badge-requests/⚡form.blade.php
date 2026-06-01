@@ -22,7 +22,7 @@ class extends Component
     public function mount(?int $badgeRequestId = null): void
     {
         if (auth()->user()->isClient()) {
-            $this->redirect(route('companies.show', ['companyId' => auth()->user()->client_id]), navigate: true);
+            $this->redirect(route('companies.show', ['companyId' => auth()->user()->contextualClientId()]), navigate: true);
 
             return;
         }

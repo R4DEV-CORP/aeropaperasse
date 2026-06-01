@@ -1,0 +1,144 @@
+- generic [ref=e187]:
+  - complementary [ref=e188]:
+    - link "Aeropaperasse" [ref=e190] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e191]
+    - navigation [ref=e192]:
+      - link "Sociétés" [ref=e193] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e195]
+        - generic [ref=e197]: Sociétés
+      - link "Demande d'activité" [ref=e198] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e200]
+        - generic [ref=e202]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e203] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e205]
+        - generic [ref=e207]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e208] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e210]
+        - generic [ref=e212]: Demande de badge
+      - link "Suivi des badges" [ref=e213] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e215]
+        - generic [ref=e217]: Suivi des badges
+      - link "Formations" [ref=e218] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e220]
+        - generic [ref=e222]: Formations
+      - link "Laissez-passer" [ref=e223] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e225]
+        - generic [ref=e227]: Laissez-passer
+    - generic [ref=e228]:
+      - link "Changer d'espace" [ref=e229] [cursor=pointer]:
+        - /url: http://client1.aeropaperasse.test/choose-tenant
+        - img [ref=e230]
+        - generic [ref=e232]: Changer d'espace
+      - link "Déconnexion" [ref=e233] [cursor=pointer]:
+        - /url: http://client1.aeropaperasse.test/logout
+        - img [ref=e234]
+        - generic [ref=e236]: Déconnexion
+  - generic [ref=e237]:
+    - banner [ref=e238]:
+      - button "Masquer la barre latérale" [expanded] [ref=e240]:
+        - img [ref=e241]
+      - navigation "Fil d'Ariane" [ref=e243]:
+        - generic [ref=e244]: Administration
+        - img [ref=e245]
+        - generic [ref=e247]: Suivi des badges
+    - main [ref=e248]:
+      - generic [ref=e249]:
+        - generic [ref=e250]:
+          - heading "Suivi des badges" [level=1] [ref=e251]
+          - paragraph [ref=e252]: Gérez tous les badges depuis cette interface.
+        - generic [ref=e253]:
+          - generic [ref=e256]:
+            - generic [ref=e259]: Total
+            - generic [ref=e260]: "1"
+          - button "Actifs 1" [ref=e261]:
+            - generic [ref=e264]:
+              - generic [ref=e267]: Actifs
+              - generic [ref=e268]: "1"
+          - button "Expirés 0" [ref=e269]:
+            - generic [ref=e272]:
+              - generic [ref=e275]: Expirés
+              - generic [ref=e276]: "0"
+          - button "Restitués 0" [ref=e277]:
+            - generic [ref=e280]:
+              - generic [ref=e283]: Restitués
+              - generic [ref=e284]: "0"
+          - button "Non restitués 0" [ref=e285]:
+            - generic [ref=e288]:
+              - generic [ref=e291]: Non restitués
+              - generic [ref=e292]: "0"
+        - generic [ref=e293]:
+          - generic [ref=e294]:
+            - generic [ref=e297]:
+              - generic:
+                - img
+              - searchbox "Rechercher par nom de collaborateur ou de société..." [ref=e298]
+            - button "Toutes les sociétés" [ref=e302]:
+              - generic [ref=e303]: Toutes les sociétés
+              - img [ref=e304]
+            - generic [ref=e307]:
+              - button "Ajouter un badge" [ref=e308]:
+                - img [ref=e309]
+                - text: Ajouter un badge
+              - button "Plus d'options" [ref=e312]:
+                - img [ref=e313]
+          - radiogroup [ref=e315]:
+            - radio "Tous les aéroports" [checked] [ref=e316]
+            - radio "CDG" [ref=e317]
+            - radio "ORY" [ref=e318]
+            - radio "LBG" [ref=e319]
+        - generic [ref=e320]:
+          - generic [ref=e321]:
+            - heading "Liste des badges" [level=2] [ref=e322]
+            - paragraph [ref=e323]: 1 badge
+          - table [ref=e325]:
+            - rowgroup [ref=e326]:
+              - row "N° badge Détenteur Contact Aéroport Statut Création Expiration Actions" [ref=e327]:
+                - columnheader "N° badge" [ref=e328]
+                - columnheader "Détenteur" [ref=e329]
+                - columnheader "Contact" [ref=e330]
+                - columnheader "Aéroport" [ref=e331]
+                - columnheader "Statut" [ref=e332]
+                - columnheader "Création" [ref=e333]
+                - columnheader "Expiration" [ref=e334]
+                - columnheader "Actions" [ref=e335]
+            - rowgroup [ref=e336]:
+              - row "C1-555 Benjamin Renard Client1 - Nouvelle Société benjamin.renard@c1.test 0623456789 ORY Actif 01/06/2026 01/06/2028 Actions" [ref=e337]:
+                - cell "C1-555" [ref=e338]
+                - cell "Benjamin Renard Client1 - Nouvelle Société" [ref=e339]:
+                  - generic [ref=e340]: Benjamin Renard
+                  - generic [ref=e341]: Client1 - Nouvelle Société
+                - cell "benjamin.renard@c1.test 0623456789" [ref=e342]:
+                  - generic [ref=e343]: benjamin.renard@c1.test
+                  - generic [ref=e344]: "0623456789"
+                - cell "ORY" [ref=e345]:
+                  - generic [ref=e346]: ORY
+                - cell "Actif" [ref=e347]:
+                  - generic [ref=e348]: Actif
+                - cell "01/06/2026" [ref=e350]
+                - cell "01/06/2028" [ref=e351]
+                - cell "Actions" [ref=e352]:
+                  - button "Actions" [ref=e355]:
+                    - img [ref=e356]
+      - generic [ref=e359]:
+        - paragraph [ref=e360]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e361]:
+          - link "Mentions légales" [ref=e362] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e363] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e364] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e365] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e366]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e367] [cursor=pointer]:
+            - /url: https://r4dev.fr

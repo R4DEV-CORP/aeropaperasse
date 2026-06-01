@@ -20,7 +20,7 @@ new class extends Component
     #[On('open-reject-vehicle-pass')]
     public function open(int $id): void
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             return;
         }
 
@@ -48,7 +48,7 @@ new class extends Component
 
     public function submit(): void
     {
-        if (! auth()->user()->isAdmin() || $this->vehiclePassId === null) {
+        if (! auth()->user()->isTenantManager() || $this->vehiclePassId === null) {
             return;
         }
 

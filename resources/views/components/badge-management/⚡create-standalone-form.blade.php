@@ -53,9 +53,9 @@ new class extends Component
             abort(403);
         }
 
-        if (! $user->isAdmin()) {
+        if (! $user->isTenantManager()) {
             $this->client = $user->client;
-            $this->selected_client_id = $this->client?->id;
+            $this->selected_client_id = $user->contextualClientId();
         }
     }
 
@@ -97,9 +97,10 @@ new class extends Component
             abort(403);
         }
 
-        // sclient ne peut créer un badge que pour son propre client.
-        if (! $user->isAdmin()) {
-            $this->selected_client_id = $user->client_id;
+        // sclient ne peut créer un badge que pour son propre client ; les tenant managers (REM staff,
+        // owner, tenant_admin) gardent leur sélection libre.
+        if (! $user->isTenantManager()) {
+            $this->selected_client_id = $user->contextualClientId();
         }
 
         $this->validate();
@@ -131,9 +132,10 @@ new class extends Component
 }; ?>
 
 @php
-    $isAdmin = auth()->user()->isAdmin();
+    $isAdmin = auth()->user()->isTenantManager();
+    $isTenantManager = auth()->user()->isTenantManager();
 
-    $clientOptions = $isAdmin
+    $clientOptions = $isTenantManager
         ? collect($this->clients)
             ->map(fn ($c) => [
                 'value' => $c->id,
@@ -159,8 +161,8 @@ new class extends Component
                 Le badge créé indépendamment ne sera pas rattaché à une demande de badge existante.
             </x-ui.alert>
 
-            {{-- Section Client : picker pour admin/sadmin, info read-only pour sclient --}}
-            @if ($isAdmin)
+            {{-- Section Client : picker pour tenant managers (admin REM/owner/tenant_admin), info read-only pour sclient --}}
+            @if ($isTenantManager)
                 <div x-data="{ open: true }" class="overflow-hidden rounded-lg bg-amber-50/50 ring-1 ring-amber-200/70 ring-inset">
                     <button type="button" @click="open = !open" :aria-expanded="open" class="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-amber-100/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500">
                         <span class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md bg-amber-100 text-amber-700">

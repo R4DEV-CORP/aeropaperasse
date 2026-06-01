@@ -29,8 +29,10 @@ class extends Component
     {
         $user = auth()->user();
 
-        if (! $user->isAdmin()) {
-            $this->redirect(route('companies.show', ['companyId' => $user->client_id]), navigate: true);
+        // Tenant managers (REM staff + owner/tenant_admin) browse the index; single-company
+        // users (client/sclient/aclient) are sent straight to their own company sheet.
+        if (! $user->isTenantManager()) {
+            $this->redirect(route('companies.show', ['companyId' => $user->contextualClientId()]), navigate: true);
         }
     }
 

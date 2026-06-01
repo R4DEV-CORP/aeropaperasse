@@ -1,0 +1,136 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - link "Déconnexion" [ref=e44] [cursor=pointer]:
+      - /url: http://client1.aeropaperasse.test/logout
+      - img [ref=e45]
+      - generic [ref=e47]: Déconnexion
+  - generic [ref=e48]:
+    - banner [ref=e49]:
+      - button "Masquer la barre latérale" [expanded] [ref=e51]:
+        - img [ref=e52]
+      - navigation "Fil d'Ariane" [ref=e54]:
+        - generic [ref=e55]: Administration
+        - img [ref=e56]
+        - generic [ref=e58]: Sociétés
+    - main [ref=e59]:
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - heading "Sociétés" [level=1] [ref=e63]
+            - paragraph [ref=e64]: Gérez les sociétés et leurs accès.
+          - link "Nouvelle société" [ref=e65] [cursor=pointer]:
+            - /url: http://client1.aeropaperasse.test/companies/form
+            - img [ref=e66]
+            - text: Nouvelle société
+        - generic [ref=e68]:
+          - generic [ref=e71]:
+            - generic [ref=e74]: Total sociétés
+            - generic [ref=e75]: "3"
+          - generic [ref=e78]:
+            - generic [ref=e81]: Compagnies aériennes
+            - generic [ref=e82]: "0"
+          - generic [ref=e85]:
+            - generic [ref=e88]: Total collaborateurs
+            - generic [ref=e89]: "5"
+        - generic [ref=e90]:
+          - generic [ref=e94]:
+            - generic:
+              - img
+            - searchbox "Rechercher par nom, nom commercial ou SIRET..." [ref=e95]
+          - radiogroup [ref=e96]:
+            - radio "Toutes" [checked] [ref=e97]
+            - radio "Compagnies aériennes" [ref=e98]
+            - radio "Non aériennes" [ref=e99]
+        - generic [ref=e100]:
+          - generic [ref=e101]:
+            - heading "Liste des sociétés" [level=2] [ref=e102]
+            - paragraph [ref=e103]: 3 sociétés
+          - table [ref=e105]:
+            - rowgroup [ref=e106]:
+              - row "Raison sociale SIRET Ville Collaborateurs Créée le Actions" [ref=e107]:
+                - columnheader "Raison sociale" [ref=e108]
+                - columnheader "SIRET" [ref=e109]
+                - columnheader "Ville" [ref=e110]
+                - columnheader "Collaborateurs" [ref=e111]
+                - columnheader "Créée le" [ref=e112]
+                - columnheader "Actions" [ref=e113]
+            - rowgroup [ref=e114]:
+              - row "Client1 - Nouvelle Société C1NewCo 99988877766655 Lyon 1 01/06/2026 Actions" [ref=e115]:
+                - cell "Client1 - Nouvelle Société C1NewCo" [ref=e116]:
+                  - generic [ref=e118]:
+                    - generic [ref=e119]: Client1 - Nouvelle Société
+                    - generic [ref=e120]: C1NewCo
+                - cell "99988877766655" [ref=e121]
+                - cell "Lyon" [ref=e122]
+                - cell "1" [ref=e123]
+                - cell "01/06/2026" [ref=e124]
+                - cell "Actions" [ref=e125]:
+                  - button "Actions" [ref=e128]:
+                    - img [ref=e129]
+              - row "Client1 Société A 99627447 Noel 2 01/06/2026 Actions" [ref=e131]:
+                - cell "Client1 Société A" [ref=e132]:
+                  - generic [ref=e135]: Client1 Société A
+                - cell "99627447" [ref=e136]
+                - cell "Noel" [ref=e137]
+                - cell "2" [ref=e138]
+                - cell "01/06/2026" [ref=e139]
+                - cell "Actions" [ref=e140]:
+                  - button "Actions" [ref=e143]:
+                    - img [ref=e144]
+              - row "Client1 Société B 22793292 Levy 2 01/06/2026 Actions" [ref=e146]:
+                - cell "Client1 Société B" [ref=e147]:
+                  - generic [ref=e150]: Client1 Société B
+                - cell "22793292" [ref=e151]
+                - cell "Levy" [ref=e152]
+                - cell "2" [ref=e153]
+                - cell "01/06/2026" [ref=e154]
+                - cell "Actions" [ref=e155]:
+                  - button "Actions" [ref=e158]:
+                    - img [ref=e159]
+      - generic [ref=e162]:
+        - paragraph [ref=e163]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e164]:
+          - link "Mentions légales" [ref=e165] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e166] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e167] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e168] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e169]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e170] [cursor=pointer]:
+            - /url: https://r4dev.fr

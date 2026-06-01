@@ -1,0 +1,152 @@
+- generic [ref=e207]:
+  - complementary [ref=e208]:
+    - link "Aeropaperasse" [ref=e210] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e211]
+    - navigation [ref=e212]:
+      - link "Sociétés" [ref=e213] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e215]
+        - generic [ref=e217]: Sociétés
+      - link "Demande d'activité" [ref=e218] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e220]
+        - generic [ref=e222]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e223] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e225]
+        - generic [ref=e227]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e228] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e230]
+        - generic [ref=e232]: Demande de badge
+      - link "Suivi des badges" [ref=e233] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e235]
+        - generic [ref=e237]: Suivi des badges
+      - link "Formations" [ref=e238] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e240]
+        - generic [ref=e242]: Formations
+      - link "Laissez-passer" [ref=e243] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e245]
+        - generic [ref=e247]: Laissez-passer
+    - generic [ref=e248]:
+      - link "Changer d'espace" [ref=e249] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/choose-tenant
+        - img [ref=e250]
+        - generic [ref=e252]: Changer d'espace
+      - link "Déconnexion" [ref=e253] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/logout
+        - img [ref=e254]
+        - generic [ref=e256]: Déconnexion
+  - generic [ref=e257]:
+    - banner [ref=e258]:
+      - button "Masquer la barre latérale" [expanded] [ref=e260]:
+        - img [ref=e261]
+      - navigation "Fil d'Ariane" [ref=e263]:
+        - generic [ref=e264]: Administration
+        - img [ref=e265]
+        - link "Laissez-passer" [ref=e267] [cursor=pointer]:
+          - /url: /vehicle-pass
+        - img [ref=e268]
+        - generic [ref=e270]: Détail
+    - main [ref=e271]:
+      - generic [ref=e272]:
+        - generic [ref=e273]:
+          - generic [ref=e274]:
+            - link "Retour" [ref=e275] [cursor=pointer]:
+              - /url: http://app.aeropaperasse.test/vehicle-pass
+              - img [ref=e276]
+              - text: Retour
+            - generic [ref=e278]: /
+            - 'heading "Laissez-passer #1" [level=1] [ref=e279]'
+            - generic [ref=e280]: En attente
+            - generic [ref=e282]: Indépendante
+          - generic [ref=e284]:
+            - button "Approuver" [ref=e285]:
+              - img [ref=e286]
+              - text: Approuver
+            - button "Rejeter" [ref=e288]:
+              - img [ref=e289]
+              - text: Rejeter
+        - generic [ref=e291]:
+          - generic [ref=e292]:
+            - generic [ref=e294]:
+              - heading "Véhicule" [level=2] [ref=e295]
+              - generic [ref=e296]:
+                - generic [ref=e297]:
+                  - term [ref=e298]: Immatriculation
+                  - definition [ref=e299]: AB-123-CD
+                - generic [ref=e300]:
+                  - term [ref=e301]: Marque
+                  - definition [ref=e302]: Renault Trafic
+                - generic [ref=e303]:
+                  - term [ref=e304]: Aéroport
+                  - definition [ref=e305]:
+                    - generic [ref=e306]: CDG
+            - generic [ref=e308]:
+              - heading "Société & demande d'activité" [level=2] [ref=e309]
+              - generic [ref=e310]:
+                - generic [ref=e311]:
+                  - term [ref=e312]: Société
+                  - definition [ref=e313]:
+                    - link "Test Société SA" [ref=e314] [cursor=pointer]:
+                      - /url: http://app.aeropaperasse.test/companies/3
+                      - text: Test Société SA
+                      - img [ref=e315]
+                - generic [ref=e317]:
+                  - term [ref=e318]: Demande d'activité
+                  - definition [ref=e319]: —
+            - generic [ref=e321]:
+              - heading "Documents" [level=2] [ref=e322]
+              - list [ref=e323]:
+                - listitem [ref=e324]:
+                  - generic [ref=e325]:
+                    - generic [ref=e326]: Carte grise
+                    - generic [ref=e327]: certificate_of_registration-test-socit-sa-1780306978.pdf
+                  - link "Télécharger" [ref=e328] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/tenancy/assets/clients/test-socit-sa/documents/vehicle-pass/1/certificate_of_registration-test-socit-sa-1780306978.pdf
+                    - img [ref=e329]
+                    - text: Télécharger
+                - listitem [ref=e331]:
+                  - generic [ref=e332]:
+                    - generic [ref=e333]: Tampon de l'entreprise
+                    - generic [ref=e334]: company_stamp-test-socit-sa-1780306978.pdf
+                  - link "Télécharger" [ref=e335] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/tenancy/assets/clients/test-socit-sa/documents/vehicle-pass/1/company_stamp-test-socit-sa-1780306978.pdf
+                    - img [ref=e336]
+                    - text: Télécharger
+          - generic [ref=e338]:
+            - generic [ref=e340]:
+              - heading "Suivi" [level=2] [ref=e341]
+              - list [ref=e342]:
+                - listitem [ref=e343]:
+                  - generic [ref=e345]:
+                    - generic [ref=e346]: Créée
+                    - generic [ref=e347]: 01/06/2026 à 09:42
+            - generic [ref=e349]:
+              - heading "Informations" [level=2] [ref=e350]
+              - generic [ref=e351]:
+                - generic [ref=e352]:
+                  - term [ref=e353]: Créée par
+                  - definition [ref=e354]: REM Super Admin
+                - generic [ref=e355]:
+                  - term [ref=e356]: Dernière mise à jour
+                  - definition [ref=e357]: 01/06/2026 à 09:42
+      - generic [ref=e359]:
+        - paragraph [ref=e360]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e361]:
+          - link "Mentions légales" [ref=e362] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e363] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e364] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e365] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e366]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e367] [cursor=pointer]:
+            - /url: https://r4dev.fr

@@ -1,0 +1,911 @@
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e6]:
+        - list [ref=e7]:
+          - listitem [ref=e8]:
+            - link "Stack" [ref=e9] [cursor=pointer]:
+              - /url: "#stack"
+              - button "Stack" [ref=e10]:
+                - img [ref=e12]
+                - text: Stack
+          - listitem [ref=e14]:
+            - link "Context" [ref=e15] [cursor=pointer]:
+              - /url: "#context"
+              - button "Context" [ref=e16]:
+                - img [ref=e18]
+                - text: Context
+          - listitem [ref=e20]:
+            - link "Debug" [ref=e21] [cursor=pointer]:
+              - /url: "#debug"
+              - button "Debug" [ref=e22]:
+                - img [ref=e24]
+                - text: Debug
+          - listitem [ref=e26]:
+            - link "Flare" [ref=e27] [cursor=pointer]:
+              - /url: https://flareapp.io/?utm_campaign=ignition&utm_source=ignition
+              - button "Flare" [ref=e28]:
+                - img [ref=e30]
+                - text: Flare
+        - list [ref=e35]:
+          - listitem [ref=e36]:
+            - link "Share" [ref=e37] [cursor=pointer]:
+              - /url: "#share"
+              - button "Share" [ref=e38]:
+                - img [ref=e40]
+                - text: Share
+            - generic:
+              - generic:
+                - generic:
+                  - heading "Share with Flare" [level=4]
+                  - link "Docs":
+                    - /url: https://flareapp.io/docs/ignition/introducing-ignition/sharing-errors?utm_campaign=ignition&utm_source=ignition
+                    - text: Docs
+                    - img
+                - list:
+                  - listitem:
+                    - generic:
+                      - checkbox "Stack" [checked]
+                      - generic: Stack
+                  - listitem:
+                    - generic:
+                      - checkbox "Context" [checked]
+                      - generic: Context
+                  - listitem:
+                    - generic:
+                      - checkbox "Debug" [checked]
+                      - generic: Debug
+                - generic:
+                  - button "Create Share":
+                    - img
+                    - text: Create Share
+          - listitem [ref=e42]:
+            - link "Docs" [ref=e43] [cursor=pointer]:
+              - /url: https://laravel.com/docs/13.x/eloquent
+              - button "Docs" [ref=e44]:
+                - img [ref=e46]
+                - text: Docs
+          - listitem [ref=e49]:
+            - link [ref=e50] [cursor=pointer]:
+              - /url: "#settings"
+              - button [ref=e51]:
+                - img [ref=e53]
+            - generic:
+              - generic:
+                - generic:
+                  - heading "Ignition Settings" [level=4]
+                  - link "Docs":
+                    - /url: https://flareapp.io/ignition?utm_campaign=ignition&utm_source=ignition
+                    - text: Docs
+                    - img
+                - generic:
+                  - text: Editor
+                  - generic:
+                    - combobox "Editor":
+                      - option "Clipboard"
+                      - option "Sublime"
+                      - option "TextMate"
+                      - option "Emacs"
+                      - option "MacVim"
+                      - option "PhpStorm" [selected]
+                      - option "PHPStorm Remote"
+                      - option "Idea"
+                      - option "VS Code"
+                      - option "VS Code Insiders"
+                      - option "VS Code Remote"
+                      - option "VS Code Insiders Remote"
+                      - option "VS Codium"
+                      - option "Cursor"
+                      - option "Atom"
+                      - option "Nova"
+                      - option "NetBeans"
+                      - option "Zed"
+                      - option "Windsurf"
+                      - option "Xdebug"
+                    - generic:
+                      - img
+                - generic:
+                  - text: Theme
+                  - button "auto":
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic:
+                            - img
+                      - generic: auto
+                - generic:
+                  - button "Save settings"
+                - paragraph:
+                  - text: Settings will be saved locally in
+                  - code: ~/.ignition.json
+                  - text: .
+      - 'link "SQLSTATE[42S02]: Base table or view not found: 1146 Table ''aeropaperasse_central.coworker_trainings'' doesn''t exist (Connection: central, Host: 127.0.0.1, Port: 3306, Database: aeropaperasse_central, SQL: select `trainings`.*, `coworker_trainings`.`coworker_id` as `pivot_coworker_id`, `coworker_trainings`.`training_id` as `pivot_training_id`, `coworker_trainings`.`id` as `pivot_id`, `coworker_trainings`.`started_at` as `pivot_started_at`, `coworker_trainings`.`expires_at` as `pivot_expires_at`, `coworker_trainings`.`certificate_path` as `pivot_certificate_path` from `trainings` inner join `coworker_trainings` on `trainings`.`id` = `coworker_trainings`.`training_id` where `coworker_trainings`.`coworker_id` in (1))" [ref=e57] [cursor=pointer]':
+        - /url: "#top"
+        - generic [ref=e58]: "SQLSTATE[42S02]: Base table or view not found: 1146 Table 'aeropaperasse_central.coworker_trainings' doesn't exist (Connection: central, Host: 127.0.0.1, Port: 3306, Database: aeropaperasse_central, SQL: select `trainings`.*, `coworker_trainings`.`coworker_id` as `pivot_coworker_id`, `coworker_trainings`.`training_id` as `pivot_training_id`, `coworker_trainings`.`id` as `pivot_id`, `coworker_trainings`.`started_at` as `pivot_started_at`, `coworker_trainings`.`expires_at` as `pivot_expires_at`, `coworker_trainings`.`certificate_path` as `pivot_certificate_path` from `trainings` inner join `coworker_trainings` on `trainings`.`id` = `coworker_trainings`.`training_id` where `coworker_trainings`.`coworker_id` in (1))"
+  - main [ref=e59]:
+    - generic [ref=e62]:
+      - main [ref=e63]:
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - generic [ref=e68]:
+              - generic [ref=e69]: Illuminate
+              - generic [ref=e70]: \
+              - generic [ref=e71]: Database
+              - generic [ref=e72]: \
+              - generic [ref=e73]: QueryException
+            - generic [ref=e74]:
+              - generic [ref=e75]: PHP 8.3.30
+              - generic [ref=e76]:
+                - img [ref=e77]
+                - text: 13.11.2
+          - generic [ref=e80]: "SQLSTATE[42S02]: Base table or view not found: 1146 Table 'aeropaperasse_central.coworker_trainings' doesn't exist"
+          - generic [ref=e81] [cursor=pointer]:
+            - code [ref=e84]:
+              - code [ref=e86]: "select `trainings`.*, `coworker_trainings`.`coworker_id` as `pivot_coworker_id`, `coworker_trainings`.`training_id` as `pivot_training_id`, `coworker_trainings`.`id` as `pivot_id`, `coworker_trainings`.`started_at` as `pivot_started_at`, `coworker_trainings`.`expires_at` as `pivot_expires_at`, `coworker_trainings`.`certificate_path` as `pivot_certificate_path` from `trainings` inner join `coworker_trainings` on `trainings`.`id` = `coworker_trainings`.`training_id` where `coworker_trainings`.`coworker_id` in (1)"
+            - button "Copy to clipboard" [ref=e88]:
+              - img [ref=e89]
+            - button [ref=e91]:
+              - img [ref=e92]
+      - complementary [ref=e94]:
+        - generic [ref=e95]:
+          - button [ref=e96] [cursor=pointer]:
+            - img [ref=e97]
+          - generic [ref=e100]:
+            - heading "A table was not found" [level=2] [ref=e102]
+            - generic [ref=e104]:
+              - paragraph [ref=e105]: You might have forgotten to run your database migrations.
+              - paragraph [ref=e106]: "You can try to run your migrations using `php artisan migrate`."
+              - list [ref=e107]:
+                - listitem [ref=e108]:
+                  - 'link "Database: Running Migrations docs" [ref=e109] [cursor=pointer]':
+                    - /url: https://laravel.com/docs/master/migrations#running-migrations
+    - generic [ref=e112]:
+      - complementary [ref=e113]:
+        - generic [ref=e114]:
+          - button "Expand vendor frames" [ref=e116] [cursor=pointer]:
+            - generic [ref=e117]:
+              - img [ref=e118]
+              - img [ref=e120]
+            - text: Expand vendor frames
+          - list [ref=e123]:
+            - listitem [ref=e124] [cursor=pointer]:
+              - text: 13 vendor frames
+              - img [ref=e125]
+            - listitem [ref=e127]:
+              - generic [ref=e129]:
+                - generic [ref=e130]: Livewire
+                - generic [ref=e131]: \
+                - generic [ref=e132]: "Component@anonymous\x00C:"
+                - generic [ref=e133]: \
+                - generic [ref=e134]: laragon
+                - generic [ref=e135]: \
+                - generic [ref=e136]: www
+                - generic [ref=e137]: \
+                - generic [ref=e138]: aeropaperasse
+                - generic [ref=e139]: \
+                - generic [ref=e140]: storage
+                - generic [ref=e141]: \
+                - generic [ref=e142]: framework
+                - generic [ref=e143]: \
+                - generic [ref=e144]: views
+                - generic [ref=e145]: \
+                - generic [ref=e146]: livewire
+                - generic [ref=e147]: \
+                - generic [ref=e148]: classes
+                - generic [ref=e149]: \
+                - generic [ref=e150]: 01bf8e98.php:29$37b7
+                - generic [ref=e151]: ": 79"
+              - generic [ref=e152]: mount
+            - listitem [ref=e153]
+            - listitem [ref=e154] [cursor=pointer]:
+              - text: 27 vendor frames
+              - img [ref=e155]
+            - listitem [ref=e157] [cursor=pointer]:
+              - generic [ref=e159]:
+                - generic [ref=e160]: App
+                - generic [ref=e161]: \
+                - generic [ref=e162]: Http
+                - generic [ref=e163]: \
+                - generic [ref=e164]: Middleware
+                - generic [ref=e165]: \
+                - generic [ref=e166]: EnsureTenantMembership
+                - generic [ref=e167]: ": 46"
+              - generic [ref=e168]: handle
+            - listitem [ref=e169] [cursor=pointer]:
+              - text: 51 vendor frames
+              - img [ref=e170]
+            - listitem [ref=e172] [cursor=pointer]:
+              - generic [ref=e174]:
+                - generic [ref=e175]: C:\laragon\www\aeropaperasse\public\index
+                - generic [ref=e176]: .php
+                - generic [ref=e177]: ": 51"
+              - generic [ref=e178]: "[top]"
+      - generic [ref=e179]:
+        - 'link "C:\\laragon\\www\\aeropaperasse\\storage\\framework\\views\\livewire\\classes\\01bf8e98 .php : 79" [ref=e181] [cursor=pointer]':
+          - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=79
+          - generic [ref=e182]:
+            - generic [ref=e183]: C:\laragon\www\aeropaperasse\storage\framework\views\livewire\classes\01bf8e98
+            - generic [ref=e184]: .php
+            - generic [ref=e185]: ": 79"
+        - main [ref=e186]:
+          - navigation [ref=e187]:
+            - generic [ref=e188]:
+              - paragraph [ref=e189]: "64"
+              - paragraph [ref=e190]: "65"
+              - paragraph [ref=e191]: "66"
+              - paragraph [ref=e192]: "67"
+              - paragraph [ref=e193]: "68"
+              - paragraph [ref=e194]: "69"
+              - paragraph [ref=e195]: "70"
+              - paragraph [ref=e196]: "71"
+              - paragraph [ref=e197]: "72"
+              - paragraph [ref=e198]: "73"
+              - paragraph [ref=e199]: "74"
+              - paragraph [ref=e200]: "75"
+              - paragraph [ref=e201]: "76"
+              - paragraph [ref=e202]: "77"
+              - paragraph [ref=e203]: "78"
+              - paragraph [ref=e204]: "79"
+              - paragraph [ref=e205]: "80"
+              - paragraph [ref=e206]: "81"
+              - paragraph [ref=e207]: "82"
+              - paragraph [ref=e208]: "83"
+              - paragraph [ref=e209]: "84"
+              - paragraph [ref=e210]: "85"
+              - paragraph [ref=e211]: "86"
+              - paragraph [ref=e212]: "87"
+              - paragraph [ref=e213]: "88"
+              - paragraph [ref=e214]: "89"
+              - paragraph [ref=e215]: "90"
+              - paragraph [ref=e216]: "91"
+              - paragraph [ref=e217]: "92"
+              - paragraph [ref=e218]: "93"
+          - code [ref=e221]:
+            - generic [ref=e222]:
+              - link [ref=e223] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=64
+                - button [ref=e224]:
+                  - img [ref=e225]
+              - generic [ref=e228]: "* Format: ['training_id' => ['selected' => bool, 'start_date' => 'YYYY-MM-DD', 'validity_years' => '2|3|5|lifetime', 'pivot_id' => ?int]]"
+            - generic [ref=e229]:
+              - link [ref=e230] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=65
+                - button [ref=e231]:
+                  - img [ref=e232]
+              - generic [ref=e234]: "*/"
+            - generic [ref=e235]:
+              - link [ref=e236] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=66
+                - button [ref=e237]:
+                  - img [ref=e238]
+              - generic [ref=e241]: public array $selected_trainings = [];
+            - link [ref=e243] [cursor=pointer]:
+              - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=67
+              - button [ref=e244]:
+                - img [ref=e245]
+            - generic [ref=e248]:
+              - link [ref=e249] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=68
+                - button [ref=e250]:
+                  - img [ref=e251]
+              - generic [ref=e254]: "public function mount(?int $coworkerId = null): void"
+            - generic [ref=e255]:
+              - link [ref=e256] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=69
+                - button [ref=e257]:
+                  - img [ref=e258]
+              - generic [ref=e261]: "{"
+            - generic [ref=e262]:
+              - link [ref=e263] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=70
+                - button [ref=e264]:
+                  - img [ref=e265]
+              - generic [ref=e268]: $authUser = auth()->user();
+            - link [ref=e270] [cursor=pointer]:
+              - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=71
+              - button [ref=e271]:
+                - img [ref=e272]
+            - generic [ref=e275]:
+              - link [ref=e276] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=72
+                - button [ref=e277]:
+                  - img [ref=e278]
+              - generic [ref=e281]: "if ($authUser->isClient()) {"
+            - generic [ref=e282]:
+              - link [ref=e283] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=73
+                - button [ref=e284]:
+                  - img [ref=e285]
+              - generic [ref=e288]: "$this->redirect(route('companies.show', ['companyId' => $authUser->client_id]), navigate: true);"
+            - link [ref=e290] [cursor=pointer]:
+              - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=74
+              - button [ref=e291]:
+                - img [ref=e292]
+            - generic [ref=e295]:
+              - link [ref=e296] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=75
+                - button [ref=e297]:
+                  - img [ref=e298]
+              - generic [ref=e301]: return;
+            - generic [ref=e302]:
+              - link [ref=e303] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=76
+                - button [ref=e304]:
+                  - img [ref=e305]
+              - generic [ref=e307]: "}"
+            - link [ref=e309] [cursor=pointer]:
+              - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=77
+              - button [ref=e310]:
+                - img [ref=e311]
+            - generic [ref=e314]:
+              - link [ref=e315] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=78
+                - button [ref=e316]:
+                  - img [ref=e317]
+              - generic [ref=e320]: "if ($coworkerId !== null) {"
+            - generic [ref=e321]:
+              - link [ref=e322] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=79
+                - button [ref=e323]:
+                  - img [ref=e324]
+              - generic [ref=e327]: $coworker = Coworker::with(['user', 'client', 'trainings'])->find($coworkerId);
+            - generic [ref=e328]:
+              - link [ref=e329] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=80
+                - button [ref=e330]:
+                  - img [ref=e331]
+              - generic [ref=e334]: "if (! $coworker) {"
+            - generic [ref=e335]:
+              - link [ref=e336] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=81
+                - button [ref=e337]:
+                  - img [ref=e338]
+              - generic [ref=e341]: abort(404);
+            - generic [ref=e342]:
+              - link [ref=e343] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=82
+                - button [ref=e344]:
+                  - img [ref=e345]
+              - generic [ref=e347]: "}"
+            - link [ref=e349] [cursor=pointer]:
+              - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=83
+              - button [ref=e350]:
+                - img [ref=e351]
+            - generic [ref=e354]:
+              - link [ref=e355] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=84
+                - button [ref=e356]:
+                  - img [ref=e357]
+              - generic [ref=e360]: "if (! $authUser->isAdmin() && $coworker->client_id !== $authUser->client_id) {"
+            - generic [ref=e361]:
+              - link [ref=e362] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=85
+                - button [ref=e363]:
+                  - img [ref=e364]
+              - generic [ref=e367]: abort(403);
+            - generic [ref=e368]:
+              - link [ref=e369] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=86
+                - button [ref=e370]:
+                  - img [ref=e371]
+              - generic [ref=e373]: "}"
+            - link [ref=e375] [cursor=pointer]:
+              - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=87
+              - button [ref=e376]:
+                - img [ref=e377]
+            - generic [ref=e380]:
+              - link [ref=e381] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=88
+                - button [ref=e382]:
+                  - img [ref=e383]
+              - generic [ref=e386]: $this->isEdit = true;
+            - generic [ref=e387]:
+              - link [ref=e388] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=89
+                - button [ref=e389]:
+                  - img [ref=e390]
+              - generic [ref=e393]: $this->coworkerId = $coworker->id;
+            - generic [ref=e394]:
+              - link [ref=e395] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=90
+                - button [ref=e396]:
+                  - img [ref=e397]
+              - generic [ref=e400]: $this->selected_client_id = $coworker->client_id;
+            - generic [ref=e401]:
+              - link [ref=e402] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=91
+                - button [ref=e403]:
+                  - img [ref=e404]
+              - generic [ref=e407]: $this->firstname = $coworker->firstname;
+            - generic [ref=e408]:
+              - link [ref=e409] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=92
+                - button [ref=e410]:
+                  - img [ref=e411]
+              - generic [ref=e414]: $this->lastname = $coworker->lastname;
+            - generic [ref=e415]:
+              - link [ref=e416] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5C01bf8e98.php&line=93
+                - button [ref=e417]:
+                  - img [ref=e418]
+              - generic [ref=e421]: $this->email = $coworker->email;
+      - generic [ref=e422]:
+        - generic [ref=e423]: arguments
+        - generic [ref=e424]:
+          - generic [ref=e425]:
+            - term [ref=e426]:
+              - generic [ref=e427]:
+                - generic [ref=e428]:
+                  - generic "by reference"
+                  - text: $id
+                - generic [ref=e429]: :int
+            - definition [ref=e430]:
+              - generic [ref=e431]:
+                - code [ref=e434]: "1"
+                - button "Copy to clipboard" [ref=e436] [cursor=pointer]:
+                  - img [ref=e437]
+          - generic [ref=e439]:
+            - term [ref=e440]:
+              - generic [ref=e441]:
+                - generic [ref=e442]:
+                  - generic "by reference"
+                  - text: $columns
+                - generic [ref=e443]: :array
+            - definition [ref=e444]:
+              - generic [ref=e445]:
+                - code [ref=e448]:
+                  - code [ref=e450]: "[ \"*\" ]"
+                - button "Copy to clipboard" [ref=e452] [cursor=pointer]:
+                  - img [ref=e453]
+    - generic [ref=e456]:
+      - navigation [ref=e457]:
+        - list [ref=e459]:
+          - listitem [ref=e460]:
+            - link "App" [ref=e461] [cursor=pointer]:
+              - /url: "#context-app"
+            - list [ref=e462]:
+              - listitem [ref=e463]:
+                - link "Routing" [ref=e464] [cursor=pointer]:
+                  - /url: "#context-app-routing"
+                  - img [ref=e466]
+                  - generic [ref=e468]: Routing
+          - listitem [ref=e469]:
+            - link "Request" [ref=e470] [cursor=pointer]:
+              - /url: "#context-request"
+            - list [ref=e471]:
+              - listitem [ref=e472]:
+                - link "Browser" [ref=e473] [cursor=pointer]:
+                  - /url: "#context-request-browser"
+                  - img [ref=e475]
+                  - generic [ref=e477]: Browser
+              - listitem [ref=e478]:
+                - link "Headers" [ref=e479] [cursor=pointer]:
+                  - /url: "#context-request-headers"
+                  - img [ref=e481]
+                  - generic [ref=e483]: Headers
+              - listitem [ref=e484]:
+                - link "Body" [ref=e485] [cursor=pointer]:
+                  - /url: "#context-request-body"
+                  - img [ref=e487]
+                  - generic [ref=e489]: Body
+          - listitem [ref=e490]:
+            - link "Context" [ref=e491] [cursor=pointer]:
+              - /url: "#context-context"
+            - list [ref=e492]:
+              - listitem [ref=e493]:
+                - link "User" [ref=e494] [cursor=pointer]:
+                  - /url: "#context-user-user"
+                  - img [ref=e496]
+                  - generic [ref=e498]: User
+              - listitem [ref=e499]:
+                - link "Versions" [ref=e500] [cursor=pointer]:
+                  - /url: "#context-context-versions"
+                  - img [ref=e502]
+                  - generic [ref=e504]: Versions
+              - listitem [ref=e505]:
+                - link "Exception" [ref=e506] [cursor=pointer]:
+                  - /url: "#context-context-exception"
+                  - img [ref=e508]
+                  - generic [ref=e510]: Exception
+      - generic [ref=e511]:
+        - generic [ref=e512]:
+          - heading "App" [level=2] [ref=e513]
+          - generic [ref=e515]:
+            - heading "Routing" [level=1] [ref=e516]:
+              - text: Routing
+              - img [ref=e518]
+            - generic [ref=e520]:
+              - generic [ref=e521]:
+                - term [ref=e522]: Controller
+                - definition [ref=e523]:
+                  - generic [ref=e524]:
+                    - code [ref=e527]: Livewire\Mechanisms\HandleRouting\LivewirePageController
+                    - button "Copy to clipboard" [ref=e529] [cursor=pointer]:
+                      - img [ref=e530]
+              - generic [ref=e532]:
+                - term [ref=e533]: Route name
+                - definition [ref=e534]:
+                  - generic [ref=e535]:
+                    - code [ref=e538]: coworkers.form
+                    - button "Copy to clipboard" [ref=e540] [cursor=pointer]:
+                      - img [ref=e541]
+              - generic [ref=e543]:
+                - term [ref=e544]: Middleware
+                - definition [ref=e545]:
+                  - list [ref=e546]:
+                    - listitem [ref=e547]:
+                      - generic [ref=e548]:
+                        - code [ref=e551]: web
+                        - button "Copy to clipboard" [ref=e553] [cursor=pointer]:
+                          - img [ref=e554]
+                    - listitem [ref=e556]:
+                      - generic [ref=e557]:
+                        - code [ref=e560]: Stancl\Tenancy\Middleware\InitializeTenancyByDomain
+                        - button "Copy to clipboard" [ref=e562] [cursor=pointer]:
+                          - img [ref=e563]
+                    - listitem [ref=e565]:
+                      - generic [ref=e566]:
+                        - code [ref=e569]: Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains
+                        - button "Copy to clipboard" [ref=e571] [cursor=pointer]:
+                          - img [ref=e572]
+                    - listitem [ref=e574]:
+                      - generic [ref=e575]:
+                        - code [ref=e578]: auth
+                        - button "Copy to clipboard" [ref=e580] [cursor=pointer]:
+                          - img [ref=e581]
+                    - listitem [ref=e583]:
+                      - generic [ref=e584]:
+                        - code [ref=e587]: tenant.member
+                        - button "Copy to clipboard" [ref=e589] [cursor=pointer]:
+                          - img [ref=e590]
+        - generic [ref=e592]:
+          - heading "Request" [level=2] [ref=e593]
+          - generic [ref=e594]:
+            - generic [ref=e595]:
+              - generic [ref=e596]:
+                - generic [ref=e597]: http://app.aeropaperasse.test/coworkers/form/1
+                - generic [ref=e598]: GET
+              - generic [ref=e600] [cursor=pointer]:
+                - code [ref=e603]:
+                  - code [ref=e605]: "curl \"http://app.aeropaperasse.test/coworkers/form/1\" \\ -X GET \\ -H 'host: app.aeropaperasse.test' \\ -H 'connection: keep-alive' \\ -H 'upgrade-insecure-requests: 1' \\ -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36' \\ -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \\ -H 'accept-encoding: gzip, deflate' \\ -H 'accept-language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7' \\ -H 'cookie: <CENSORED>';"
+                - button "Copy to clipboard" [ref=e607]:
+                  - img [ref=e608]
+                - button [ref=e610]:
+                  - img [ref=e611]
+            - generic [ref=e613]:
+              - heading "Browser" [level=1] [ref=e614]:
+                - text: Browser
+                - img [ref=e616]
+              - generic [ref=e618]:
+                - code [ref=e621]: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+                - button "Copy to clipboard" [ref=e623] [cursor=pointer]:
+                  - img [ref=e624]
+            - generic [ref=e626]:
+              - heading "Headers" [level=1] [ref=e627]:
+                - text: Headers
+                - img [ref=e629]
+              - generic [ref=e631]:
+                - generic [ref=e632]:
+                  - term [ref=e633]: host
+                  - definition [ref=e634]:
+                    - generic [ref=e635]:
+                      - code [ref=e638]: app.aeropaperasse.test
+                      - button "Copy to clipboard" [ref=e640] [cursor=pointer]:
+                        - img [ref=e641]
+                - generic [ref=e643]:
+                  - term [ref=e644]: connection
+                  - definition [ref=e645]:
+                    - generic [ref=e646]:
+                      - code [ref=e649]: keep-alive
+                      - button "Copy to clipboard" [ref=e651] [cursor=pointer]:
+                        - img [ref=e652]
+                - generic [ref=e654]:
+                  - term [ref=e655]: upgrade-insecure-requests
+                  - definition [ref=e656]:
+                    - generic [ref=e657]:
+                      - code [ref=e660]: "1"
+                      - button "Copy to clipboard" [ref=e662] [cursor=pointer]:
+                        - img [ref=e663]
+                - generic [ref=e665]:
+                  - term [ref=e666]: user-agent
+                  - definition [ref=e667]:
+                    - generic [ref=e668]:
+                      - code [ref=e671]: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+                      - button "Copy to clipboard" [ref=e673] [cursor=pointer]:
+                        - img [ref=e674]
+                - generic [ref=e676]:
+                  - term [ref=e677]: accept
+                  - definition [ref=e678]:
+                    - generic [ref=e679]:
+                      - code [ref=e682]: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+                      - button "Copy to clipboard" [ref=e684] [cursor=pointer]:
+                        - img [ref=e685]
+                - generic [ref=e687]:
+                  - term [ref=e688]: accept-encoding
+                  - definition [ref=e689]:
+                    - generic [ref=e690]:
+                      - code [ref=e693]: gzip, deflate
+                      - button "Copy to clipboard" [ref=e695] [cursor=pointer]:
+                        - img [ref=e696]
+                - generic [ref=e698]:
+                  - term [ref=e699]: accept-language
+                  - definition [ref=e700]:
+                    - generic [ref=e701]:
+                      - code [ref=e704]: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7
+                      - button "Copy to clipboard" [ref=e706] [cursor=pointer]:
+                        - img [ref=e707]
+                - generic [ref=e709]:
+                  - term [ref=e710]: cookie
+                  - definition [ref=e711]:
+                    - generic [ref=e712]:
+                      - code [ref=e715]: <CENSORED>
+                      - button "Copy to clipboard" [ref=e717] [cursor=pointer]:
+                        - img [ref=e718]
+            - generic [ref=e720]:
+              - heading "Body" [level=1] [ref=e721]:
+                - text: Body
+                - img [ref=e723]
+              - generic [ref=e725]:
+                - code [ref=e728]: "[]"
+                - button "Copy to clipboard" [ref=e730] [cursor=pointer]:
+                  - img [ref=e731]
+        - generic [ref=e733]:
+          - heading "Context" [level=2] [ref=e734]
+          - generic [ref=e735]:
+            - generic [ref=e736]:
+              - heading "User" [level=1] [ref=e737]:
+                - text: User
+                - img [ref=e739]
+              - generic [ref=e741]:
+                - img "rem-admin@aeropaperasse.test" [ref=e743]
+                - generic [ref=e744]:
+                  - paragraph [ref=e745]: REM Super Admin
+                  - paragraph [ref=e746]: rem-admin@aeropaperasse.test
+              - generic [ref=e747] [cursor=pointer]:
+                - code [ref=e750]:
+                  - code [ref=e752]: "{ \"id\": 1, \"name\": \"REM Super Admin\", \"email\": \"rem-admin@aeropaperasse.test\", \"email_verified_at\": null, \"is_new\": false, \"created_at\": \"2026-06-01T08:51:38.000000Z\", \"updated_at\": \"2026-06-01T08:52:33.000000Z\", \"role\": \"rem_super_admin\", \"function\": null, \"client_id\": null, \"coworker_id\": null, \"two_factor_enabled\": false, \"can_access_formation\": true }"
+                - button "Copy to clipboard" [ref=e754]:
+                  - img [ref=e755]
+                - button [ref=e757]:
+                  - img [ref=e758]
+            - generic [ref=e760]:
+              - heading "Versions" [level=1] [ref=e761]:
+                - text: Versions
+                - img [ref=e763]
+              - generic [ref=e765]:
+                - generic [ref=e766]:
+                  - term [ref=e767]: Php Version
+                  - definition [ref=e768]:
+                    - generic [ref=e769]:
+                      - code [ref=e772]: 8.3.30
+                      - button "Copy to clipboard" [ref=e774] [cursor=pointer]:
+                        - img [ref=e775]
+                - generic [ref=e777]:
+                  - term [ref=e778]: Laravel Version
+                  - definition [ref=e779]:
+                    - generic [ref=e780]:
+                      - code [ref=e783]: 13.11.2
+                      - button "Copy to clipboard" [ref=e785] [cursor=pointer]:
+                        - img [ref=e786]
+                - generic [ref=e788]:
+                  - term [ref=e789]: Laravel Locale
+                  - definition [ref=e790]:
+                    - generic [ref=e791]:
+                      - code [ref=e794]: fr
+                      - button "Copy to clipboard" [ref=e796] [cursor=pointer]:
+                        - img [ref=e797]
+                - generic [ref=e799]:
+                  - term [ref=e800]: Laravel Config Cached
+                  - definition [ref=e801]:
+                    - generic [ref=e802]:
+                      - img [ref=e803]
+                      - generic [ref=e805]: "false"
+                - generic [ref=e806]:
+                  - term [ref=e807]: App Debug
+                  - definition [ref=e808]:
+                    - generic [ref=e809]:
+                      - img [ref=e810]
+                      - generic [ref=e812]: "true"
+                - generic [ref=e813]:
+                  - term [ref=e814]: App Env
+                  - definition [ref=e815]:
+                    - generic [ref=e816]:
+                      - code [ref=e819]: local
+                      - button "Copy to clipboard" [ref=e821] [cursor=pointer]:
+                        - img [ref=e822]
+            - generic [ref=e824]:
+              - heading "Exception" [level=1] [ref=e825]:
+                - text: Exception
+                - img [ref=e827]
+              - generic [ref=e830]:
+                - term [ref=e831]: Raw Sql
+                - definition [ref=e832]:
+                  - generic [ref=e833]:
+                    - code [ref=e836]: "select `trainings`.*, `coworker_trainings`.`coworker_id` as `pivot_coworker_id`, `coworker_trainings`.`training_id` as `pivot_training_id`, `coworker_trainings`.`id` as `pivot_id`, `coworker_trainings`.`started_at` as `pivot_started_at`, `coworker_trainings`.`expires_at` as `pivot_expires_at`, `coworker_trainings`.`certificate_path` as `pivot_certificate_path` from `trainings` inner join `coworker_trainings` on `trainings`.`id` = `coworker_trainings`.`training_id` where `coworker_trainings`.`coworker_id` in (1)"
+                    - button "Copy to clipboard" [ref=e838] [cursor=pointer]:
+                      - img [ref=e839]
+    - generic [ref=e842]:
+      - navigation:
+        - list [ref=e843]:
+          - listitem [ref=e844]:
+            - button "8 Queries" [ref=e845] [cursor=pointer]:
+              - generic [ref=e846]: "8"
+              - generic [ref=e847]: Queries
+      - generic [ref=e848]:
+        - generic [ref=e849]:
+          - generic [ref=e850]:
+            - generic [ref=e851]: 11:10:29
+            - generic [ref=e852]:
+              - img "Runtime" [ref=e853]
+              - text: 22.99ms
+            - generic [ref=e855]:
+              - img "Connection" [ref=e856]
+              - text: central
+          - generic [ref=e859]:
+            - generic [ref=e860] [cursor=pointer]:
+              - code [ref=e863]:
+                - code [ref=e865]: "select * from `tenants` where exists (select * from `domains` where `tenants`.`id` = `domains`.`tenant_id` and `domain` = app.aeropaperasse.test) limit 1"
+              - button "Copy to clipboard" [ref=e867]:
+                - img [ref=e868]
+              - button [ref=e870]:
+                - img [ref=e871]
+            - button "1 query parameter" [ref=e874] [cursor=pointer]:
+              - img [ref=e875]
+              - text: 1 query parameter
+        - generic [ref=e877]:
+          - generic [ref=e878]:
+            - generic [ref=e879]: 11:10:29
+            - generic [ref=e880]:
+              - img "Runtime" [ref=e881]
+              - text: 0.64ms
+            - generic [ref=e883]:
+              - img "Connection" [ref=e884]
+              - text: central
+          - generic [ref=e887]:
+            - generic [ref=e888] [cursor=pointer]:
+              - code [ref=e891]:
+                - code [ref=e893]: "select * from `domains` where `domains`.`tenant_id` in (rem)"
+              - button "Copy to clipboard" [ref=e895]:
+                - img [ref=e896]
+              - button [ref=e898]:
+                - img [ref=e899]
+            - button "1 query parameter" [ref=e902] [cursor=pointer]:
+              - img [ref=e903]
+              - text: 1 query parameter
+        - generic [ref=e905]:
+          - generic [ref=e906]:
+            - generic [ref=e907]: 11:10:29
+            - generic [ref=e908]:
+              - img "Runtime" [ref=e909]
+              - text: 0.92ms
+            - generic [ref=e911]:
+              - img "Connection" [ref=e912]
+              - text: central
+          - generic [ref=e915] [cursor=pointer]:
+            - code [ref=e918]:
+              - code [ref=e920]: SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'tenant_rem'
+            - button "Copy to clipboard" [ref=e922]:
+              - img [ref=e923]
+            - button [ref=e925]:
+              - img [ref=e926]
+        - generic [ref=e928]:
+          - generic [ref=e929]:
+            - generic [ref=e930]: 11:10:29
+            - generic [ref=e931]:
+              - img "Runtime" [ref=e932]
+              - text: 1.16ms
+            - generic [ref=e934]:
+              - img "Connection" [ref=e935]
+              - text: central
+          - generic [ref=e938]:
+            - generic [ref=e939] [cursor=pointer]:
+              - code [ref=e942]:
+                - code [ref=e944]: "select * from `sessions` where `id` = 7og059p0nsKFJrmJUWFQms8GcvTHZNCSXWKMguA7 limit 1"
+              - button "Copy to clipboard" [ref=e946]:
+                - img [ref=e947]
+              - button [ref=e949]:
+                - img [ref=e950]
+            - button "1 query parameter" [ref=e953] [cursor=pointer]:
+              - img [ref=e954]
+              - text: 1 query parameter
+        - generic [ref=e956]:
+          - generic [ref=e957]:
+            - generic [ref=e958]: 11:10:29
+            - generic [ref=e959]:
+              - img "Runtime" [ref=e960]
+              - text: 0.83ms
+            - generic [ref=e962]:
+              - img "Connection" [ref=e963]
+              - text: central
+          - generic [ref=e966]:
+            - generic [ref=e967] [cursor=pointer]:
+              - code [ref=e970]:
+                - code [ref=e972]: "select * from `users` where `id` = 1 limit 1"
+              - button "Copy to clipboard" [ref=e974]:
+                - img [ref=e975]
+              - button [ref=e977]:
+                - img [ref=e978]
+            - button "1 query parameter" [ref=e981] [cursor=pointer]:
+              - img [ref=e982]
+              - text: 1 query parameter
+        - generic [ref=e984]:
+          - generic [ref=e985]:
+            - generic [ref=e986]: 11:10:29
+            - generic [ref=e987]:
+              - img "Runtime" [ref=e988]
+              - text: 1.7ms
+            - generic [ref=e990]:
+              - img "Connection" [ref=e991]
+              - text: tenant
+          - generic [ref=e994]:
+            - generic [ref=e995] [cursor=pointer]:
+              - code [ref=e998]:
+                - code [ref=e1000]: "select * from `coworkers` where `coworkers`.`id` = 1 limit 1"
+              - button "Copy to clipboard" [ref=e1002]:
+                - img [ref=e1003]
+              - button [ref=e1005]:
+                - img [ref=e1006]
+            - button "1 query parameter" [ref=e1009] [cursor=pointer]:
+              - img [ref=e1010]
+              - text: 1 query parameter
+        - generic [ref=e1012]:
+          - generic [ref=e1013]:
+            - generic [ref=e1014]: 11:10:29
+            - generic [ref=e1015]:
+              - img "Runtime" [ref=e1016]
+              - text: 0.42ms
+            - generic [ref=e1018]:
+              - img "Connection" [ref=e1019]
+              - text: central
+          - generic [ref=e1022] [cursor=pointer]:
+            - code [ref=e1025]:
+              - code [ref=e1027]: "select * from `users` where `users`.`id` in (3)"
+            - button "Copy to clipboard" [ref=e1029]:
+              - img [ref=e1030]
+            - button [ref=e1032]:
+              - img [ref=e1033]
+        - generic [ref=e1035]:
+          - generic [ref=e1036]:
+            - generic [ref=e1037]: 11:10:29
+            - generic [ref=e1038]:
+              - img "Runtime" [ref=e1039]
+              - text: 0.35ms
+            - generic [ref=e1041]:
+              - img "Connection" [ref=e1042]
+              - text: tenant
+          - generic [ref=e1045] [cursor=pointer]:
+            - code [ref=e1048]:
+              - code [ref=e1050]: "select * from `clients` where `clients`.`id` in (1)"
+            - button "Copy to clipboard" [ref=e1052]:
+              - img [ref=e1053]
+            - button [ref=e1055]:
+              - img [ref=e1056]
+    - generic [ref=e1059]:
+      - list [ref=e1060]:
+        - listitem [ref=e1061]:
+          - img [ref=e1062]
+        - listitem [ref=e1070]: ·
+        - listitem [ref=e1071]:
+          - link "Source" [ref=e1072] [cursor=pointer]:
+            - /url: https://github.com/spatie/laravel-ignition
+        - listitem [ref=e1073]: ·
+        - listitem [ref=e1074]:
+          - link "Docs" [ref=e1075] [cursor=pointer]:
+            - /url: https://flareapp.io/docs/ignition/introducing-ignition/overview
+        - listitem [ref=e1076]: ·
+        - listitem [ref=e1077]:
+          - link "Laravel" [ref=e1078] [cursor=pointer]:
+            - /url: https://laravel.com
+      - paragraph [ref=e1080]:
+        - text: Ignition is built by
+        - link "Flare" [ref=e1081] [cursor=pointer]:
+          - /url: https://flareapp.io/?utm_campaign=ignition&utm_source=ignition
+          - img [ref=e1082]
+          - text: Flare
+        - text: ", the Laravel error reporting service."

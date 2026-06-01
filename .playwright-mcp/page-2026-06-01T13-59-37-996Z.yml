@@ -1,0 +1,252 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - generic [ref=e43]:
+      - link "Changer d'espace" [ref=e44] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/choose-tenant
+        - img [ref=e45]
+        - generic [ref=e47]: Changer d'espace
+      - link "Déconnexion" [ref=e48] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/logout
+        - img [ref=e49]
+        - generic [ref=e51]: Déconnexion
+  - generic [ref=e52]:
+    - banner [ref=e53]:
+      - button "Masquer la barre latérale" [expanded] [ref=e55]:
+        - img [ref=e56]
+      - navigation "Fil d'Ariane" [ref=e58]:
+        - generic [ref=e59]: Administration
+        - img [ref=e60]
+        - generic [ref=e62]: Collaborateurs & utilisateurs
+    - main [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - heading "Collaborateurs & utilisateurs" [level=1] [ref=e67]
+            - paragraph [ref=e68]: Gérez les collaborateurs et leurs comptes utilisateurs.
+          - link "Nouveau" [ref=e69] [cursor=pointer]:
+            - /url: http://app.aeropaperasse.test/coworkers/form
+            - img [ref=e70]
+            - text: Nouveau
+        - generic [ref=e72]:
+          - generic [ref=e75]:
+            - generic [ref=e78]: Total
+            - generic [ref=e79]: "7"
+          - button "Avec compte 4" [ref=e80]:
+            - generic [ref=e83]:
+              - generic [ref=e86]: Avec compte
+              - generic [ref=e87]: "4"
+          - button "Sans compte 3" [ref=e88]:
+            - generic [ref=e91]:
+              - generic [ref=e94]: Sans compte
+              - generic [ref=e95]: "3"
+          - button "Accès formation 2" [ref=e96]:
+            - generic [ref=e99]:
+              - generic [ref=e102]: Accès formation
+              - generic [ref=e103]: "2"
+          - button "Partis 0" [ref=e104]:
+            - generic [ref=e107]:
+              - generic [ref=e110]: Partis
+              - generic [ref=e111]: "0"
+        - generic [ref=e113]:
+          - generic [ref=e116]:
+            - generic:
+              - img
+            - searchbox "Rechercher par nom, email ou téléphone..." [ref=e117]
+          - button "Toutes les sociétés" [ref=e121]:
+            - generic [ref=e122]: Toutes les sociétés
+            - img [ref=e123]
+          - button "Tous les rôles" [ref=e128]:
+            - generic [ref=e129]: Tous les rôles
+            - img [ref=e130]
+        - generic [ref=e132]:
+          - generic [ref=e133]:
+            - heading "Liste" [level=2] [ref=e134]
+            - paragraph [ref=e135]: 7 collaborateurs
+          - table [ref=e137]:
+            - rowgroup [ref=e138]:
+              - row "Nom Société Type Contact Statut Actions" [ref=e139]:
+                - columnheader "Nom" [ref=e140]
+                - columnheader "Société" [ref=e141]
+                - columnheader "Type" [ref=e142]
+                - columnheader "Contact" [ref=e143]
+                - columnheader "Statut" [ref=e144]
+                - columnheader "Actions" [ref=e145]
+            - rowgroup [ref=e146]:
+              - row "Newbie Admin Nouveau R4WEB SASU R4Dev Administrateur newbie.admin@example.test — Actif Actions" [ref=e147]:
+                - cell "Newbie Admin Nouveau" [ref=e148]:
+                  - generic [ref=e149]:
+                    - link "Newbie Admin" [ref=e150] [cursor=pointer]:
+                      - /url: http://app.aeropaperasse.test/coworkers/12
+                    - generic [ref=e151]: Nouveau
+                    - generic "2FA activée" [ref=e152]:
+                      - img [ref=e153]
+                - cell "R4WEB SASU R4Dev" [ref=e155]:
+                  - generic [ref=e156]: R4WEB SASU
+                  - generic [ref=e157]: R4Dev
+                - cell "Administrateur" [ref=e158]:
+                  - generic [ref=e159]: Administrateur
+                - cell "newbie.admin@example.test —" [ref=e161]:
+                  - generic [ref=e162]: newbie.admin@example.test
+                  - generic [ref=e163]: —
+                - cell "Actif" [ref=e164]:
+                  - generic [ref=e165]: Actif
+                - cell "Actions" [ref=e167]:
+                  - button "Actions" [ref=e170]:
+                    - img [ref=e171]
+              - row "Philippe Briand REM Société B REM Société B Collaborateur philippe.briand@gmail.com +33 (0)6 30 12 42 46 Actif Actions" [ref=e173]:
+                - cell "Philippe Briand" [ref=e174]:
+                  - link "Philippe Briand" [ref=e176] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/coworkers/4
+                - cell "REM Société B REM Société B" [ref=e177]:
+                  - generic [ref=e178]: REM Société B
+                  - generic [ref=e179]: REM Société B
+                - cell "Collaborateur" [ref=e180]:
+                  - generic [ref=e181]: Collaborateur
+                - cell "philippe.briand@gmail.com +33 (0)6 30 12 42 46" [ref=e183]:
+                  - generic [ref=e184]: philippe.briand@gmail.com
+                  - generic [ref=e185]: +33 (0)6 30 12 42 46
+                - cell "Actif" [ref=e186]:
+                  - generic [ref=e187]: Actif
+                - cell "Actions" [ref=e189]:
+                  - button "Actions" [ref=e192]:
+                    - img [ref=e193]
+              - row "Christophe Cordier REM Société B REM Société B Collaborateur christophe.cordier@gmail.com 09 67 22 55 15 Actif Actions" [ref=e195]:
+                - cell "Christophe Cordier" [ref=e196]:
+                  - link "Christophe Cordier" [ref=e198] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/coworkers/3
+                - cell "REM Société B REM Société B" [ref=e199]:
+                  - generic [ref=e200]: REM Société B
+                  - generic [ref=e201]: REM Société B
+                - cell "Collaborateur" [ref=e202]:
+                  - generic [ref=e203]: Collaborateur
+                - cell "christophe.cordier@gmail.com 09 67 22 55 15" [ref=e205]:
+                  - generic [ref=e206]: christophe.cordier@gmail.com
+                  - generic [ref=e207]: 09 67 22 55 15
+                - cell "Actif" [ref=e208]:
+                  - generic [ref=e209]: Actif
+                - cell "Actions" [ref=e211]:
+                  - button "Actions" [ref=e214]:
+                    - img [ref=e215]
+              - row "Patrick Coulon REM Société A REM Société A Client patrick.coulon@gmail.com 0676713190 Actif Actions" [ref=e217]:
+                - cell "Patrick Coulon" [ref=e218]:
+                  - link "Patrick Coulon" [ref=e220] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/coworkers/1
+                - cell "REM Société A REM Société A" [ref=e221]:
+                  - generic [ref=e222]: REM Société A
+                  - generic [ref=e223]: REM Société A
+                - cell "Client" [ref=e224]:
+                  - generic [ref=e225]: Client
+                - cell "patrick.coulon@gmail.com 0676713190" [ref=e227]:
+                  - generic [ref=e228]: patrick.coulon@gmail.com
+                  - generic [ref=e229]: "0676713190"
+                - cell "Actif" [ref=e230]:
+                  - generic [ref=e231]: Actif
+                - cell "Actions" [ref=e233]:
+                  - button "Actions" [ref=e236]:
+                    - img [ref=e237]
+              - row "Martin Dupond R4WEB SASU R4Dev AClient m.dupond@gmail.com — Actif Actions" [ref=e239]:
+                - cell "Martin Dupond" [ref=e240]:
+                  - generic [ref=e241]:
+                    - link "Martin Dupond" [ref=e242] [cursor=pointer]:
+                      - /url: http://app.aeropaperasse.test/coworkers/10
+                    - generic "Accès aux formations" [ref=e243]:
+                      - img [ref=e244]
+                    - generic "2FA activée" [ref=e247]:
+                      - img [ref=e248]
+                - cell "R4WEB SASU R4Dev" [ref=e250]:
+                  - generic [ref=e251]: R4WEB SASU
+                  - generic [ref=e252]: R4Dev
+                - cell "AClient" [ref=e253]:
+                  - generic [ref=e254]: AClient
+                - cell "m.dupond@gmail.com —" [ref=e256]:
+                  - generic [ref=e257]: m.dupond@gmail.com
+                  - generic [ref=e258]: —
+                - cell "Actif" [ref=e259]:
+                  - generic [ref=e260]: Actif
+                - cell "Actions" [ref=e262]:
+                  - button "Actions" [ref=e265]:
+                    - img [ref=e266]
+              - row "Test Existing R4WEB SASU R4Dev Owner owner@client1.test — Actif Actions" [ref=e268]:
+                - cell "Test Existing" [ref=e269]:
+                  - generic [ref=e270]:
+                    - link "Test Existing" [ref=e271] [cursor=pointer]:
+                      - /url: http://app.aeropaperasse.test/coworkers/11
+                    - generic "Accès aux formations" [ref=e272]:
+                      - img [ref=e273]
+                - cell "R4WEB SASU R4Dev" [ref=e276]:
+                  - generic [ref=e277]: R4WEB SASU
+                  - generic [ref=e278]: R4Dev
+                - cell "Owner" [ref=e279]:
+                  - generic [ref=e280]: Owner
+                - cell "owner@client1.test —" [ref=e282]:
+                  - generic [ref=e283]: owner@client1.test
+                  - generic [ref=e284]: —
+                - cell "Actif" [ref=e285]:
+                  - generic [ref=e286]: Actif
+                - cell "Actions" [ref=e288]:
+                  - button "Actions" [ref=e291]:
+                    - img [ref=e292]
+              - row "Thierry Schmitt REM Société A REM Société A Collaborateur thierry.schmitt@gmail.com 0661694069 Actif Actions" [ref=e294]:
+                - cell "Thierry Schmitt" [ref=e295]:
+                  - link "Thierry Schmitt" [ref=e297] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/coworkers/2
+                - cell "REM Société A REM Société A" [ref=e298]:
+                  - generic [ref=e299]: REM Société A
+                  - generic [ref=e300]: REM Société A
+                - cell "Collaborateur" [ref=e301]:
+                  - generic [ref=e302]: Collaborateur
+                - cell "thierry.schmitt@gmail.com 0661694069" [ref=e304]:
+                  - generic [ref=e305]: thierry.schmitt@gmail.com
+                  - generic [ref=e306]: "0661694069"
+                - cell "Actif" [ref=e307]:
+                  - generic [ref=e308]: Actif
+                - cell "Actions" [ref=e310]:
+                  - button "Actions" [ref=e313]:
+                    - img [ref=e314]
+      - generic [ref=e317]:
+        - paragraph [ref=e318]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e319]:
+          - link "Mentions légales" [ref=e320] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e321] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e322] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e323] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e324]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e325] [cursor=pointer]:
+            - /url: https://r4dev.fr

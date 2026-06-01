@@ -126,7 +126,7 @@ new class extends Component
         $this->activityRequests = collect();
         $this->coworkers = collect();
 
-        if ($this->user->isAdmin()) {
+        if ($this->user->isTenantManager()) {
             $this->allClients = Client::orderBy('company_name')->get();
         } else {
             $this->client = $this->user->client;
@@ -184,7 +184,7 @@ new class extends Component
             $query = BadgeRequest::with(['activityRequest.client', 'coworker'])
                 ->where('id', $badgeRequestId);
 
-            if (! $this->user->isAdmin()) {
+            if (! $this->user->isTenantManager()) {
                 $query->whereHas('activityRequest', function ($q) {
                     $q->where('client_id', $this->client->id);
                 });
@@ -218,7 +218,7 @@ new class extends Component
             $this->sourceStatus = $badgeRequest->status;
             $this->sourceRejectReason = $badgeRequest->reject_reason;
 
-            if ($this->user->isAdmin()) {
+            if ($this->user->isTenantManager()) {
                 $this->client = $badgeRequest->activityRequest->client;
                 $this->selected_client_id = $this->client->id;
                 $this->loadActivityRequests();
@@ -552,7 +552,7 @@ new class extends Component
     #[Computed]
     public function canSubmit(): bool
     {
-        if ($this->user?->isAdmin() && ! $this->client) {
+        if ($this->user?->isTenantManager() && ! $this->client) {
             return false;
         }
 
@@ -582,7 +582,7 @@ new class extends Component
     protected function processBadgeRequest(bool $isDraft): void
     {
         try {
-            if ($this->user->isAdmin() && ! $this->client) {
+            if ($this->user->isTenantManager() && ! $this->client) {
                 $this->toast('Veuillez sélectionner un client.', 'warning');
 
                 return;
@@ -746,7 +746,7 @@ new class extends Component
     $accordionChevron = 'ml-auto h-4 w-4 text-foreground-muted transition-transform duration-200';
     $accordionBody = 'border-t border-border p-5';
 
-    $isAdmin = $user->isAdmin();
+    $isAdmin = $user->isTenantManager();
     $hasClient = (bool) $client;
     $clientPickerVisible = $isAdmin && ! $badgeRequestId;
     $isCorrection = $mode === 'correction';

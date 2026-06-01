@@ -1,0 +1,140 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - link "Déconnexion" [ref=e44] [cursor=pointer]:
+      - /url: http://app.aeropaperasse.test/logout
+      - img [ref=e45]
+      - generic [ref=e47]: Déconnexion
+  - generic [ref=e48]:
+    - banner [ref=e49]:
+      - button "Masquer la barre latérale" [expanded] [ref=e51]:
+        - img [ref=e52]
+      - navigation "Fil d'Ariane" [ref=e54]:
+        - generic [ref=e55]: Administration
+        - img [ref=e56]
+        - generic [ref=e58]: Demandes de badges
+    - main [ref=e59]:
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - heading "Demandes de badges" [level=1] [ref=e62]
+          - paragraph [ref=e63]: Gérez toutes les demandes de badges depuis cette interface.
+        - generic [ref=e64]:
+          - button "En attente 0" [ref=e65]:
+            - generic [ref=e68]:
+              - generic [ref=e71]: En attente
+              - generic [ref=e72]: "0"
+          - button "En attente ADP 0" [ref=e73]:
+            - generic [ref=e76]:
+              - generic [ref=e79]: En attente ADP
+              - generic [ref=e80]: "0"
+          - button "Approuvé ADP 0" [ref=e81]:
+            - generic [ref=e84]:
+              - generic [ref=e87]: Approuvé ADP
+              - generic [ref=e88]: "0"
+          - button "En fabrication 0" [ref=e89]:
+            - generic [ref=e92]:
+              - generic [ref=e95]: En fabrication
+              - generic [ref=e96]: "0"
+          - button "Dossier incomplet 0" [ref=e97]:
+            - generic [ref=e100]:
+              - generic [ref=e103]: Dossier incomplet
+              - generic [ref=e104]: "0"
+          - button "Rejeté ADP 0" [ref=e105]:
+            - generic [ref=e108]:
+              - generic [ref=e111]: Rejeté ADP
+              - generic [ref=e112]: "0"
+          - button "Prêt à être Remis 0" [ref=e113]:
+            - generic [ref=e116]:
+              - generic [ref=e119]: Prêt à être Remis
+              - generic [ref=e120]: "0"
+          - button "Remis 0" [ref=e121]:
+            - generic [ref=e124]:
+              - generic [ref=e127]: Remis
+              - generic [ref=e128]: "0"
+        - generic [ref=e129]:
+          - generic [ref=e130]:
+            - generic [ref=e133]:
+              - generic:
+                - img
+              - searchbox "Rechercher une demande, un demandeur, une société..." [ref=e134]
+            - button "Toutes les sociétés" [ref=e138]:
+              - generic [ref=e139]: Toutes les sociétés
+              - img [ref=e140]
+            - link "Nouvelle demande" [ref=e142] [cursor=pointer]:
+              - /url: http://app.aeropaperasse.test/badge-requests/form
+              - img [ref=e143]
+              - text: Nouvelle demande
+          - radiogroup [ref=e145]:
+            - radio "Tous les aéroports" [checked] [ref=e146]
+            - radio "CDG" [ref=e147]
+            - radio "ORY" [ref=e148]
+            - radio "LBG" [ref=e149]
+        - generic [ref=e151]:
+          - img [ref=e153]
+          - generic [ref=e155]:
+            - heading "Brouillons" [level=2] [ref=e156]
+            - generic [ref=e157]: Aucune demande en cours de rédaction
+        - generic [ref=e158]:
+          - generic [ref=e159]:
+            - heading "Demandes récentes" [level=2] [ref=e160]
+            - paragraph [ref=e161]: 0 demande
+          - table [ref=e163]:
+            - rowgroup [ref=e164]:
+              - row "N° demande d'activité Demandeur Contact Statut Date de création Aéroport Actions" [ref=e165]:
+                - columnheader "N° demande d'activité" [ref=e166]
+                - columnheader "Demandeur" [ref=e167]
+                - columnheader "Contact" [ref=e168]
+                - columnheader "Statut" [ref=e169]
+                - columnheader "Date de création" [ref=e170]
+                - columnheader "Aéroport" [ref=e171]
+                - columnheader "Actions" [ref=e172]
+            - rowgroup [ref=e173]:
+              - row "Aucune demande à afficher." [ref=e174]:
+                - cell "Aucune demande à afficher." [ref=e175]:
+                  - generic [ref=e176]: Aucune demande à afficher.
+      - generic [ref=e178]:
+        - paragraph [ref=e179]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e180]:
+          - link "Mentions légales" [ref=e181] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e182] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e183] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e184] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e185]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e186] [cursor=pointer]:
+            - /url: https://r4dev.fr

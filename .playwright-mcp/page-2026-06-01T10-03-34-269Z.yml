@@ -1,0 +1,122 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - link "Déconnexion" [ref=e44] [cursor=pointer]:
+      - /url: http://client1.aeropaperasse.test/logout
+      - img [ref=e45]
+      - generic [ref=e47]: Déconnexion
+  - generic [ref=e48]:
+    - banner [ref=e49]:
+      - button "Masquer la barre latérale" [expanded] [ref=e51]:
+        - img [ref=e52]
+      - navigation "Fil d'Ariane" [ref=e54]:
+        - generic [ref=e55]: Administration
+        - img [ref=e56]
+        - link "Collaborateurs & utilisateurs" [ref=e58] [cursor=pointer]:
+          - /url: /coworkers
+        - img [ref=e59]
+        - generic [ref=e61]: Détail
+    - main [ref=e62]:
+      - generic [ref=e63]:
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - link "Retour" [ref=e66] [cursor=pointer]:
+              - /url: http://client1.aeropaperasse.test/coworkers
+              - img [ref=e67]
+              - text: Retour
+            - generic [ref=e69]: /
+            - heading "Camille Vidal" [level=1] [ref=e70]
+            - generic [ref=e71]: Collaborateur
+            - generic [ref=e73]: Actif
+          - generic [ref=e75]:
+            - link "Modifier" [ref=e76] [cursor=pointer]:
+              - /url: http://client1.aeropaperasse.test/coworkers/form/6
+            - button "Actions" [ref=e79]:
+              - text: Actions
+              - img [ref=e80]
+        - generic [ref=e82]:
+          - generic [ref=e83]:
+            - generic [ref=e85]:
+              - heading "Identité" [level=2] [ref=e86]
+              - generic [ref=e87]:
+                - generic [ref=e88]:
+                  - term [ref=e89]: Nom complet
+                  - definition [ref=e90]: Camille Vidal
+                - generic [ref=e91]:
+                  - term [ref=e92]: Société
+                  - definition [ref=e93]: Client1 Société A
+                - generic [ref=e94]:
+                  - term [ref=e95]: Email
+                  - definition [ref=e96]: camille.vidal@c1.test
+                - generic [ref=e97]:
+                  - term [ref=e98]: Téléphone
+                  - definition [ref=e99]: "0698765432"
+            - generic [ref=e100]:
+              - generic [ref=e102]:
+                - heading "Demandes de badge" [level=2] [ref=e103]
+                - generic [ref=e104]: 0 demande(s)
+              - generic [ref=e105]: Aucune demande de badge.
+            - generic [ref=e106]:
+              - generic [ref=e108]:
+                - heading "Badges" [level=2] [ref=e109]
+                - generic [ref=e110]: 0 badge(s)
+              - generic [ref=e111]: Aucun badge.
+          - generic [ref=e112]:
+            - generic [ref=e114]:
+              - heading "Compte utilisateur" [level=2] [ref=e115]
+              - generic [ref=e116]:
+                - img [ref=e118]
+                - generic [ref=e120]:
+                  - generic [ref=e121]: Aucun compte
+                  - paragraph [ref=e122]: Ce collaborateur n'a pas d'accès à l'application.
+            - generic [ref=e124]:
+              - generic [ref=e125]:
+                - heading "Formations" [level=2] [ref=e126]
+                - generic [ref=e127]: "0"
+              - paragraph [ref=e128]: Aucune formation attribuée.
+      - generic [ref=e130]:
+        - paragraph [ref=e131]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e132]:
+          - link "Mentions légales" [ref=e133] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e134] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e135] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e136] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e137]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e138] [cursor=pointer]:
+            - /url: https://r4dev.fr

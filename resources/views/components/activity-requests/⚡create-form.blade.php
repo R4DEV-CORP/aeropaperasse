@@ -107,7 +107,7 @@ new class extends Component
         $this->user = auth()->user();
         $this->activityRequestId = $activityRequestId;
 
-        if ($this->user->isAdmin()) {
+        if ($this->user->isTenantManager()) {
             $this->allClients = Client::orderBy('company_name')->get();
         } else {
             $this->client = $this->user->client;
@@ -123,13 +123,13 @@ new class extends Component
         try {
             $query = ActivityRequest::where('id', $activityRequestId)->where('status', 'draft');
 
-            if (! $this->user->isAdmin()) {
+            if (! $this->user->isTenantManager()) {
                 $query->where('client_id', $this->client->id);
             }
 
             $activityRequest = $query->firstOrFail();
 
-            if ($this->user->isAdmin()) {
+            if ($this->user->isTenantManager()) {
                 $this->client = $activityRequest->client;
                 $this->selected_client_id = $this->client->id;
             }
@@ -274,7 +274,7 @@ new class extends Component
     #[Computed]
     public function canSubmit(): bool
     {
-        if ($this->user?->isAdmin() && ! $this->client) {
+        if ($this->user?->isTenantManager() && ! $this->client) {
             return false;
         }
 
@@ -296,7 +296,7 @@ new class extends Component
     protected function processActivityRequest(bool $isDraft): void
     {
         try {
-            if ($this->user->isAdmin() && ! $this->client) {
+            if ($this->user->isTenantManager() && ! $this->client) {
                 $this->toast('Veuillez sélectionner un client.', 'warning');
 
                 return;
@@ -423,7 +423,7 @@ new class extends Component
     $accordionChevron = 'ml-auto h-4 w-4 text-foreground-muted transition-transform duration-200';
     $accordionBody = 'border-t border-border p-5';
 
-    $isAdmin = $user->isAdmin();
+    $isAdmin = $user->isTenantManager();
     $hasClient = (bool) $client;
     $clientPickerVisible = $isAdmin && ! $activityRequestId;
 

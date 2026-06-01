@@ -1,0 +1,178 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - link "Déconnexion" [ref=e44] [cursor=pointer]:
+      - /url: http://client1.aeropaperasse.test/logout
+      - img [ref=e45]
+      - generic [ref=e47]: Déconnexion
+  - generic [ref=e48]:
+    - banner [ref=e49]:
+      - button "Masquer la barre latérale" [expanded] [ref=e51]:
+        - img [ref=e52]
+      - navigation "Fil d'Ariane" [ref=e54]:
+        - generic [ref=e55]: Administration
+        - img [ref=e56]
+        - generic [ref=e58]: Collaborateurs & utilisateurs
+    - main [ref=e59]:
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - heading "Collaborateurs & utilisateurs" [level=1] [ref=e63]
+            - paragraph [ref=e64]: Gérez les collaborateurs et leurs comptes utilisateurs.
+          - link "Nouveau" [ref=e65] [cursor=pointer]:
+            - /url: http://client1.aeropaperasse.test/coworkers/form
+            - img [ref=e66]
+            - text: Nouveau
+        - generic [ref=e68]:
+          - generic [ref=e71]:
+            - generic [ref=e74]: Total
+            - generic [ref=e75]: "5"
+          - button "Avec compte 0" [ref=e76]:
+            - generic [ref=e79]:
+              - generic [ref=e82]: Avec compte
+              - generic [ref=e83]: "0"
+          - button "Sans compte 5" [ref=e84]:
+            - generic [ref=e87]:
+              - generic [ref=e90]: Sans compte
+              - generic [ref=e91]: "5"
+          - button "Accès formation 0" [ref=e92]:
+            - generic [ref=e95]:
+              - generic [ref=e98]: Accès formation
+              - generic [ref=e99]: "0"
+          - button "Partis 0" [ref=e100]:
+            - generic [ref=e103]:
+              - generic [ref=e106]: Partis
+              - generic [ref=e107]: "0"
+        - generic [ref=e112]:
+          - generic:
+            - img
+          - searchbox "Rechercher par nom, email ou téléphone..." [ref=e113]
+        - generic [ref=e114]:
+          - generic [ref=e115]:
+            - heading "Liste" [level=2] [ref=e116]
+            - paragraph [ref=e117]: 5 collaborateurs
+          - table [ref=e119]:
+            - rowgroup [ref=e120]:
+              - row "Nom Type Contact Statut Actions" [ref=e121]:
+                - columnheader "Nom" [ref=e122]
+                - columnheader "Type" [ref=e123]
+                - columnheader "Contact" [ref=e124]
+                - columnheader "Statut" [ref=e125]
+                - columnheader "Actions" [ref=e126]
+            - rowgroup [ref=e127]:
+              - row "Susan Charpentier Collaborateur susan.charpentier@gmail.com +33 (0)6 30 11 52 77 Actif Actions" [ref=e128]:
+                - cell "Susan Charpentier" [ref=e129]:
+                  - link "Susan Charpentier" [ref=e131] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/coworkers/1
+                - cell "Collaborateur" [ref=e132]:
+                  - generic [ref=e133]: Collaborateur
+                - cell "susan.charpentier@gmail.com +33 (0)6 30 11 52 77" [ref=e135]:
+                  - generic [ref=e136]: susan.charpentier@gmail.com
+                  - generic [ref=e137]: +33 (0)6 30 11 52 77
+                - cell "Actif" [ref=e138]:
+                  - generic [ref=e139]: Actif
+                - cell "Actions" [ref=e141]:
+                  - button "Actions" [ref=e144]:
+                    - img [ref=e145]
+              - row "Luc Fernandez Collaborateur luc.fernandez@gmail.com +33 3 02 37 67 97 Actif Actions" [ref=e147]:
+                - cell "Luc Fernandez" [ref=e148]:
+                  - link "Luc Fernandez" [ref=e150] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/coworkers/3
+                - cell "Collaborateur" [ref=e151]:
+                  - generic [ref=e152]: Collaborateur
+                - cell "luc.fernandez@gmail.com +33 3 02 37 67 97" [ref=e154]:
+                  - generic [ref=e155]: luc.fernandez@gmail.com
+                  - generic [ref=e156]: +33 3 02 37 67 97
+                - cell "Actif" [ref=e157]:
+                  - generic [ref=e158]: Actif
+                - cell "Actions" [ref=e160]:
+                  - button "Actions" [ref=e163]:
+                    - img [ref=e164]
+              - row "Georges Parent Collaborateur georges.parent@gmail.com 0736890674 Actif Actions" [ref=e166]:
+                - cell "Georges Parent" [ref=e167]:
+                  - link "Georges Parent" [ref=e169] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/coworkers/2
+                - cell "Collaborateur" [ref=e170]:
+                  - generic [ref=e171]: Collaborateur
+                - cell "georges.parent@gmail.com 0736890674" [ref=e173]:
+                  - generic [ref=e174]: georges.parent@gmail.com
+                  - generic [ref=e175]: "0736890674"
+                - cell "Actif" [ref=e176]:
+                  - generic [ref=e177]: Actif
+                - cell "Actions" [ref=e179]:
+                  - button "Actions" [ref=e182]:
+                    - img [ref=e183]
+              - row "Hugues Pasquier Collaborateur hugues.pasquier@gmail.com 0410586104 Actif Actions" [ref=e185]:
+                - cell "Hugues Pasquier" [ref=e186]:
+                  - link "Hugues Pasquier" [ref=e188] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/coworkers/4
+                - cell "Collaborateur" [ref=e189]:
+                  - generic [ref=e190]: Collaborateur
+                - cell "hugues.pasquier@gmail.com 0410586104" [ref=e192]:
+                  - generic [ref=e193]: hugues.pasquier@gmail.com
+                  - generic [ref=e194]: "0410586104"
+                - cell "Actif" [ref=e195]:
+                  - generic [ref=e196]: Actif
+                - cell "Actions" [ref=e198]:
+                  - button "Actions" [ref=e201]:
+                    - img [ref=e202]
+              - row "Benjamin Renard Collaborateur benjamin.renard@c1.test 0623456789 Actif Actions" [ref=e204]:
+                - cell "Benjamin Renard" [ref=e205]:
+                  - link "Benjamin Renard" [ref=e207] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/coworkers/5
+                - cell "Collaborateur" [ref=e208]:
+                  - generic [ref=e209]: Collaborateur
+                - cell "benjamin.renard@c1.test 0623456789" [ref=e211]:
+                  - generic [ref=e212]: benjamin.renard@c1.test
+                  - generic [ref=e213]: "0623456789"
+                - cell "Actif" [ref=e214]:
+                  - generic [ref=e215]: Actif
+                - cell "Actions" [ref=e217]:
+                  - button "Actions" [ref=e220]:
+                    - img [ref=e221]
+      - generic [ref=e224]:
+        - paragraph [ref=e225]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e226]:
+          - link "Mentions légales" [ref=e227] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e228] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e229] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e230] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e231]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e232] [cursor=pointer]:
+            - /url: https://r4dev.fr

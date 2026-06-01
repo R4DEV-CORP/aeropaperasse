@@ -2,15 +2,21 @@
 
 namespace App\Validators;
 
+use App\Enums\Role;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
 class CoworkerValidator
 {
     /**
-     * Règles de validation pour la création complète d'un collaborateur
+     * Règles de validation pour la création complète d'un collaborateur.
+     *
+     * @param  list<string>|null  $allowedRoles  Restreint les valeurs `role.in` ; par défaut tous les rôles connus.
      */
-    public static function getCompleteRules(): array
+    public static function getCompleteRules(?array $allowedRoles = null): array
     {
+        $allowedRoles ??= array_map(fn (Role $r) => $r->value, Role::cases());
+
         return [
             // Informations du collaborateur (obligatoires)
             'firstname' => 'required|string|max:255',
@@ -28,7 +34,7 @@ class CoworkerValidator
             'create_user' => 'nullable|boolean',
             'password' => 'required_if:create_user,true|string|min:8|confirmed',
             'password_confirmation' => 'required_if:create_user,true|string|min:8',
-            'role' => 'nullable|string|in:sclient,rem_super_admin,client,rem_admin,aclient',
+            'role' => 'nullable|string|in:'.implode(',', $allowedRoles),
         ];
     }
 
@@ -82,17 +88,32 @@ class CoworkerValidator
     }
 
     /**
-     * Fonction principale de validation pour la création complète
+     * Fonction principale de validation pour la création complète.
+     *
+     * @param  array  $data  Le payload validé. Si `existing_user_id` est présent, le flow "rattacher
+     *                       un utilisateur existant" s'active : on n'exige plus de mot de passe,
+     *                       et l'email peut déjà être pris dans central.users (c'est précisément
+     *                       le sens du rattachement).
+     * @param  list<string>|null  $allowedRoles  Restreint `role.in` aux rôles que l'acteur a le droit d'attribuer.
      */
-    public static function validateComplete(array $data): \Illuminate\Validation\Validator
+    public static function validateComplete(array $data, ?array $allowedRoles = null): \Illuminate\Validation\Validator
     {
-        $rules = self::getCompleteRules();
+        $rules = self::getCompleteRules($allowedRoles);
 
+        $attachExisting = ! empty($data['existing_user_id']);
         $createUser = $data['create_user'] ?? false;
 
-        if ($createUser) {
-            // Un email est requis pour créer un compte ; unique uniquement dans users (pas coworkers)
-            $rules['email'] = 'required|email|max:255|unique:users,email';
+        if ($attachExisting) {
+            // L'email doit pointer sur un user central existant — pas de password requis.
+            $rules['email'] = 'required|email|max:255|exists:central.users,email';
+            $rules['password'] = 'nullable';
+            $rules['password_confirmation'] = 'nullable';
+            $rules['existing_user_id'] = 'required|integer|exists:central.users,id';
+        } elseif ($createUser) {
+            // Création d'un nouveau user — email unique côté central.
+            // `users` vit en central : la connexion doit être qualifiée, sinon la règle
+            // tape `tenant_<id>.users` (cf. docs/multi-tenant-migration.md → gotchas).
+            $rules['email'] = 'required|email|max:255|unique:central.users,email';
         } else {
             $rules['password'] = 'nullable|string|min:8|confirmed';
             $rules['password_confirmation'] = 'nullable|string|min:8';
@@ -102,15 +123,20 @@ class CoworkerValidator
     }
 
     /**
-     * Validation conditionnelle pour les données de création d'utilisateur
+     * Validation conditionnelle pour les données de création d'utilisateur.
+     *
+     * @param  list<string>|null  $allowedRoles  Restreint `role.in` aux rôles que l'acteur a le droit d'attribuer.
      */
-    public static function validateUserCreation(array $data): \Illuminate\Validation\Validator
+    public static function validateUserCreation(array $data, ?array $allowedRoles = null): \Illuminate\Validation\Validator
     {
+        $allowedRoles ??= array_map(fn (Role $r) => $r->value, Role::cases());
+
         $rules = [
-            'email' => 'required|email|max:255|unique:users,email',
+            // `users` est central : la connexion doit être qualifiée pour éviter `tenant_<id>.users`.
+            'email' => 'required|email|max:255|unique:central.users,email',
             'password' => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required|string|min:8',
-            'role' => 'nullable|string|in:sclient,rem_super_admin,client,rem_admin,aclient',
+            'role' => 'nullable|string|in:'.implode(',', $allowedRoles),
         ];
 
         $messages = [
@@ -155,17 +181,21 @@ class CoworkerValidator
     }
 
     /**
-     * Validation pour la mise à jour d'un collaborateur
+     * Validation pour la mise à jour d'un collaborateur.
+     *
+     * @param  list<string>|null  $allowedRoles  Restreint `role.in` aux rôles que l'acteur a le droit d'attribuer.
      */
-    public static function validateUpdate(array $data, $coworkerId): \Illuminate\Validation\Validator
+    public static function validateUpdate(array $data, $coworkerId, ?array $allowedRoles = null): \Illuminate\Validation\Validator
     {
+        $allowedRoles ??= array_map(fn (Role $r) => $r->value, Role::cases());
+
         $rules = [
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
             'email' => 'nullable|email|max:255|unique:coworkers,email,'.$coworkerId,
             'phone' => 'nullable|string|max:255',
             'can_access_formation' => 'nullable|boolean',
-            'role' => 'nullable|string|in:sclient,rem_super_admin,client,rem_admin,aclient',
+            'role' => 'nullable|string|in:'.implode(',', $allowedRoles),
         ];
 
         $messages = [

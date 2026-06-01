@@ -1,9 +1,11 @@
 <?php
 
+use App\Enums\Role;
 use App\Livewire\Concerns\InteractsWithToasts;
 use App\Models\Client;
 use App\Models\Coworker;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -74,8 +76,10 @@ class extends Component
             });
         }
 
-        if (! $authUser->isAdmin()) {
-            $query->where('client_id', $authUser->client_id);
+        // Tenant managers see all coworkers in the tenant; single-company users are
+        // restricted to their own company (users.client_id).
+        if (! $authUser->isTenantManager()) {
+            $query->where('client_id', $authUser->contextualClientId());
         }
 
         return $query;
@@ -93,13 +97,31 @@ class extends Component
     }
 
     /**
-     * Ids of central users who may access trainings.
+     * Ids of central users who may access trainings **on the active tenant**.
+     * Combines: (a) the tenant_user pivot rows whose can_access_formation = true,
+     * and (b) all REM staff (cross-tenant capability, short-circuits the pivot).
      *
      * @return array<int, int>
      */
     private function userIdsWithFormationAccess(): array
     {
-        return User::query()->where('can_access_formation', true)->pluck('id')->all();
+        $tenantId = tenant()?->getTenantKey();
+
+        $pivotIds = $tenantId === null
+            ? []
+            : DB::connection('central')
+                ->table('tenant_user')
+                ->where('tenant_id', $tenantId)
+                ->where('can_access_formation', true)
+                ->pluck('user_id')
+                ->all();
+
+        $remIds = User::query()
+            ->whereIn('role', [Role::RemAdmin->value, Role::RemSuperAdmin->value])
+            ->pluck('id')
+            ->all();
+
+        return array_values(array_unique(array_merge($pivotIds, $remIds)));
     }
 
     #[Computed]
@@ -125,7 +147,7 @@ class extends Component
     #[Computed]
     public function clients()
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             return collect();
         }
 
@@ -137,7 +159,7 @@ class extends Component
     {
         $query = $this->baseQuery();
 
-        if ($this->selectedClientId && auth()->user()->isAdmin()) {
+        if ($this->selectedClientId && auth()->user()->isTenantManager()) {
             $query->where('client_id', $this->selectedClientId);
         }
 
@@ -193,7 +215,7 @@ class extends Component
         'client' => ['label' => 'Client', 'variant' => 'ready'],
     ];
     $authUser = auth()->user();
-    $isAdmin = $authUser->isAdmin();
+    $isAdmin = $authUser->isTenantManager();
     $isClient = $authUser->isClient();
 @endphp
 
@@ -422,7 +444,7 @@ class extends Component
                                 <a href="{{ route('coworkers.show', ['coworkerId' => $coworker->id]) }}" wire:navigate class="font-medium text-foreground hover:text-accent">
                                     {{ $coworker->firstname }} {{ $coworker->lastname }}
                                 </a>
-                                @if ($hasUser && $u->can_access_formation)
+                                @if ($hasUser && $u->canAccessFormation())
                                     <span title="Accès aux formations" class="text-violet-600">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4">
                                             <path d="M10 1.5a1 1 0 0 1 .447.106l8 4a1 1 0 0 1 0 1.788l-1.95 .975L10 11.118 3.503 8.369l-1.95-.975a1 1 0 0 1 0-1.788l8-4A1 1 0 0 1 10 1.5Z" />

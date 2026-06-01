@@ -26,6 +26,14 @@ class CreateCoworkerData
 
         // Metadata
         public int $created_by,
+
+        /**
+         * If set, the coworker is linked to this **already existing** central user
+         * instead of creating a new one. Used by the "auto-upgrade" flow in the form:
+         * when the typed email matches an existing user, we attach them to the active
+         * tenant (pivot) and link them to the new coworker — no password required.
+         */
+        public ?int $existing_user_id = null,
     ) {}
 
     /**
@@ -48,7 +56,17 @@ class CreateCoworkerData
             role: $data['role'] ?? 'client',
             created_by: $userId,
             can_access_formation: (bool) ($data['can_access_formation'] ?? false),
+            existing_user_id: isset($data['existing_user_id']) ? (int) $data['existing_user_id'] : null,
         );
+    }
+
+    /**
+     * Whether this DTO targets an already-existing central user (attach flow)
+     * rather than creating a new one.
+     */
+    public function shouldAttachExistingUser(): bool
+    {
+        return $this->existing_user_id !== null;
     }
 
     /**

@@ -1,0 +1,3 @@
+[     809ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://app.aeropaperasse.test/_boost/browser-logs @ http://app.aeropaperasse.test/login:19
+[   12396ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://app.aeropaperasse.test/_boost/browser-logs @ http://app.aeropaperasse.test/choose-tenant:19
+[   37410ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://client1.aeropaperasse.test/_boost/browser-logs @ http://client1.aeropaperasse.test/badge-requests:19

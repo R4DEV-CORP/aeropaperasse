@@ -1,0 +1,153 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - link "Déconnexion" [ref=e44] [cursor=pointer]:
+      - /url: http://client1.aeropaperasse.test/logout
+      - img [ref=e45]
+      - generic [ref=e47]: Déconnexion
+  - generic [ref=e48]:
+    - banner [ref=e49]:
+      - button "Masquer la barre latérale" [expanded] [ref=e51]:
+        - img [ref=e52]
+      - navigation "Fil d'Ariane" [ref=e54]:
+        - generic [ref=e55]: Administration
+        - img [ref=e56]
+        - generic [ref=e58]: Suivi des badges
+    - main [ref=e59]:
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - heading "Suivi des badges" [level=1] [ref=e62]
+          - paragraph [ref=e63]: Gérez tous les badges depuis cette interface.
+        - generic [ref=e64]:
+          - generic [ref=e67]:
+            - generic [ref=e70]: Total
+            - generic [ref=e71]: "2"
+          - button "Actifs 2" [ref=e72]:
+            - generic [ref=e75]:
+              - generic [ref=e78]: Actifs
+              - generic [ref=e79]: "2"
+          - button "Expirés 0" [ref=e80]:
+            - generic [ref=e83]:
+              - generic [ref=e86]: Expirés
+              - generic [ref=e87]: "0"
+          - button "Restitués 0" [ref=e88]:
+            - generic [ref=e91]:
+              - generic [ref=e94]: Restitués
+              - generic [ref=e95]: "0"
+          - button "Non restitués 0" [ref=e96]:
+            - generic [ref=e99]:
+              - generic [ref=e102]: Non restitués
+              - generic [ref=e103]: "0"
+        - generic [ref=e104]:
+          - generic [ref=e105]:
+            - generic [ref=e108]:
+              - generic:
+                - img
+              - searchbox "Rechercher par nom de collaborateur ou de société..." [ref=e109]
+            - generic [ref=e111]:
+              - button "Ajouter un badge" [ref=e112]:
+                - img [ref=e113]
+                - text: Ajouter un badge
+              - button "Plus d'options" [ref=e116]:
+                - img [ref=e117]
+          - radiogroup [ref=e119]:
+            - radio "Tous les aéroports" [checked] [ref=e120]
+            - radio "CDG" [ref=e121]
+            - radio "ORY" [ref=e122]
+            - radio "LBG" [ref=e123]
+        - generic [ref=e124]:
+          - generic [ref=e125]:
+            - heading "Liste des badges" [level=2] [ref=e126]
+            - paragraph [ref=e127]: 2 badges
+          - table [ref=e129]:
+            - rowgroup [ref=e130]:
+              - row "N° badge Détenteur Contact Aéroport Statut Création Expiration Actions" [ref=e131]:
+                - columnheader "N° badge" [ref=e132]
+                - columnheader "Détenteur" [ref=e133]
+                - columnheader "Contact" [ref=e134]
+                - columnheader "Aéroport" [ref=e135]
+                - columnheader "Statut" [ref=e136]
+                - columnheader "Création" [ref=e137]
+                - columnheader "Expiration" [ref=e138]
+                - columnheader "Actions" [ref=e139]
+            - rowgroup [ref=e140]:
+              - row "OWN-001 Camille Vidal Client1 Société A camille.vidal@c1.test 0698765432 ORY Actif 01/06/2026 31/12/2028 Actions" [ref=e141]:
+                - cell "OWN-001" [ref=e142]
+                - cell "Camille Vidal Client1 Société A" [ref=e143]:
+                  - generic [ref=e144]: Camille Vidal
+                  - generic [ref=e145]: Client1 Société A
+                - cell "camille.vidal@c1.test 0698765432" [ref=e146]:
+                  - generic [ref=e147]: camille.vidal@c1.test
+                  - generic [ref=e148]: "0698765432"
+                - cell "ORY" [ref=e149]:
+                  - generic [ref=e150]: ORY
+                - cell "Actif" [ref=e151]:
+                  - generic [ref=e152]: Actif
+                - cell "01/06/2026" [ref=e154]
+                - cell "31/12/2028" [ref=e155]
+                - cell "Actions" [ref=e156]:
+                  - button "Actions" [ref=e159]:
+                    - img [ref=e160]
+              - row "C1-555 Benjamin Renard Client1 - Nouvelle Société benjamin.renard@c1.test 0623456789 ORY Actif 01/06/2026 01/06/2028 Actions" [ref=e162]:
+                - cell "C1-555" [ref=e163]
+                - cell "Benjamin Renard Client1 - Nouvelle Société" [ref=e164]:
+                  - generic [ref=e165]: Benjamin Renard
+                  - generic [ref=e166]: Client1 - Nouvelle Société
+                - cell "benjamin.renard@c1.test 0623456789" [ref=e167]:
+                  - generic [ref=e168]: benjamin.renard@c1.test
+                  - generic [ref=e169]: "0623456789"
+                - cell "ORY" [ref=e170]:
+                  - generic [ref=e171]: ORY
+                - cell "Actif" [ref=e172]:
+                  - generic [ref=e173]: Actif
+                - cell "01/06/2026" [ref=e175]
+                - cell "01/06/2028" [ref=e176]
+                - cell "Actions" [ref=e177]:
+                  - button "Actions" [ref=e180]:
+                    - img [ref=e181]
+      - generic [ref=e184]:
+        - paragraph [ref=e185]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e186]:
+          - link "Mentions légales" [ref=e187] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e188] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e189] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e190] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e191]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e192] [cursor=pointer]:
+            - /url: https://r4dev.fr

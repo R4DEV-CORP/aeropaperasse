@@ -39,7 +39,7 @@ class extends Component
     public function mount(): void
     {
         if (auth()->user()->isClient()) {
-            $this->redirect(route('companies.show', ['companyId' => auth()->user()->client_id]), navigate: true);
+            $this->redirect(route('companies.show', ['companyId' => auth()->user()->contextualClientId()]), navigate: true);
         }
     }
 
@@ -78,7 +78,7 @@ class extends Component
     #[Computed]
     public function clients()
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             return collect();
         }
 
@@ -97,8 +97,8 @@ class extends Component
         $query = ActivityRequest::with('client')
             ->where('status', 'draft');
 
-        if (! auth()->user()->isAdmin()) {
-            $query->where('client_id', auth()->user()->client_id);
+        if (! auth()->user()->isTenantManager()) {
+            $query->where('client_id', auth()->user()->contextualClientId());
         }
 
         return $query->orderBy('updated_at', 'desc')->take(50)->get();
@@ -109,11 +109,11 @@ class extends Component
     {
         $query = ActivityRequest::query()->where('status', '!=', 'draft');
 
-        if (! auth()->user()->isAdmin()) {
-            $query->where('client_id', auth()->user()->client_id);
+        if (! auth()->user()->isTenantManager()) {
+            $query->where('client_id', auth()->user()->contextualClientId());
         }
 
-        if ($this->selectedClientId && auth()->user()->isAdmin()) {
+        if ($this->selectedClientId && auth()->user()->isTenantManager()) {
             $query->where('client_id', $this->selectedClientId);
         }
 
@@ -135,11 +135,11 @@ class extends Component
         $query = ActivityRequest::with('client')
             ->where('status', '!=', 'draft');
 
-        if (! auth()->user()->isAdmin()) {
-            $query->where('client_id', auth()->user()->client_id);
+        if (! auth()->user()->isTenantManager()) {
+            $query->where('client_id', auth()->user()->contextualClientId());
         }
 
-        if ($this->selectedClientId && auth()->user()->isAdmin()) {
+        if ($this->selectedClientId && auth()->user()->isTenantManager()) {
             $query->where('client_id', $this->selectedClientId);
         }
 
@@ -166,11 +166,11 @@ class extends Component
                     ->select('activity_requests.*', 'clients.company_name as company_name', 'clients.trade_name as trade_name')
                     ->where('activity_requests.status', '!=', 'draft');
 
-                if (! auth()->user()->isAdmin()) {
-                    $query->where('activity_requests.client_id', auth()->user()->client_id);
+                if (! auth()->user()->isTenantManager()) {
+                    $query->where('activity_requests.client_id', auth()->user()->contextualClientId());
                 }
 
-                if ($selectedClientId && auth()->user()->isAdmin()) {
+                if ($selectedClientId && auth()->user()->isTenantManager()) {
                     $query->where('activity_requests.client_id', $selectedClientId);
                 }
 
@@ -237,7 +237,7 @@ class extends Component
             return;
         }
 
-        if (! auth()->user()->isAdmin() && $activityRequest->client_id !== auth()->user()->client_id) {
+        if (! auth()->user()->isTenantManager() && $activityRequest->client_id !== auth()->user()->contextualClientId()) {
             return;
         }
 
@@ -255,7 +255,7 @@ class extends Component
 
     public function downloadDocuments(int $activityRequestId)
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             return null;
         }
 
@@ -348,7 +348,7 @@ class extends Component
                 </x-ui.input>
             </div>
 
-            @if (auth()->user()->isAdmin())
+            @if (auth()->user()->isTenantManager())
                 @php
                     $clientOptions = [['value' => null, 'label' => 'Toutes les sociétés']];
                     foreach ($this->clients as $c) {
@@ -696,7 +696,7 @@ class extends Component
                                     </x-ui.dropdown-item>
                                 @endif
 
-                                @if (auth()->user()->isAdmin())
+                                @if (auth()->user()->isTenantManager())
                                     <x-ui.dropdown-item wire:click="downloadDocuments({{ $activityRequest->id }})">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4 text-foreground-subtle">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />

@@ -1,0 +1,134 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - link "Déconnexion" [ref=e44] [cursor=pointer]:
+      - /url: http://client1.aeropaperasse.test/logout
+      - img [ref=e45]
+      - generic [ref=e47]: Déconnexion
+  - generic [ref=e48]:
+    - banner [ref=e49]:
+      - button "Masquer la barre latérale" [expanded] [ref=e51]:
+        - img [ref=e52]
+      - navigation "Fil d'Ariane" [ref=e54]:
+        - generic [ref=e55]: Administration
+        - img [ref=e56]
+        - link "Suivi des badges" [ref=e58] [cursor=pointer]:
+          - /url: /badge-management
+        - img [ref=e59]
+        - generic [ref=e61]: Nouveau badge
+    - main [ref=e62]:
+      - generic [ref=e63]:
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - link "Retour" [ref=e67] [cursor=pointer]:
+              - /url: http://client1.aeropaperasse.test/badge-management
+              - img [ref=e68]
+              - text: Retour
+            - generic [ref=e70]: /
+            - heading "Créer un badge indépendant" [level=1] [ref=e71]
+          - generic [ref=e72]:
+            - link "Lier à une demande" [ref=e73] [cursor=pointer]:
+              - /url: http://client1.aeropaperasse.test/badge-management/form/linked
+            - link "Indépendant" [ref=e74] [cursor=pointer]:
+              - /url: http://client1.aeropaperasse.test/badge-management/form/standalone
+        - generic [ref=e75]:
+          - generic [ref=e77]:
+            - alert [ref=e78]:
+              - generic [ref=e79]: Le badge créé indépendamment ne sera pas rattaché à une demande de badge existante.
+            - generic [ref=e80]:
+              - button "Sélection du client Administration" [expanded] [ref=e81]:
+                - img [ref=e83]
+                - generic [ref=e85]:
+                  - generic [ref=e86]: Sélection du client
+                  - generic [ref=e87]: Administration
+                - img [ref=e88]
+              - generic [ref=e90]:
+                - generic [ref=e91]:
+                  - generic [ref=e92]: Client *
+                  - button "Client" [ref=e94]:
+                    - generic [ref=e95]: Sélectionnez un client…
+                    - img [ref=e96]
+                - paragraph [ref=e98]: Le badge sera créé au nom du client sélectionné.
+            - generic [ref=e99]:
+              - generic [ref=e100]:
+                - heading "Collaborateur" [level=2] [ref=e101]
+                - paragraph [ref=e102]: Détenteur du badge.
+              - alert [ref=e104]:
+                - generic [ref=e105]: Sélectionnez d'abord un client.
+            - generic [ref=e106]:
+              - heading "Badge" [level=2] [ref=e108]
+              - generic [ref=e109]:
+                - group "Aéroport" [ref=e110]:
+                  - generic [ref=e111]: Aéroport *
+                  - generic [ref=e112]:
+                    - generic [ref=e113] [cursor=pointer]:
+                      - radio "CDG Roissy Charles de Gaulle" [ref=e114]
+                      - generic [ref=e115]: CDG
+                      - generic [ref=e116]: Roissy Charles de Gaulle
+                    - generic [ref=e117] [cursor=pointer]:
+                      - radio "ORY Paris Orly" [ref=e118]
+                      - generic [ref=e119]: ORY
+                      - generic [ref=e120]: Paris Orly
+                    - generic [ref=e121] [cursor=pointer]:
+                      - radio "LBG Le Bourget" [ref=e122]
+                      - generic [ref=e123]: LBG
+                      - generic [ref=e124]: Le Bourget
+                - generic [ref=e125]:
+                  - generic [ref=e126]:
+                    - generic [ref=e127]: Numéro de badge
+                    - textbox "Numéro de badge" [ref=e128]:
+                      - /placeholder: "Ex : 123456"
+                  - generic [ref=e129]:
+                    - generic [ref=e130]: Date d'expiration *
+                    - textbox "Date d'expiration" [ref=e131]
+          - generic [ref=e133]:
+            - button "Annuler" [ref=e134]
+            - button "Créer le badge" [ref=e135]:
+              - img [ref=e136]
+              - generic [ref=e138]: Créer le badge
+      - generic [ref=e140]:
+        - paragraph [ref=e141]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e142]:
+          - link "Mentions légales" [ref=e143] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e144] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e145] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e146] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e147]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e148] [cursor=pointer]:
+            - /url: https://r4dev.fr

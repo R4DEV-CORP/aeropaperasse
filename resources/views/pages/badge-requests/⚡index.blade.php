@@ -66,7 +66,7 @@ class extends Component
     #[Computed]
     public function clients()
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             return collect();
         }
 
@@ -79,9 +79,9 @@ class extends Component
         $query = BadgeRequest::with(['coworker', 'activityRequest.client'])
             ->where('status', 'draft');
 
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             $query->whereHas('activityRequest', function ($q) {
-                $q->where('client_id', auth()->user()->client_id);
+                $q->where('client_id', auth()->user()->contextualClientId());
             });
         }
 
@@ -99,13 +99,13 @@ class extends Component
     {
         $query = BadgeRequest::query()->where('status', '!=', 'draft');
 
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             $query->whereHas('activityRequest', function ($q) {
-                $q->where('client_id', auth()->user()->client_id);
+                $q->where('client_id', auth()->user()->contextualClientId());
             });
         }
 
-        if ($this->selectedClientId && auth()->user()->isAdmin()) {
+        if ($this->selectedClientId && auth()->user()->isTenantManager()) {
             $query->whereHas('activityRequest', function ($q) {
                 $q->where('client_id', $this->selectedClientId);
             });
@@ -129,9 +129,9 @@ class extends Component
         $query = BadgeRequest::with(['coworker', 'activityRequest.client'])
             ->where('status', '!=', 'draft');
 
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             $query->whereHas('activityRequest', function ($q) {
-                $q->where('client_id', auth()->user()->client_id);
+                $q->where('client_id', auth()->user()->contextualClientId());
             });
         }
 
@@ -147,7 +147,7 @@ class extends Component
             });
         }
 
-        if ($this->selectedClientId && auth()->user()->isAdmin()) {
+        if ($this->selectedClientId && auth()->user()->isTenantManager()) {
             $query->whereHas('activityRequest', function ($q) {
                 $q->where('client_id', $this->selectedClientId);
             });
@@ -337,7 +337,7 @@ class extends Component
                 </x-ui.input>
             </div>
 
-            @if (auth()->user()->isAdmin())
+            @if (auth()->user()->isTenantManager())
                 @php
                     $clientOptions = [['value' => null, 'label' => 'Toutes les sociétés']];
                     foreach ($this->clients as $c) {

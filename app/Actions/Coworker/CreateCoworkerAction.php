@@ -25,18 +25,21 @@ class CreateCoworkerAction
                 // 1. Vérifier que le client existe
                 $client = Client::findOrFail($data->client_id);
 
-                // 2. Créer l'utilisateur si demandé
+                // 2. Résoudre l'utilisateur : soit un existant à rattacher, soit on en crée un.
                 $user = null;
-                if ($data->shouldCreateUser()) {
+                if ($data->shouldAttachExistingUser()) {
+                    $user = User::findOrFail($data->existing_user_id);
+                } elseif ($data->shouldCreateUser()) {
                     $user = $this->createUser($data);
                 }
 
                 // 3. Créer le collaborateur
                 $coworker = $this->createCoworker($data, $user);
 
-                // 4. Lier l'utilisateur au collaborateur si nécessaire
+                // 4. Lier l'utilisateur au collaborateur + attacher la pivot tenant.
                 if ($user) {
                     $this->linkUserToCoworker($user, $coworker);
+                    $this->attachUserToActiveTenant($user, $data);
                 }
 
                 // 5. Log de la création
@@ -88,6 +91,37 @@ class CreateCoworkerAction
     {
         $user->coworker_id = $coworker->id;
         $user->save();
+    }
+
+    /**
+     * Attache l'utilisateur au tenant actif via la pivot `tenant_user` (rôle + client_id).
+     * Sans cette ligne, EnsureTenantMembership redirige le compte vers tenant.no-access
+     * au prochain login. Les rôles REM court-circuitent et n'ont pas besoin de pivot.
+     */
+    private function attachUserToActiveTenant(User $user, CreateCoworkerData $data): void
+    {
+        $activeTenant = tenant();
+        if ($activeTenant === null) {
+            return;
+        }
+
+        if (in_array($data->role, ['rem_admin', 'rem_super_admin'], true)) {
+            return;
+        }
+
+        $tenantKey = $activeTenant->getTenantKey();
+
+        // Idempotent attach — REM staff and users already on this tenant skip,
+        // protecting the unique(user_id, tenant_id) constraint on tenant_user.
+        if ($user->belongsToTenant($tenantKey) && ! $user->isRemStaff()) {
+            return;
+        }
+
+        $user->tenants()->attach($tenantKey, [
+            'role' => $data->role ?? 'client',
+            'client_id' => $data->client_id,
+            'can_access_formation' => $data->can_access_formation,
+        ]);
     }
 
     /**

@@ -18,7 +18,7 @@ new class extends Component
     #[On('open-edit-airport')]
     public function open(int $coworkerTrainingId, ?string $currentAirport = null): void
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             return;
         }
 
@@ -52,7 +52,7 @@ new class extends Component
 
     public function submit(): void
     {
-        if (! auth()->user()->isAdmin() || $this->coworkerTrainingId === null) {
+        if (! auth()->user()->isTenantManager() || $this->coworkerTrainingId === null) {
             return;
         }
 

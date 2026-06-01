@@ -30,7 +30,7 @@ new class extends Component
     #[On('edit-badge-number')]
     public function open(int $id): void
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             return;
         }
 
@@ -49,7 +49,7 @@ new class extends Component
 
     public function submit(): void
     {
-        if (! auth()->user()->isAdmin() || $this->badgeId === null) {
+        if (! auth()->user()->isTenantManager() || $this->badgeId === null) {
             return;
         }
 

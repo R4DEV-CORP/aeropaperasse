@@ -35,9 +35,9 @@ class extends Component
         }
 
         $user = auth()->user();
-        if (! $user->isAdmin()) {
+        if (! $user->isTenantManager()) {
             $clientId = $badgeRequest->activityRequest?->client_id;
-            if ($clientId !== $user->client_id) {
+            if ($clientId !== $user->contextualClientId()) {
                 abort(403);
             }
             if ($user->isClient() && $badgeRequest->activityRequest?->created_by !== $user->id) {
@@ -211,7 +211,7 @@ class extends Component
     $client = $ar?->client;
     $airport = $ar?->airport;
     $user = auth()->user();
-    $isAdmin = $user->isAdmin();
+    $isAdmin = $user->isTenantManager();
     $isSAdmin = $user->isSAdmin();
     $canChangeStatus = $user->canChangeRequestStatus();
     // Les "client" simples n'ont pas le droit de créer une demande — ils ne peuvent donc pas non plus la corriger.

@@ -1,0 +1,189 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - generic [ref=e43]:
+      - link "Changer d'espace" [ref=e44] [cursor=pointer]:
+        - /url: http://client1.aeropaperasse.test/choose-tenant
+        - img [ref=e45]
+        - generic [ref=e47]: Changer d'espace
+      - link "Déconnexion" [ref=e48] [cursor=pointer]:
+        - /url: http://client1.aeropaperasse.test/logout
+        - img [ref=e49]
+        - generic [ref=e51]: Déconnexion
+  - generic [ref=e52]:
+    - banner [ref=e53]:
+      - button "Masquer la barre latérale" [expanded] [ref=e55]:
+        - img [ref=e56]
+      - navigation "Fil d'Ariane" [ref=e58]:
+        - generic [ref=e59]: Administration
+        - img [ref=e60]
+        - generic [ref=e62]: Collaborateurs & utilisateurs
+    - main [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - heading "Collaborateurs & utilisateurs" [level=1] [ref=e67]
+            - paragraph [ref=e68]: Gérez les collaborateurs et leurs comptes utilisateurs.
+          - link "Nouveau" [ref=e69] [cursor=pointer]:
+            - /url: http://client1.aeropaperasse.test/coworkers/form
+            - img [ref=e70]
+            - text: Nouveau
+        - generic [ref=e72]:
+          - generic [ref=e75]:
+            - generic [ref=e78]: Total
+            - generic [ref=e79]: "4"
+          - button "Avec compte 0" [ref=e80]:
+            - generic [ref=e83]:
+              - generic [ref=e86]: Avec compte
+              - generic [ref=e87]: "0"
+          - button "Sans compte 4" [ref=e88]:
+            - generic [ref=e91]:
+              - generic [ref=e94]: Sans compte
+              - generic [ref=e95]: "4"
+          - button "Accès formation 0" [ref=e96]:
+            - generic [ref=e99]:
+              - generic [ref=e102]: Accès formation
+              - generic [ref=e103]: "0"
+          - button "Partis 0" [ref=e104]:
+            - generic [ref=e107]:
+              - generic [ref=e110]: Partis
+              - generic [ref=e111]: "0"
+        - generic [ref=e113]:
+          - generic [ref=e116]:
+            - generic:
+              - img
+            - searchbox "Rechercher par nom, email ou téléphone..." [ref=e117]
+          - button "Toutes les sociétés" [ref=e121]:
+            - generic [ref=e122]: Toutes les sociétés
+            - img [ref=e123]
+          - button "Tous les rôles" [ref=e128]:
+            - generic [ref=e129]: Tous les rôles
+            - img [ref=e130]
+        - generic [ref=e132]:
+          - generic [ref=e133]:
+            - heading "Liste" [level=2] [ref=e134]
+            - paragraph [ref=e135]: 4 collaborateurs
+          - table [ref=e137]:
+            - rowgroup [ref=e138]:
+              - row "Nom Société Type Contact Statut Actions" [ref=e139]:
+                - columnheader "Nom" [ref=e140]
+                - columnheader "Société" [ref=e141]
+                - columnheader "Type" [ref=e142]
+                - columnheader "Contact" [ref=e143]
+                - columnheader "Statut" [ref=e144]
+                - columnheader "Actions" [ref=e145]
+            - rowgroup [ref=e146]:
+              - row "Jean Gautier Client1 Société A Client1 Société A Collaborateur jean.gautier@gmail.com 0801289723 Actif Actions" [ref=e147]:
+                - cell "Jean Gautier" [ref=e148]:
+                  - link "Jean Gautier" [ref=e150] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/coworkers/1
+                - cell "Client1 Société A Client1 Société A" [ref=e151]:
+                  - generic [ref=e152]: Client1 Société A
+                  - generic [ref=e153]: Client1 Société A
+                - cell "Collaborateur" [ref=e154]:
+                  - generic [ref=e155]: Collaborateur
+                - cell "jean.gautier@gmail.com 0801289723" [ref=e157]:
+                  - generic [ref=e158]: jean.gautier@gmail.com
+                  - generic [ref=e159]: "0801289723"
+                - cell "Actif" [ref=e160]:
+                  - generic [ref=e161]: Actif
+                - cell "Actions" [ref=e163]:
+                  - button "Actions" [ref=e166]:
+                    - img [ref=e167]
+              - row "Maggie Pruvost Client1 Société A Client1 Société A Collaborateur maggie.pruvost@gmail.com 01 44 00 23 64 Actif Actions" [ref=e169]:
+                - cell "Maggie Pruvost" [ref=e170]:
+                  - link "Maggie Pruvost" [ref=e172] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/coworkers/2
+                - cell "Client1 Société A Client1 Société A" [ref=e173]:
+                  - generic [ref=e174]: Client1 Société A
+                  - generic [ref=e175]: Client1 Société A
+                - cell "Collaborateur" [ref=e176]:
+                  - generic [ref=e177]: Collaborateur
+                - cell "maggie.pruvost@gmail.com 01 44 00 23 64" [ref=e179]:
+                  - generic [ref=e180]: maggie.pruvost@gmail.com
+                  - generic [ref=e181]: 01 44 00 23 64
+                - cell "Actif" [ref=e182]:
+                  - generic [ref=e183]: Actif
+                - cell "Actions" [ref=e185]:
+                  - button "Actions" [ref=e188]:
+                    - img [ref=e189]
+              - row "Adrien Roussel Client1 Société B Client1 Société B Collaborateur adrien.roussel@gmail.com +33 1 37 08 52 19 Actif Actions" [ref=e191]:
+                - cell "Adrien Roussel" [ref=e192]:
+                  - link "Adrien Roussel" [ref=e194] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/coworkers/3
+                - cell "Client1 Société B Client1 Société B" [ref=e195]:
+                  - generic [ref=e196]: Client1 Société B
+                  - generic [ref=e197]: Client1 Société B
+                - cell "Collaborateur" [ref=e198]:
+                  - generic [ref=e199]: Collaborateur
+                - cell "adrien.roussel@gmail.com +33 1 37 08 52 19" [ref=e201]:
+                  - generic [ref=e202]: adrien.roussel@gmail.com
+                  - generic [ref=e203]: +33 1 37 08 52 19
+                - cell "Actif" [ref=e204]:
+                  - generic [ref=e205]: Actif
+                - cell "Actions" [ref=e207]:
+                  - button "Actions" [ref=e210]:
+                    - img [ref=e211]
+              - row "Luc Turpin Client1 Société B Client1 Société B Collaborateur luc.turpin@gmail.com +33 (0)8 16 33 95 26 Actif Actions" [ref=e213]:
+                - cell "Luc Turpin" [ref=e214]:
+                  - link "Luc Turpin" [ref=e216] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/coworkers/4
+                - cell "Client1 Société B Client1 Société B" [ref=e217]:
+                  - generic [ref=e218]: Client1 Société B
+                  - generic [ref=e219]: Client1 Société B
+                - cell "Collaborateur" [ref=e220]:
+                  - generic [ref=e221]: Collaborateur
+                - cell "luc.turpin@gmail.com +33 (0)8 16 33 95 26" [ref=e223]:
+                  - generic [ref=e224]: luc.turpin@gmail.com
+                  - generic [ref=e225]: +33 (0)8 16 33 95 26
+                - cell "Actif" [ref=e226]:
+                  - generic [ref=e227]: Actif
+                - cell "Actions" [ref=e229]:
+                  - button "Actions" [ref=e232]:
+                    - img [ref=e233]
+      - generic [ref=e236]:
+        - paragraph [ref=e237]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e238]:
+          - link "Mentions légales" [ref=e239] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e240] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e241] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e242] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e243]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e244] [cursor=pointer]:
+            - /url: https://r4dev.fr

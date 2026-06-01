@@ -1,0 +1,123 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Aeropaperasse" [ref=e6]
+      - navigation [ref=e7]:
+        - link "Sociétés" [ref=e8] [cursor=pointer]:
+          - /url: /companies
+          - img [ref=e10]
+          - generic [ref=e12]: Sociétés
+        - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+          - /url: /activity-requests
+          - img [ref=e15]
+          - generic [ref=e17]: Demande d'activité
+        - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+          - /url: /coworkers
+          - img [ref=e20]
+          - generic [ref=e22]: Collaborateurs & utilisateurs
+        - link "Demande de badge" [ref=e23] [cursor=pointer]:
+          - /url: /badge-requests
+          - img [ref=e25]
+          - generic [ref=e27]: Demande de badge
+        - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+          - /url: /badge-management
+          - img [ref=e30]
+          - generic [ref=e32]: Suivi des badges
+        - link "Formations" [ref=e33] [cursor=pointer]:
+          - /url: /trainings
+          - img [ref=e35]
+          - generic [ref=e37]: Formations
+        - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+          - /url: /vehicle-pass
+          - img [ref=e40]
+          - generic [ref=e42]: Laissez-passer
+      - generic [ref=e43]:
+        - link "Changer d'espace" [ref=e44] [cursor=pointer]:
+          - /url: http://app.aeropaperasse.test/choose-tenant
+          - img [ref=e45]
+          - generic [ref=e47]: Changer d'espace
+        - link "Déconnexion" [ref=e48] [cursor=pointer]:
+          - /url: http://app.aeropaperasse.test/logout
+          - img [ref=e49]
+          - generic [ref=e51]: Déconnexion
+    - generic [ref=e52]:
+      - banner [ref=e53]:
+        - button "Masquer la barre latérale" [expanded] [ref=e55]:
+          - img [ref=e56]
+        - navigation "Fil d'Ariane" [ref=e58]:
+          - generic [ref=e59]: Administration
+          - img [ref=e60]
+          - link "Demandes de badges" [ref=e62] [cursor=pointer]:
+            - /url: /badge-requests
+          - img [ref=e63]
+          - generic [ref=e65]: Formulaire
+      - main [ref=e66]:
+        - generic [ref=e67]:
+          - generic [ref=e70]:
+            - link "Retour" [ref=e71] [cursor=pointer]:
+              - /url: http://app.aeropaperasse.test/badge-requests
+              - img [ref=e72]
+              - text: Retour
+            - generic [ref=e74]: /
+            - heading "Nouvelle demande de badge" [level=1] [ref=e75]
+          - generic [ref=e77]:
+            - generic [ref=e80]:
+              - button "Sélection du client Administration" [expanded] [ref=e81]:
+                - img [ref=e83]
+                - generic [ref=e85]:
+                  - generic [ref=e86]: Sélection du client
+                  - generic [ref=e87]: Administration
+                - img [ref=e88]
+              - generic [ref=e90]:
+                - generic [ref=e91]:
+                  - generic [ref=e92]: Client *
+                  - button "Client" [expanded] [ref=e94]:
+                    - generic [ref=e95]: Sélectionnez un client…
+                    - img [ref=e96]
+                - paragraph [ref=e98]: Cette demande sera créée au nom du client sélectionné.
+            - generic [ref=e100]:
+              - button "Abandonner" [ref=e101]:
+                - img [ref=e102]
+                - text: Abandonner
+              - generic [ref=e104]:
+                - button "Brouillon" [ref=e105]:
+                  - img [ref=e106]
+                  - generic [ref=e109]: Brouillon
+                - button "Créer la demande" [disabled] [ref=e110]:
+                  - img [ref=e111]
+                  - generic [ref=e113]: Créer la demande
+        - generic [ref=e115]:
+          - paragraph [ref=e116]: © 2026 Aeropaperasse — tous droits réservés
+          - navigation [ref=e117]:
+            - link "Mentions légales" [ref=e118] [cursor=pointer]:
+              - /url: "#"
+            - link "Politique de confidentialité" [ref=e119] [cursor=pointer]:
+              - /url: "#"
+            - link "CGU" [ref=e120] [cursor=pointer]:
+              - /url: "#"
+            - link "CGV" [ref=e121] [cursor=pointer]:
+              - /url: "#"
+          - paragraph [ref=e122]:
+            - text: Une réalisation
+            - link "R4DEV" [ref=e123] [cursor=pointer]:
+              - /url: https://r4dev.fr
+  - generic [ref=e124]:
+    - generic [ref=e126]:
+      - generic:
+        - img
+      - textbox "Filtrer par société ou SIRET…" [active] [ref=e127]
+    - listbox [ref=e128]:
+      - option "REM Société A SIRET 52256857" [ref=e129] [cursor=pointer]:
+        - generic [ref=e130]:
+          - generic [ref=e131]: REM Société A
+          - generic [ref=e132]: SIRET 52256857
+      - option "REM Société B SIRET 18245976" [ref=e133] [cursor=pointer]:
+        - generic [ref=e134]:
+          - generic [ref=e135]: REM Société B
+          - generic [ref=e136]: SIRET 18245976
+      - option "Test Société SA SIRET 12345678901234" [ref=e137] [cursor=pointer]:
+        - generic [ref=e138]:
+          - generic [ref=e139]: Test Société SA
+          - generic [ref=e140]: SIRET 12345678901234

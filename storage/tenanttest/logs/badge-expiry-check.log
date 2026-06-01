@@ -52,3 +52,57 @@
 [2026-05-28 14:23:54] [test] Traitement de 0 badges expirant dans 15 jours
 [2026-05-28 14:23:54] [test] Traitement de 0 badges expirant dans 7 jours
 [2026-05-28 14:23:54] Vérification des badges terminée.
+[2026-06-01 08:47:56] Démarrage de la vérification des badges
+[2026-06-01 08:47:56] [second] Traitement de 0 badges expirant dans 90 jours
+[2026-06-01 08:47:56] [second] Traitement de 1 badges expirant dans 30 jours
+[2026-06-01 08:47:56] [second] Notification envoyée pour le badge #1 à holder-second@example.com
+[2026-06-01 08:47:56] [second] Traitement de 0 badges expirant dans 15 jours
+[2026-06-01 08:47:56] [second] Traitement de 0 badges expirant dans 7 jours
+[2026-06-01 08:47:56] [test] Traitement de 0 badges expirant dans 90 jours
+[2026-06-01 08:47:56] [test] Traitement de 1 badges expirant dans 30 jours
+[2026-06-01 08:47:56] [test] Notification envoyée pour le badge #1 à holder-test@example.com
+[2026-06-01 08:47:56] [test] Traitement de 0 badges expirant dans 15 jours
+[2026-06-01 08:47:56] [test] Traitement de 0 badges expirant dans 7 jours
+[2026-06-01 08:47:56] Vérification des badges terminée.
+[2026-06-01 08:47:59] Démarrage de la vérification des badges
+[2026-06-01 08:47:59] [test] Traitement de 0 badges expirant dans 90 jours
+[2026-06-01 08:47:59] [test] Traitement de 0 badges expirant dans 30 jours
+[2026-06-01 08:47:59] [test] Traitement de 0 badges expirant dans 15 jours
+[2026-06-01 08:47:59] [test] Traitement de 0 badges expirant dans 7 jours
+[2026-06-01 08:47:59] Vérification des badges terminée.
+[2026-06-01 09:22:21] Démarrage de la vérification des badges
+[2026-06-01 09:22:21] [second] Traitement de 0 badges expirant dans 90 jours
+[2026-06-01 09:22:21] [second] Traitement de 1 badges expirant dans 30 jours
+[2026-06-01 09:22:21] [second] Notification envoyée pour le badge #1 à holder-second@example.com
+[2026-06-01 09:22:21] [second] Traitement de 0 badges expirant dans 15 jours
+[2026-06-01 09:22:21] [second] Traitement de 0 badges expirant dans 7 jours
+[2026-06-01 09:22:21] [test] Traitement de 0 badges expirant dans 90 jours
+[2026-06-01 09:22:21] [test] Traitement de 1 badges expirant dans 30 jours
+[2026-06-01 09:22:21] [test] Notification envoyée pour le badge #1 à holder-test@example.com
+[2026-06-01 09:22:21] [test] Traitement de 0 badges expirant dans 15 jours
+[2026-06-01 09:22:21] [test] Traitement de 0 badges expirant dans 7 jours
+[2026-06-01 09:22:21] Vérification des badges terminée.
+[2026-06-01 09:22:24] Démarrage de la vérification des badges
+[2026-06-01 09:22:24] [test] Traitement de 0 badges expirant dans 90 jours
+[2026-06-01 09:22:24] [test] Traitement de 0 badges expirant dans 30 jours
+[2026-06-01 09:22:24] [test] Traitement de 0 badges expirant dans 15 jours
+[2026-06-01 09:22:24] [test] Traitement de 0 badges expirant dans 7 jours
+[2026-06-01 09:22:24] Vérification des badges terminée.
+[2026-06-01 12:32:11] Démarrage de la vérification des badges
+[2026-06-01 12:32:11] [second] Traitement de 0 badges expirant dans 90 jours
+[2026-06-01 12:32:11] [second] Traitement de 1 badges expirant dans 30 jours
+[2026-06-01 12:32:11] [second] Notification envoyée pour le badge #1 à holder-second@example.com
+[2026-06-01 12:32:11] [second] Traitement de 0 badges expirant dans 15 jours
+[2026-06-01 12:32:11] [second] Traitement de 0 badges expirant dans 7 jours
+[2026-06-01 12:32:11] [test] Traitement de 0 badges expirant dans 90 jours
+[2026-06-01 12:32:11] [test] Traitement de 1 badges expirant dans 30 jours
+[2026-06-01 12:32:11] [test] Notification envoyée pour le badge #1 à holder-test@example.com
+[2026-06-01 12:32:11] [test] Traitement de 0 badges expirant dans 15 jours
+[2026-06-01 12:32:11] [test] Traitement de 0 badges expirant dans 7 jours
+[2026-06-01 12:32:11] Vérification des badges terminée.
+[2026-06-01 12:32:15] Démarrage de la vérification des badges
+[2026-06-01 12:32:15] [test] Traitement de 0 badges expirant dans 90 jours
+[2026-06-01 12:32:15] [test] Traitement de 0 badges expirant dans 30 jours
+[2026-06-01 12:32:15] [test] Traitement de 0 badges expirant dans 15 jours
+[2026-06-01 12:32:15] [test] Traitement de 0 badges expirant dans 7 jours
+[2026-06-01 12:32:15] Vérification des badges terminée.

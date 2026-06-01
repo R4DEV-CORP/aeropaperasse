@@ -21,7 +21,7 @@ new class extends Component
     public function open(int $coworkerTrainingId): void
     {
         $authUser = auth()->user();
-        if ($authUser->isClient() && ! $authUser->can_access_formation) {
+        if ($authUser->isClient() && ! $authUser->canAccessFormation()) {
             return;
         }
 

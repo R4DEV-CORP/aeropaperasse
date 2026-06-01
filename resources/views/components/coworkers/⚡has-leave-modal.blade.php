@@ -110,11 +110,11 @@ new class extends Component
     {
         $user = auth()->user();
 
-        if ($user->isAdmin()) {
+        if ($user->isTenantManager()) {
             return true;
         }
 
-        return $coworker->client_id === $user->client_id;
+        return $coworker->client_id === $user->contextualClientId();
     }
 }; ?>
 

@@ -44,6 +44,27 @@ return [
             'throw' => false,
         ],
 
+        /*
+         * Disk used by Livewire for its temporary uploads (livewire-tmp/<hash>.<ext>).
+         *
+         * Why a dedicated disk: Livewire's POST /livewire/upload-file/{id} endpoint
+         * doesn't go through our tenancy middleware (it's auto-registered by the
+         * Livewire service provider), so it runs with tenancy **inactive**. The
+         * subsequent form submit goes through /livewire/update, where tenancy IS
+         * active (replayed via persistent middleware) — the public/local disks then
+         * get their root suffixed to storage/tenant_<id>/app/... by
+         * FilesystemTenancyBootstrapper, and the temp file from the upload step is
+         * no longer found.
+         *
+         * Pinning livewire-tmp to a disk that is NOT listed in config/tenancy.php
+         * → filesystem → disks keeps the path stable across both requests.
+         */
+        'livewire_tmp' => [
+            'driver' => 'local',
+            'root' => storage_path('app'),
+            'throw' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

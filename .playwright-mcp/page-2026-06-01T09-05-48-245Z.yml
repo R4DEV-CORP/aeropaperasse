@@ -1,0 +1,130 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - generic [ref=e43]:
+      - link "Changer d'espace" [ref=e44] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/choose-tenant
+        - img [ref=e45]
+        - generic [ref=e47]: Changer d'espace
+      - link "Déconnexion" [ref=e48] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/logout
+        - img [ref=e49]
+        - generic [ref=e51]: Déconnexion
+  - generic [ref=e52]:
+    - banner [ref=e53]:
+      - button "Masquer la barre latérale" [expanded] [ref=e55]:
+        - img [ref=e56]
+      - navigation "Fil d'Ariane" [ref=e58]:
+        - generic [ref=e59]: Administration
+        - img [ref=e60]
+        - generic [ref=e62]: Suivi des badges
+    - main [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - heading "Suivi des badges" [level=1] [ref=e66]
+          - paragraph [ref=e67]: Gérez tous les badges depuis cette interface.
+        - generic [ref=e68]:
+          - generic [ref=e71]:
+            - generic [ref=e74]: Total
+            - generic [ref=e75]: "0"
+          - button "Actifs 0" [ref=e76]:
+            - generic [ref=e79]:
+              - generic [ref=e82]: Actifs
+              - generic [ref=e83]: "0"
+          - button "Expirés 0" [ref=e84]:
+            - generic [ref=e87]:
+              - generic [ref=e90]: Expirés
+              - generic [ref=e91]: "0"
+          - button "Restitués 0" [ref=e92]:
+            - generic [ref=e95]:
+              - generic [ref=e98]: Restitués
+              - generic [ref=e99]: "0"
+          - button "Non restitués 0" [ref=e100]:
+            - generic [ref=e103]:
+              - generic [ref=e106]: Non restitués
+              - generic [ref=e107]: "0"
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - generic [ref=e112]:
+              - generic:
+                - img
+              - searchbox "Rechercher par nom de collaborateur ou de société..." [ref=e113]
+            - button "Toutes les sociétés" [ref=e117]:
+              - generic [ref=e118]: Toutes les sociétés
+              - img [ref=e119]
+            - generic [ref=e122]:
+              - button "Ajouter un badge" [ref=e123]:
+                - img [ref=e124]
+                - text: Ajouter un badge
+              - button "Plus d'options" [ref=e127]:
+                - img [ref=e128]
+          - radiogroup [ref=e130]:
+            - radio "Tous les aéroports" [checked] [ref=e131]
+            - radio "CDG" [ref=e132]
+            - radio "ORY" [ref=e133]
+            - radio "LBG" [ref=e134]
+        - generic [ref=e135]:
+          - generic [ref=e136]:
+            - heading "Liste des badges" [level=2] [ref=e137]
+            - paragraph [ref=e138]: 0 badge
+          - table [ref=e140]:
+            - rowgroup [ref=e141]:
+              - row "N° badge Détenteur Contact Aéroport Statut Création Expiration Actions" [ref=e142]:
+                - columnheader "N° badge" [ref=e143]
+                - columnheader "Détenteur" [ref=e144]
+                - columnheader "Contact" [ref=e145]
+                - columnheader "Aéroport" [ref=e146]
+                - columnheader "Statut" [ref=e147]
+                - columnheader "Création" [ref=e148]
+                - columnheader "Expiration" [ref=e149]
+                - columnheader "Actions" [ref=e150]
+            - rowgroup [ref=e151]:
+              - row "Aucun badge à afficher." [ref=e152]:
+                - cell "Aucun badge à afficher." [ref=e153]:
+                  - generic [ref=e154]: Aucun badge à afficher.
+      - generic [ref=e156]:
+        - paragraph [ref=e157]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e158]:
+          - link "Mentions légales" [ref=e159] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e160] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e161] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e162] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e163]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e164] [cursor=pointer]:
+            - /url: https://r4dev.fr

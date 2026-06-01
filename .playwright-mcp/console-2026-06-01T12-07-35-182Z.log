@@ -1,0 +1,4 @@
+[     693ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://app.aeropaperasse.test/_boost/browser-logs @ http://app.aeropaperasse.test/login:19
+[    8111ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://app.aeropaperasse.test/_boost/browser-logs @ http://app.aeropaperasse.test/badge-requests:19
+[   13496ms] [ERROR] Access to fetch at 'http://client1.aeropaperasse.test/badge-requests' from origin 'http://app.aeropaperasse.test' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://app.aeropaperasse.test/badge-requests:0
+[   13496ms] [ERROR] Failed to load resource: net::ERR_FAILED @ http://client1.aeropaperasse.test/badge-requests:0

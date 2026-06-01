@@ -1,0 +1,126 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - generic [ref=e43]:
+      - link "Changer d'espace" [ref=e44] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/choose-tenant
+        - img [ref=e45]
+        - generic [ref=e47]: Changer d'espace
+      - link "Déconnexion" [ref=e48] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/logout
+        - img [ref=e49]
+        - generic [ref=e51]: Déconnexion
+  - generic [ref=e52]:
+    - banner [ref=e53]:
+      - button "Masquer la barre latérale" [expanded] [ref=e55]:
+        - img [ref=e56]
+      - navigation "Fil d'Ariane" [ref=e58]:
+        - generic [ref=e59]: Administration
+        - img [ref=e60]
+        - generic [ref=e62]: Formations
+    - main [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - heading "Formations" [level=1] [ref=e67]
+            - paragraph [ref=e68]: Catalogue des formations attribuées à vos collaborateurs.
+          - button "Attribuer une formation" [ref=e69]:
+            - img [ref=e70]
+            - text: Attribuer une formation
+        - generic [ref=e72]:
+          - generic [ref=e75]:
+            - generic [ref=e78]: Sociétés
+            - generic [ref=e79]: "2"
+          - generic [ref=e82]:
+            - generic [ref=e85]: Collaborateurs actifs
+            - generic [ref=e86]: "5"
+          - generic [ref=e89]:
+            - generic [ref=e92]: Formations actives
+            - generic [ref=e93]: "0"
+          - generic [ref=e96]:
+            - generic [ref=e99]: Expirent < 6 mois
+            - generic [ref=e100]: "0"
+          - generic [ref=e103]:
+            - generic [ref=e106]: Expirées
+            - generic [ref=e107]: "0"
+        - generic [ref=e110]:
+          - generic:
+            - img
+          - searchbox "Rechercher une société..." [ref=e111]
+        - generic [ref=e112]:
+          - generic [ref=e113]:
+            - heading "Sociétés" [level=2] [ref=e114]
+            - paragraph [ref=e115]: 2 sociétés
+          - table [ref=e117]:
+            - rowgroup [ref=e118]:
+              - row "Société SIRET Collaborateurs actifs Formations actives Actions" [ref=e119]:
+                - columnheader "Société" [ref=e120]
+                - columnheader "SIRET" [ref=e121]
+                - columnheader "Collaborateurs actifs" [ref=e122]
+                - columnheader "Formations actives" [ref=e123]
+                - columnheader "Actions" [ref=e124]
+            - rowgroup [ref=e125]:
+              - row "REM Société A 59536284 3 — Actions" [ref=e126]:
+                - cell "REM Société A" [ref=e127]:
+                  - generic [ref=e128]: REM Société A
+                - cell "59536284" [ref=e129]
+                - cell "3" [ref=e130]
+                - cell "—" [ref=e131]
+                - cell "Actions" [ref=e132]:
+                  - button "Actions" [ref=e135]:
+                    - img [ref=e136]
+              - row "REM Société B 96946066 2 — Actions" [ref=e138]:
+                - cell "REM Société B" [ref=e139]:
+                  - generic [ref=e140]: REM Société B
+                - cell "96946066" [ref=e141]
+                - cell "2" [ref=e142]
+                - cell "—" [ref=e143]
+                - cell "Actions" [ref=e144]:
+                  - button "Actions" [ref=e147]:
+                    - img [ref=e148]
+      - generic [ref=e151]:
+        - paragraph [ref=e152]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e153]:
+          - link "Mentions légales" [ref=e154] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e155] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e156] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e157] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e158]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e159] [cursor=pointer]:
+            - /url: https://r4dev.fr

@@ -2,7 +2,7 @@
 
 use App\Livewire\Concerns\InteractsWithToasts;
 use App\Models\Client;
-use Illuminate\Support\Facades\DB;
+use App\Models\CoworkerTraining;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -27,13 +27,13 @@ class extends Component
     {
         $user = auth()->user();
 
-        if ($user->isClient() && ! $user->can_access_formation) {
-            $this->redirect(route('companies.show', ['companyId' => $user->client_id]), navigate: true);
+        if ($user->isClient() && ! $user->canAccessFormation()) {
+            $this->redirect(route('companies.show', ['companyId' => $user->contextualClientId()]), navigate: true);
 
             return;
         }
 
-        if (! $user->isAdmin() && $user->client_id !== $companyId) {
+        if (! $user->isTenantManager() && $user->contextualClientId() !== $companyId) {
             abort(403);
         }
 
@@ -51,27 +51,17 @@ class extends Component
         return Client::with('coworkers')->findOrFail($this->companyId);
     }
 
+    /**
+     * Tenant-side query. `coworker` (tenant) and `training` (central) are eager-loaded as
+     * separate queries — no cross-DB JOIN, which MySQL wouldn't run.
+     */
     private function trainingsQuery()
     {
         $coworkerIds = $this->client->coworkers->pluck('id');
 
-        return DB::table('coworker_trainings')
-            ->join('coworkers', 'coworker_trainings.coworker_id', '=', 'coworkers.id')
-            ->join('trainings', 'coworker_trainings.training_id', '=', 'trainings.id')
-            ->select(
-                'coworker_trainings.id',
-                'coworker_trainings.coworker_id',
-                'coworker_trainings.training_id',
-                'coworker_trainings.airport',
-                'coworker_trainings.started_at',
-                'coworker_trainings.expires_at',
-                'coworker_trainings.certificate_path',
-                'coworkers.firstname as coworker_firstname',
-                'coworkers.lastname as coworker_lastname',
-                'trainings.title as training_title',
-                'trainings.requires_airport as training_requires_airport',
-            )
-            ->whereIn('coworker_trainings.coworker_id', $coworkerIds);
+        return CoworkerTraining::query()
+            ->with(['coworker', 'training'])
+            ->whereIn('coworker_id', $coworkerIds);
     }
 
     #[Computed]
@@ -79,21 +69,22 @@ class extends Component
     {
         return $this->trainingsQuery()
             ->where(function ($q) {
-                $q->whereNull('coworker_trainings.expires_at')
-                    ->orWhere('coworker_trainings.expires_at', '>', now()->addMonths(6));
+                $q->whereNull('expires_at')
+                    ->orWhere('expires_at', '>', now()->addMonths(6));
             })
-            ->orderBy('coworkers.lastname')
-            ->orderBy('coworker_trainings.expires_at')
-            ->get();
+            ->orderBy('expires_at')
+            ->get()
+            ->sortBy(fn ($ct) => $ct->coworker?->lastname)
+            ->values();
     }
 
     #[Computed]
     public function soonExpiringTrainings()
     {
         return $this->trainingsQuery()
-            ->whereNotNull('coworker_trainings.expires_at')
-            ->whereBetween('coworker_trainings.expires_at', [now(), now()->addMonths(6)])
-            ->orderBy('coworker_trainings.expires_at')
+            ->whereNotNull('expires_at')
+            ->whereBetween('expires_at', [now(), now()->addMonths(6)])
+            ->orderBy('expires_at')
             ->get();
     }
 
@@ -101,9 +92,9 @@ class extends Component
     public function expiredTrainings()
     {
         return $this->trainingsQuery()
-            ->whereNotNull('coworker_trainings.expires_at')
-            ->where('coworker_trainings.expires_at', '<', now())
-            ->orderBy('coworker_trainings.expires_at', 'desc')
+            ->whereNotNull('expires_at')
+            ->where('expires_at', '<', now())
+            ->orderBy('expires_at', 'desc')
             ->get();
     }
 
@@ -118,7 +109,7 @@ class extends Component
 
 @php
     $authUser = auth()->user();
-    $isAdmin = $authUser->isAdmin();
+    $isAdmin = $authUser->isTenantManager();
     $client = $this->client;
 
     $airportMeta = [
@@ -246,10 +237,10 @@ class extends Component
                             <tr wire:key="ct-{{ $row->id }}">
                                 <td>
                                     <a href="{{ route('coworkers.show', ['coworkerId' => $row->coworker_id]) }}" wire:navigate class="font-medium text-foreground transition hover:text-accent">
-                                        {{ $row->coworker_firstname }} {{ $row->coworker_lastname }}
+                                        {{ $row->coworker?->firstname }} {{ $row->coworker?->lastname }}
                                     </a>
                                 </td>
-                                <td class="text-foreground">{{ $row->training_title }}</td>
+                                <td class="text-foreground">{{ $row->training?->title }}</td>
                                 <td>
                                     @if ($row->airport)
                                         <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold ring-1 ring-inset {{ $airportMeta[$row->airport] ?? 'bg-slate-50 text-slate-700 ring-slate-200' }}">
@@ -297,7 +288,7 @@ class extends Component
                                             </x-ui.dropdown-item>
                                         @endif
 
-                                        @if ($row->training_requires_airport && $isAdmin)
+                                        @if ($row->training?->requires_airport && $isAdmin)
                                             <x-ui.dropdown-item wire:click="$dispatch('open-edit-airport', { coworkerTrainingId: {{ $row->id }}, currentAirport: '{{ $row->airport ?? '' }}' })">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4 text-foreground-subtle">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />

@@ -49,15 +49,15 @@ class extends Component
         $authUser = auth()->user();
 
         if ($authUser->isClient()) {
-            $this->redirect(route('companies.show', ['companyId' => $authUser->client_id]), navigate: true);
+            $this->redirect(route('companies.show', ['companyId' => $authUser->contextualClientId()]), navigate: true);
 
             return;
         }
 
         $this->mode = in_array($mode, ['linked', 'standalone'], true) ? $mode : 'linked';
 
-        if (! $authUser->isAdmin()) {
-            $this->selected_client_id = $authUser->client_id;
+        if (! $authUser->isTenantManager()) {
+            $this->selected_client_id = $authUser->contextualClientId();
         }
     }
 
@@ -109,8 +109,8 @@ class extends Component
             return;
         }
 
-        if (! $authUser->isAdmin()) {
-            $this->selected_client_id = $authUser->client_id;
+        if (! $authUser->isTenantManager()) {
+            $this->selected_client_id = $authUser->contextualClientId();
         }
 
         if (! $this->selected_client_id) {
@@ -223,7 +223,7 @@ class extends Component
 
 @php
     $authUser = auth()->user();
-    $isAdmin = $authUser->isAdmin();
+    $isAdmin = $authUser->isTenantManager();
 
     $clientOptions = [];
     foreach ($this->clients as $c) {

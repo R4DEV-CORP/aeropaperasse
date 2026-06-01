@@ -17,7 +17,7 @@
         @php
             $user = auth()->user();
             $isClient = $user?->isClient() ?? false;
-            $canSeeFormations = ! $isClient || ($user?->can_access_formation ?? false);
+            $canSeeFormations = ! $isClient || ($user?->canAccessFormation() ?? false);
 
             // REM staff reach every tenant; other users can switch only if they belong to more than one.
             $canSwitchSpace = $user && ($user->isRemStaff() || $user->tenants()->count() > 1);
@@ -219,7 +219,7 @@
                         if ($isClientSide && $user->client) {
                             $breadcrumbRoot = [
                                 'label' => $user->client->company_name,
-                                'href' => route('companies.show', ['companyId' => $user->client_id]),
+                                'href' => route('companies.show', ['companyId' => $user->contextualClientId()]),
                             ];
                         } else {
                             $breadcrumbRoot = ['label' => 'Administration'];

@@ -1,0 +1,121 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Collaborateurs & utilisateurs" [ref=e13] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e15]
+        - generic [ref=e17]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e18] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e20]
+        - generic [ref=e22]: Demande de badge
+      - link "Suivi des badges" [ref=e23] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e25]
+        - generic [ref=e27]: Suivi des badges
+    - link "Déconnexion" [ref=e29] [cursor=pointer]:
+      - /url: http://app.aeropaperasse.test/logout
+      - img [ref=e30]
+      - generic [ref=e32]: Déconnexion
+  - generic [ref=e33]:
+    - banner [ref=e34]:
+      - button "Masquer la barre latérale" [expanded] [ref=e36]:
+        - img [ref=e37]
+      - navigation "Fil d'Ariane" [ref=e39]:
+        - link "REM Société A" [ref=e40] [cursor=pointer]:
+          - /url: http://app.aeropaperasse.test/companies/1
+        - img [ref=e41]
+        - generic [ref=e43]: Demandes de badges
+    - main [ref=e44]:
+      - generic [ref=e45]:
+        - generic [ref=e46]:
+          - heading "Demandes de badges" [level=1] [ref=e47]
+          - paragraph [ref=e48]: Gérez toutes les demandes de badges depuis cette interface.
+        - generic [ref=e49]:
+          - button "En attente 0" [ref=e50]:
+            - generic [ref=e53]:
+              - generic [ref=e56]: En attente
+              - generic [ref=e57]: "0"
+          - button "En attente ADP 0" [ref=e58]:
+            - generic [ref=e61]:
+              - generic [ref=e64]: En attente ADP
+              - generic [ref=e65]: "0"
+          - button "Approuvé ADP 0" [ref=e66]:
+            - generic [ref=e69]:
+              - generic [ref=e72]: Approuvé ADP
+              - generic [ref=e73]: "0"
+          - button "En fabrication 0" [ref=e74]:
+            - generic [ref=e77]:
+              - generic [ref=e80]: En fabrication
+              - generic [ref=e81]: "0"
+          - button "Dossier incomplet 0" [ref=e82]:
+            - generic [ref=e85]:
+              - generic [ref=e88]: Dossier incomplet
+              - generic [ref=e89]: "0"
+          - button "Rejeté ADP 0" [ref=e90]:
+            - generic [ref=e93]:
+              - generic [ref=e96]: Rejeté ADP
+              - generic [ref=e97]: "0"
+          - button "Prêt à être Remis 0" [ref=e98]:
+            - generic [ref=e101]:
+              - generic [ref=e104]: Prêt à être Remis
+              - generic [ref=e105]: "0"
+          - button "Remis 0" [ref=e106]:
+            - generic [ref=e109]:
+              - generic [ref=e112]: Remis
+              - generic [ref=e113]: "0"
+        - generic [ref=e114]:
+          - generic [ref=e118]:
+            - generic:
+              - img
+            - searchbox "Rechercher une demande, un demandeur, une société..." [ref=e119]
+          - radiogroup [ref=e120]:
+            - radio "Tous les aéroports" [checked] [ref=e121]
+            - radio "CDG" [ref=e122]
+            - radio "ORY" [ref=e123]
+            - radio "LBG" [ref=e124]
+        - generic [ref=e126]:
+          - img [ref=e128]
+          - generic [ref=e130]:
+            - heading "Brouillons" [level=2] [ref=e131]
+            - generic [ref=e132]: Aucune demande en cours de rédaction
+        - generic [ref=e133]:
+          - generic [ref=e134]:
+            - heading "Demandes récentes" [level=2] [ref=e135]
+            - paragraph [ref=e136]: 0 demande
+          - table [ref=e138]:
+            - rowgroup [ref=e139]:
+              - row "N° demande d'activité Demandeur Contact Statut Date de création Aéroport Actions" [ref=e140]:
+                - columnheader "N° demande d'activité" [ref=e141]
+                - columnheader "Demandeur" [ref=e142]
+                - columnheader "Contact" [ref=e143]
+                - columnheader "Statut" [ref=e144]
+                - columnheader "Date de création" [ref=e145]
+                - columnheader "Aéroport" [ref=e146]
+                - columnheader "Actions" [ref=e147]
+            - rowgroup [ref=e148]:
+              - row "Aucune demande à afficher." [ref=e149]:
+                - cell "Aucune demande à afficher." [ref=e150]:
+                  - generic [ref=e151]: Aucune demande à afficher.
+      - generic [ref=e153]:
+        - paragraph [ref=e154]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e155]:
+          - link "Mentions légales" [ref=e156] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e157] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e158] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e159] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e160]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e161] [cursor=pointer]:
+            - /url: https://r4dev.fr

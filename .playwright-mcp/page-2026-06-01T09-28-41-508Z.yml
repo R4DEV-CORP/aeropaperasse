@@ -1,0 +1,1473 @@
+- generic [active] [ref=e1]:
+  - dialog [ref=e302]:
+    - iframe [ref=e303]:
+      - generic [ref=f1e2]:
+        - navigation [ref=f1e3]:
+          - generic [ref=f1e4]:
+            - generic [ref=f1e6]:
+              - list [ref=f1e7]:
+                - listitem [ref=f1e8]:
+                  - link "Stack" [ref=f1e9] [cursor=pointer]:
+                    - /url: "#stack"
+                    - button "Stack" [ref=f1e10]:
+                      - img [ref=f1e12]
+                      - text: Stack
+                - listitem [ref=f1e14]:
+                  - link "Context" [ref=f1e15] [cursor=pointer]:
+                    - /url: "#context"
+                    - button "Context" [ref=f1e16]:
+                      - img [ref=f1e18]
+                      - text: Context
+                - listitem [ref=f1e20]:
+                  - link "Debug" [ref=f1e21] [cursor=pointer]:
+                    - /url: "#debug"
+                    - button "Debug" [ref=f1e22]:
+                      - img [ref=f1e24]
+                      - text: Debug
+                - listitem [ref=f1e26]:
+                  - link "Flare" [ref=f1e27] [cursor=pointer]:
+                    - /url: https://flareapp.io/?utm_campaign=ignition&utm_source=ignition
+                    - button "Flare" [ref=f1e28]:
+                      - img [ref=f1e30]
+                      - text: Flare
+              - list [ref=f1e35]:
+                - listitem [ref=f1e36]:
+                  - link "Share" [ref=f1e37] [cursor=pointer]:
+                    - /url: "#share"
+                    - button "Share" [ref=f1e38]:
+                      - img [ref=f1e40]
+                      - text: Share
+                  - generic:
+                    - generic:
+                      - generic:
+                        - heading "Share with Flare" [level=4]
+                        - link "Docs":
+                          - /url: https://flareapp.io/docs/ignition/introducing-ignition/sharing-errors?utm_campaign=ignition&utm_source=ignition
+                          - text: Docs
+                          - img
+                      - list:
+                        - listitem:
+                          - generic:
+                            - checkbox "Stack" [checked]
+                            - generic: Stack
+                        - listitem:
+                          - generic:
+                            - checkbox "Context" [checked]
+                            - generic: Context
+                        - listitem:
+                          - generic:
+                            - checkbox "Debug" [checked]
+                            - generic: Debug
+                      - generic:
+                        - button "Create Share":
+                          - img
+                          - text: Create Share
+                - listitem [ref=f1e42]:
+                  - link "Docs" [ref=f1e43] [cursor=pointer]:
+                    - /url: https://laravel.com/docs/
+                    - button "Docs" [ref=f1e44]:
+                      - img [ref=f1e46]
+                      - text: Docs
+                - listitem [ref=f1e48]:
+                  - link [ref=f1e49] [cursor=pointer]:
+                    - /url: "#settings"
+                    - button [ref=f1e50]:
+                      - img [ref=f1e52]
+                  - generic:
+                    - generic:
+                      - generic:
+                        - heading "Ignition Settings" [level=4]
+                        - link "Docs":
+                          - /url: https://flareapp.io/ignition?utm_campaign=ignition&utm_source=ignition
+                          - text: Docs
+                          - img
+                      - generic:
+                        - text: Editor
+                        - generic:
+                          - combobox "Editor":
+                            - option "Clipboard"
+                            - option "Sublime"
+                            - option "TextMate"
+                            - option "Emacs"
+                            - option "MacVim"
+                            - option "PhpStorm" [selected]
+                            - option "PHPStorm Remote"
+                            - option "Idea"
+                            - option "VS Code"
+                            - option "VS Code Insiders"
+                            - option "VS Code Remote"
+                            - option "VS Code Insiders Remote"
+                            - option "VS Codium"
+                            - option "Cursor"
+                            - option "Atom"
+                            - option "Nova"
+                            - option "NetBeans"
+                            - option "Zed"
+                            - option "Windsurf"
+                            - option "Xdebug"
+                          - generic:
+                            - img
+                      - generic:
+                        - text: Theme
+                        - button "auto":
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - img
+                              - generic:
+                                - generic:
+                                  - img
+                              - generic:
+                                - generic:
+                                  - img
+                            - generic: auto
+                      - generic:
+                        - button "Save settings"
+                      - paragraph:
+                        - text: Settings will be saved locally in
+                        - code: ~/.ignition.json
+                        - text: .
+            - 'link "Unable to retrieve the file_size for file at location: livewire-tmp/w4eRsmqja6bAlpkw4fT8YxOjVp0XOXbUvYHZHT0X.pdf." [ref=f1e56] [cursor=pointer]':
+              - /url: "#top"
+              - generic [ref=f1e57]: "Unable to retrieve the file_size for file at location: livewire-tmp/w4eRsmqja6bAlpkw4fT8YxOjVp0XOXbUvYHZHT0X.pdf."
+        - main [ref=f1e58]:
+          - main [ref=f1e62]:
+            - generic [ref=f1e64]:
+              - generic [ref=f1e65]:
+                - generic [ref=f1e67]:
+                  - generic [ref=f1e68]: League
+                  - generic [ref=f1e69]: \
+                  - generic [ref=f1e70]: Flysystem
+                  - generic [ref=f1e71]: \
+                  - generic [ref=f1e72]: UnableToRetrieveMetadata
+                - generic [ref=f1e73]:
+                  - generic [ref=f1e74]: PHP 8.3.30
+                  - generic [ref=f1e75]:
+                    - img [ref=f1e76]
+                    - text: 13.11.2
+              - generic [ref=f1e79]: "Unable to retrieve the file_size for file at location: livewire-tmp/w4eRsmqja6bAlpkw4fT8YxOjVp0XOXbUvYHZHT0X.pdf."
+          - generic [ref=f1e82]:
+            - complementary [ref=f1e83]:
+              - generic [ref=f1e84]:
+                - button "Expand vendor frames" [ref=f1e86] [cursor=pointer]:
+                  - generic [ref=f1e87]:
+                    - img [ref=f1e88]
+                    - img [ref=f1e90]
+                  - text: Expand vendor frames
+                - list [ref=f1e93]:
+                  - listitem [ref=f1e94] [cursor=pointer]:
+                    - text: 11 vendor frames
+                    - img [ref=f1e95]
+                  - listitem [ref=f1e97]:
+                    - generic [ref=f1e99]:
+                      - generic [ref=f1e100]: Livewire
+                      - generic [ref=f1e101]: \
+                      - generic [ref=f1e102]: "Component@anonymous\x00C:"
+                      - generic [ref=f1e103]: \
+                      - generic [ref=f1e104]: laragon
+                      - generic [ref=f1e105]: \
+                      - generic [ref=f1e106]: www
+                      - generic [ref=f1e107]: \
+                      - generic [ref=f1e108]: aeropaperasse
+                      - generic [ref=f1e109]: \
+                      - generic [ref=f1e110]: storage
+                      - generic [ref=f1e111]: \
+                      - generic [ref=f1e112]: framework
+                      - generic [ref=f1e113]: \
+                      - generic [ref=f1e114]: views
+                      - generic [ref=f1e115]: \
+                      - generic [ref=f1e116]: livewire
+                      - generic [ref=f1e117]: \
+                      - generic [ref=f1e118]: classes
+                      - generic [ref=f1e119]: \
+                      - generic [ref=f1e120]: fe49fe86.php:23$488e
+                      - generic [ref=f1e121]: ": 255"
+                    - generic [ref=f1e122]: submitCreate
+                  - listitem [ref=f1e123]
+                  - listitem [ref=f1e124] [cursor=pointer]:
+                    - generic [ref=f1e126]:
+                      - generic [ref=f1e127]: Livewire
+                      - generic [ref=f1e128]: \
+                      - generic [ref=f1e129]: "Component@anonymous\x00C:"
+                      - generic [ref=f1e130]: \
+                      - generic [ref=f1e131]: laragon
+                      - generic [ref=f1e132]: \
+                      - generic [ref=f1e133]: www
+                      - generic [ref=f1e134]: \
+                      - generic [ref=f1e135]: aeropaperasse
+                      - generic [ref=f1e136]: \
+                      - generic [ref=f1e137]: storage
+                      - generic [ref=f1e138]: \
+                      - generic [ref=f1e139]: framework
+                      - generic [ref=f1e140]: \
+                      - generic [ref=f1e141]: views
+                      - generic [ref=f1e142]: \
+                      - generic [ref=f1e143]: livewire
+                      - generic [ref=f1e144]: \
+                      - generic [ref=f1e145]: classes
+                      - generic [ref=f1e146]: \
+                      - generic [ref=f1e147]: fe49fe86.php:23$488e
+                      - generic [ref=f1e148]: ": 245"
+                    - generic [ref=f1e149]: submit
+                  - listitem [ref=f1e150] [cursor=pointer]:
+                    - text: 57 vendor frames
+                    - img [ref=f1e151]
+                  - listitem [ref=f1e153] [cursor=pointer]:
+                    - generic [ref=f1e155]:
+                      - generic [ref=f1e156]: C:\laragon\www\aeropaperasse\public\index
+                      - generic [ref=f1e157]: .php
+                      - generic [ref=f1e158]: ": 51"
+                    - generic [ref=f1e159]: "[top]"
+            - generic [ref=f1e160]:
+              - 'link "C:\\laragon\\www\\aeropaperasse\\storage\\framework\\views\\livewire\\classes\\fe49fe86 .php : 255" [ref=f1e162] [cursor=pointer]':
+                - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=255
+                - generic [ref=f1e163]:
+                  - generic [ref=f1e164]: C:\laragon\www\aeropaperasse\storage\framework\views\livewire\classes\fe49fe86
+                  - generic [ref=f1e165]: .php
+                  - generic [ref=f1e166]: ": 255"
+              - main [ref=f1e167]:
+                - navigation [ref=f1e168]:
+                  - generic [ref=f1e169]:
+                    - paragraph [ref=f1e170]: "240"
+                    - paragraph [ref=f1e171]: "241"
+                    - paragraph [ref=f1e172]: "242"
+                    - paragraph [ref=f1e173]: "243"
+                    - paragraph [ref=f1e174]: "244"
+                    - paragraph [ref=f1e175]: "245"
+                    - paragraph [ref=f1e176]: "246"
+                    - paragraph [ref=f1e177]: "247"
+                    - paragraph [ref=f1e178]: "248"
+                    - paragraph [ref=f1e179]: "249"
+                    - paragraph [ref=f1e180]: "250"
+                    - paragraph [ref=f1e181]: "251"
+                    - paragraph [ref=f1e182]: "252"
+                    - paragraph [ref=f1e183]: "253"
+                    - paragraph [ref=f1e184]: "254"
+                    - paragraph [ref=f1e185]: "255"
+                    - paragraph [ref=f1e186]: "256"
+                    - paragraph [ref=f1e187]: "257"
+                    - paragraph [ref=f1e188]: "258"
+                    - paragraph [ref=f1e189]: "259"
+                    - paragraph [ref=f1e190]: "260"
+                    - paragraph [ref=f1e191]: "261"
+                    - paragraph [ref=f1e192]: "262"
+                    - paragraph [ref=f1e193]: "263"
+                    - paragraph [ref=f1e194]: "264"
+                    - paragraph [ref=f1e195]: "265"
+                    - paragraph [ref=f1e196]: "266"
+                    - paragraph [ref=f1e197]: "267"
+                    - paragraph [ref=f1e198]: "268"
+                    - paragraph [ref=f1e199]: "269"
+                - code [ref=f1e202]:
+                  - generic [ref=f1e203]:
+                    - link [ref=f1e204] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=240
+                      - button [ref=f1e205]:
+                        - img [ref=f1e206]
+                    - generic [ref=f1e209]: "}"
+                  - link [ref=f1e211] [cursor=pointer]:
+                    - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=241
+                    - button [ref=f1e212]:
+                      - img [ref=f1e213]
+                  - generic [ref=f1e216]:
+                    - link [ref=f1e217] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=242
+                      - button [ref=f1e218]:
+                        - img [ref=f1e219]
+                    - generic [ref=f1e222]: "if ($this->isEdit) {"
+                  - generic [ref=f1e223]:
+                    - link [ref=f1e224] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=243
+                      - button [ref=f1e225]:
+                        - img [ref=f1e226]
+                    - generic [ref=f1e229]: $this->submitUpdate();
+                  - generic [ref=f1e230]:
+                    - link [ref=f1e231] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=244
+                      - button [ref=f1e232]:
+                        - img [ref=f1e233]
+                    - generic [ref=f1e236]: "} else {"
+                  - generic [ref=f1e237]:
+                    - link [ref=f1e238] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=245
+                      - button [ref=f1e239]:
+                        - img [ref=f1e240]
+                    - generic [ref=f1e243]: $this->submitCreate();
+                  - generic [ref=f1e244]:
+                    - link [ref=f1e245] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=246
+                      - button [ref=f1e246]:
+                        - img [ref=f1e247]
+                    - generic [ref=f1e249]: "}"
+                  - generic [ref=f1e250]:
+                    - link [ref=f1e251] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=247
+                      - button [ref=f1e252]:
+                        - img [ref=f1e253]
+                    - generic [ref=f1e255]: "}"
+                  - link [ref=f1e257] [cursor=pointer]:
+                    - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=248
+                    - button [ref=f1e258]:
+                      - img [ref=f1e259]
+                  - generic [ref=f1e262]:
+                    - link [ref=f1e263] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=249
+                      - button [ref=f1e264]:
+                        - img [ref=f1e265]
+                    - generic [ref=f1e268]: "private function submitCreate(): void"
+                  - generic [ref=f1e269]:
+                    - link [ref=f1e270] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=250
+                      - button [ref=f1e271]:
+                        - img [ref=f1e272]
+                    - generic [ref=f1e275]: "{"
+                  - generic [ref=f1e276]:
+                    - link [ref=f1e277] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=251
+                      - button [ref=f1e278]:
+                        - img [ref=f1e279]
+                    - generic [ref=f1e282]: $data = $this->getFormData();
+                  - generic [ref=f1e283]:
+                    - link [ref=f1e284] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=252
+                      - button [ref=f1e285]:
+                        - img [ref=f1e286]
+                    - generic [ref=f1e289]: $data['slug'] = (string) \Illuminate\Support\Str::uuid();
+                  - link [ref=f1e291] [cursor=pointer]:
+                    - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=253
+                    - button [ref=f1e292]:
+                      - img [ref=f1e293]
+                  - generic [ref=f1e296]:
+                    - link [ref=f1e297] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=254
+                      - button [ref=f1e298]:
+                        - img [ref=f1e299]
+                    - generic [ref=f1e302]: $validator = ClientValidator::validate($data);
+                  - generic [ref=f1e303]:
+                    - link [ref=f1e304] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=255
+                      - button [ref=f1e305]:
+                        - img [ref=f1e306]
+                    - generic [ref=f1e309]: "if ($validator->fails()) {"
+                  - generic [ref=f1e310]:
+                    - link [ref=f1e311] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=256
+                      - button [ref=f1e312]:
+                        - img [ref=f1e313]
+                    - generic [ref=f1e316]: "foreach ($validator->errors()->messages() as $field => $messages) {"
+                  - generic [ref=f1e317]:
+                    - link [ref=f1e318] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=257
+                      - button [ref=f1e319]:
+                        - img [ref=f1e320]
+                    - generic [ref=f1e323]: $this->addError($field, $messages[0]);
+                  - generic [ref=f1e324]:
+                    - link [ref=f1e325] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=258
+                      - button [ref=f1e326]:
+                        - img [ref=f1e327]
+                    - generic [ref=f1e329]: "}"
+                  - generic [ref=f1e330]:
+                    - link [ref=f1e331] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=259
+                      - button [ref=f1e332]:
+                        - img [ref=f1e333]
+                    - generic [ref=f1e336]: $this->toast($validator->errors()->first(), 'danger');
+                  - link [ref=f1e338] [cursor=pointer]:
+                    - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=260
+                    - button [ref=f1e339]:
+                      - img [ref=f1e340]
+                  - generic [ref=f1e343]:
+                    - link [ref=f1e344] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=261
+                      - button [ref=f1e345]:
+                        - img [ref=f1e346]
+                    - generic [ref=f1e349]: return;
+                  - generic [ref=f1e350]:
+                    - link [ref=f1e351] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=262
+                      - button [ref=f1e352]:
+                        - img [ref=f1e353]
+                    - generic [ref=f1e355]: "}"
+                  - link [ref=f1e357] [cursor=pointer]:
+                    - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=263
+                    - button [ref=f1e358]:
+                      - img [ref=f1e359]
+                  - generic [ref=f1e362]:
+                    - link [ref=f1e363] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=264
+                      - button [ref=f1e364]:
+                        - img [ref=f1e365]
+                    - generic [ref=f1e368]: "try {"
+                  - generic [ref=f1e369]:
+                    - link [ref=f1e370] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=265
+                      - button [ref=f1e371]:
+                        - img [ref=f1e372]
+                    - generic [ref=f1e375]: $dto = CreateClientData::fromArray($data);
+                  - generic [ref=f1e376]:
+                    - link [ref=f1e377] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=266
+                      - button [ref=f1e378]:
+                        - img [ref=f1e379]
+                    - generic [ref=f1e382]: $action = app(CreateClientAction::class);
+                  - generic [ref=f1e383]:
+                    - link [ref=f1e384] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=267
+                      - button [ref=f1e385]:
+                        - img [ref=f1e386]
+                    - generic [ref=f1e389]: $result = $action->execute($dto);
+                  - link [ref=f1e391] [cursor=pointer]:
+                    - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=268
+                    - button [ref=f1e392]:
+                      - img [ref=f1e393]
+                  - generic [ref=f1e396]:
+                    - link [ref=f1e397] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5Claragon%5Cwww%5Caeropaperasse%5Cstorage%5Cframework%5Cviews%5Clivewire%5Cclasses%5Cfe49fe86.php&line=269
+                      - button [ref=f1e398]:
+                        - img [ref=f1e399]
+                    - generic [ref=f1e402]: "if (! $result->isSuccessful()) {"
+          - generic [ref=f1e404]:
+            - navigation [ref=f1e405]:
+              - list [ref=f1e407]:
+                - listitem [ref=f1e408]:
+                  - link "App" [ref=f1e409] [cursor=pointer]:
+                    - /url: "#context-app"
+                  - list [ref=f1e410]:
+                    - listitem [ref=f1e411]:
+                      - link "Routing" [ref=f1e412] [cursor=pointer]:
+                        - /url: "#context-app-routing"
+                        - img [ref=f1e414]
+                        - generic [ref=f1e416]: Routing
+                - listitem [ref=f1e417]:
+                  - link "Request" [ref=f1e418] [cursor=pointer]:
+                    - /url: "#context-request"
+                  - list [ref=f1e419]:
+                    - listitem [ref=f1e420]:
+                      - link "Browser" [ref=f1e421] [cursor=pointer]:
+                        - /url: "#context-request-browser"
+                        - img [ref=f1e423]
+                        - generic [ref=f1e425]: Browser
+                    - listitem [ref=f1e426]:
+                      - link "Headers" [ref=f1e427] [cursor=pointer]:
+                        - /url: "#context-request-headers"
+                        - img [ref=f1e429]
+                        - generic [ref=f1e431]: Headers
+                    - listitem [ref=f1e432]:
+                      - link "Body" [ref=f1e433] [cursor=pointer]:
+                        - /url: "#context-request-body"
+                        - img [ref=f1e435]
+                        - generic [ref=f1e437]: Body
+                - listitem [ref=f1e438]:
+                  - link "Livewire" [ref=f1e439] [cursor=pointer]:
+                    - /url: "#context-livewire"
+                  - list [ref=f1e440]:
+                    - listitem [ref=f1e441]:
+                      - link "pages::companies.form" [ref=f1e442] [cursor=pointer]:
+                        - /url: "#context-pages::companies.form-request-livewire"
+                        - img [ref=f1e444]
+                        - generic [ref=f1e452]: pages::companies.form
+                - listitem [ref=f1e453]:
+                  - link "Context" [ref=f1e454] [cursor=pointer]:
+                    - /url: "#context-context"
+                  - list [ref=f1e455]:
+                    - listitem [ref=f1e456]:
+                      - link "User" [ref=f1e457] [cursor=pointer]:
+                        - /url: "#context-user-user"
+                        - img [ref=f1e459]
+                        - generic [ref=f1e461]: User
+                    - listitem [ref=f1e462]:
+                      - link "Versions" [ref=f1e463] [cursor=pointer]:
+                        - /url: "#context-context-versions"
+                        - img [ref=f1e465]
+                        - generic [ref=f1e467]: Versions
+            - generic [ref=f1e468]:
+              - generic [ref=f1e469]:
+                - heading "App" [level=2] [ref=f1e470]
+                - generic [ref=f1e472]:
+                  - heading "Routing" [level=1] [ref=f1e473]:
+                    - text: Routing
+                    - img [ref=f1e475]
+                  - generic [ref=f1e477]:
+                    - generic [ref=f1e478]:
+                      - term [ref=f1e479]: Controller
+                      - definition [ref=f1e480]:
+                        - generic [ref=f1e481]:
+                          - code [ref=f1e484]: Livewire\Mechanisms\HandleRequests\HandleRequests@handleUpdate
+                          - button "Copy to clipboard" [ref=f1e486] [cursor=pointer]:
+                            - img [ref=f1e487]
+                    - generic [ref=f1e489]:
+                      - term [ref=f1e490]: Route name
+                      - definition [ref=f1e491]:
+                        - generic [ref=f1e492]:
+                          - code [ref=f1e495]: default-livewire.update
+                          - button "Copy to clipboard" [ref=f1e497] [cursor=pointer]:
+                            - img [ref=f1e498]
+                    - generic [ref=f1e500]:
+                      - term [ref=f1e501]: Middleware
+                      - definition [ref=f1e502]:
+                        - list [ref=f1e503]:
+                          - listitem [ref=f1e504]:
+                            - generic [ref=f1e505]:
+                              - code [ref=f1e508]: web
+                              - button "Copy to clipboard" [ref=f1e510] [cursor=pointer]:
+                                - img [ref=f1e511]
+                          - listitem [ref=f1e513]:
+                            - generic [ref=f1e514]:
+                              - code [ref=f1e517]: Livewire\Mechanisms\HandleRequests\RequireLivewireHeaders
+                              - button "Copy to clipboard" [ref=f1e519] [cursor=pointer]:
+                                - img [ref=f1e520]
+              - generic [ref=f1e522]:
+                - heading "Request" [level=2] [ref=f1e523]
+                - generic [ref=f1e524]:
+                  - generic [ref=f1e525]:
+                    - generic [ref=f1e526]:
+                      - generic [ref=f1e527]: http://app.aeropaperasse.test/companies/form
+                      - generic [ref=f1e528]: GET
+                    - generic [ref=f1e530] [cursor=pointer]:
+                      - code [ref=f1e533]:
+                        - code [ref=f1e535]: "curl \"http://app.aeropaperasse.test/companies/form\" \\ -X GET \\ -H 'host: app.aeropaperasse.test' \\ -H 'connection: keep-alive' \\ -H 'content-length: 2251' \\ -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36' \\ -H 'content-type: application/json' \\ -H 'x-livewire: 1' \\ -H 'accept: */*' \\ -H 'origin: http://app.aeropaperasse.test' \\ -H 'referer: http://app.aeropaperasse.test/companies/form' \\ -H 'accept-encoding: gzip, deflate' \\ -H 'accept-language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7' \\ -H 'cookie: <CENSORED>' \\ -F '_token=BBDOMCxl2Rdnkbiu9MlvkXV902poG0XfOlJCP1Yz' -F 'components=[object Object]'"
+                      - button "Copy to clipboard" [ref=f1e537]:
+                        - img [ref=f1e538]
+                      - button [ref=f1e540]:
+                        - img [ref=f1e541]
+                  - generic [ref=f1e543]:
+                    - heading "Browser" [level=1] [ref=f1e544]:
+                      - text: Browser
+                      - img [ref=f1e546]
+                    - generic [ref=f1e548]:
+                      - code [ref=f1e551]: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+                      - button "Copy to clipboard" [ref=f1e553] [cursor=pointer]:
+                        - img [ref=f1e554]
+                  - generic [ref=f1e556]:
+                    - heading "Headers" [level=1] [ref=f1e557]:
+                      - text: Headers
+                      - img [ref=f1e559]
+                    - generic [ref=f1e561]:
+                      - generic [ref=f1e562]:
+                        - term [ref=f1e563]: host
+                        - definition [ref=f1e564]:
+                          - generic [ref=f1e565]:
+                            - code [ref=f1e568]: app.aeropaperasse.test
+                            - button "Copy to clipboard" [ref=f1e570] [cursor=pointer]:
+                              - img [ref=f1e571]
+                      - generic [ref=f1e573]:
+                        - term [ref=f1e574]: connection
+                        - definition [ref=f1e575]:
+                          - generic [ref=f1e576]:
+                            - code [ref=f1e579]: keep-alive
+                            - button "Copy to clipboard" [ref=f1e581] [cursor=pointer]:
+                              - img [ref=f1e582]
+                      - generic [ref=f1e584]:
+                        - term [ref=f1e585]: content-length
+                        - definition [ref=f1e586]:
+                          - generic [ref=f1e587]:
+                            - code [ref=f1e590]: "2251"
+                            - button "Copy to clipboard" [ref=f1e592] [cursor=pointer]:
+                              - img [ref=f1e593]
+                      - generic [ref=f1e595]:
+                        - term [ref=f1e596]: user-agent
+                        - definition [ref=f1e597]:
+                          - generic [ref=f1e598]:
+                            - code [ref=f1e601]: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+                            - button "Copy to clipboard" [ref=f1e603] [cursor=pointer]:
+                              - img [ref=f1e604]
+                      - generic [ref=f1e606]:
+                        - term [ref=f1e607]: content-type
+                        - definition [ref=f1e608]:
+                          - generic [ref=f1e609]:
+                            - code [ref=f1e612]: application/json
+                            - button "Copy to clipboard" [ref=f1e614] [cursor=pointer]:
+                              - img [ref=f1e615]
+                      - generic [ref=f1e617]:
+                        - term [ref=f1e618]: x-livewire
+                        - definition [ref=f1e619]:
+                          - generic [ref=f1e620]:
+                            - code [ref=f1e623]: "1"
+                            - button "Copy to clipboard" [ref=f1e625] [cursor=pointer]:
+                              - img [ref=f1e626]
+                      - generic [ref=f1e628]:
+                        - term [ref=f1e629]: accept
+                        - definition [ref=f1e630]:
+                          - generic [ref=f1e631]:
+                            - code [ref=f1e634]: "*/*"
+                            - button "Copy to clipboard" [ref=f1e636] [cursor=pointer]:
+                              - img [ref=f1e637]
+                      - generic [ref=f1e639]:
+                        - term [ref=f1e640]: origin
+                        - definition [ref=f1e641]:
+                          - generic [ref=f1e642]:
+                            - code [ref=f1e645]: http://app.aeropaperasse.test
+                            - button "Copy to clipboard" [ref=f1e647] [cursor=pointer]:
+                              - img [ref=f1e648]
+                      - generic [ref=f1e650]:
+                        - term [ref=f1e651]: referer
+                        - definition [ref=f1e652]:
+                          - generic [ref=f1e653]:
+                            - code [ref=f1e656]: http://app.aeropaperasse.test/companies/form
+                            - button "Copy to clipboard" [ref=f1e658] [cursor=pointer]:
+                              - img [ref=f1e659]
+                      - generic [ref=f1e661]:
+                        - term [ref=f1e662]: accept-encoding
+                        - definition [ref=f1e663]:
+                          - generic [ref=f1e664]:
+                            - code [ref=f1e667]: gzip, deflate
+                            - button "Copy to clipboard" [ref=f1e669] [cursor=pointer]:
+                              - img [ref=f1e670]
+                      - generic [ref=f1e672]:
+                        - term [ref=f1e673]: accept-language
+                        - definition [ref=f1e674]:
+                          - generic [ref=f1e675]:
+                            - code [ref=f1e678]: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7
+                            - button "Copy to clipboard" [ref=f1e680] [cursor=pointer]:
+                              - img [ref=f1e681]
+                      - generic [ref=f1e683]:
+                        - term [ref=f1e684]: cookie
+                        - definition [ref=f1e685]:
+                          - generic [ref=f1e686]:
+                            - code [ref=f1e689]: <CENSORED>
+                            - button "Copy to clipboard" [ref=f1e691] [cursor=pointer]:
+                              - img [ref=f1e692]
+                  - generic [ref=f1e694]:
+                    - heading "Body" [level=1] [ref=f1e695]:
+                      - text: Body
+                      - img [ref=f1e697]
+                    - generic [ref=f1e699] [cursor=pointer]:
+                      - code [ref=f1e702]: "{ \"_token\": \"BBDOMCxl2Rdnkbiu9MlvkXV902poG0XfOlJCP1Yz\", \"components\": [ { \"snapshot\": \"{\\\"data\\\":{\\\"companyId\\\":null,\\\"isEdit\\\":false,\\\"client\\\":null,\\\"company_name\\\":\\\"Test Soci\\\\u00e9t\\\\u00e9 SA\\\",\\\"trade_name\\\":\\\"TestCo\\\",\\\"siret_number\\\":\\\"12345678901234\\\",\\\"address\\\":\\\"1 rue de Test\\\",\\\"zip_code\\\":\\\"75001\\\",\\\"city\\\":\\\"Paris\\\",\\\"subcontractor_of\\\":null,\\\"is_airline_company\\\":false,\\\"notification_email\\\":null,\\\"kbis_document\\\":[\\\"livewire-file:w4eRsmqja6bAlpkw4fT8YxOjVp0XOXbUvYHZHT0X.pdf\\\",{\\\"s\\\":\\\"fil\\\"}],\\\"safety_document\\\":[\\\"livewire-file:dwYy4HqO0NTNkQhYssyx9np0W82ox2kJ6nBLfMea.pdf\\\",{\\\"s\\\":\\\"fil\\\"}],\\\"security_document\\\":[\\\"livewire-file:wDO8tkNE5SU4T5ND9OjYclVOZhTmcck36FSxJFW0.pdf\\\",{\\\"s\\\":\\\"fil\\\"}],\\\"hasExistingKbis\\\":false,\\\"hasExistingSafety\\\":false,\\\"hasExistingSecurity\\\":false,\\\"safety_referent_1_prenom\\\":\\\"Jean\\\",\\\"safety_referent_1_nom\\\":\\\"Dupont\\\",\\\"safety_referent_1_email\\\":\\\"jean.dupont@example.test\\\",\\\"safety_referent_1_phone\\\":\\\"0102030405\\\",\\\"safety_referent_2_prenom\\\":null,\\\"safety_referent_2_nom\\\":null,\\\"safety_referent_2_email\\\":null,\\\"safety_referent_2_phone\\\":null,\\\"safety_referent_3_prenom\\\":null,\\\"safety_referent_3_nom\\\":null,\\\"safety_referent_3_email\\\":null,\\\"safety_referent_3_phone\\\":null,\\\"security_correspondent_prenom\\\":\\\"Marie\\\",\\\"security_correspondent_nom\\\":\\\"Martin\\\",\\\"security_correspondent_email\\\":\\\"marie.martin@example.test\\\",\\\"security_correspondent_phone\\\":\\\"0607080910\\\",\\\"hr_contact_prenom\\\":\\\"Paul\\\",\\\"hr_contact_nom\\\":\\\"Bernard\\\",\\\"hr_contact_email\\\":\\\"paul.bernard@example.test\\\",\\\"hr_contact_phone\\\":\\\"0708091011\\\"},\\\"memo\\\":{\\\"id\\\":\\\"rZ3h9pI7SMzVYeFDXJVu\\\",\\\"name\\\":\\\"pages::companies.form\\\",\\\"path\\\":\\\"companies\\\\/form\\\",\\\"method\\\":\\\"GET\\\",\\\"release\\\":\\\"a-a-a\\\",\\\"children\\\":[],\\\"scripts\\\":[],\\\"assets\\\":[],\\\"errors\\\":[],\\\"locale\\\":\\\"fr\\\",\\\"islands\\\":[]},\\\"checksum\\\":\\\"f66da65718eb1f79c1a321490df0a4885fb4695c65aaaf8e7f407cb2ce2b401f\\\"}\", \"updates\": { \"subcontractor_of\": \"\", \"notification_email\": \"\", \"safety_referent_2_prenom\": \"\", \"safety_referent_2_nom\": \"\", \"safety_referent_2_email\": \"\", \"safety_referent_2_phone\": \"\", \"safety_referent_3_prenom\": \"\", \"safety_referent_3_nom\": \"\", \"safety_referent_3_email\": \"\", \"safety_referent_3_phone\": \"\" }, \"calls\": [ { \"method\": \"submit\", \"params\": [], \"metadata\": [] } ] } ] }"
+                      - button "Copy to clipboard" [ref=f1e704]:
+                        - img [ref=f1e705]
+                      - button [ref=f1e707]:
+                        - img [ref=f1e708]
+              - generic [ref=f1e710]:
+                - heading "Livewire" [level=2] [ref=f1e711]
+                - generic [ref=f1e713]:
+                  - heading "pages::companies.form" [level=1] [ref=f1e714]:
+                    - text: pages::companies.form
+                    - img [ref=f1e716]
+                  - generic [ref=f1e724]:
+                    - generic [ref=f1e725]:
+                      - heading "Component" [level=1] [ref=f1e726]
+                      - generic [ref=f1e728]:
+                        - term [ref=f1e729]: Component
+                        - definition [ref=f1e730]:
+                          - generic [ref=f1e731]:
+                            - code [ref=f1e734]:
+                              - code [ref=f1e736]: "null"
+                            - button "Copy to clipboard" [ref=f1e738] [cursor=pointer]:
+                              - img [ref=f1e739]
+                    - generic [ref=f1e741]:
+                      - heading "Calls" [level=1] [ref=f1e742]
+                      - generic [ref=f1e743]:
+                        - generic [ref=f1e744]:
+                          - term [ref=f1e745]: Method
+                          - definition [ref=f1e746]:
+                            - generic [ref=f1e747]:
+                              - code [ref=f1e750]: submit
+                              - button "Copy to clipboard" [ref=f1e752] [cursor=pointer]:
+                                - img [ref=f1e753]
+                        - generic [ref=f1e755]:
+                          - term [ref=f1e756]: Params
+                          - definition [ref=f1e757]:
+                            - generic [ref=f1e758]:
+                              - code [ref=f1e761]:
+                                - code [ref=f1e763]: "[]"
+                              - button "Copy to clipboard" [ref=f1e765] [cursor=pointer]:
+                                - img [ref=f1e766]
+                    - generic [ref=f1e768]:
+                      - heading "Data" [level=1] [ref=f1e769]
+                      - generic [ref=f1e770]:
+                        - generic [ref=f1e771]:
+                          - term [ref=f1e772]: companyId
+                          - definition [ref=f1e773]:
+                            - generic [ref=f1e774]:
+                              - code [ref=f1e777]:
+                                - code [ref=f1e779]: "null"
+                              - button "Copy to clipboard" [ref=f1e781] [cursor=pointer]:
+                                - img [ref=f1e782]
+                        - generic [ref=f1e784]:
+                          - term [ref=f1e785]: isEdit
+                          - definition [ref=f1e786]:
+                            - generic [ref=f1e787]:
+                              - img [ref=f1e788]
+                              - generic [ref=f1e790]: "false"
+                        - generic [ref=f1e791]:
+                          - term [ref=f1e792]: client
+                          - definition [ref=f1e793]:
+                            - generic [ref=f1e794]:
+                              - code [ref=f1e797]:
+                                - code [ref=f1e799]: "null"
+                              - button "Copy to clipboard" [ref=f1e801] [cursor=pointer]:
+                                - img [ref=f1e802]
+                        - generic [ref=f1e804]:
+                          - term [ref=f1e805]: company_name
+                          - definition [ref=f1e806]:
+                            - generic [ref=f1e807]:
+                              - code [ref=f1e810]: Test Société SA
+                              - button "Copy to clipboard" [ref=f1e812] [cursor=pointer]:
+                                - img [ref=f1e813]
+                        - generic [ref=f1e815]:
+                          - term [ref=f1e816]: trade_name
+                          - definition [ref=f1e817]:
+                            - generic [ref=f1e818]:
+                              - code [ref=f1e821]: TestCo
+                              - button "Copy to clipboard" [ref=f1e823] [cursor=pointer]:
+                                - img [ref=f1e824]
+                        - generic [ref=f1e826]:
+                          - term [ref=f1e827]: siret_number
+                          - definition [ref=f1e828]:
+                            - generic [ref=f1e829]:
+                              - code [ref=f1e832]: "12345678901234"
+                              - button "Copy to clipboard" [ref=f1e834] [cursor=pointer]:
+                                - img [ref=f1e835]
+                        - generic [ref=f1e837]:
+                          - term [ref=f1e838]: address
+                          - definition [ref=f1e839]:
+                            - generic [ref=f1e840]:
+                              - code [ref=f1e843]: 1 rue de Test
+                              - button "Copy to clipboard" [ref=f1e845] [cursor=pointer]:
+                                - img [ref=f1e846]
+                        - generic [ref=f1e848]:
+                          - term [ref=f1e849]: zip_code
+                          - definition [ref=f1e850]:
+                            - generic [ref=f1e851]:
+                              - code [ref=f1e854]: "75001"
+                              - button "Copy to clipboard" [ref=f1e856] [cursor=pointer]:
+                                - img [ref=f1e857]
+                        - generic [ref=f1e859]:
+                          - term [ref=f1e860]: city
+                          - definition [ref=f1e861]:
+                            - generic [ref=f1e862]:
+                              - code [ref=f1e865]: Paris
+                              - button "Copy to clipboard" [ref=f1e867] [cursor=pointer]:
+                                - img [ref=f1e868]
+                        - generic [ref=f1e870]:
+                          - term [ref=f1e871]: subcontractor_of
+                          - definition [ref=f1e872]:
+                            - generic [ref=f1e873]:
+                              - code [ref=f1e876]:
+                                - code [ref=f1e878]: "null"
+                              - button "Copy to clipboard" [ref=f1e880] [cursor=pointer]:
+                                - img [ref=f1e881]
+                        - generic [ref=f1e883]:
+                          - term [ref=f1e884]: is_airline_company
+                          - definition [ref=f1e885]:
+                            - generic [ref=f1e886]:
+                              - img [ref=f1e887]
+                              - generic [ref=f1e889]: "false"
+                        - generic [ref=f1e890]:
+                          - term [ref=f1e891]: notification_email
+                          - definition [ref=f1e892]:
+                            - generic [ref=f1e893]:
+                              - code [ref=f1e896]:
+                                - code [ref=f1e898]: "null"
+                              - button "Copy to clipboard" [ref=f1e900] [cursor=pointer]:
+                                - img [ref=f1e901]
+                        - generic [ref=f1e903]:
+                          - term [ref=f1e904]: kbis_document
+                          - definition [ref=f1e905]:
+                            - generic [ref=f1e906] [cursor=pointer]:
+                              - code [ref=f1e909]:
+                                - code [ref=f1e911]: "[ \"livewire-file:w4eRsmqja6bAlpkw4fT8YxOjVp0XOXbUvYHZHT0X.pdf\", { \"s\": \"fil\" } ]"
+                              - button "Copy to clipboard" [ref=f1e913]:
+                                - img [ref=f1e914]
+                              - button [ref=f1e916]:
+                                - img [ref=f1e917]
+                        - generic [ref=f1e919]:
+                          - term [ref=f1e920]: safety_document
+                          - definition [ref=f1e921]:
+                            - generic [ref=f1e922] [cursor=pointer]:
+                              - code [ref=f1e925]:
+                                - code [ref=f1e927]: "[ \"livewire-file:dwYy4HqO0NTNkQhYssyx9np0W82ox2kJ6nBLfMea.pdf\", { \"s\": \"fil\" } ]"
+                              - button "Copy to clipboard" [ref=f1e929]:
+                                - img [ref=f1e930]
+                              - button [ref=f1e932]:
+                                - img [ref=f1e933]
+                        - generic [ref=f1e935]:
+                          - term [ref=f1e936]: security_document
+                          - definition [ref=f1e937]:
+                            - generic [ref=f1e938] [cursor=pointer]:
+                              - code [ref=f1e941]:
+                                - code [ref=f1e943]: "[ \"livewire-file:wDO8tkNE5SU4T5ND9OjYclVOZhTmcck36FSxJFW0.pdf\", { \"s\": \"fil\" } ]"
+                              - button "Copy to clipboard" [ref=f1e945]:
+                                - img [ref=f1e946]
+                              - button [ref=f1e948]:
+                                - img [ref=f1e949]
+                        - generic [ref=f1e951]:
+                          - term [ref=f1e952]: hasExistingKbis
+                          - definition [ref=f1e953]:
+                            - generic [ref=f1e954]:
+                              - img [ref=f1e955]
+                              - generic [ref=f1e957]: "false"
+                        - generic [ref=f1e958]:
+                          - term [ref=f1e959]: hasExistingSafety
+                          - definition [ref=f1e960]:
+                            - generic [ref=f1e961]:
+                              - img [ref=f1e962]
+                              - generic [ref=f1e964]: "false"
+                        - generic [ref=f1e965]:
+                          - term [ref=f1e966]: hasExistingSecurity
+                          - definition [ref=f1e967]:
+                            - generic [ref=f1e968]:
+                              - img [ref=f1e969]
+                              - generic [ref=f1e971]: "false"
+                        - generic [ref=f1e972]:
+                          - term [ref=f1e973]: safety_referent_1_prenom
+                          - definition [ref=f1e974]:
+                            - generic [ref=f1e975]:
+                              - code [ref=f1e978]: Jean
+                              - button "Copy to clipboard" [ref=f1e980] [cursor=pointer]:
+                                - img [ref=f1e981]
+                        - generic [ref=f1e983]:
+                          - term [ref=f1e984]: safety_referent_1_nom
+                          - definition [ref=f1e985]:
+                            - generic [ref=f1e986]:
+                              - code [ref=f1e989]: Dupont
+                              - button "Copy to clipboard" [ref=f1e991] [cursor=pointer]:
+                                - img [ref=f1e992]
+                        - generic [ref=f1e994]:
+                          - term [ref=f1e995]: safety_referent_1_email
+                          - definition [ref=f1e996]:
+                            - generic [ref=f1e997]:
+                              - code [ref=f1e1000]: jean.dupont@example.test
+                              - button "Copy to clipboard" [ref=f1e1002] [cursor=pointer]:
+                                - img [ref=f1e1003]
+                        - generic [ref=f1e1005]:
+                          - term [ref=f1e1006]: safety_referent_1_phone
+                          - definition [ref=f1e1007]:
+                            - generic [ref=f1e1008]:
+                              - code [ref=f1e1011]: "0102030405"
+                              - button "Copy to clipboard" [ref=f1e1013] [cursor=pointer]:
+                                - img [ref=f1e1014]
+                        - generic [ref=f1e1016]:
+                          - term [ref=f1e1017]: safety_referent_2_prenom
+                          - definition [ref=f1e1018]:
+                            - generic [ref=f1e1019]:
+                              - code [ref=f1e1022]:
+                                - code [ref=f1e1024]: "null"
+                              - button "Copy to clipboard" [ref=f1e1026] [cursor=pointer]:
+                                - img [ref=f1e1027]
+                        - generic [ref=f1e1029]:
+                          - term [ref=f1e1030]: safety_referent_2_nom
+                          - definition [ref=f1e1031]:
+                            - generic [ref=f1e1032]:
+                              - code [ref=f1e1035]:
+                                - code [ref=f1e1037]: "null"
+                              - button "Copy to clipboard" [ref=f1e1039] [cursor=pointer]:
+                                - img [ref=f1e1040]
+                        - generic [ref=f1e1042]:
+                          - term [ref=f1e1043]: safety_referent_2_email
+                          - definition [ref=f1e1044]:
+                            - generic [ref=f1e1045]:
+                              - code [ref=f1e1048]:
+                                - code [ref=f1e1050]: "null"
+                              - button "Copy to clipboard" [ref=f1e1052] [cursor=pointer]:
+                                - img [ref=f1e1053]
+                        - generic [ref=f1e1055]:
+                          - term [ref=f1e1056]: safety_referent_2_phone
+                          - definition [ref=f1e1057]:
+                            - generic [ref=f1e1058]:
+                              - code [ref=f1e1061]:
+                                - code [ref=f1e1063]: "null"
+                              - button "Copy to clipboard" [ref=f1e1065] [cursor=pointer]:
+                                - img [ref=f1e1066]
+                        - generic [ref=f1e1068]:
+                          - term [ref=f1e1069]: safety_referent_3_prenom
+                          - definition [ref=f1e1070]:
+                            - generic [ref=f1e1071]:
+                              - code [ref=f1e1074]:
+                                - code [ref=f1e1076]: "null"
+                              - button "Copy to clipboard" [ref=f1e1078] [cursor=pointer]:
+                                - img [ref=f1e1079]
+                        - generic [ref=f1e1081]:
+                          - term [ref=f1e1082]: safety_referent_3_nom
+                          - definition [ref=f1e1083]:
+                            - generic [ref=f1e1084]:
+                              - code [ref=f1e1087]:
+                                - code [ref=f1e1089]: "null"
+                              - button "Copy to clipboard" [ref=f1e1091] [cursor=pointer]:
+                                - img [ref=f1e1092]
+                        - generic [ref=f1e1094]:
+                          - term [ref=f1e1095]: safety_referent_3_email
+                          - definition [ref=f1e1096]:
+                            - generic [ref=f1e1097]:
+                              - code [ref=f1e1100]:
+                                - code [ref=f1e1102]: "null"
+                              - button "Copy to clipboard" [ref=f1e1104] [cursor=pointer]:
+                                - img [ref=f1e1105]
+                        - generic [ref=f1e1107]:
+                          - term [ref=f1e1108]: safety_referent_3_phone
+                          - definition [ref=f1e1109]:
+                            - generic [ref=f1e1110]:
+                              - code [ref=f1e1113]:
+                                - code [ref=f1e1115]: "null"
+                              - button "Copy to clipboard" [ref=f1e1117] [cursor=pointer]:
+                                - img [ref=f1e1118]
+                        - generic [ref=f1e1120]:
+                          - term [ref=f1e1121]: security_correspondent_prenom
+                          - definition [ref=f1e1122]:
+                            - generic [ref=f1e1123]:
+                              - code [ref=f1e1126]: Marie
+                              - button "Copy to clipboard" [ref=f1e1128] [cursor=pointer]:
+                                - img [ref=f1e1129]
+                        - generic [ref=f1e1131]:
+                          - term [ref=f1e1132]: security_correspondent_nom
+                          - definition [ref=f1e1133]:
+                            - generic [ref=f1e1134]:
+                              - code [ref=f1e1137]: Martin
+                              - button "Copy to clipboard" [ref=f1e1139] [cursor=pointer]:
+                                - img [ref=f1e1140]
+                        - generic [ref=f1e1142]:
+                          - term [ref=f1e1143]: security_correspondent_email
+                          - definition [ref=f1e1144]:
+                            - generic [ref=f1e1145]:
+                              - code [ref=f1e1148]: marie.martin@example.test
+                              - button "Copy to clipboard" [ref=f1e1150] [cursor=pointer]:
+                                - img [ref=f1e1151]
+                        - generic [ref=f1e1153]:
+                          - term [ref=f1e1154]: security_correspondent_phone
+                          - definition [ref=f1e1155]:
+                            - generic [ref=f1e1156]:
+                              - code [ref=f1e1159]: "0607080910"
+                              - button "Copy to clipboard" [ref=f1e1161] [cursor=pointer]:
+                                - img [ref=f1e1162]
+                        - generic [ref=f1e1164]:
+                          - term [ref=f1e1165]: hr_contact_prenom
+                          - definition [ref=f1e1166]:
+                            - generic [ref=f1e1167]:
+                              - code [ref=f1e1170]: Paul
+                              - button "Copy to clipboard" [ref=f1e1172] [cursor=pointer]:
+                                - img [ref=f1e1173]
+                        - generic [ref=f1e1175]:
+                          - term [ref=f1e1176]: hr_contact_nom
+                          - definition [ref=f1e1177]:
+                            - generic [ref=f1e1178]:
+                              - code [ref=f1e1181]: Bernard
+                              - button "Copy to clipboard" [ref=f1e1183] [cursor=pointer]:
+                                - img [ref=f1e1184]
+                        - generic [ref=f1e1186]:
+                          - term [ref=f1e1187]: hr_contact_email
+                          - definition [ref=f1e1188]:
+                            - generic [ref=f1e1189]:
+                              - code [ref=f1e1192]: paul.bernard@example.test
+                              - button "Copy to clipboard" [ref=f1e1194] [cursor=pointer]:
+                                - img [ref=f1e1195]
+                        - generic [ref=f1e1197]:
+                          - term [ref=f1e1198]: hr_contact_phone
+                          - definition [ref=f1e1199]:
+                            - generic [ref=f1e1200]:
+                              - code [ref=f1e1203]: "0708091011"
+                              - button "Copy to clipboard" [ref=f1e1205] [cursor=pointer]:
+                                - img [ref=f1e1206]
+                    - generic [ref=f1e1208]:
+                      - heading "Memo" [level=1] [ref=f1e1209]
+                      - generic [ref=f1e1210]:
+                        - generic [ref=f1e1211]:
+                          - term [ref=f1e1212]: id
+                          - definition [ref=f1e1213]:
+                            - generic [ref=f1e1214]:
+                              - code [ref=f1e1217]: rZ3h9pI7SMzVYeFDXJVu
+                              - button "Copy to clipboard" [ref=f1e1219] [cursor=pointer]:
+                                - img [ref=f1e1220]
+                        - generic [ref=f1e1222]:
+                          - term [ref=f1e1223]: name
+                          - definition [ref=f1e1224]:
+                            - generic [ref=f1e1225]:
+                              - code [ref=f1e1228]: pages::companies.form
+                              - button "Copy to clipboard" [ref=f1e1230] [cursor=pointer]:
+                                - img [ref=f1e1231]
+                        - generic [ref=f1e1233]:
+                          - term [ref=f1e1234]: path
+                          - definition [ref=f1e1235]:
+                            - generic [ref=f1e1236]:
+                              - code [ref=f1e1239]: companies/form
+                              - button "Copy to clipboard" [ref=f1e1241] [cursor=pointer]:
+                                - img [ref=f1e1242]
+                        - generic [ref=f1e1244]:
+                          - term [ref=f1e1245]: method
+                          - definition [ref=f1e1246]:
+                            - generic [ref=f1e1247]:
+                              - code [ref=f1e1250]: GET
+                              - button "Copy to clipboard" [ref=f1e1252] [cursor=pointer]:
+                                - img [ref=f1e1253]
+                        - generic [ref=f1e1255]:
+                          - term [ref=f1e1256]: release
+                          - definition [ref=f1e1257]:
+                            - generic [ref=f1e1258]:
+                              - code [ref=f1e1261]: a-a-a
+                              - button "Copy to clipboard" [ref=f1e1263] [cursor=pointer]:
+                                - img [ref=f1e1264]
+                        - generic [ref=f1e1266]:
+                          - term [ref=f1e1267]: children
+                          - definition [ref=f1e1268]:
+                            - generic [ref=f1e1269]:
+                              - code [ref=f1e1272]:
+                                - code [ref=f1e1274]: "[]"
+                              - button "Copy to clipboard" [ref=f1e1276] [cursor=pointer]:
+                                - img [ref=f1e1277]
+                        - generic [ref=f1e1279]:
+                          - term [ref=f1e1280]: scripts
+                          - definition [ref=f1e1281]:
+                            - generic [ref=f1e1282]:
+                              - code [ref=f1e1285]:
+                                - code [ref=f1e1287]: "[]"
+                              - button "Copy to clipboard" [ref=f1e1289] [cursor=pointer]:
+                                - img [ref=f1e1290]
+                        - generic [ref=f1e1292]:
+                          - term [ref=f1e1293]: assets
+                          - definition [ref=f1e1294]:
+                            - generic [ref=f1e1295]:
+                              - code [ref=f1e1298]:
+                                - code [ref=f1e1300]: "[]"
+                              - button "Copy to clipboard" [ref=f1e1302] [cursor=pointer]:
+                                - img [ref=f1e1303]
+                        - generic [ref=f1e1305]:
+                          - term [ref=f1e1306]: errors
+                          - definition [ref=f1e1307]:
+                            - generic [ref=f1e1308]:
+                              - code [ref=f1e1311]:
+                                - code [ref=f1e1313]: "[]"
+                              - button "Copy to clipboard" [ref=f1e1315] [cursor=pointer]:
+                                - img [ref=f1e1316]
+                        - generic [ref=f1e1318]:
+                          - term [ref=f1e1319]: locale
+                          - definition [ref=f1e1320]:
+                            - generic [ref=f1e1321]:
+                              - code [ref=f1e1324]: fr
+                              - button "Copy to clipboard" [ref=f1e1326] [cursor=pointer]:
+                                - img [ref=f1e1327]
+                        - generic [ref=f1e1329]:
+                          - term [ref=f1e1330]: islands
+                          - definition [ref=f1e1331]:
+                            - generic [ref=f1e1332]:
+                              - code [ref=f1e1335]:
+                                - code [ref=f1e1337]: "[]"
+                              - button "Copy to clipboard" [ref=f1e1339] [cursor=pointer]:
+                                - img [ref=f1e1340]
+              - generic [ref=f1e1342]:
+                - heading "Context" [level=2] [ref=f1e1343]
+                - generic [ref=f1e1344]:
+                  - generic [ref=f1e1345]:
+                    - heading "User" [level=1] [ref=f1e1346]:
+                      - text: User
+                      - img [ref=f1e1348]
+                    - generic [ref=f1e1350]:
+                      - img "rem-admin@aeropaperasse.test" [ref=f1e1352]
+                      - generic [ref=f1e1353]:
+                        - paragraph [ref=f1e1354]: REM Super Admin
+                        - paragraph [ref=f1e1355]: rem-admin@aeropaperasse.test
+                    - generic [ref=f1e1356] [cursor=pointer]:
+                      - code [ref=f1e1359]:
+                        - code [ref=f1e1361]: "{ \"id\": 1, \"name\": \"REM Super Admin\", \"email\": \"rem-admin@aeropaperasse.test\", \"email_verified_at\": null, \"is_new\": false, \"created_at\": \"2026-06-01T09:23:45.000000Z\", \"updated_at\": \"2026-06-01T09:23:45.000000Z\", \"role\": \"rem_super_admin\", \"function\": null, \"client_id\": null, \"coworker_id\": null, \"two_factor_enabled\": false, \"can_access_formation\": true }"
+                      - button "Copy to clipboard" [ref=f1e1363]:
+                        - img [ref=f1e1364]
+                      - button [ref=f1e1366]:
+                        - img [ref=f1e1367]
+                  - generic [ref=f1e1369]:
+                    - heading "Versions" [level=1] [ref=f1e1370]:
+                      - text: Versions
+                      - img [ref=f1e1372]
+                    - generic [ref=f1e1374]:
+                      - generic [ref=f1e1375]:
+                        - term [ref=f1e1376]: Php Version
+                        - definition [ref=f1e1377]:
+                          - generic [ref=f1e1378]:
+                            - code [ref=f1e1381]: 8.3.30
+                            - button "Copy to clipboard" [ref=f1e1383] [cursor=pointer]:
+                              - img [ref=f1e1384]
+                      - generic [ref=f1e1386]:
+                        - term [ref=f1e1387]: Laravel Version
+                        - definition [ref=f1e1388]:
+                          - generic [ref=f1e1389]:
+                            - code [ref=f1e1392]: 13.11.2
+                            - button "Copy to clipboard" [ref=f1e1394] [cursor=pointer]:
+                              - img [ref=f1e1395]
+                      - generic [ref=f1e1397]:
+                        - term [ref=f1e1398]: Laravel Locale
+                        - definition [ref=f1e1399]:
+                          - generic [ref=f1e1400]:
+                            - code [ref=f1e1403]: fr
+                            - button "Copy to clipboard" [ref=f1e1405] [cursor=pointer]:
+                              - img [ref=f1e1406]
+                      - generic [ref=f1e1408]:
+                        - term [ref=f1e1409]: Laravel Config Cached
+                        - definition [ref=f1e1410]:
+                          - generic [ref=f1e1411]:
+                            - img [ref=f1e1412]
+                            - generic [ref=f1e1414]: "false"
+                      - generic [ref=f1e1415]:
+                        - term [ref=f1e1416]: App Debug
+                        - definition [ref=f1e1417]:
+                          - generic [ref=f1e1418]:
+                            - img [ref=f1e1419]
+                            - generic [ref=f1e1421]: "true"
+                      - generic [ref=f1e1422]:
+                        - term [ref=f1e1423]: App Env
+                        - definition [ref=f1e1424]:
+                          - generic [ref=f1e1425]:
+                            - code [ref=f1e1428]: local
+                            - button "Copy to clipboard" [ref=f1e1430] [cursor=pointer]:
+                              - img [ref=f1e1431]
+          - generic [ref=f1e1434]:
+            - navigation:
+              - list [ref=f1e1435]:
+                - listitem [ref=f1e1436]:
+                  - button "5 Queries" [ref=f1e1437] [cursor=pointer]:
+                    - generic [ref=f1e1438]: "5"
+                    - generic [ref=f1e1439]: Queries
+            - generic [ref=f1e1440]:
+              - generic [ref=f1e1441]:
+                - generic [ref=f1e1442]:
+                  - generic [ref=f1e1443]: 11:28:39
+                  - generic [ref=f1e1444]:
+                    - img "Runtime" [ref=f1e1445]
+                    - text: 20.81ms
+                  - generic [ref=f1e1447]:
+                    - img "Connection" [ref=f1e1448]
+                    - text: central
+                - generic [ref=f1e1451]:
+                  - generic [ref=f1e1452] [cursor=pointer]:
+                    - code [ref=f1e1455]:
+                      - code [ref=f1e1457]: "select * from `sessions` where `id` = T4E79DVW9mFe6JBHNMHse2EWaFd2EA6KHphp5WXA limit 1"
+                    - button "Copy to clipboard" [ref=f1e1459]:
+                      - img [ref=f1e1460]
+                    - button [ref=f1e1462]:
+                      - img [ref=f1e1463]
+                  - button "1 query parameter" [ref=f1e1466] [cursor=pointer]:
+                    - img [ref=f1e1467]
+                    - text: 1 query parameter
+              - generic [ref=f1e1469]:
+                - generic [ref=f1e1470]:
+                  - generic [ref=f1e1471]: 11:28:39
+                  - generic [ref=f1e1472]:
+                    - img "Runtime" [ref=f1e1473]
+                    - text: 0.57ms
+                  - generic [ref=f1e1475]:
+                    - img "Connection" [ref=f1e1476]
+                    - text: central
+                - generic [ref=f1e1479]:
+                  - generic [ref=f1e1480] [cursor=pointer]:
+                    - code [ref=f1e1483]:
+                      - code [ref=f1e1485]: "select * from `tenants` where exists (select * from `domains` where `tenants`.`id` = `domains`.`tenant_id` and `domain` = app.aeropaperasse.test) limit 1"
+                    - button "Copy to clipboard" [ref=f1e1487]:
+                      - img [ref=f1e1488]
+                    - button [ref=f1e1490]:
+                      - img [ref=f1e1491]
+                  - button "1 query parameter" [ref=f1e1494] [cursor=pointer]:
+                    - img [ref=f1e1495]
+                    - text: 1 query parameter
+              - generic [ref=f1e1497]:
+                - generic [ref=f1e1498]:
+                  - generic [ref=f1e1499]: 11:28:39
+                  - generic [ref=f1e1500]:
+                    - img "Runtime" [ref=f1e1501]
+                    - text: 0.35ms
+                  - generic [ref=f1e1503]:
+                    - img "Connection" [ref=f1e1504]
+                    - text: central
+                - generic [ref=f1e1507]:
+                  - generic [ref=f1e1508] [cursor=pointer]:
+                    - code [ref=f1e1511]:
+                      - code [ref=f1e1513]: "select * from `domains` where `domains`.`tenant_id` in (rem)"
+                    - button "Copy to clipboard" [ref=f1e1515]:
+                      - img [ref=f1e1516]
+                    - button [ref=f1e1518]:
+                      - img [ref=f1e1519]
+                  - button "1 query parameter" [ref=f1e1522] [cursor=pointer]:
+                    - img [ref=f1e1523]
+                    - text: 1 query parameter
+              - generic [ref=f1e1525]:
+                - generic [ref=f1e1526]:
+                  - generic [ref=f1e1527]: 11:28:39
+                  - generic [ref=f1e1528]:
+                    - img "Runtime" [ref=f1e1529]
+                    - text: 0.6ms
+                  - generic [ref=f1e1531]:
+                    - img "Connection" [ref=f1e1532]
+                    - text: central
+                - generic [ref=f1e1535] [cursor=pointer]:
+                  - code [ref=f1e1538]:
+                    - code [ref=f1e1540]: SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'tenant_rem'
+                  - button "Copy to clipboard" [ref=f1e1542]:
+                    - img [ref=f1e1543]
+                  - button [ref=f1e1545]:
+                    - img [ref=f1e1546]
+              - generic [ref=f1e1548]:
+                - generic [ref=f1e1549]:
+                  - generic [ref=f1e1550]: 11:28:39
+                  - generic [ref=f1e1551]:
+                    - img "Runtime" [ref=f1e1552]
+                    - text: 0.54ms
+                  - generic [ref=f1e1554]:
+                    - img "Connection" [ref=f1e1555]
+                    - text: central
+                - generic [ref=f1e1558]:
+                  - generic [ref=f1e1559] [cursor=pointer]:
+                    - code [ref=f1e1562]:
+                      - code [ref=f1e1564]: "select * from `users` where `id` = 1 limit 1"
+                    - button "Copy to clipboard" [ref=f1e1566]:
+                      - img [ref=f1e1567]
+                    - button [ref=f1e1569]:
+                      - img [ref=f1e1570]
+                  - button "1 query parameter" [ref=f1e1573] [cursor=pointer]:
+                    - img [ref=f1e1574]
+                    - text: 1 query parameter
+          - generic [ref=f1e1577]:
+            - list [ref=f1e1578]:
+              - listitem [ref=f1e1579]:
+                - img [ref=f1e1580]
+              - listitem [ref=f1e1588]: ·
+              - listitem [ref=f1e1589]:
+                - link "Source" [ref=f1e1590] [cursor=pointer]:
+                  - /url: https://github.com/spatie/laravel-ignition
+              - listitem [ref=f1e1591]: ·
+              - listitem [ref=f1e1592]:
+                - link "Docs" [ref=f1e1593] [cursor=pointer]:
+                  - /url: https://flareapp.io/docs/ignition/introducing-ignition/overview
+              - listitem [ref=f1e1594]: ·
+              - listitem [ref=f1e1595]:
+                - link "Laravel" [ref=f1e1596] [cursor=pointer]:
+                  - /url: https://laravel.com
+            - paragraph [ref=f1e1598]:
+              - text: Ignition is built by
+              - link "Flare" [ref=f1e1599] [cursor=pointer]:
+                - /url: https://flareapp.io/?utm_campaign=ignition&utm_source=ignition
+                - img [ref=f1e1600]
+                - text: Flare
+              - text: ", the Laravel error reporting service."
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Aeropaperasse" [ref=e6]
+      - navigation [ref=e7]:
+        - link "Sociétés" [ref=e8] [cursor=pointer]:
+          - /url: /companies
+          - img [ref=e10]
+          - generic [ref=e12]: Sociétés
+        - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+          - /url: /activity-requests
+          - img [ref=e15]
+          - generic [ref=e17]: Demande d'activité
+        - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+          - /url: /coworkers
+          - img [ref=e20]
+          - generic [ref=e22]: Collaborateurs & utilisateurs
+        - link "Demande de badge" [ref=e23] [cursor=pointer]:
+          - /url: /badge-requests
+          - img [ref=e25]
+          - generic [ref=e27]: Demande de badge
+        - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+          - /url: /badge-management
+          - img [ref=e30]
+          - generic [ref=e32]: Suivi des badges
+        - link "Formations" [ref=e33] [cursor=pointer]:
+          - /url: /trainings
+          - img [ref=e35]
+          - generic [ref=e37]: Formations
+        - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+          - /url: /vehicle-pass
+          - img [ref=e40]
+          - generic [ref=e42]: Laissez-passer
+      - generic [ref=e43]:
+        - link "Changer d'espace" [ref=e44] [cursor=pointer]:
+          - /url: http://app.aeropaperasse.test/choose-tenant
+          - img [ref=e45]
+          - generic [ref=e47]: Changer d'espace
+        - link "Déconnexion" [ref=e48] [cursor=pointer]:
+          - /url: http://app.aeropaperasse.test/logout
+          - img [ref=e49]
+          - generic [ref=e51]: Déconnexion
+    - generic [ref=e52]:
+      - banner [ref=e53]:
+        - button "Masquer la barre latérale" [expanded] [ref=e55]:
+          - img [ref=e56]
+        - navigation "Fil d'Ariane" [ref=e58]:
+          - generic [ref=e59]: Administration
+          - img [ref=e60]
+          - link "Sociétés" [ref=e62] [cursor=pointer]:
+            - /url: /companies
+          - img [ref=e63]
+          - generic [ref=e65]: Formulaire
+      - main [ref=e66]:
+        - generic [ref=e67]:
+          - generic [ref=e70]:
+            - link "Retour" [ref=e71] [cursor=pointer]:
+              - /url: http://app.aeropaperasse.test/companies
+              - img [ref=e72]
+              - text: Retour
+            - generic [ref=e74]: /
+            - heading "Nouvelle société" [level=1] [ref=e75]
+          - generic [ref=e76]:
+            - generic [ref=e78]:
+              - generic [ref=e79]:
+                - button "Identité société Raison sociale, SIRET, statut" [expanded] [ref=e80]:
+                  - img [ref=e82]
+                  - generic [ref=e84]:
+                    - generic [ref=e85]: Identité société
+                    - generic [ref=e86]: Raison sociale, SIRET, statut
+                  - img [ref=e87]
+                - generic [ref=e90]:
+                  - generic [ref=e91]:
+                    - generic [ref=e92]: Raison sociale *
+                    - textbox "Raison sociale" [ref=e93]: Test Société SA
+                  - generic [ref=e94]:
+                    - generic [ref=e95]: Nom commercial *
+                    - textbox "Nom commercial" [ref=e96]: TestCo
+                  - generic [ref=e97]:
+                    - generic [ref=e98]: SIRET *
+                    - textbox "SIRET" [ref=e99]: "12345678901234"
+                  - generic [ref=e100]:
+                    - generic [ref=e101]: Sous-traitant de
+                    - textbox "Sous-traitant de" [ref=e102]
+                  - generic [ref=e105] [cursor=pointer]:
+                    - checkbox "Compagnie aérienne Cocher si cette société est une compagnie aérienne." [ref=e107]
+                    - generic [ref=e108]:
+                      - generic [ref=e109]: Compagnie aérienne
+                      - generic [ref=e110]: Cocher si cette société est une compagnie aérienne.
+              - generic [ref=e111]:
+                - button "Adresse Adresse postale du siège" [expanded] [ref=e112]:
+                  - img [ref=e114]
+                  - generic [ref=e117]:
+                    - generic [ref=e118]: Adresse
+                    - generic [ref=e119]: Adresse postale du siège
+                  - img [ref=e120]
+                - generic [ref=e123]:
+                  - generic [ref=e125]:
+                    - generic [ref=e126]: Adresse *
+                    - textbox "Adresse" [ref=e127]: 1 rue de Test
+                  - generic [ref=e128]:
+                    - generic [ref=e129]: Code postal *
+                    - textbox "Code postal" [ref=e130]: "75001"
+                  - generic [ref=e131]:
+                    - generic [ref=e132]: Ville *
+                    - textbox "Ville" [ref=e133]: Paris
+              - button "Notifications Email de notification (optionnel)" [ref=e135]:
+                - img [ref=e137]
+                - generic [ref=e139]:
+                  - generic [ref=e140]: Notifications
+                  - generic [ref=e141]: Email de notification (optionnel)
+                - img [ref=e142]
+              - generic [ref=e144]:
+                - 'button "Référent sûreté #1 Obligatoire" [expanded] [ref=e145]':
+                  - img [ref=e147]
+                  - generic [ref=e149]:
+                    - generic [ref=e150]: "Référent sûreté #1"
+                    - generic [ref=e151]: Obligatoire
+                  - img [ref=e152]
+                - generic [ref=e155]:
+                  - generic [ref=e156]:
+                    - generic [ref=e157]: Prénom *
+                    - textbox "Prénom Prénom Prénom Prénom Prénom" [ref=e158]: Jean
+                  - generic [ref=e159]:
+                    - generic [ref=e160]: Nom *
+                    - textbox "Nom Nom Nom Nom Nom" [ref=e161]: Dupont
+                  - generic [ref=e162]:
+                    - generic [ref=e163]: Email *
+                    - textbox "Email Email Email Email Email" [ref=e164]: jean.dupont@example.test
+                  - generic [ref=e165]:
+                    - generic [ref=e166]: Téléphone *
+                    - textbox "Téléphone Téléphone Téléphone Téléphone Téléphone" [ref=e167]: "0102030405"
+              - 'button "Référent sûreté #2 Optionnel" [ref=e169]':
+                - img [ref=e171]
+                - generic [ref=e173]:
+                  - generic [ref=e174]: "Référent sûreté #2"
+                  - generic [ref=e175]: Optionnel
+                - img [ref=e176]
+              - 'button "Référent sûreté #3 Optionnel" [ref=e179]':
+                - img [ref=e181]
+                - generic [ref=e183]:
+                  - generic [ref=e184]: "Référent sûreté #3"
+                  - generic [ref=e185]: Optionnel
+                - img [ref=e186]
+              - generic [ref=e188]:
+                - button "Correspondant sécurité Obligatoire" [expanded] [ref=e189]:
+                  - img [ref=e191]
+                  - generic [ref=e193]:
+                    - generic [ref=e194]: Correspondant sécurité
+                    - generic [ref=e195]: Obligatoire
+                  - img [ref=e196]
+                - generic [ref=e199]:
+                  - generic [ref=e200]:
+                    - generic [ref=e201]: Prénom *
+                    - textbox [ref=e202]: Marie
+                  - generic [ref=e203]:
+                    - generic [ref=e204]: Nom *
+                    - textbox [ref=e205]: Martin
+                  - generic [ref=e206]:
+                    - generic [ref=e207]: Email *
+                    - textbox [ref=e208]: marie.martin@example.test
+                  - generic [ref=e209]:
+                    - generic [ref=e210]: Téléphone *
+                    - textbox [ref=e211]: "0607080910"
+              - generic [ref=e212]:
+                - button "Contact RH Obligatoire" [expanded] [ref=e213]:
+                  - img [ref=e215]
+                  - generic [ref=e217]:
+                    - generic [ref=e218]: Contact RH
+                    - generic [ref=e219]: Obligatoire
+                  - img [ref=e220]
+                - generic [ref=e223]:
+                  - generic [ref=e224]:
+                    - generic [ref=e225]: Prénom *
+                    - textbox [ref=e226]: Paul
+                  - generic [ref=e227]:
+                    - generic [ref=e228]: Nom *
+                    - textbox [ref=e229]: Bernard
+                  - generic [ref=e230]:
+                    - generic [ref=e231]: Email *
+                    - textbox [ref=e232]: paul.bernard@example.test
+                  - generic [ref=e233]:
+                    - generic [ref=e234]: Téléphone *
+                    - textbox [ref=e235]: "0708091011"
+              - generic [ref=e236]:
+                - button "Documents PDF — max 8 Mo par fichier" [expanded] [ref=e237]:
+                  - img [ref=e239]
+                  - generic [ref=e241]:
+                    - generic [ref=e242]: Documents
+                    - generic [ref=e243]: PDF — max 8 Mo par fichier
+                  - img [ref=e244]
+                - generic [ref=e247]:
+                  - generic [ref=e248]:
+                    - generic [ref=e249]: KBIS *
+                    - button "KBIS �+��*� Nouveau fichier — cliquer pour remplacer" [ref=e299] [cursor=pointer]:
+                      - button "KBIS" [ref=e252]
+                      - img [ref=e255]
+                      - generic [ref=e257]:
+                        - generic [ref=e258]: �+��*�
+                        - generic [ref=e259]: Nouveau fichier — cliquer pour remplacer
+                  - generic [ref=e260]:
+                    - generic [ref=e261]: Document référents sûreté *
+                    - button "Document référents sûreté �+��*� Nouveau fichier — cliquer pour remplacer" [ref=e300] [cursor=pointer]:
+                      - button "Document référents sûreté" [ref=e264]
+                      - img [ref=e267]
+                      - generic [ref=e269]:
+                        - generic [ref=e270]: �+��*�
+                        - generic [ref=e271]: Nouveau fichier — cliquer pour remplacer
+                  - generic [ref=e272]:
+                    - generic [ref=e273]: Document correspondant sécurité *
+                    - button "Document correspondant sécurité �+��*� Nouveau fichier — cliquer pour remplacer" [ref=e301] [cursor=pointer]:
+                      - button "Document correspondant sécurité" [ref=e276]
+                      - img [ref=e279]
+                      - generic [ref=e281]:
+                        - generic [ref=e282]: �+��*�
+                        - generic [ref=e283]: Nouveau fichier — cliquer pour remplacer
+            - generic [ref=e285]:
+              - button "Annuler" [ref=e286]
+              - button "Créer la société" [ref=e287]:
+                - generic [ref=e288]: Créer la société
+        - generic [ref=e290]:
+          - paragraph [ref=e291]: © 2026 Aeropaperasse — tous droits réservés
+          - navigation [ref=e292]:
+            - link "Mentions légales" [ref=e293] [cursor=pointer]:
+              - /url: "#"
+            - link "Politique de confidentialité" [ref=e294] [cursor=pointer]:
+              - /url: "#"
+            - link "CGU" [ref=e295] [cursor=pointer]:
+              - /url: "#"
+            - link "CGV" [ref=e296] [cursor=pointer]:
+              - /url: "#"
+          - paragraph [ref=e297]:
+            - text: Une réalisation
+            - link "R4DEV" [ref=e298] [cursor=pointer]:
+              - /url: https://r4dev.fr

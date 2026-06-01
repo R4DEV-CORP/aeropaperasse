@@ -1,0 +1,5 @@
+[     514ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://client1.aeropaperasse.test/_boost/browser-logs @ http://client1.aeropaperasse.test/coworkers/form:19
+[   34446ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://client1.aeropaperasse.test/coworkers/5:0
+[   34447ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://client1.aeropaperasse.test/coworkers/5:0
+[   34447ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://client1.aeropaperasse.test/coworkers/5:0
+[   34447ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://client1.aeropaperasse.test/coworkers/5:0

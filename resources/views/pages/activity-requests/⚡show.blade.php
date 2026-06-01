@@ -31,7 +31,7 @@ class extends Component
     public function mount(int $activityRequestId): void
     {
         if (auth()->user()->isClient()) {
-            $this->redirect(route('companies.show', ['companyId' => auth()->user()->client_id]), navigate: true);
+            $this->redirect(route('companies.show', ['companyId' => auth()->user()->contextualClientId()]), navigate: true);
 
             return;
         }
@@ -42,7 +42,7 @@ class extends Component
             abort(404);
         }
 
-        if (! auth()->user()->isAdmin() && $activityRequest->client_id !== auth()->user()->client_id) {
+        if (! auth()->user()->isTenantManager() && $activityRequest->client_id !== auth()->user()->contextualClientId()) {
             abort(403);
         }
 
@@ -121,7 +121,7 @@ class extends Component
             return;
         }
 
-        if (! auth()->user()->isAdmin() && $activityRequest->client_id !== auth()->user()->client_id) {
+        if (! auth()->user()->isTenantManager() && $activityRequest->client_id !== auth()->user()->contextualClientId()) {
             return;
         }
 
@@ -154,7 +154,7 @@ class extends Component
 
     public function downloadAllDocuments()
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             return null;
         }
 
@@ -216,7 +216,7 @@ class extends Component
     $client = $ar->client;
     $airport = $ar->airport;
     $user = auth()->user();
-    $isAdmin = $user->isAdmin();
+    $isAdmin = $user->isTenantManager();
     $isSAdmin = $user->isSAdmin();
     $canChangeStatus = $user->canChangeRequestStatus();
     $attachmentsByType = $ar->attachments->groupBy('type');

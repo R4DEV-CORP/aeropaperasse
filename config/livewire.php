@@ -124,7 +124,12 @@ return [
     */
 
     'temporary_file_upload' => [
-        'disk' => env('LIVEWIRE_TEMPORARY_FILE_UPLOAD_DISK'), // Example: 'local', 's3'             | Default: 'default'
+        // Pinned to the dedicated `livewire_tmp` disk (see config/filesystems.php).
+        // That disk's root is the central storage path and it is NOT listed in
+        // config/tenancy.php → filesystem → disks, so its root stays stable across
+        // the upload request (no tenancy) and the subsequent form submit (tenancy
+        // active). Without this, files vanish between the two requests.
+        'disk' => env('LIVEWIRE_TEMPORARY_FILE_UPLOAD_DISK', 'livewire_tmp'),
         'rules' => null,                                      // Example: ['file', 'mimes:png,jpg'] | Default: ['required', 'file', 'max:12288'] (12MB)
         'directory' => null,                                  // Example: 'tmp'                     | Default: 'livewire-tmp'
         'middleware' => null,                                 // Example: 'throttle:5,1'            | Default: 'throttle:60,1'

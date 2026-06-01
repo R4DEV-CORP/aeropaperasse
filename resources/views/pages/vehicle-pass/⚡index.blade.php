@@ -33,7 +33,7 @@ class extends Component
     public function mount(): void
     {
         if (auth()->user()->isClient()) {
-            $this->redirect(route('companies.show', ['companyId' => auth()->user()->client_id]), navigate: true);
+            $this->redirect(route('companies.show', ['companyId' => auth()->user()->contextualClientId()]), navigate: true);
         }
     }
 
@@ -72,7 +72,7 @@ class extends Component
     #[Computed]
     public function clients()
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             return collect();
         }
 
@@ -83,11 +83,11 @@ class extends Component
     {
         $query = VehiclePass::with(['client', 'activityRequest']);
 
-        if (! auth()->user()->isAdmin()) {
-            $query->where('client_id', auth()->user()->client_id);
+        if (! auth()->user()->isTenantManager()) {
+            $query->where('client_id', auth()->user()->contextualClientId());
         }
 
-        if ($this->selectedClientId && auth()->user()->isAdmin()) {
+        if ($this->selectedClientId && auth()->user()->isTenantManager()) {
             $query->where('client_id', $this->selectedClientId);
         }
 
@@ -239,7 +239,7 @@ class extends Component
                 </x-ui.input>
             </div>
 
-            @if (auth()->user()->isAdmin())
+            @if (auth()->user()->isTenantManager())
                 @php
                     $clientOptions = [['value' => null, 'label' => 'Toutes les sociétés']];
                     foreach ($this->clients as $c) {
@@ -359,7 +359,7 @@ class extends Component
                 @forelse ($this->items as $vp)
                     @php
                         $status = $statusMeta[$vp->status] ?? ['label' => $vp->status, 'variant' => 'default'];
-                        $isAdmin = auth()->user()->isAdmin();
+                        $isAdmin = auth()->user()->isTenantManager();
                         $isPending = $vp->status === 'pending';
                     @endphp
                     <tr wire:key="vp-{{ $vp->id }}">

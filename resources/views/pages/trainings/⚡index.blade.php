@@ -28,14 +28,14 @@ class extends Component
     {
         $user = auth()->user();
 
-        if ($user->isClient() && ! $user->can_access_formation) {
-            $this->redirect(route('companies.show', ['companyId' => $user->client_id]), navigate: true);
+        if ($user->isClient() && ! $user->canAccessFormation()) {
+            $this->redirect(route('companies.show', ['companyId' => $user->contextualClientId()]), navigate: true);
 
             return;
         }
 
-        if (! $user->isAdmin()) {
-            $this->redirect(route('trainings.show', ['companyId' => $user->client_id]), navigate: true);
+        if (! $user->isTenantManager()) {
+            $this->redirect(route('trainings.show', ['companyId' => $user->contextualClientId()]), navigate: true);
         }
     }
 

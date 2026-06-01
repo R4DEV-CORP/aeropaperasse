@@ -1,0 +1,139 @@
+- generic [active] [ref=e182]:
+  - generic [ref=e183]:
+    - complementary [ref=e184]:
+      - link "Aeropaperasse" [ref=e186] [cursor=pointer]:
+        - /url: /dashboard
+        - img "Aeropaperasse" [ref=e187]
+      - navigation [ref=e188]:
+        - link "Sociétés" [ref=e189] [cursor=pointer]:
+          - /url: /companies
+          - img [ref=e191]
+          - generic [ref=e193]: Sociétés
+        - link "Demande d'activité" [ref=e194] [cursor=pointer]:
+          - /url: /activity-requests
+          - img [ref=e196]
+          - generic [ref=e198]: Demande d'activité
+        - link "Collaborateurs & utilisateurs" [ref=e199] [cursor=pointer]:
+          - /url: /coworkers
+          - img [ref=e201]
+          - generic [ref=e203]: Collaborateurs & utilisateurs
+        - link "Demande de badge" [ref=e204] [cursor=pointer]:
+          - /url: /badge-requests
+          - img [ref=e206]
+          - generic [ref=e208]: Demande de badge
+        - link "Suivi des badges" [ref=e209] [cursor=pointer]:
+          - /url: /badge-management
+          - img [ref=e211]
+          - generic [ref=e213]: Suivi des badges
+        - link "Formations" [ref=e214] [cursor=pointer]:
+          - /url: /trainings
+          - img [ref=e216]
+          - generic [ref=e218]: Formations
+        - link "Laissez-passer" [ref=e219] [cursor=pointer]:
+          - /url: /vehicle-pass
+          - img [ref=e221]
+          - generic [ref=e223]: Laissez-passer
+      - generic [ref=e224]:
+        - link "Changer d'espace" [ref=e225] [cursor=pointer]:
+          - /url: http://app.aeropaperasse.test/choose-tenant
+          - img [ref=e226]
+          - generic [ref=e228]: Changer d'espace
+        - link "Déconnexion" [ref=e229] [cursor=pointer]:
+          - /url: http://app.aeropaperasse.test/logout
+          - img [ref=e230]
+          - generic [ref=e232]: Déconnexion
+    - generic [ref=e233]:
+      - banner [ref=e234]:
+        - button "Masquer la barre latérale" [expanded] [ref=e236]:
+          - img [ref=e237]
+        - navigation "Fil d'Ariane" [ref=e239]:
+          - generic [ref=e240]: Administration
+          - img [ref=e241]
+          - generic [ref=e243]: Demandes d'activité
+      - main [ref=e244]:
+        - generic [ref=e245]:
+          - generic [ref=e246]:
+            - heading "Demandes d'activité" [level=1] [ref=e247]
+            - paragraph [ref=e248]: Gérez toutes les demandes d'activité depuis cette interface.
+          - generic [ref=e249]:
+            - button "En attente 0" [ref=e250]:
+              - generic [ref=e253]:
+                - generic [ref=e256]: En attente
+                - generic [ref=e257]: "0"
+            - button "Approuvées 0" [ref=e258]:
+              - generic [ref=e261]:
+                - generic [ref=e264]: Approuvées
+                - generic [ref=e265]: "0"
+            - button "Rejetées 0" [ref=e266]:
+              - generic [ref=e269]:
+                - generic [ref=e272]: Rejetées
+                - generic [ref=e273]: "0"
+            - generic [ref=e276]:
+              - generic [ref=e279]: Total
+              - generic [ref=e280]: "0"
+          - generic [ref=e281]:
+            - generic [ref=e282]:
+              - generic [ref=e285]:
+                - generic:
+                  - img
+                - searchbox "Rechercher une société, un responsable..." [ref=e286]
+              - button "Toutes les sociétés" [ref=e290]:
+                - generic [ref=e291]: Toutes les sociétés
+                - img [ref=e292]
+              - link "Nouvelle demande" [ref=e294] [cursor=pointer]:
+                - /url: http://app.aeropaperasse.test/activity-requests/form
+                - img [ref=e295]
+                - text: Nouvelle demande
+            - radiogroup [ref=e297]:
+              - radio "Tous les aéroports" [checked] [ref=e298]
+              - radio "CDG" [ref=e299]
+              - radio "ORY" [ref=e300]
+              - radio "LBG" [ref=e301]
+          - button "Brouillons 1 — demandes en cours de rédaction Ouvrir" [ref=e303]:
+            - img [ref=e305]
+            - generic [ref=e307]:
+              - heading "Brouillons" [level=2] [ref=e308]
+              - generic [ref=e309]: "1"
+              - generic [ref=e310]: — demandes en cours de rédaction
+            - generic [ref=e311]:
+              - generic [ref=e312]: Ouvrir
+              - img [ref=e313]
+          - generic [ref=e315]:
+            - generic [ref=e316]:
+              - heading "Demandes récentes" [level=2] [ref=e317]
+              - paragraph [ref=e318]: 0 demande
+            - table [ref=e320]:
+              - rowgroup [ref=e321]:
+                - row "Numéro Société Responsable Statut Description Date de création Aéroport Actions" [ref=e322]:
+                  - columnheader "Numéro" [ref=e323]
+                  - columnheader "Société" [ref=e324]
+                  - columnheader "Responsable" [ref=e325]
+                  - columnheader "Statut" [ref=e326]
+                  - columnheader "Description" [ref=e327]
+                  - columnheader "Date de création" [ref=e328]
+                  - columnheader "Aéroport" [ref=e329]
+                  - columnheader "Actions" [ref=e330]
+              - rowgroup [ref=e331]:
+                - row "Aucune demande à afficher." [ref=e332]:
+                  - cell "Aucune demande à afficher." [ref=e333]:
+                    - generic [ref=e334]: Aucune demande à afficher.
+        - generic [ref=e336]:
+          - paragraph [ref=e337]: © 2026 Aeropaperasse — tous droits réservés
+          - navigation [ref=e338]:
+            - link "Mentions légales" [ref=e339] [cursor=pointer]:
+              - /url: "#"
+            - link "Politique de confidentialité" [ref=e340] [cursor=pointer]:
+              - /url: "#"
+            - link "CGU" [ref=e341] [cursor=pointer]:
+              - /url: "#"
+            - link "CGV" [ref=e342] [cursor=pointer]:
+              - /url: "#"
+          - paragraph [ref=e343]:
+            - text: Une réalisation
+            - link "R4DEV" [ref=e344] [cursor=pointer]:
+              - /url: https://r4dev.fr
+  - status [ref=e345]:
+    - generic [ref=e347]:
+      - generic [ref=e349]: Brouillon enregistré avec succès
+      - button "Fermer" [ref=e350]:
+        - img [ref=e351]

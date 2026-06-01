@@ -1,0 +1,10 @@
+[     818ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://app.aeropaperasse.test/_boost/browser-logs @ http://app.aeropaperasse.test/login:19
+[   10233ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://app.aeropaperasse.test/_boost/browser-logs @ http://app.aeropaperasse.test/badge-requests:19
+[   18563ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://app.aeropaperasse.test/companies:0
+[   18989ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://app.aeropaperasse.test/companies/1:0
+[   19696ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://app.aeropaperasse.test/companies/form:0
+[   20364ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://app.aeropaperasse.test/companies/form/1:0
+[   22099ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://app.aeropaperasse.test/coworkers/1:0
+[   22888ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://app.aeropaperasse.test/coworkers/form/1:0
+[   25042ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://app.aeropaperasse.test/trainings:0
+[   25500ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://app.aeropaperasse.test/trainings/1:0

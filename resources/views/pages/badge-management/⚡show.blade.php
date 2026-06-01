@@ -37,9 +37,9 @@ class extends Component
         }
 
         $user = auth()->user();
-        if (! $user->isAdmin()) {
+        if (! $user->isTenantManager()) {
             $effectiveClient = $badge->getEffectiveClient();
-            if (! $effectiveClient || $effectiveClient->id !== $user->client_id) {
+            if (! $effectiveClient || $effectiveClient->id !== $user->contextualClientId()) {
                 abort(403);
             }
 
@@ -110,7 +110,7 @@ class extends Component
     $br = $b->badgeRequest;
     $ar = $br?->activityRequest;
     $user = auth()->user();
-    $isAdmin = $user->isAdmin();
+    $isAdmin = $user->isTenantManager();
     $isClient = $user->isClient();
     $canReturn = ! $isClient && in_array($b->status, ['active', 'expired', 'not_returned'], true);
     $canEdit = $isAdmin;

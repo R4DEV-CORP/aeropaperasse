@@ -32,7 +32,7 @@ class extends Component
 
         $authUser = auth()->user();
 
-        if (! $authUser->isAdmin() && $company->id !== $authUser->client_id) {
+        if (! $authUser->isTenantManager() && $company->id !== $authUser->contextualClientId()) {
             abort(403);
         }
 
@@ -90,7 +90,7 @@ class extends Component
 
 @php
     $authUser = auth()->user();
-    $isAdmin = $authUser->isAdmin();
+    $isAdmin = $authUser->isTenantManager();
     $isClient = $authUser->isClient();
     $canEdit = ! $isClient;
 

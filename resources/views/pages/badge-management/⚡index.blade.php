@@ -70,7 +70,7 @@ class extends Component
     #[Computed]
     public function clients()
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             return collect();
         }
 
@@ -86,15 +86,15 @@ class extends Component
             'badgeRequest.activityRequest.client',
         ]);
 
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             $query->where(function ($q) {
                 $q->whereHas('badgeRequest.activityRequest', function ($s) {
-                    $s->where('client_id', auth()->user()->client_id);
-                })->orWhere('client_id', auth()->user()->client_id);
+                    $s->where('client_id', auth()->user()->contextualClientId());
+                })->orWhere('client_id', auth()->user()->contextualClientId());
             });
         }
 
-        if ($this->selectedClientId && auth()->user()->isAdmin()) {
+        if ($this->selectedClientId && auth()->user()->isTenantManager()) {
             $clientId = $this->selectedClientId;
             $query->where(function ($q) use ($clientId) {
                 $q->where('client_id', $clientId)
@@ -177,7 +177,7 @@ class extends Component
 
     public function notReturnedBadge(int $badgeId): void
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             return;
         }
 
@@ -286,7 +286,7 @@ class extends Component
                 </x-ui.input>
             </div>
 
-            @if (auth()->user()->isAdmin())
+            @if (auth()->user()->isTenantManager())
                 @php
                     $clientOptions = [['value' => null, 'label' => 'Toutes les sociétés']];
                     foreach ($this->clients as $c) {
@@ -434,7 +434,7 @@ class extends Component
                         $status = $statusMeta[$badge->status] ?? ['label' => $badge->status, 'variant' => 'default'];
                         $coworker = $badge->getEffectiveCoworker();
                         $client = $badge->getEffectiveClient();
-                        $isAdmin = auth()->user()->isAdmin();
+                        $isAdmin = auth()->user()->isTenantManager();
                         $isClient = auth()->user()->isClient();
                         $canReturn = ! $isClient && in_array($badge->status, ['active', 'expired', 'not_returned'], true);
                     @endphp

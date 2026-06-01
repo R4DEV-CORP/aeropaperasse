@@ -31,7 +31,7 @@ class extends Component
 
         $authUser = auth()->user();
 
-        if (! $authUser->isAdmin() && $vp->client_id !== $authUser->client_id) {
+        if (! $authUser->isTenantManager() && $vp->client_id !== $authUser->contextualClientId()) {
             abort(403);
         }
 
@@ -68,7 +68,7 @@ class extends Component
 
     $vp = $this->vehiclePass;
     $status = $statusMeta[$vp->status] ?? ['label' => $vp->status, 'variant' => 'default'];
-    $isAdmin = auth()->user()->isAdmin();
+    $isAdmin = auth()->user()->isTenantManager();
     $isPending = $vp->status === 'pending';
 
     $documents = [

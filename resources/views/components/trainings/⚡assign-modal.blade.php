@@ -31,16 +31,16 @@ new class extends Component
     public function open(?int $clientId = null): void
     {
         $authUser = auth()->user();
-        if ($authUser->isClient() && ! $authUser->can_access_formation) {
+        if ($authUser->isClient() && ! $authUser->canAccessFormation()) {
             return;
         }
 
         $this->resetForm();
 
-        if ($authUser->isAdmin()) {
+        if ($authUser->isTenantManager()) {
             $this->selected_client_id = $clientId;
         } else {
-            $this->selected_client_id = $authUser->client_id;
+            $this->selected_client_id = $authUser->contextualClientId();
         }
 
         $this->dispatch('open-modal', name: 'assign-training');
@@ -106,8 +106,8 @@ new class extends Component
     {
         $authUser = auth()->user();
 
-        if (! $authUser->isAdmin()) {
-            $this->selected_client_id = $authUser->client_id;
+        if (! $authUser->isTenantManager()) {
+            $this->selected_client_id = $authUser->contextualClientId();
         }
 
         $this->validate([
@@ -203,7 +203,7 @@ new class extends Component
 
 @php
     $authUser = auth()->user();
-    $isAdmin = $authUser->isAdmin();
+    $isAdmin = $authUser->isTenantManager();
 
     $clientOptions = [];
     foreach ($this->clients as $c) {

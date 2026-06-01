@@ -1,0 +1,272 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - generic [ref=e43]:
+      - link "Changer d'espace" [ref=e44] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/choose-tenant
+        - img [ref=e45]
+        - generic [ref=e47]: Changer d'espace
+      - link "Déconnexion" [ref=e48] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/logout
+        - img [ref=e49]
+        - generic [ref=e51]: Déconnexion
+  - generic [ref=e52]:
+    - banner [ref=e53]:
+      - button "Masquer la barre latérale" [expanded] [ref=e55]:
+        - img [ref=e56]
+      - navigation "Fil d'Ariane" [ref=e58]:
+        - generic [ref=e59]: Administration
+        - img [ref=e60]
+        - link "Sociétés" [ref=e62] [cursor=pointer]:
+          - /url: /companies
+        - img [ref=e63]
+        - generic [ref=e65]: Détail
+    - main [ref=e66]:
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - generic [ref=e69]:
+            - heading "REM Société A" [level=1] [ref=e70]
+            - generic [ref=e71]: Compagnie aérienne
+            - generic [ref=e73]: SIRET 49190023
+          - generic [ref=e74]:
+            - button "Télécharger le bilan" [ref=e75]:
+              - generic [ref=e76]:
+                - img [ref=e77]
+                - text: Télécharger le bilan
+            - link "Modifier" [ref=e79] [cursor=pointer]:
+              - /url: http://app.aeropaperasse.test/companies/form/1
+        - generic [ref=e80]:
+          - generic [ref=e83]:
+            - generic [ref=e86]: Collaborateurs
+            - generic [ref=e87]: "2"
+          - generic [ref=e90]:
+            - generic [ref=e93]: Utilisateurs
+            - generic [ref=e94]: "0"
+          - generic [ref=e97]:
+            - generic [ref=e100]: Badges actifs
+            - generic [ref=e101]: "0"
+          - generic [ref=e104]:
+            - generic [ref=e107]: Formations actives
+            - generic [ref=e108]: "0"
+          - generic [ref=e111]:
+            - generic [ref=e114]: Demandes d'activité
+            - generic [ref=e115]: "0"
+        - generic [ref=e116]:
+          - generic [ref=e117]:
+            - heading "Identité" [level=2] [ref=e118]
+            - generic [ref=e119]: Créée le 01/06/2026
+          - generic [ref=e120]:
+            - generic [ref=e122]:
+              - heading "Informations société" [level=3] [ref=e123]
+              - generic [ref=e124]:
+                - generic [ref=e125]:
+                  - term [ref=e126]: Raison sociale
+                  - definition [ref=e127]: REM Société A
+                - generic [ref=e128]:
+                  - term [ref=e129]: Nom commercial
+                  - definition [ref=e130]: REM Société A
+                - generic [ref=e131]:
+                  - term [ref=e132]: SIRET
+                  - definition [ref=e133]: "49190023"
+                - generic [ref=e134]:
+                  - term [ref=e135]: Sous-traitant de
+                  - definition [ref=e136]: Gautier SAS
+                - generic [ref=e137]:
+                  - term [ref=e138]: Email de notification
+                  - definition [ref=e139]: contact@meunier.com
+            - generic [ref=e141]:
+              - heading "Adresse" [level=3] [ref=e142]
+              - generic [ref=e143]:
+                - generic [ref=e144]:
+                  - term [ref=e145]: Adresse
+                  - definition [ref=e146]: 2, place Gros
+                - generic [ref=e147]:
+                  - term [ref=e148]: Code postal
+                  - definition [ref=e149]: "57800"
+                - generic [ref=e150]:
+                  - term [ref=e151]: Ville
+                  - definition [ref=e152]: Fernandez-la-Forêt
+            - generic [ref=e154]:
+              - heading "Contacts" [level=3] [ref=e155]
+              - generic [ref=e156]:
+                - generic [ref=e157]:
+                  - heading "Référents sûreté" [level=4] [ref=e158]
+                  - generic [ref=e159]: "0"
+                - paragraph [ref=e160]: Aucun référent renseigné.
+              - generic [ref=e161]:
+                - heading "Correspondant sécurité" [level=4] [ref=e162]
+                - paragraph [ref=e163]: Non renseigné.
+              - generic [ref=e164]:
+                - heading "Contact RH" [level=4] [ref=e165]
+                - paragraph [ref=e166]: Non renseigné.
+            - generic [ref=e168]:
+              - heading "Documents" [level=3] [ref=e169]
+              - list [ref=e170]:
+                - listitem [ref=e171]:
+                  - generic [ref=e172]:
+                    - generic [ref=e173]: KBIS
+                    - generic [ref=e174]: Document fourni
+                  - link "Télécharger KBIS" [ref=e175] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/tenancy/assets/application/x-futuresplash
+                    - img [ref=e176]
+                - listitem [ref=e178]:
+                  - generic [ref=e179]:
+                    - generic [ref=e180]: Référents sûreté
+                    - generic [ref=e181]: Document fourni
+                  - link "Télécharger Référents sûreté" [ref=e182] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/tenancy/assets/application/vnd.epson.quickanime
+                    - img [ref=e183]
+                - listitem [ref=e185]:
+                  - generic [ref=e186]:
+                    - generic [ref=e187]: Correspondant sécurité
+                    - generic [ref=e188]: Document fourni
+                  - link "Télécharger Correspondant sécurité" [ref=e189] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/tenancy/assets/text/x-uuencode
+                    - img [ref=e190]
+        - generic [ref=e192]:
+          - heading "Ressources" [level=2] [ref=e193]
+          - generic [ref=e194]:
+            - generic [ref=e195]:
+              - generic [ref=e196]:
+                - generic [ref=e197]:
+                  - generic [ref=e198]:
+                    - heading "Utilisateurs & Collaborateurs" [level=2] [ref=e199]
+                    - generic [ref=e200]: "2"
+                  - link "Voir tout" [ref=e201] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/coworkers
+                - generic [ref=e203]:
+                  - generic:
+                    - img
+                  - searchbox "Rechercher un collaborateur…" [ref=e204]
+              - list [ref=e205]:
+                - listitem [ref=e206]:
+                  - generic [ref=e207]:
+                    - generic [ref=e208]:
+                      - generic [ref=e209]: Patrick Coulon
+                      - generic [ref=e210]: Collaborateur
+                    - generic [ref=e211]: patrick.coulon@gmail.com · 0676713190
+                  - link "Voir" [ref=e212] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/coworkers/1
+                    - text: Voir
+                    - img [ref=e213]
+                - listitem [ref=e215]:
+                  - generic [ref=e216]:
+                    - generic [ref=e217]:
+                      - generic [ref=e218]: Thierry Schmitt
+                      - generic [ref=e219]: Collaborateur
+                    - generic [ref=e220]: thierry.schmitt@gmail.com · 0661694069
+                  - link "Voir" [ref=e221] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/coworkers/2
+                    - text: Voir
+                    - img [ref=e222]
+            - generic [ref=e224]:
+              - generic [ref=e225]:
+                - generic [ref=e226]:
+                  - generic [ref=e227]:
+                    - heading "Demandes d'activité" [level=2] [ref=e228]
+                    - generic [ref=e229]: "0"
+                  - link "Voir tout" [ref=e230] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/activity-requests
+                - generic [ref=e232]:
+                  - generic:
+                    - img
+                  - searchbox "Rechercher une demande…" [ref=e233]
+              - generic [ref=e234]: Aucune demande d'activité.
+            - generic [ref=e235]:
+              - generic [ref=e236]:
+                - generic [ref=e237]:
+                  - generic [ref=e238]:
+                    - heading "Demandes de badges" [level=2] [ref=e239]
+                    - generic [ref=e240]: "0"
+                  - link "Voir tout" [ref=e241] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/badge-requests
+                - generic [ref=e243]:
+                  - generic:
+                    - img
+                  - searchbox "Rechercher un collaborateur, un statut…" [ref=e244]
+              - generic [ref=e245]: Aucune demande de badge.
+            - generic [ref=e246]:
+              - generic [ref=e247]:
+                - generic [ref=e248]:
+                  - generic [ref=e249]:
+                    - heading "Badges" [level=2] [ref=e250]
+                    - generic [ref=e251]: "0"
+                  - link "Voir tout" [ref=e252] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/badge-management
+                - generic [ref=e254]:
+                  - generic:
+                    - img
+                  - searchbox "Rechercher un badge, un porteur…" [ref=e255]
+              - generic [ref=e256]: Aucun badge.
+            - generic [ref=e257]:
+              - generic [ref=e258]:
+                - generic [ref=e259]:
+                  - generic [ref=e260]:
+                    - heading "Laissez-passer" [level=2] [ref=e261]
+                    - generic [ref=e262]: "0"
+                  - link "Voir tout" [ref=e263] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/vehicle-pass
+                - generic [ref=e265]:
+                  - generic:
+                    - img
+                  - searchbox "Rechercher une plaque, une marque…" [ref=e266]
+              - generic [ref=e267]: Aucun laissez-passer.
+            - generic [ref=e268]:
+              - generic [ref=e269]:
+                - generic [ref=e270]:
+                  - generic [ref=e271]:
+                    - heading "Formations" [level=2] [ref=e272]
+                    - generic [ref=e273]: "0"
+                  - link "Voir tout" [ref=e274] [cursor=pointer]:
+                    - /url: http://app.aeropaperasse.test/trainings/1
+                - generic [ref=e276]:
+                  - generic:
+                    - img
+                  - searchbox "Rechercher une formation, un collaborateur…" [ref=e277]
+              - generic [ref=e278]: Aucune formation attribuée.
+      - generic [ref=e280]:
+        - paragraph [ref=e281]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e282]:
+          - link "Mentions légales" [ref=e283] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e284] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e285] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e286] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e287]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e288] [cursor=pointer]:
+            - /url: https://r4dev.fr

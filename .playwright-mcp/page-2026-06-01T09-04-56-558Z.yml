@@ -1,0 +1,132 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - generic [ref=e43]:
+      - link "Changer d'espace" [ref=e44] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/choose-tenant
+        - img [ref=e45]
+        - generic [ref=e47]: Changer d'espace
+      - link "Déconnexion" [ref=e48] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/logout
+        - img [ref=e49]
+        - generic [ref=e51]: Déconnexion
+  - generic [ref=e52]:
+    - banner [ref=e53]:
+      - button "Masquer la barre latérale" [expanded] [ref=e55]:
+        - img [ref=e56]
+      - navigation "Fil d'Ariane" [ref=e58]:
+        - generic [ref=e59]: Administration
+        - img [ref=e60]
+        - generic [ref=e62]: Sociétés
+    - main [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - heading "Sociétés" [level=1] [ref=e67]
+            - paragraph [ref=e68]: Gérez les sociétés et leurs accès.
+          - link "Nouvelle société" [ref=e69] [cursor=pointer]:
+            - /url: http://app.aeropaperasse.test/companies/form
+            - img [ref=e70]
+            - text: Nouvelle société
+        - generic [ref=e72]:
+          - generic [ref=e75]:
+            - generic [ref=e78]: Total sociétés
+            - generic [ref=e79]: "2"
+          - generic [ref=e82]:
+            - generic [ref=e85]: Compagnies aériennes
+            - generic [ref=e86]: "1"
+          - generic [ref=e89]:
+            - generic [ref=e92]: Total collaborateurs
+            - generic [ref=e93]: "5"
+        - generic [ref=e94]:
+          - generic [ref=e98]:
+            - generic:
+              - img
+            - searchbox "Rechercher par nom, nom commercial ou SIRET..." [ref=e99]
+          - radiogroup [ref=e100]:
+            - radio "Toutes" [checked] [ref=e101]
+            - radio "Compagnies aériennes" [ref=e102]
+            - radio "Non aériennes" [ref=e103]
+        - generic [ref=e104]:
+          - generic [ref=e105]:
+            - heading "Liste des sociétés" [level=2] [ref=e106]
+            - paragraph [ref=e107]: 2 sociétés
+          - table [ref=e109]:
+            - rowgroup [ref=e110]:
+              - row "Raison sociale SIRET Ville Collaborateurs Créée le Actions" [ref=e111]:
+                - columnheader "Raison sociale" [ref=e112]
+                - columnheader "SIRET" [ref=e113]
+                - columnheader "Ville" [ref=e114]
+                - columnheader "Collaborateurs" [ref=e115]
+                - columnheader "Créée le" [ref=e116]
+                - columnheader "Actions" [ref=e117]
+            - rowgroup [ref=e118]:
+              - row "REM Société A Compagnie aérienne 59536284 Clementdan 3 01/06/2026 Actions" [ref=e119]:
+                - cell "REM Société A Compagnie aérienne" [ref=e120]:
+                  - generic [ref=e121]:
+                    - generic [ref=e123]: REM Société A
+                    - generic "Compagnie aérienne" [ref=e125]:
+                      - img [ref=e126]
+                - cell "59536284" [ref=e128]
+                - cell "Clementdan" [ref=e129]
+                - cell "3" [ref=e130]
+                - cell "01/06/2026" [ref=e131]
+                - cell "Actions" [ref=e132]:
+                  - button "Actions" [ref=e135]:
+                    - img [ref=e136]
+              - row "REM Société B 96946066 PoulainVille 2 01/06/2026 Actions" [ref=e138]:
+                - cell "REM Société B" [ref=e139]:
+                  - generic [ref=e142]: REM Société B
+                - cell "96946066" [ref=e143]
+                - cell "PoulainVille" [ref=e144]
+                - cell "2" [ref=e145]
+                - cell "01/06/2026" [ref=e146]
+                - cell "Actions" [ref=e147]:
+                  - button "Actions" [ref=e150]:
+                    - img [ref=e151]
+      - generic [ref=e154]:
+        - paragraph [ref=e155]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e156]:
+          - link "Mentions légales" [ref=e157] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e158] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e159] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e160] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e161]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e162] [cursor=pointer]:
+            - /url: https://r4dev.fr

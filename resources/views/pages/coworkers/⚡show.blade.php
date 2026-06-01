@@ -33,7 +33,7 @@ class extends Component
 
         $authUser = auth()->user();
 
-        if (! $authUser->isAdmin() && $coworker->client_id !== $authUser->client_id) {
+        if (! $authUser->isTenantManager() && $coworker->client_id !== $authUser->contextualClientId()) {
             abort(403);
         }
 
@@ -47,10 +47,13 @@ class extends Component
     #[Computed]
     public function coworker(): Coworker
     {
+        // `trainings` is a belongsToMany via `coworker_trainings` (tenant) joining `trainings` (central).
+        // Eloquent emits a JOIN that MySQL can't run cross-DB. Load `coworkerTrainings` (tenant) and
+        // its central `training` separately — two queries, no JOIN. See docs/multi-tenant-migration.md.
         return Coworker::with([
             'user',
             'client',
-            'trainings',
+            'coworkerTrainings.training',
         ])->findOrFail($this->coworkerId);
     }
 
@@ -88,7 +91,7 @@ class extends Component
     $u = $cw->user;
     $client = $cw->client;
     $authUser = auth()->user();
-    $isAdmin = $authUser->isAdmin();
+    $isAdmin = $authUser->isTenantManager();
     $isClient = $authUser->isClient();
     $hasUser = $u !== null;
 
@@ -374,7 +377,7 @@ class extends Component
                             <div>
                                 <dt class="text-xs font-medium uppercase tracking-wide text-foreground-muted">Accès formations</dt>
                                 <dd class="mt-1">
-                                    @if ($u->can_access_formation)
+                                    @if ($u->canAccessFormation())
                                         <x-ui.badge variant="approved">Activé</x-ui.badge>
                                     @else
                                         <x-ui.badge variant="default">Désactivé</x-ui.badge>
@@ -429,16 +432,16 @@ class extends Component
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
                         <h2 class="text-base font-semibold text-foreground">Formations</h2>
-                        <span class="text-xs text-foreground-muted">{{ $cw->trainings->count() }}</span>
+                        <span class="text-xs text-foreground-muted">{{ $cw->coworkerTrainings->count() }}</span>
                     </div>
 
-                    @if ($cw->trainings->isEmpty())
+                    @if ($cw->coworkerTrainings->isEmpty())
                         <p class="text-sm text-foreground-muted">Aucune formation attribuée.</p>
                     @else
                         <ul class="space-y-2">
-                            @foreach ($cw->trainings as $training)
+                            @foreach ($cw->coworkerTrainings as $ct)
                                 @php
-                                    $expiresAt = $training->pivot->expires_at ? \Carbon\Carbon::parse($training->pivot->expires_at) : null;
+                                    $expiresAt = $ct->expires_at;
                                     $isLifetime = $expiresAt === null;
                                     $isExpired = $expiresAt !== null && $expiresAt->isPast();
                                     $variant = $isExpired ? 'rejected' : ($isLifetime ? 'in-progress' : 'approved');
@@ -446,9 +449,9 @@ class extends Component
                                         ? 'À vie'
                                         : ($isExpired ? 'Expirée le '.$expiresAt->format('d/m/Y') : 'Valide jusqu\'au '.$expiresAt->format('d/m/Y'));
                                 @endphp
-                                <li wire:key="training-{{ $training->id }}" class="flex items-start justify-between gap-3 rounded border border-border px-3 py-2">
+                                <li wire:key="ct-{{ $ct->id }}" class="flex items-start justify-between gap-3 rounded border border-border px-3 py-2">
                                     <div class="min-w-0">
-                                        <div class="text-sm font-medium text-foreground">{{ $training->title }}</div>
+                                        <div class="text-sm font-medium text-foreground">{{ $ct->training?->title }}</div>
                                         <div class="text-xs text-foreground-muted">{{ $hint }}</div>
                                     </div>
                                     <x-ui.badge :variant="$variant" :dot="false" class="!text-[10px]">

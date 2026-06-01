@@ -1,0 +1,139 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - generic [ref=e43]:
+      - link "Changer d'espace" [ref=e44] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/choose-tenant
+        - img [ref=e45]
+        - generic [ref=e47]: Changer d'espace
+      - link "Déconnexion" [ref=e48] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/logout
+        - img [ref=e49]
+        - generic [ref=e51]: Déconnexion
+  - generic [ref=e52]:
+    - banner [ref=e53]:
+      - button "Masquer la barre latérale" [expanded] [ref=e55]:
+        - img [ref=e56]
+      - navigation "Fil d'Ariane" [ref=e58]:
+        - generic [ref=e59]: Administration
+        - img [ref=e60]
+        - link "Suivi des badges" [ref=e62] [cursor=pointer]:
+          - /url: /badge-management
+        - img [ref=e63]
+        - generic [ref=e65]: Nouveau badge
+    - main [ref=e66]:
+      - generic [ref=e67]:
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - link "Retour" [ref=e71] [cursor=pointer]:
+              - /url: http://app.aeropaperasse.test/badge-management
+              - img [ref=e72]
+              - text: Retour
+            - generic [ref=e74]: /
+            - heading "Créer un badge indépendant" [level=1] [ref=e75]
+          - generic [ref=e76]:
+            - link "Lier à une demande" [ref=e77] [cursor=pointer]:
+              - /url: http://app.aeropaperasse.test/badge-management/form/linked
+            - link "Indépendant" [ref=e78] [cursor=pointer]:
+              - /url: http://app.aeropaperasse.test/badge-management/form/standalone
+        - generic [ref=e79]:
+          - generic [ref=e81]:
+            - alert [ref=e82]:
+              - generic [ref=e83]: Le badge créé indépendamment ne sera pas rattaché à une demande de badge existante.
+            - generic [ref=e84]:
+              - button "Sélection du client Administration" [expanded] [ref=e85]:
+                - img [ref=e87]
+                - generic [ref=e89]:
+                  - generic [ref=e90]: Sélection du client
+                  - generic [ref=e91]: Administration
+                - img [ref=e92]
+              - generic [ref=e94]:
+                - generic [ref=e95]:
+                  - generic [ref=e96]: Client *
+                  - button "Client" [ref=e98]:
+                    - generic [ref=e99]: Sélectionnez un client…
+                    - img [ref=e100]
+                - paragraph [ref=e102]: Le badge sera créé au nom du client sélectionné.
+            - generic [ref=e103]:
+              - generic [ref=e104]:
+                - heading "Collaborateur" [level=2] [ref=e105]
+                - paragraph [ref=e106]: Détenteur du badge.
+              - alert [ref=e108]:
+                - generic [ref=e109]: Sélectionnez d'abord un client.
+            - generic [ref=e110]:
+              - heading "Badge" [level=2] [ref=e112]
+              - generic [ref=e113]:
+                - group "Aéroport" [ref=e114]:
+                  - generic [ref=e115]: Aéroport *
+                  - generic [ref=e116]:
+                    - generic [ref=e117] [cursor=pointer]:
+                      - radio "CDG Roissy Charles de Gaulle" [ref=e118]
+                      - generic [ref=e119]: CDG
+                      - generic [ref=e120]: Roissy Charles de Gaulle
+                    - generic [ref=e121] [cursor=pointer]:
+                      - radio "ORY Paris Orly" [ref=e122]
+                      - generic [ref=e123]: ORY
+                      - generic [ref=e124]: Paris Orly
+                    - generic [ref=e125] [cursor=pointer]:
+                      - radio "LBG Le Bourget" [ref=e126]
+                      - generic [ref=e127]: LBG
+                      - generic [ref=e128]: Le Bourget
+                - generic [ref=e129]:
+                  - generic [ref=e130]:
+                    - generic [ref=e131]: Numéro de badge
+                    - textbox "Numéro de badge" [ref=e132]:
+                      - /placeholder: "Ex : 123456"
+                  - generic [ref=e133]:
+                    - generic [ref=e134]: Date d'expiration *
+                    - textbox "Date d'expiration" [ref=e135]
+          - generic [ref=e137]:
+            - button "Annuler" [ref=e138]
+            - button "Créer le badge" [ref=e139]:
+              - img [ref=e140]
+              - generic [ref=e142]: Créer le badge
+      - generic [ref=e144]:
+        - paragraph [ref=e145]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e146]:
+          - link "Mentions légales" [ref=e147] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e148] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e149] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e150] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e151]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e152] [cursor=pointer]:
+            - /url: https://r4dev.fr

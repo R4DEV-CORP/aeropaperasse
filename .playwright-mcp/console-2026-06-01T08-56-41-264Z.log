@@ -1,0 +1,23 @@
+[     526ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://app.aeropaperasse.test/_boost/browser-logs @ http://app.aeropaperasse.test/coworkers:19
+[     586ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[     586ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[     586ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[     586ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[   40100ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://app.aeropaperasse.test/livewire-ffd83d90/update:0
+[   40123ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://app.aeropaperasse.test/_boost/browser-logs @ :6
+[   40167ms] [LOG] {report: Object, shareableReport: Object, config: Object, solutions: Array(1), updateConfigEndpoint: /_ignition/update-config} {frames: Array(73), context_items: Object, custom_context_items: Array(0), type: web, entry_point: http://app.aeropaperasse.test/coworkers} @ :65
+[  114656ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://app.aeropaperasse.test/_boost/browser-logs @ http://app.aeropaperasse.test/coworkers:19
+[  114728ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[  114728ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[  114728ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[  114728ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[  120723ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://app.aeropaperasse.test/_boost/browser-logs @ http://app.aeropaperasse.test/coworkers:19
+[  120809ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[  120809ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[  120809ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[  120809ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[  126845ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://app.aeropaperasse.test/_boost/browser-logs @ http://app.aeropaperasse.test/coworkers:19
+[  126917ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[  126917ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[  126917ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0
+[  126917ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "new-password"): (More info: https://goo.gl/9p2vKq) %o @ http://app.aeropaperasse.test/coworkers:0

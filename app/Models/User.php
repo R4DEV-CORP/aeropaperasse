@@ -70,6 +70,20 @@ class User extends Authenticatable
     private array $effectiveRoleCache = [];
 
     /**
+     * Per-request memo of the resolved tenant client_id, keyed by tenant id.
+     *
+     * @var array<string, ?int>
+     */
+    private array $contextualClientIdCache = [];
+
+    /**
+     * Per-request memo of the resolved formation-access flag, keyed by tenant id.
+     *
+     * @var array<string, bool>
+     */
+    private array $canAccessFormationCache = [];
+
+    /**
      * REM-level staff (`rem_admin` / `rem_super_admin`) — cross-tenant access to every
      * tenant. This is a **global** capability read from `users.role` (not tenant-scoped),
      * and it short-circuits per-tenant membership/role resolution. Keeping it global also
@@ -87,6 +101,25 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->isRemStaff();
+    }
+
+    /**
+     * Whether the user can manage the **active tenant** in full (browse all companies,
+     * all coworkers, all requests…). REM staff qualify globally; owner / tenant_admin
+     * qualify within the tenant they hold that pivot role on. Used to broaden checks
+     * that were previously `! isAdmin()` and assumed every non-REM user was a single-
+     * company client attached via `users.client_id`.
+     * See docs/multi-tenant-migration.md (Roles).
+     */
+    public function isTenantManager(): bool
+    {
+        if ($this->isRemStaff()) {
+            return true;
+        }
+
+        $role = $this->contextualRole();
+
+        return $role === Role::Owner->value || $role === Role::TenantAdmin->value;
     }
 
     public function isSAdmin(): bool
@@ -172,6 +205,41 @@ class User extends Authenticatable
         return $this->effectiveRole()?->value ?? $this->role;
     }
 
+    /**
+     * The company (tenant `clients` row id) this user maps to in the active tenant —
+     * read from the `tenant_user.client_id` pivot column. Falls back to the deprecated
+     * central `users.client_id` column when no pivot row resolves (single-tenant legacy
+     * users, or REM staff with a legacy company link), and returns null when neither
+     * source has a value (typical for REM staff, owner/tenant_admin not tied to a
+     * company). Replaces direct reads of `$user->client_id` across the live path
+     * — that column doesn't carry the per-tenant association any more.
+     * See docs/multi-tenant-migration.md (Q-CLIENT).
+     */
+    public function contextualClientId(?string $tenantId = null): ?int
+    {
+        $tenantId ??= tenant()?->getTenantKey();
+
+        $cacheKey = $tenantId ?? '__no_tenant__';
+
+        if (! array_key_exists($cacheKey, $this->contextualClientIdCache)) {
+            $this->contextualClientIdCache[$cacheKey] = $this->resolveContextualClientId($tenantId);
+        }
+
+        return $this->contextualClientIdCache[$cacheKey];
+    }
+
+    private function resolveContextualClientId(?string $tenantId): ?int
+    {
+        if ($tenantId !== null && ! $this->isRemStaff()) {
+            $pivotClientId = $this->membershipFor($tenantId)?->pivot->client_id;
+            if ($pivotClientId !== null) {
+                return (int) $pivotClientId;
+            }
+        }
+
+        return $this->client_id !== null ? (int) $this->client_id : null;
+    }
+
     public function canChangeRequestStatus(): bool
     {
         return $this->isAdmin() || $this->isAClient();
@@ -206,15 +274,54 @@ class User extends Authenticatable
     }
 
     /**
-     * Tenants this user belongs to, with the tenant-scoped role and (optionally)
-     * the company (`client_id`) they map to within that tenant — carried on the
-     * central `tenant_user` pivot. See docs/multi-tenant-migration.md.
+     * Tenants this user belongs to, with the tenant-scoped role, the company
+     * (`client_id`) they map to within that tenant, and the per-tenant
+     * `can_access_formation` flag — all carried on the central `tenant_user` pivot.
+     * See docs/multi-tenant-migration.md.
      */
     public function tenants(): BelongsToMany
     {
         return $this->belongsToMany(Tenant::class, 'tenant_user')
-            ->withPivot(['role', 'client_id'])
+            ->withPivot(['role', 'client_id', 'can_access_formation'])
             ->withTimestamps();
+    }
+
+    /**
+     * Whether this user may access formations on the given tenant. REM staff
+     * short-circuit to `true` (cross-tenant capability, like the role helpers);
+     * everyone else reads the tenant-scoped flag from the `tenant_user` pivot,
+     * falling back to the deprecated central `users.can_access_formation`
+     * column when no pivot resolves (single-tenant legacy users, central/console
+     * context). Replaces direct reads of `$user->can_access_formation` across
+     * the live path — the column doesn't carry the per-tenant info any more.
+     */
+    public function canAccessFormation(?string $tenantId = null): bool
+    {
+        if ($this->isRemStaff()) {
+            return true;
+        }
+
+        $tenantId ??= tenant()?->getTenantKey();
+
+        $cacheKey = $tenantId ?? '__no_tenant__';
+
+        if (! array_key_exists($cacheKey, $this->canAccessFormationCache)) {
+            $this->canAccessFormationCache[$cacheKey] = $this->resolveCanAccessFormation($tenantId);
+        }
+
+        return $this->canAccessFormationCache[$cacheKey];
+    }
+
+    private function resolveCanAccessFormation(?string $tenantId): bool
+    {
+        if ($tenantId !== null) {
+            $pivotFlag = $this->membershipFor($tenantId)?->pivot->can_access_formation;
+            if ($pivotFlag !== null) {
+                return (bool) $pivotFlag;
+            }
+        }
+
+        return (bool) $this->can_access_formation;
     }
 
     public function conversations()

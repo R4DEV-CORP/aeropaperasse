@@ -109,8 +109,8 @@ class extends Component
     {
         $authUser = auth()->user();
 
-        if (! $authUser->isAdmin()) {
-            $this->redirect(route('companies.show', ['companyId' => $authUser->client_id]), navigate: true);
+        if (! $authUser->isTenantManager()) {
+            $this->redirect(route('companies.show', ['companyId' => $authUser->contextualClientId()]), navigate: true);
 
             return;
         }
@@ -235,7 +235,7 @@ class extends Component
 
     public function submit(): void
     {
-        if (! auth()->user()->isAdmin()) {
+        if (! auth()->user()->isTenantManager()) {
             return;
         }
 

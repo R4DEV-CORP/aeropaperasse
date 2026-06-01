@@ -2,10 +2,13 @@
 
 use App\Actions\Coworker\CreateCoworkerAction;
 use App\DataTransferObjects\CreateCoworkerData;
+use App\Enums\Role;
 use App\Mail\UserCreated;
 use App\Models\Client;
 use App\Models\Coworker;
+use App\Models\CoworkerTraining;
 use App\Models\Training;
+use App\Models\User;
 use App\Validators\CoworkerValidator;
 use App\Livewire\Concerns\InteractsWithToasts;
 use Carbon\Carbon;
@@ -70,18 +73,20 @@ class extends Component
         $authUser = auth()->user();
 
         if ($authUser->isClient()) {
-            $this->redirect(route('companies.show', ['companyId' => $authUser->client_id]), navigate: true);
+            $this->redirect(route('companies.show', ['companyId' => $authUser->contextualClientId()]), navigate: true);
 
             return;
         }
 
         if ($coworkerId !== null) {
-            $coworker = Coworker::with(['user', 'client', 'trainings'])->find($coworkerId);
+            // `coworkerTrainings` (HasMany, tenant) instead of `trainings` (belongsToMany cross-DB JOIN).
+            // The tenant pivot rows hold everything we need here (training_id + dates).
+            $coworker = Coworker::with(['user', 'client', 'coworkerTrainings'])->find($coworkerId);
             if (! $coworker) {
                 abort(404);
             }
 
-            if (! $authUser->isAdmin() && $coworker->client_id !== $authUser->client_id) {
+            if (! $authUser->isTenantManager() && $coworker->client_id !== $authUser->contextualClientId()) {
                 abort(403);
             }
 
@@ -97,13 +102,15 @@ class extends Component
 
             if ($coworker->user_id && $coworker->user) {
                 $this->has_user_account = true;
-                $this->can_access_formation = (bool) $coworker->user->can_access_formation;
+                // Lit le flag formation sur le tenant courant via la méthode contextuelle
+                // (pivot first, fallback colonne dépréciée).
+                $this->can_access_formation = $coworker->user->canAccessFormation();
                 $this->role = $coworker->user->role;
             }
 
-            foreach ($coworker->trainings as $t) {
-                $startedAt = $t->pivot->started_at ? Carbon::parse($t->pivot->started_at) : null;
-                $expiresAt = $t->pivot->expires_at ? Carbon::parse($t->pivot->expires_at) : null;
+            foreach ($coworker->coworkerTrainings as $ct) {
+                $startedAt = $ct->started_at ? Carbon::parse($ct->started_at) : null;
+                $expiresAt = $ct->expires_at ? Carbon::parse($ct->expires_at) : null;
 
                 $validity = 'lifetime';
                 if ($startedAt && $expiresAt) {
@@ -113,16 +120,16 @@ class extends Component
                     }
                 }
 
-                $this->selected_trainings[$t->id] = [
+                $this->selected_trainings[$ct->training_id] = [
                     'selected' => true,
                     'start_date' => $startedAt?->format('Y-m-d'),
                     'validity_years' => $validity,
-                    'pivot_id' => $t->pivot->id,
+                    'pivot_id' => $ct->id,
                 ];
             }
         } else {
-            if (! $authUser->isAdmin()) {
-                $this->selected_client_id = $authUser->client_id;
+            if (! $authUser->isTenantManager()) {
+                $this->selected_client_id = $authUser->contextualClientId();
             }
         }
     }
@@ -137,6 +144,42 @@ class extends Component
     public function trainings()
     {
         return Training::orderBy('title')->get();
+    }
+
+    /**
+     * Auto-upgrade lookup: if the typed email matches an existing central user,
+     * the form switches into "attach existing user" mode (no password, just pivot).
+     * Returns null on create/edit when the email doesn't match anyone.
+     */
+    #[Computed]
+    public function existingUser(): ?User
+    {
+        if ($this->isEdit || $this->email === null || $this->email === '') {
+            return null;
+        }
+
+        if (! filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            return null;
+        }
+
+        return User::with('tenants')->where('email', $this->email)->first();
+    }
+
+    /**
+     * True when the matched existing user is already a member of the active tenant
+     * — submit must be blocked, otherwise unique(user_id, tenant_id) would 500.
+     */
+    #[Computed]
+    public function existingUserAlreadyInTenant(): bool
+    {
+        $existing = $this->existingUser;
+        $activeTenant = tenant();
+
+        if ($existing === null || $activeTenant === null) {
+            return false;
+        }
+
+        return $existing->belongsToTenant($activeTenant->getTenantKey());
     }
 
     public function updatedHasLeave(): void
@@ -167,8 +210,10 @@ class extends Component
             return;
         }
 
-        if (! $authUser->isAdmin()) {
-            $this->selected_client_id = $authUser->client_id;
+        // Single-company users (sclient/aclient) can only act on their own company.
+        // Tenant managers (admin REM, owner, tenant_admin) keep the picked company.
+        if (! $authUser->isTenantManager()) {
+            $this->selected_client_id = $authUser->contextualClientId();
         }
 
         if ($this->isEdit) {
@@ -182,6 +227,20 @@ class extends Component
     {
         $authUser = auth()->user();
 
+        // Auto-upgrade: if the typed email matches an existing user, we attach them
+        // instead of creating. They become the coworker's user — provided they're
+        // not already a member of this tenant (would violate unique(user_id,tenant_id)).
+        $existing = $this->existingUser;
+        if ($existing !== null && $this->existingUserAlreadyInTenant) {
+            $this->addError('email', 'Cet utilisateur a déjà accès à cet espace.');
+            $this->toast('Cet utilisateur a déjà accès à cet espace.', 'warning');
+
+            return;
+        }
+
+        $attachExisting = $existing !== null;
+        $effectiveCreateUser = $attachExisting ? false : $this->create_user;
+
         $validationData = [
             'firstname' => $this->firstname,
             'lastname' => $this->lastname,
@@ -191,13 +250,16 @@ class extends Component
             'can_access_formation' => $this->can_access_formation,
             'has_leave' => $this->has_leave,
             'departure_date' => $this->has_leave ? $this->departure_date : null,
-            'create_user' => $this->create_user,
-            'password' => $this->create_user ? $this->password : null,
-            'password_confirmation' => $this->create_user ? $this->password_confirmation : null,
+            'create_user' => $effectiveCreateUser,
+            'password' => $effectiveCreateUser ? $this->password : null,
+            'password_confirmation' => $effectiveCreateUser ? $this->password_confirmation : null,
             'role' => $this->role,
+            'existing_user_id' => $attachExisting ? $existing->id : null,
         ];
 
-        $validator = CoworkerValidator::validateComplete($validationData);
+        $allowedRoles = Role::assignableValuesBy($authUser);
+
+        $validator = CoworkerValidator::validateComplete($validationData, $allowedRoles);
         if ($validator->fails()) {
             foreach ($validator->errors()->messages() as $field => $messages) {
                 $this->addError($field, $messages[0]);
@@ -228,11 +290,14 @@ class extends Component
                 $this->syncTrainings($result->coworker->id);
             }
 
-            if ($this->create_user && $result->user && $this->password) {
+            if (! $attachExisting && $effectiveCreateUser && $result->user && $this->password) {
                 Mail::to($result->user->email)->send(new UserCreated($result->user, $this->password));
             }
 
-            $this->toast('Collaborateur créé avec succès.', 'success', 'Création réussie');
+            $successMessage = $attachExisting
+                ? 'Collaborateur créé et utilisateur '.$existing->name.' rattaché à cet espace.'
+                : 'Collaborateur créé avec succès.';
+            $this->toast($successMessage, 'success', 'Création réussie');
             $this->redirect(route('coworkers.show', ['coworkerId' => $result->coworker->id]), navigate: true);
         } catch (\Exception $e) {
             Log::error('Erreur lors de la création du collaborateur', [
@@ -256,7 +321,8 @@ class extends Component
             'role' => $this->role,
         ];
 
-        $validator = CoworkerValidator::validateUpdate($validationData, $this->coworkerId);
+        $allowedRoles = Role::assignableValuesBy($authUser);
+        $validator = CoworkerValidator::validateUpdate($validationData, $this->coworkerId, $allowedRoles);
         if ($validator->fails()) {
             foreach ($validator->errors()->messages() as $field => $messages) {
                 $this->addError($field, $messages[0]);
@@ -296,7 +362,7 @@ class extends Component
             abort(404);
         }
 
-        if (! $authUser->isAdmin() && $coworker->client_id !== $authUser->client_id) {
+        if (! $authUser->isTenantManager() && $coworker->client_id !== $authUser->contextualClientId()) {
             abort(403);
         }
 
@@ -312,11 +378,20 @@ class extends Component
                 ]);
 
                 if ($coworker->user) {
+                    // Name/role restent sur la colonne users (le rôle global est encore
+                    // utilisé en fallback, le rename est Q-ROLES différé).
                     $coworker->user->update([
                         'name' => $this->firstname.' '.$this->lastname,
                         'role' => $this->role,
-                        'can_access_formation' => $this->can_access_formation,
                     ]);
+
+                    // `can_access_formation` est désormais par tenant : on écrit sur la pivot.
+                    $activeTenant = tenant();
+                    if ($activeTenant !== null) {
+                        $coworker->user->tenants()->updateExistingPivot($activeTenant->getTenantKey(), [
+                            'can_access_formation' => $this->can_access_formation,
+                        ]);
+                    }
                 }
 
                 $this->syncTrainings($coworker->id);
@@ -350,12 +425,13 @@ class extends Component
 
     private function syncTrainings(int $coworkerId): void
     {
-        $coworker = Coworker::with('trainings')->find($coworkerId);
+        // `coworkerTrainings` (HasMany, tenant) — avoids the cross-DB JOIN that `trainings` would emit.
+        $coworker = Coworker::with('coworkerTrainings')->find($coworkerId);
         if (! $coworker) {
             return;
         }
 
-        $existing = $coworker->trainings->keyBy('id');
+        $existing = $coworker->coworkerTrainings->keyBy('training_id');
         $kept = [];
 
         foreach ($this->selected_trainings as $trainingId => $row) {
@@ -369,21 +445,16 @@ class extends Component
                 : $startDate->copy()->addYears((int) $row['validity_years']);
 
             if ($existing->has($trainingId)) {
-                DB::table('coworker_trainings')
-                    ->where('id', $existing[$trainingId]->pivot->id)
-                    ->update([
-                        'started_at' => $startDate,
-                        'expires_at' => $expiresAt,
-                        'updated_at' => now(),
-                    ]);
+                $existing[$trainingId]->update([
+                    'started_at' => $startDate,
+                    'expires_at' => $expiresAt,
+                ]);
             } else {
-                DB::table('coworker_trainings')->insert([
+                CoworkerTraining::create([
                     'coworker_id' => $coworkerId,
                     'training_id' => (int) $trainingId,
                     'started_at' => $startDate,
                     'expires_at' => $expiresAt,
-                    'created_at' => now(),
-                    'updated_at' => now(),
                 ]);
             }
 
@@ -392,7 +463,7 @@ class extends Component
 
         $toRemove = $existing->keys()->diff($kept);
         if ($toRemove->isNotEmpty()) {
-            DB::table('coworker_trainings')
+            CoworkerTraining::query()
                 ->where('coworker_id', $coworkerId)
                 ->whereIn('training_id', $toRemove->all())
                 ->delete();
@@ -402,8 +473,7 @@ class extends Component
 
 @php
     $authUser = auth()->user();
-    $isAdmin = $authUser->isAdmin();
-    $isSAdmin = $authUser->isSAdmin();
+    $isTenantManager = $authUser->isTenantManager();
 
     $clientOptions = [];
     foreach ($this->clients as $c) {
@@ -414,17 +484,13 @@ class extends Component
         ];
     }
 
-    $roleOptions = [
-        ['value' => 'client', 'label' => 'Client'],
-        ['value' => 'sclient', 'label' => 'SClient'],
-    ];
-    if ($isAdmin) {
-        $roleOptions[] = ['value' => 'aclient', 'label' => 'AClient'];
-        $roleOptions[] = ['value' => 'rem_admin', 'label' => 'Administrateur REM'];
-    }
-    if ($isSAdmin) {
-        $roleOptions[] = ['value' => 'rem_super_admin', 'label' => 'Super admin REM'];
-    }
+    $roleOptions = array_map(
+        fn (\App\Enums\Role $r) => ['value' => $r->value, 'label' => $r->label()],
+        \App\Enums\Role::assignableBy($authUser),
+    );
+
+    $existingUser = $this->existingUser;
+    $alreadyInTenant = $this->existingUserAlreadyInTenant;
 
     $validityOptions = [
         ['value' => '2', 'label' => '2 ans'],
@@ -461,8 +527,8 @@ class extends Component
         <div class="flex-1 px-4 pb-8 sm:px-6 lg:px-8">
             <div class="mx-auto w-full max-w-3xl space-y-4">
 
-                {{-- Société (admin) --}}
-                @if ($isAdmin && ! $isEdit)
+                {{-- Société (admin REM, owner, tenant_admin) --}}
+                @if ($isTenantManager && ! $isEdit)
                     <div x-data="{ open: true }" class="overflow-hidden rounded-lg bg-amber-50/50 ring-1 ring-amber-200/70 ring-inset">
                         <button type="button" @click="open = !open" :aria-expanded="open" class="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-amber-100/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500">
                             <span class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md bg-amber-100 text-amber-700">
@@ -530,7 +596,7 @@ class extends Component
                             <x-ui.input
                                 label="Email"
                                 type="email"
-                                wire:model.blur="email"
+                                wire:model.live.debounce.500ms="email"
                                 :error="$errors->first('email')"
                             />
                             <x-ui.input
@@ -589,6 +655,42 @@ class extends Component
                                     Ce collaborateur n'a pas de compte utilisateur. Pour en créer un, utilisez l'action « Créer un compte » depuis la liste ou la fiche détail.
                                 </x-ui.alert>
                             @endif
+                        @elseif ($existingUser)
+                            {{-- Auto-upgrade : un utilisateur central existe déjà avec cet email. --}}
+                            <div class="space-y-4">
+                                @if ($alreadyInTenant)
+                                    <x-ui.alert variant="danger">
+                                        L'utilisateur <strong>{{ $existingUser->name }}</strong> ({{ $existingUser->email }})
+                                        a déjà accès à cet espace. Veuillez choisir un autre email ou utiliser sa fiche existante.
+                                    </x-ui.alert>
+                                @else
+                                    <div class="rounded-md border border-blue-200 bg-blue-50/60 p-4 text-sm">
+                                        <div class="font-medium text-blue-900">
+                                            Utilisateur existant : {{ $existingUser->name }}
+                                        </div>
+                                        <div class="mt-0.5 text-blue-800">{{ $existingUser->email }}</div>
+                                        @if ($authUser->isRemStaff() && $existingUser->tenants->isNotEmpty())
+                                            {{-- Liste des autres espaces — réservée au staff REM, qui a la visibilité cross-tenant.
+                                                 Pour un owner/tenant_admin, l'info appartient à un autre tenant et ne doit pas fuiter. --}}
+                                            <div class="mt-2 text-xs text-blue-800">
+                                                Accès actuels :
+                                                {{ $existingUser->tenants->map(fn ($t) => $t->name ?? $t->id)->implode(', ') }}
+                                            </div>
+                                        @endif
+                                        <div class="mt-3 text-xs text-blue-800">
+                                            Il sera rattaché à cet espace avec le rôle choisi ci-dessous (pas de mot de passe à fournir).
+                                        </div>
+                                    </div>
+
+                                    <x-ui.select
+                                        label="Rôle dans cet espace"
+                                        :value="$role"
+                                        wire:model.live="role"
+                                        :options="$roleOptions"
+                                        required
+                                    />
+                                @endif
+                            </div>
                         @else
                             <div class="space-y-4">
                                 <x-ui.checkbox
@@ -757,7 +859,7 @@ class extends Component
                     Annuler
                 </x-ui.button>
 
-                <x-ui.button type="submit" variant="primary" wire:loading.attr="disabled" wire:target="submit">
+                <x-ui.button type="submit" variant="primary" wire:loading.attr="disabled" wire:target="submit" :disabled="$alreadyInTenant">
                     <span wire:loading.remove wire:target="submit">{{ $isEdit ? 'Enregistrer' : 'Créer le collaborateur' }}</span>
                     <span wire:loading wire:target="submit">Enregistrement…</span>
                 </x-ui.button>
