@@ -1,0 +1,277 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - generic [ref=e43]:
+      - link "Changer d'espace" [ref=e44] [cursor=pointer]:
+        - /url: http://client1.aeropaperasse.test/choose-tenant
+        - img [ref=e45]
+        - generic [ref=e47]: Changer d'espace
+      - link "Déconnexion" [ref=e48] [cursor=pointer]:
+        - /url: http://client1.aeropaperasse.test/logout
+        - img [ref=e49]
+        - generic [ref=e51]: Déconnexion
+  - generic [ref=e52]:
+    - banner [ref=e53]:
+      - button "Masquer la barre latérale" [expanded] [ref=e55]:
+        - img [ref=e56]
+      - navigation "Fil d'Ariane" [ref=e58]:
+        - generic [ref=e59]: Administration
+        - img [ref=e60]
+        - link "Sociétés" [ref=e62] [cursor=pointer]:
+          - /url: /companies
+        - img [ref=e63]
+        - generic [ref=e65]: Détail
+    - main [ref=e66]:
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - generic [ref=e69]:
+            - link "Retour" [ref=e70] [cursor=pointer]:
+              - /url: http://client1.aeropaperasse.test/companies
+              - img [ref=e71]
+              - text: Retour
+            - generic [ref=e73]: /
+            - heading "Client1 Société A" [level=1] [ref=e74]
+            - generic [ref=e75]: Compagnie aérienne
+            - generic [ref=e77]: SIRET 7089932
+          - generic [ref=e78]:
+            - button "Télécharger le bilan" [ref=e79]:
+              - generic [ref=e80]:
+                - img [ref=e81]
+                - text: Télécharger le bilan
+            - link "Modifier" [ref=e83] [cursor=pointer]:
+              - /url: http://client1.aeropaperasse.test/companies/form/1
+        - generic [ref=e84]:
+          - generic [ref=e87]:
+            - generic [ref=e90]: Collaborateurs
+            - generic [ref=e91]: "2"
+          - generic [ref=e94]:
+            - generic [ref=e97]: Utilisateurs
+            - generic [ref=e98]: "2"
+          - generic [ref=e101]:
+            - generic [ref=e104]: Badges actifs
+            - generic [ref=e105]: "0"
+          - generic [ref=e108]:
+            - generic [ref=e111]: Formations actives
+            - generic [ref=e112]: "0"
+          - generic [ref=e115]:
+            - generic [ref=e118]: Demandes d'activité
+            - generic [ref=e119]: "0"
+        - generic [ref=e120]:
+          - generic [ref=e121]:
+            - heading "Identité" [level=2] [ref=e122]
+            - generic [ref=e123]: Créée le 01/06/2026
+          - generic [ref=e124]:
+            - generic [ref=e126]:
+              - heading "Informations société" [level=3] [ref=e127]
+              - generic [ref=e128]:
+                - generic [ref=e129]:
+                  - term [ref=e130]: Raison sociale
+                  - definition [ref=e131]: Client1 Société A
+                - generic [ref=e132]:
+                  - term [ref=e133]: Nom commercial
+                  - definition [ref=e134]: Client1 Société A
+                - generic [ref=e135]:
+                  - term [ref=e136]: SIRET
+                  - definition [ref=e137]: "7089932"
+                - generic [ref=e138]:
+                  - term [ref=e139]: Sous-traitant de
+                  - definition [ref=e140]: Chevalier
+                - generic [ref=e141]:
+                  - term [ref=e142]: Email de notification
+                  - definition [ref=e143]: contact@rochergillessa.com
+            - generic [ref=e145]:
+              - heading "Adresse" [level=3] [ref=e146]
+              - generic [ref=e147]:
+                - generic [ref=e148]:
+                  - term [ref=e149]: Adresse
+                  - definition [ref=e150]: 40, impasse Raynaud
+                - generic [ref=e151]:
+                  - term [ref=e152]: Code postal
+                  - definition [ref=e153]: "80623"
+                - generic [ref=e154]:
+                  - term [ref=e155]: Ville
+                  - definition [ref=e156]: Fontaine
+            - generic [ref=e158]:
+              - heading "Contacts" [level=3] [ref=e159]
+              - generic [ref=e160]:
+                - generic [ref=e161]:
+                  - heading "Référents sûreté" [level=4] [ref=e162]
+                  - generic [ref=e163]: "0"
+                - paragraph [ref=e164]: Aucun référent renseigné.
+              - generic [ref=e165]:
+                - heading "Correspondant sécurité" [level=4] [ref=e166]
+                - paragraph [ref=e167]: Non renseigné.
+              - generic [ref=e168]:
+                - heading "Contact RH" [level=4] [ref=e169]
+                - paragraph [ref=e170]: Non renseigné.
+            - generic [ref=e172]:
+              - heading "Documents" [level=3] [ref=e173]
+              - list [ref=e174]:
+                - listitem [ref=e175]:
+                  - generic [ref=e176]:
+                    - generic [ref=e177]: KBIS
+                    - generic [ref=e178]: Document fourni
+                  - link "Télécharger KBIS" [ref=e179] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/tenancy/assets/application/vnd.kde.kspread
+                    - img [ref=e180]
+                - listitem [ref=e182]:
+                  - generic [ref=e183]:
+                    - generic [ref=e184]: Référents sûreté
+                    - generic [ref=e185]: Document fourni
+                  - link "Télécharger Référents sûreté" [ref=e186] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/tenancy/assets/application/vnd.adobe.air-application-installer-package+zip
+                    - img [ref=e187]
+                - listitem [ref=e189]:
+                  - generic [ref=e190]:
+                    - generic [ref=e191]: Correspondant sécurité
+                    - generic [ref=e192]: Document fourni
+                  - link "Télécharger Correspondant sécurité" [ref=e193] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/tenancy/assets/application/vnd.ms-powerpoint
+                    - img [ref=e194]
+        - generic [ref=e196]:
+          - heading "Ressources" [level=2] [ref=e197]
+          - generic [ref=e198]:
+            - generic [ref=e199]:
+              - generic [ref=e200]:
+                - generic [ref=e201]:
+                  - generic [ref=e202]:
+                    - heading "Utilisateurs & Collaborateurs" [level=2] [ref=e203]
+                    - generic [ref=e204]: "2"
+                  - link "Voir tout" [ref=e205] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/coworkers
+                - generic [ref=e207]:
+                  - generic:
+                    - img
+                  - searchbox "Rechercher un collaborateur…" [ref=e208]
+              - list [ref=e209]:
+                - listitem [ref=e210]:
+                  - generic [ref=e211]:
+                    - generic [ref=e212]:
+                      - generic [ref=e213]: Jeanne Brunel
+                      - generic [ref=e214]: Client
+                    - generic [ref=e215]: jeanne.brunel@gmail.com · +33 7 85 17 66 38
+                  - link "Voir" [ref=e216] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/coworkers/1
+                    - text: Voir
+                    - img [ref=e217]
+                - listitem [ref=e219]:
+                  - generic [ref=e220]:
+                    - generic [ref=e221]:
+                      - generic [ref=e222]: Philippe Nguyen
+                      - generic [ref=e223]: Collaborateur
+                    - generic [ref=e224]: philippe.nguyen@gmail.com · +33 5 05 12 89 25
+                  - link "Voir" [ref=e225] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/coworkers/2
+                    - text: Voir
+                    - img [ref=e226]
+            - generic [ref=e228]:
+              - generic [ref=e229]:
+                - generic [ref=e230]:
+                  - generic [ref=e231]:
+                    - heading "Demandes d'activité" [level=2] [ref=e232]
+                    - generic [ref=e233]: "0"
+                  - link "Voir tout" [ref=e234] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/activity-requests
+                - generic [ref=e236]:
+                  - generic:
+                    - img
+                  - searchbox "Rechercher une demande…" [ref=e237]
+              - generic [ref=e238]: Aucune demande d'activité.
+            - generic [ref=e239]:
+              - generic [ref=e240]:
+                - generic [ref=e241]:
+                  - generic [ref=e242]:
+                    - heading "Demandes de badges" [level=2] [ref=e243]
+                    - generic [ref=e244]: "0"
+                  - link "Voir tout" [ref=e245] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/badge-requests
+                - generic [ref=e247]:
+                  - generic:
+                    - img
+                  - searchbox "Rechercher un collaborateur, un statut…" [ref=e248]
+              - generic [ref=e249]: Aucune demande de badge.
+            - generic [ref=e250]:
+              - generic [ref=e251]:
+                - generic [ref=e252]:
+                  - generic [ref=e253]:
+                    - heading "Badges" [level=2] [ref=e254]
+                    - generic [ref=e255]: "0"
+                  - link "Voir tout" [ref=e256] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/badge-management
+                - generic [ref=e258]:
+                  - generic:
+                    - img
+                  - searchbox "Rechercher un badge, un porteur…" [ref=e259]
+              - generic [ref=e260]: Aucun badge.
+            - generic [ref=e261]:
+              - generic [ref=e262]:
+                - generic [ref=e263]:
+                  - generic [ref=e264]:
+                    - heading "Laissez-passer" [level=2] [ref=e265]
+                    - generic [ref=e266]: "0"
+                  - link "Voir tout" [ref=e267] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/vehicle-pass
+                - generic [ref=e269]:
+                  - generic:
+                    - img
+                  - searchbox "Rechercher une plaque, une marque…" [ref=e270]
+              - generic [ref=e271]: Aucun laissez-passer.
+            - generic [ref=e272]:
+              - generic [ref=e273]:
+                - generic [ref=e274]:
+                  - generic [ref=e275]:
+                    - heading "Formations" [level=2] [ref=e276]
+                    - generic [ref=e277]: "0"
+                  - link "Voir tout" [ref=e278] [cursor=pointer]:
+                    - /url: http://client1.aeropaperasse.test/trainings/1
+                - generic [ref=e280]:
+                  - generic:
+                    - img
+                  - searchbox "Rechercher une formation, un collaborateur…" [ref=e281]
+              - generic [ref=e282]: Aucune formation attribuée.
+      - generic [ref=e284]:
+        - paragraph [ref=e285]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e286]:
+          - link "Mentions légales" [ref=e287] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e288] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e289] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e290] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e291]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e292] [cursor=pointer]:
+            - /url: https://r4dev.fr

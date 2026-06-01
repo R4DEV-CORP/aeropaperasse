@@ -29,6 +29,14 @@ new class extends Component
 
     public string $role = 'client';
 
+    /**
+     * Acknowledgement that the typed email matches a user already member of other
+     * tenants and that attaching them here extends their access cross-tenant. Only
+     * required (and surfaced) when the actor is REM staff — see
+     * {@see requiresCrossTenantConfirmation()}.
+     */
+    public bool $confirmCrossTenant = false;
+
     #[On('open-make-user')]
     public function open(int $id): void
     {
@@ -53,6 +61,7 @@ new class extends Component
         $this->password_confirmation = '';
         $this->can_access_formation = false;
         $this->role = 'client';
+        $this->confirmCrossTenant = false;
         $this->resetErrorBag();
 
         $this->dispatch('open-modal', name: 'coworker-make-user');
@@ -99,6 +108,29 @@ new class extends Component
         return $existing->belongsToTenant($activeTenant->getTenantKey());
     }
 
+    /**
+     * REM staff sees the existing user's cross-tenant scope (the "Accès actuels"
+     * line), so they're the only role whose attach action visibly broadens that
+     * scope. Require an explicit acknowledgement before the submit goes through —
+     * silent extension of access across tenants was how `owner@client1.test`
+     * silently grew a REM pivot during browser testing.
+     */
+    #[Computed]
+    public function requiresCrossTenantConfirmation(): bool
+    {
+        $existing = $this->existingUser;
+
+        if ($existing === null || $this->existingUserAlreadyInTenant) {
+            return false;
+        }
+
+        if (! auth()->user()->isRemStaff()) {
+            return false;
+        }
+
+        return $existing->tenants->isNotEmpty();
+    }
+
     public function submit(): void
     {
         $authUser = auth()->user();
@@ -120,6 +152,13 @@ new class extends Component
         if ($existing !== null && $this->existingUserAlreadyInTenant) {
             $this->addError('email', 'Cet utilisateur a déjà accès à cet espace.');
             $this->toast('Cet utilisateur a déjà accès à cet espace.', 'warning');
+
+            return;
+        }
+
+        if ($this->requiresCrossTenantConfirmation && ! $this->confirmCrossTenant) {
+            $this->addError('confirmCrossTenant', 'Confirmez l\'extension d\'accès cross-tenant pour continuer.');
+            $this->toast('Confirmation requise pour étendre l\'accès cross-tenant.', 'warning');
 
             return;
         }
@@ -167,7 +206,7 @@ new class extends Component
             $this->dispatch('close-modal', name: 'coworker-make-user');
             $this->dispatch('coworker-updated');
 
-            $this->reset(['coworkerId', 'email', 'password', 'password_confirmation', 'can_access_formation']);
+            $this->reset(['coworkerId', 'email', 'password', 'password_confirmation', 'can_access_formation', 'confirmCrossTenant']);
             $this->role = 'client';
         } catch (\Exception $e) {
             Log::error('Erreur lors de la création/rattachement du compte utilisateur', [
@@ -239,7 +278,7 @@ new class extends Component
     public function cancel(): void
     {
         $this->dispatch('close-modal', name: 'coworker-make-user');
-        $this->reset(['coworkerId', 'email', 'password', 'password_confirmation', 'can_access_formation']);
+        $this->reset(['coworkerId', 'email', 'password', 'password_confirmation', 'can_access_formation', 'confirmCrossTenant']);
         $this->role = 'client';
         $this->resetErrorBag();
     }
@@ -253,6 +292,8 @@ new class extends Component
     );
     $existing = $this->existingUser;
     $alreadyInTenant = $this->existingUserAlreadyInTenant;
+    $needsCrossTenantConfirmation = $this->requiresCrossTenantConfirmation;
+    $submitDisabled = $alreadyInTenant || ($needsCrossTenantConfirmation && ! $confirmCrossTenant);
 @endphp
 
 <div>
@@ -299,6 +340,18 @@ new class extends Component
                             {{ $existing->tenants->map(fn ($t) => $t->name ?? $t->id)->implode(', ') }}
                         </div>
                     @endif
+                </div>
+            @endif
+
+            @if ($needsCrossTenantConfirmation)
+                <div class="rounded-md border border-amber-300 bg-amber-50/70 p-4 text-sm">
+                    <x-ui.checkbox
+                        wire:model.live="confirmCrossTenant"
+                        :checked="$confirmCrossTenant"
+                        label="Je confirme étendre l'accès de cet utilisateur à cet espace"
+                        description="Cet utilisateur est déjà membre d'au moins un autre espace. Le rattacher ici lui donnera accès à cet espace en plus, sans le retirer des autres."
+                        :error="$errors->first('confirmCrossTenant')"
+                    />
                 </div>
             @endif
 
@@ -355,7 +408,7 @@ new class extends Component
                 <x-ui.button type="button" variant="ghost" wire:click="cancel">
                     Annuler
                 </x-ui.button>
-                <x-ui.button type="submit" variant="primary" :disabled="$alreadyInTenant">
+                <x-ui.button type="submit" variant="primary" :disabled="$submitDisabled">
                     <span wire:loading.remove wire:target="submit">
                         {{ $existing ? 'Rattacher' : 'Créer le compte' }}
                     </span>

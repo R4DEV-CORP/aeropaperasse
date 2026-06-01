@@ -1,0 +1,145 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Aeropaperasse" [ref=e5] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e6]
+    - navigation [ref=e7]:
+      - link "Sociétés" [ref=e8] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e10]
+        - generic [ref=e12]: Sociétés
+      - link "Demande d'activité" [ref=e13] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e15]
+        - generic [ref=e17]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e18] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e20]
+        - generic [ref=e22]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e23] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e25]
+        - generic [ref=e27]: Demande de badge
+      - link "Suivi des badges" [ref=e28] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e30]
+        - generic [ref=e32]: Suivi des badges
+      - link "Formations" [ref=e33] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e35]
+        - generic [ref=e37]: Formations
+      - link "Laissez-passer" [ref=e38] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e40]
+        - generic [ref=e42]: Laissez-passer
+    - generic [ref=e43]:
+      - link "Changer d'espace" [ref=e44] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/choose-tenant
+        - img [ref=e45]
+        - generic [ref=e47]: Changer d'espace
+      - link "Déconnexion" [ref=e48] [cursor=pointer]:
+        - /url: http://app.aeropaperasse.test/logout
+        - img [ref=e49]
+        - generic [ref=e51]: Déconnexion
+  - generic [ref=e52]:
+    - banner [ref=e53]:
+      - button "Masquer la barre latérale" [expanded] [ref=e55]:
+        - img [ref=e56]
+      - navigation "Fil d'Ariane" [ref=e58]:
+        - generic [ref=e59]: Administration
+        - img [ref=e60]
+        - generic [ref=e62]: Demandes d'activité
+    - main [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - heading "Demandes d'activité" [level=1] [ref=e66]
+          - paragraph [ref=e67]: Gérez toutes les demandes d'activité depuis cette interface.
+        - generic [ref=e68]:
+          - button "En attente 0" [ref=e69]:
+            - generic [ref=e72]:
+              - generic [ref=e75]: En attente
+              - generic [ref=e76]: "0"
+          - button "Approuvées 1" [ref=e77]:
+            - generic [ref=e80]:
+              - generic [ref=e83]: Approuvées
+              - generic [ref=e84]: "1"
+          - button "Rejetées 0" [ref=e85]:
+            - generic [ref=e88]:
+              - generic [ref=e91]: Rejetées
+              - generic [ref=e92]: "0"
+          - generic [ref=e95]:
+            - generic [ref=e98]: Total
+            - generic [ref=e99]: "1"
+        - generic [ref=e100]:
+          - generic [ref=e101]:
+            - generic [ref=e104]:
+              - generic:
+                - img
+              - searchbox "Rechercher une société, un responsable..." [ref=e105]
+            - button "Toutes les sociétés" [ref=e109]:
+              - generic [ref=e110]: Toutes les sociétés
+              - img [ref=e111]
+            - link "Nouvelle demande" [ref=e113] [cursor=pointer]:
+              - /url: http://app.aeropaperasse.test/activity-requests/form
+              - img [ref=e114]
+              - text: Nouvelle demande
+          - radiogroup [ref=e116]:
+            - radio "Tous les aéroports" [checked] [ref=e117]
+            - radio "CDG" [ref=e118]
+            - radio "ORY" [ref=e119]
+            - radio "LBG" [ref=e120]
+        - generic [ref=e122]:
+          - img [ref=e124]
+          - generic [ref=e126]:
+            - heading "Brouillons" [level=2] [ref=e127]
+            - generic [ref=e128]: Aucune demande en cours de rédaction
+        - generic [ref=e129]:
+          - generic [ref=e130]:
+            - heading "Demandes récentes" [level=2] [ref=e131]
+            - paragraph [ref=e132]: 1 demande
+          - table [ref=e134]:
+            - rowgroup [ref=e135]:
+              - row "Numéro Société Responsable Statut Description Date de création Aéroport Actions" [ref=e136]:
+                - columnheader "Numéro" [ref=e137]
+                - columnheader "Société" [ref=e138]
+                - columnheader "Responsable" [ref=e139]
+                - columnheader "Statut" [ref=e140]
+                - columnheader "Description" [ref=e141]
+                - columnheader "Date de création" [ref=e142]
+                - columnheader "Aéroport" [ref=e143]
+                - columnheader "Actions" [ref=e144]
+            - rowgroup [ref=e145]:
+              - row "#1 R4WEB SASU R4Dev Corentin SARDA csarda@hipay.com 0638719599 Approuvée Manutention 01/06/2026 CDG Actions" [ref=e146]:
+                - cell "#1" [ref=e147]
+                - cell "R4WEB SASU R4Dev" [ref=e148]:
+                  - generic [ref=e149]: R4WEB SASU
+                  - generic [ref=e150]: R4Dev
+                - cell "Corentin SARDA csarda@hipay.com 0638719599" [ref=e151]:
+                  - generic [ref=e152]: Corentin SARDA
+                  - generic [ref=e153]: csarda@hipay.com
+                  - generic [ref=e154]: "0638719599"
+                - cell "Approuvée" [ref=e155]:
+                  - generic [ref=e156]: Approuvée
+                - cell "Manutention" [ref=e158]:
+                  - paragraph [ref=e159]: Manutention
+                - cell "01/06/2026" [ref=e160]
+                - cell "CDG" [ref=e161]:
+                  - generic [ref=e162]: CDG
+                - cell "Actions" [ref=e163]:
+                  - button "Actions" [ref=e166]:
+                    - img [ref=e167]
+      - generic [ref=e170]:
+        - paragraph [ref=e171]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e172]:
+          - link "Mentions légales" [ref=e173] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e174] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e175] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e176] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e177]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e178] [cursor=pointer]:
+            - /url: https://r4dev.fr

@@ -106,3 +106,21 @@
 [2026-06-01 12:32:25] [test] Traitement de 0 formations expirant dans 15 jours
 [2026-06-01 12:32:25] [test] Traitement de 0 formations expirant dans 7 jours
 [2026-06-01 12:32:25] Vérification des formations terminée.
+[2026-06-01 15:05:17] Démarrage de la vérification des formations
+[2026-06-01 15:05:17] [second] Traitement de 0 formations expirant dans 90 jours
+[2026-06-01 15:05:17] [second] Traitement de 1 formations expirant dans 30 jours
+[2026-06-01 15:05:17] [second] Notification envoyée pour la formation #1 à coworker-second@example.com
+[2026-06-01 15:05:17] [second] Traitement de 0 formations expirant dans 15 jours
+[2026-06-01 15:05:17] [second] Traitement de 0 formations expirant dans 7 jours
+[2026-06-01 15:05:17] [test] Traitement de 0 formations expirant dans 90 jours
+[2026-06-01 15:05:17] [test] Traitement de 1 formations expirant dans 30 jours
+[2026-06-01 15:05:17] [test] Notification envoyée pour la formation #1 à coworker-test@example.com
+[2026-06-01 15:05:17] [test] Traitement de 0 formations expirant dans 15 jours
+[2026-06-01 15:05:17] [test] Traitement de 0 formations expirant dans 7 jours
+[2026-06-01 15:05:17] Vérification des formations terminée.
+[2026-06-01 15:05:20] Démarrage de la vérification des formations
+[2026-06-01 15:05:20] [test] Traitement de 0 formations expirant dans 90 jours
+[2026-06-01 15:05:20] [test] Traitement de 0 formations expirant dans 30 jours
+[2026-06-01 15:05:20] [test] Traitement de 0 formations expirant dans 15 jours
+[2026-06-01 15:05:20] [test] Traitement de 0 formations expirant dans 7 jours
+[2026-06-01 15:05:20] Vérification des formations terminée.

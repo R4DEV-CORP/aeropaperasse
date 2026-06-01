@@ -1,0 +1,14 @@
+- main [ref=e3]:
+  - generic [ref=e5]:
+    - link "Aeropaperasse" [ref=e6] [cursor=pointer]:
+      - /url: /
+      - img "Aeropaperasse" [ref=e7]
+    - generic [ref=e8]:
+      - paragraph [ref=e9]: Erreur 404
+      - heading "Page introuvable" [level=1] [ref=e10]
+      - paragraph [ref=e11]: La page que vous demandez n'existe pas ou n'est pas accessible depuis cet espace.
+    - generic [ref=e12]:
+      - link "Retour à l'accueil" [ref=e13] [cursor=pointer]:
+        - /url: /
+      - button "Page précédente" [ref=e14]
+  - paragraph [ref=e15]: © 2026 Aeropaperasse. Tous droits réservés.

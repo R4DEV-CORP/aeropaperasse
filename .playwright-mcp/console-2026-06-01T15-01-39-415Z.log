@@ -1,0 +1,2 @@
+[     497ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://client1.aeropaperasse.test/companies/9999:0
+[     513ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://client1.aeropaperasse.test/_boost/browser-logs @ http://client1.aeropaperasse.test/companies/9999:17

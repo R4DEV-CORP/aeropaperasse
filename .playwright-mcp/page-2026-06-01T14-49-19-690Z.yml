@@ -1,0 +1,128 @@
+- generic [ref=e170]:
+  - complementary [ref=e171]:
+    - link "Aeropaperasse" [ref=e173] [cursor=pointer]:
+      - /url: /dashboard
+      - img "Aeropaperasse" [ref=e174]
+    - navigation [ref=e175]:
+      - link "Sociétés" [ref=e176] [cursor=pointer]:
+        - /url: /companies
+        - img [ref=e178]
+        - generic [ref=e180]: Sociétés
+      - link "Demande d'activité" [ref=e181] [cursor=pointer]:
+        - /url: /activity-requests
+        - img [ref=e183]
+        - generic [ref=e185]: Demande d'activité
+      - link "Collaborateurs & utilisateurs" [ref=e186] [cursor=pointer]:
+        - /url: /coworkers
+        - img [ref=e188]
+        - generic [ref=e190]: Collaborateurs & utilisateurs
+      - link "Demande de badge" [ref=e191] [cursor=pointer]:
+        - /url: /badge-requests
+        - img [ref=e193]
+        - generic [ref=e195]: Demande de badge
+      - link "Suivi des badges" [ref=e196] [cursor=pointer]:
+        - /url: /badge-management
+        - img [ref=e198]
+        - generic [ref=e200]: Suivi des badges
+      - link "Formations" [ref=e201] [cursor=pointer]:
+        - /url: /trainings
+        - img [ref=e203]
+        - generic [ref=e205]: Formations
+      - link "Laissez-passer" [ref=e206] [cursor=pointer]:
+        - /url: /vehicle-pass
+        - img [ref=e208]
+        - generic [ref=e210]: Laissez-passer
+    - generic [ref=e211]:
+      - link "Changer d'espace" [ref=e212] [cursor=pointer]:
+        - /url: http://client1.aeropaperasse.test/choose-tenant
+        - img [ref=e213]
+        - generic [ref=e215]: Changer d'espace
+      - link "Déconnexion" [ref=e216] [cursor=pointer]:
+        - /url: http://client1.aeropaperasse.test/logout
+        - img [ref=e217]
+        - generic [ref=e219]: Déconnexion
+  - generic [ref=e220]:
+    - banner [ref=e221]:
+      - button "Masquer la barre latérale" [expanded] [ref=e223]:
+        - img [ref=e224]
+      - navigation "Fil d'Ariane" [ref=e226]:
+        - generic [ref=e227]: Administration
+        - img [ref=e228]
+        - link "Collaborateurs & utilisateurs" [ref=e230] [cursor=pointer]:
+          - /url: /coworkers
+        - img [ref=e231]
+        - generic [ref=e233]: Détail
+    - main [ref=e234]:
+      - generic [ref=e235]:
+        - generic [ref=e236]:
+          - generic [ref=e237]:
+            - link "Retour" [ref=e238] [cursor=pointer]:
+              - /url: http://client1.aeropaperasse.test/coworkers
+              - img [ref=e239]
+              - text: Retour
+            - generic [ref=e241]: /
+            - heading "TestMt Browser" [level=1] [ref=e242]
+            - generic [ref=e243]: Collaborateur
+            - generic [ref=e245]: Actif
+          - generic [ref=e247]:
+            - link "Modifier" [ref=e248] [cursor=pointer]:
+              - /url: http://client1.aeropaperasse.test/coworkers/form/5
+            - button "Actions" [ref=e251]:
+              - text: Actions
+              - img [ref=e252]
+        - generic [ref=e254]:
+          - generic [ref=e255]:
+            - generic [ref=e257]:
+              - heading "Identité" [level=2] [ref=e258]
+              - generic [ref=e259]:
+                - generic [ref=e260]:
+                  - term [ref=e261]: Nom complet
+                  - definition [ref=e262]: TestMt Browser
+                - generic [ref=e263]:
+                  - term [ref=e264]: Société
+                  - definition [ref=e265]: Client1 Société A
+                - generic [ref=e266]:
+                  - term [ref=e267]: Email
+                  - definition [ref=e268]: testmt.browser@test.local
+                - generic [ref=e269]:
+                  - term [ref=e270]: Téléphone
+                  - definition [ref=e271]: —
+            - generic [ref=e272]:
+              - generic [ref=e274]:
+                - heading "Demandes de badge" [level=2] [ref=e275]
+                - generic [ref=e276]: 0 demande(s)
+              - generic [ref=e277]: Aucune demande de badge.
+            - generic [ref=e278]:
+              - generic [ref=e280]:
+                - heading "Badges" [level=2] [ref=e281]
+                - generic [ref=e282]: 0 badge(s)
+              - generic [ref=e283]: Aucun badge.
+          - generic [ref=e284]:
+            - generic [ref=e286]:
+              - heading "Compte utilisateur" [level=2] [ref=e287]
+              - generic [ref=e288]:
+                - img [ref=e290]
+                - generic [ref=e292]:
+                  - generic [ref=e293]: Aucun compte
+                  - paragraph [ref=e294]: Ce collaborateur n'a pas d'accès à l'application.
+              - button "Créer un compte" [ref=e295]
+            - generic [ref=e297]:
+              - generic [ref=e298]:
+                - heading "Formations" [level=2] [ref=e299]
+                - generic [ref=e300]: "0"
+              - paragraph [ref=e301]: Aucune formation attribuée.
+      - generic [ref=e303]:
+        - paragraph [ref=e304]: © 2026 Aeropaperasse — tous droits réservés
+        - navigation [ref=e305]:
+          - link "Mentions légales" [ref=e306] [cursor=pointer]:
+            - /url: "#"
+          - link "Politique de confidentialité" [ref=e307] [cursor=pointer]:
+            - /url: "#"
+          - link "CGU" [ref=e308] [cursor=pointer]:
+            - /url: "#"
+          - link "CGV" [ref=e309] [cursor=pointer]:
+            - /url: "#"
+        - paragraph [ref=e310]:
+          - text: Une réalisation
+          - link "R4DEV" [ref=e311] [cursor=pointer]:
+            - /url: https://r4dev.fr

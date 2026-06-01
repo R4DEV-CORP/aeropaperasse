@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Role;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -263,9 +264,24 @@ class User extends Authenticatable
         return $this->hasMany(BadgeRequest::class);
     }
 
-    public function client()
+    /**
+     * The company this user maps to in the **active tenant**. Resolved via
+     * {@see contextualClientId()} (pivot first, deprecated central column as
+     * fallback), so a multi-tenant user gets the correct company per active
+     * tenant. Returns `null` for REM staff and owners/tenant_admins not tied
+     * to a company.
+     *
+     * Exposed as an attribute (not a `belongsTo`) because the FK lives on the
+     * `tenant_user` pivot, not on `users.client_id` — the latter is deprecated.
+     * See docs/multi-tenant-migration.md (Q-CLIENT).
+     */
+    protected function client(): Attribute
     {
-        return $this->belongsTo(Client::class);
+        return Attribute::make(
+            get: fn (): ?Client => ($id = $this->contextualClientId()) !== null
+                ? Client::find($id)
+                : null,
+        )->shouldCache();
     }
 
     public function coworker()

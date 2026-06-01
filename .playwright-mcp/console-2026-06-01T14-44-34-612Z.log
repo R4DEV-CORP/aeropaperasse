@@ -1,0 +1,2 @@
+[     425ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://app.aeropaperasse.test/companies/2:0
+[     428ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://app.aeropaperasse.test/_boost/browser-logs @ http://app.aeropaperasse.test/companies/2:23
