@@ -19,24 +19,31 @@ use Illuminate\Database\Seeder;
  *
  * Seeds:
  *  - the real shared training catalog (central, from database/data/trainings.php);
- *  - one REM super-admin (cross-tenant) — login then change the password (is_new);
- *  - if the `client1` demo tenant exists: a little business data + an Owner account,
- *    so cross-tenant isolation can be exercised end-to-end on preprod.
+ *  - REM super-admin accounts (cross-tenant, no pivot row needed);
+ *  - for each existing demo tenant (rem, client1): a little business data
+ *    (2 companies + coworkers) and an Owner account scoped to that tenant, so
+ *    cross-tenant isolation can be exercised end-to-end on preprod.
  *
- * Unlike PocMultitenantSeeder this carries no `.test` demo matrix — REM is the real
- * tenant (its business data is loaded later), client1 is a throwaway demo.
+ * No Faker: factories are dev-only and absent under `composer install --no-dev`.
  */
 class PreprodSeeder extends Seeder
 {
-    private const REM_ADMIN_EMAIL = 'corentin.sarda@gmail.com';
-
-    private const DEMO_TENANT_ID = 'client1';
+    /**
+     * Tenants that should receive demo business data, keyed by tenant id → label.
+     */
+    private const DEMO_TENANTS = [
+        'rem' => 'REM',
+        'client1' => 'Client 1',
+    ];
 
     public function run(): void
     {
         $this->seedSharedTrainings();
-        $this->seedRemSuperAdmin();
-        $this->seedDemoTenant();
+        $this->seedRemStaff();
+
+        foreach (self::DEMO_TENANTS as $tenantId => $label) {
+            $this->seedTenantDemoData($tenantId, $label);
+        }
     }
 
     private function seedSharedTrainings(): void
@@ -52,40 +59,33 @@ class PreprodSeeder extends Seeder
     }
 
     /**
-     * REM super-admin: REM-level role grants cross-tenant access without a pivot row.
-     * 2FA disabled so the first login isn't blocked if mail (Resend) isn't wired yet —
-     * enable it from the account once preprod mail is confirmed. is_new forces a
-     * password change on first login.
+     * REM-level staff: the REM role grants cross-tenant access without a pivot row.
+     * 2FA disabled so logins aren't blocked while mail (Resend) is being wired —
+     * enable it from each account once preprod mail is confirmed.
      */
-    private function seedRemSuperAdmin(): void
+    private function seedRemStaff(): void
     {
-        User::updateOrCreate(
-            ['email' => self::REM_ADMIN_EMAIL],
-            [
-                'name' => 'Corentin Sarda',
-                'password' => 'password',
-                'role' => Role::RemSuperAdmin->value,
-                'can_access_formation' => true,
-                'two_factor_enabled' => false,
-                'is_new' => true,
-            ],
-        );
+        // corentin: is_new => forced password change on first login.
+        $this->upsertUser('corentin.sarda@gmail.com', 'Corentin Sarda', Role::RemSuperAdmin, isNew: true);
+
+        // clement: active account, no forced change, no 2FA.
+        $this->upsertUser('clement.richard@r4web.fr', 'Clément Richard', Role::RemSuperAdmin, isNew: false);
     }
 
-    private function seedDemoTenant(): void
+    private function seedTenantDemoData(string $tenantId, string $label): void
     {
-        $tenant = Tenant::find(self::DEMO_TENANT_ID);
+        $tenant = Tenant::find($tenantId);
 
         if ($tenant === null) {
             return;
         }
 
-        $tenant->run(function (): void {
+        $tenant->run(function () use ($label): void {
             if (Client::query()->exists()) {
                 return;
             }
 
-            foreach ($this->demoCompanies() as $company) {
+            foreach ($this->demoCompanies($label) as $company) {
                 $client = Client::create($company['client']);
 
                 foreach ($company['coworkers'] as $coworker) {
@@ -96,17 +96,7 @@ class PreprodSeeder extends Seeder
 
         $firstClientId = $tenant->run(fn (): ?int => Client::query()->orderBy('id')->value('id'));
 
-        $owner = User::updateOrCreate(
-            ['email' => 'owner@client1.dev.aeropaperasse.fr'],
-            [
-                'name' => 'Owner Démo',
-                'password' => 'password',
-                'role' => Role::Client->value,
-                'can_access_formation' => true,
-                'two_factor_enabled' => false,
-                'is_new' => true,
-            ],
-        );
+        $owner = $this->upsertUser("owner.{$tenantId}@aeropaperasse.fr", "Owner {$label}", Role::Client, isNew: false);
 
         $owner->tenants()->syncWithoutDetaching([
             $tenant->getTenantKey() => [
@@ -117,55 +107,72 @@ class PreprodSeeder extends Seeder
         ]);
     }
 
+    private function upsertUser(string $email, string $name, Role $role, bool $isNew): User
+    {
+        return User::updateOrCreate(
+            ['email' => $email],
+            [
+                'name' => $name,
+                'password' => 'password',
+                'role' => $role->value,
+                'can_access_formation' => true,
+                'two_factor_enabled' => false,
+                'is_new' => $isNew,
+            ],
+        );
+    }
+
     /**
-     * Static demo business data — no Faker (factories are dev-only and absent under
-     * `composer install --no-dev` on preprod).
+     * Static demo business data — slugs are unique per tenant DB, so the same
+     * companies can be seeded into every tenant without collision.
      *
      * @return list<array{client: array<string, mixed>, coworkers: list<array<string, mixed>>}>
      */
-    private function demoCompanies(): array
+    private function demoCompanies(string $label): array
     {
+        $slug = strtolower(str_replace(' ', '-', $label));
+
         return [
             [
                 'client' => [
-                    'company_name' => 'Démo Société A',
-                    'trade_name' => 'Démo Société A',
+                    'company_name' => "{$label} Société A",
+                    'trade_name' => "{$label} Société A",
                     'siret_number' => '12345678',
                     'address' => '1 rue de la Démo',
                     'zip_code' => '95700',
                     'city' => 'Roissy-en-France',
                     'subcontractor_of' => 'REM Distribution',
-                    'kbis_document' => 'demo/kbis-societe-a.pdf',
-                    'safety_document' => 'demo/safety-societe-a.pdf',
-                    'security_document' => 'demo/security-societe-a.pdf',
-                    'notification_email' => 'contact@demo-societe-a.fr',
-                    'slug' => 'demo-societe-a',
+                    'kbis_document' => 'demo/kbis-a.pdf',
+                    'safety_document' => 'demo/safety-a.pdf',
+                    'security_document' => 'demo/security-a.pdf',
+                    'notification_email' => "contact-a@{$slug}.fr",
+                    'slug' => "{$slug}-societe-a",
                     'is_airline_company' => false,
                 ],
                 'coworkers' => [
-                    ['firstname' => 'Alice', 'lastname' => 'Martin', 'email' => 'alice.martin@demo-societe-a.fr', 'phone' => '0600000001', 'has_leave' => false, 'departure_date' => null],
-                    ['firstname' => 'Bruno', 'lastname' => 'Petit', 'email' => 'bruno.petit@demo-societe-a.fr', 'phone' => '0600000002', 'has_leave' => false, 'departure_date' => null],
+                    ['firstname' => 'Alice', 'lastname' => 'Martin', 'email' => "alice.martin@{$slug}-a.fr", 'phone' => '0600000001', 'has_leave' => false, 'departure_date' => null],
+                    ['firstname' => 'Bruno', 'lastname' => 'Petit', 'email' => "bruno.petit@{$slug}-a.fr", 'phone' => '0600000002', 'has_leave' => false, 'departure_date' => null],
                 ],
             ],
             [
                 'client' => [
-                    'company_name' => 'Démo Société B',
-                    'trade_name' => 'Démo Société B',
+                    'company_name' => "{$label} Société B",
+                    'trade_name' => "{$label} Société B",
                     'siret_number' => '87654321',
                     'address' => '2 avenue de la Démo',
                     'zip_code' => '95700',
                     'city' => 'Roissy-en-France',
                     'subcontractor_of' => 'REM Distribution',
-                    'kbis_document' => 'demo/kbis-societe-b.pdf',
-                    'safety_document' => 'demo/safety-societe-b.pdf',
-                    'security_document' => 'demo/security-societe-b.pdf',
-                    'notification_email' => 'contact@demo-societe-b.fr',
-                    'slug' => 'demo-societe-b',
+                    'kbis_document' => 'demo/kbis-b.pdf',
+                    'safety_document' => 'demo/safety-b.pdf',
+                    'security_document' => 'demo/security-b.pdf',
+                    'notification_email' => "contact-b@{$slug}.fr",
+                    'slug' => "{$slug}-societe-b",
                     'is_airline_company' => true,
                 ],
                 'coworkers' => [
-                    ['firstname' => 'Chloé', 'lastname' => 'Durand', 'email' => 'chloe.durand@demo-societe-b.fr', 'phone' => '0600000003', 'has_leave' => false, 'departure_date' => null],
-                    ['firstname' => 'David', 'lastname' => 'Moreau', 'email' => 'david.moreau@demo-societe-b.fr', 'phone' => '0600000004', 'has_leave' => false, 'departure_date' => null],
+                    ['firstname' => 'Chloé', 'lastname' => 'Durand', 'email' => "chloe.durand@{$slug}-b.fr", 'phone' => '0600000003', 'has_leave' => false, 'departure_date' => null],
+                    ['firstname' => 'David', 'lastname' => 'Moreau', 'email' => "david.moreau@{$slug}-b.fr", 'phone' => '0600000004', 'has_leave' => false, 'departure_date' => null],
                 ],
             ],
         ];
