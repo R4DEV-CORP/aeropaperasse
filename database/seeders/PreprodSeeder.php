@@ -85,16 +85,13 @@ class PreprodSeeder extends Seeder
                 return;
             }
 
-            Client::factory()
-                ->count(2)
-                ->sequence(
-                    ['company_name' => 'Démo Société A', 'trade_name' => 'Démo Société A'],
-                    ['company_name' => 'Démo Société B', 'trade_name' => 'Démo Société B'],
-                )
-                ->create()
-                ->each(function (Client $client): void {
-                    Coworker::factory()->count(2)->create(['client_id' => $client->id]);
-                });
+            foreach ($this->demoCompanies() as $company) {
+                $client = Client::create($company['client']);
+
+                foreach ($company['coworkers'] as $coworker) {
+                    Coworker::create([...$coworker, 'client_id' => $client->id]);
+                }
+            }
         });
 
         $firstClientId = $tenant->run(fn (): ?int => Client::query()->orderBy('id')->value('id'));
@@ -118,5 +115,59 @@ class PreprodSeeder extends Seeder
                 'can_access_formation' => true,
             ],
         ]);
+    }
+
+    /**
+     * Static demo business data — no Faker (factories are dev-only and absent under
+     * `composer install --no-dev` on preprod).
+     *
+     * @return list<array{client: array<string, mixed>, coworkers: list<array<string, mixed>>}>
+     */
+    private function demoCompanies(): array
+    {
+        return [
+            [
+                'client' => [
+                    'company_name' => 'Démo Société A',
+                    'trade_name' => 'Démo Société A',
+                    'siret_number' => '12345678',
+                    'address' => '1 rue de la Démo',
+                    'zip_code' => '95700',
+                    'city' => 'Roissy-en-France',
+                    'subcontractor_of' => 'REM Distribution',
+                    'kbis_document' => 'demo/kbis-societe-a.pdf',
+                    'safety_document' => 'demo/safety-societe-a.pdf',
+                    'security_document' => 'demo/security-societe-a.pdf',
+                    'notification_email' => 'contact@demo-societe-a.fr',
+                    'slug' => 'demo-societe-a',
+                    'is_airline_company' => false,
+                ],
+                'coworkers' => [
+                    ['firstname' => 'Alice', 'lastname' => 'Martin', 'email' => 'alice.martin@demo-societe-a.fr', 'phone' => '0600000001', 'has_leave' => false, 'departure_date' => null],
+                    ['firstname' => 'Bruno', 'lastname' => 'Petit', 'email' => 'bruno.petit@demo-societe-a.fr', 'phone' => '0600000002', 'has_leave' => false, 'departure_date' => null],
+                ],
+            ],
+            [
+                'client' => [
+                    'company_name' => 'Démo Société B',
+                    'trade_name' => 'Démo Société B',
+                    'siret_number' => '87654321',
+                    'address' => '2 avenue de la Démo',
+                    'zip_code' => '95700',
+                    'city' => 'Roissy-en-France',
+                    'subcontractor_of' => 'REM Distribution',
+                    'kbis_document' => 'demo/kbis-societe-b.pdf',
+                    'safety_document' => 'demo/safety-societe-b.pdf',
+                    'security_document' => 'demo/security-societe-b.pdf',
+                    'notification_email' => 'contact@demo-societe-b.fr',
+                    'slug' => 'demo-societe-b',
+                    'is_airline_company' => true,
+                ],
+                'coworkers' => [
+                    ['firstname' => 'Chloé', 'lastname' => 'Durand', 'email' => 'chloe.durand@demo-societe-b.fr', 'phone' => '0600000003', 'has_leave' => false, 'departure_date' => null],
+                    ['firstname' => 'David', 'lastname' => 'Moreau', 'email' => 'david.moreau@demo-societe-b.fr', 'phone' => '0600000004', 'has_leave' => false, 'departure_date' => null],
+                ],
+            ],
+        ];
     }
 }
